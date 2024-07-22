@@ -3,6 +3,8 @@ require_once('../connection/db.php');
 
 $productmaterialid = $_POST['recordID'];
 
+// NOT IN USE
+
 $sql = "DELETE FROM `tbl_product_materials` WHERE `idtbl_product_materials` = '$productmaterialid'";
 if($conn->query($sql)==false){
     $actionObj=new stdClass();

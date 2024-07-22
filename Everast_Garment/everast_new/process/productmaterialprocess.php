@@ -1,4 +1,7 @@
 <?php 
+
+// NOT IN USE
+
 session_start();
 if(!isset($_SESSION['userid'])){header ("Location:index.php");}
 require_once('../connection/db.php');//die('bc');

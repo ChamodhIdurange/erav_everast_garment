@@ -1,18 +1,18 @@
 <?php 
 include "include/header.php";  
 
-$productarray=array();
-$sqlproduct="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
-$resultproduct =$conn-> query($sqlproduct);
+// $productarray=array();
+// $sqlproduct="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
+// $resultproduct =$conn-> query($sqlproduct);
 
-$sqlmaterial="SELECT `idtbl_material`, `materialname` FROM `tbl_material` WHERE `status`=1";
-$resultmaterial =$conn-> query($sqlmaterial);
+// $sqlmaterial="SELECT `idtbl_material`, `materialname` FROM `tbl_material` WHERE `status`=1";
+// $resultmaterial =$conn-> query($sqlmaterial);
 
-$sqlproduct="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
-$aresultproduct =$conn-> query($sqlproduct); 
+// $sqlproduct="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
+// $aresultproduct =$conn-> query($sqlproduct); 
 
-$sqlproductlist="SELECT `p`.`idtbl_product`, `p`.`product_name`, SUM(`pm`.`tbl_product_idtbl_product`) as 'productcount' FROM `tbl_product` AS `p` JOIN `tbl_product_materials` AS `pm` ON (`p`.`idtbl_product` = `pm`.`tbl_product_idtbl_product`) WHERE `pm`.`status`=1 GROUP BY `pm`.`tbl_product_idtbl_product`";
-$resultproductlist =$conn-> query($sqlproductlist);
+// $sqlproductlist="SELECT `p`.`idtbl_product`, `p`.`product_name`, SUM(`pm`.`tbl_product_idtbl_product`) as 'productcount' FROM `tbl_product` AS `p` JOIN `tbl_product_materials` AS `pm` ON (`p`.`idtbl_product` = `pm`.`tbl_product_idtbl_product`) WHERE `pm`.`status`=1 GROUP BY `pm`.`tbl_product_idtbl_product`";
+// $resultproductlist =$conn-> query($sqlproductlist);
 
 include "include/topnavbar.php"; 
 ?>
@@ -27,7 +27,7 @@ include "include/topnavbar.php";
                     <div class="page-header-content py-3">
                         <h1 class="page-header-title">
                             <div class="page-header-icon"><i data-feather="shopping-cart"></i></div>
-                            <span>Product Materials</span>
+                            <span>Product Materials Not in use</span>
                         </h1>
                     </div>
                 </div>
@@ -244,250 +244,250 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function () {
-        $('.dpd1a').datepicker({
-            uiLibrary: 'bootstrap4',
-            autoclose: 'true',
-            todayHighlight: true,
-            startDate: 'today',
-            format: 'yyyy-mm-dd'
-        });
-        $('#tablelist').DataTable({});
+        // $('.dpd1a').datepicker({
+        //     uiLibrary: 'bootstrap4',
+        //     autoclose: 'true',
+        //     todayHighlight: true,
+        //     startDate: 'today',
+        //     format: 'yyyy-mm-dd'
+        // });
+        // $('#tablelist').DataTable({});
     });
-    $("#formsubmit").click(function () {
-        if (!$("#productmaterialform")[0].checkValidity()) {
-            // If the form is invalid, submit it. The form won't actually submit;
-            // this will just cause the browser to display the native HTML5 error messages.
-            $("#btnsubmit").click();
-        } else {
-            var productID = $('#product').val();
-            var product = $("#product option:selected").text();
-            var materialId = $('#materials').val();
-            var material = $("#materials option:selected").text();
-            var requiredqty = $('#requiredqty').val();
+    // $("#formsubmit").click(function () {
+    //     if (!$("#productmaterialform")[0].checkValidity()) {
+    //         // If the form is invalid, submit it. The form won't actually submit;
+    //         // this will just cause the browser to display the native HTML5 error messages.
+    //         $("#btnsubmit").click();
+    //     } else {
+    //         var productID = $('#product').val();
+    //         var product = $("#product option:selected").text();
+    //         var materialId = $('#materials').val();
+    //         var material = $("#materials option:selected").text();
+    //         var requiredqty = $('#requiredqty').val();
 
-            $('#tableproductmaterial > tbody:last').append('<tr class="pointer"><td class = "d-none">' +
-                productID +
-                '</td><td class="">' +
-                materialId + '</td><td class="">' + material +
-                '</td><td class="text-center">' + requiredqty + '</td></tr>');
+    //         $('#tableproductmaterial > tbody:last').append('<tr class="pointer"><td class = "d-none">' +
+    //             productID +
+    //             '</td><td class="">' +
+    //             materialId + '</td><td class="">' + material +
+    //             '</td><td class="text-center">' + requiredqty + '</td></tr>');
 
-            $('#materials').focus();
-            $('#materials').val('')
-            $('#requiredqty').val('')
-        }
-    });
+    //         $('#materials').focus();
+    //         $('#materials').val('')
+    //         $('#requiredqty').val('')
+    //     }
+    // });
 
-    $('#btnAssemble').click(function () {
-        $('#modalassemble').modal('show');
-        $('#modalassemble').on('shown.bs.modal', function () {
-            $('#orderdate').trigger('focus');
-        })
-    });
-    $('#btnComplete').click(() => {
-        var tbody = $("#tableproductmaterial tbody");
-        if (tbody.children().length > 0) {
-            jsonObj = [];
-            $("#tableproductmaterial tbody tr").each(function () {
-                item = {}
-                $(this).find('td').each(function (col_idx) {
-                    item["col_" + (col_idx + 1)] = $(this).text();
-                });
-                jsonObj.push(item);
-            });
-            console.log(jsonObj);
+    // $('#btnAssemble').click(function () {
+    //     $('#modalassemble').modal('show');
+    //     $('#modalassemble').on('shown.bs.modal', function () {
+    //         $('#orderdate').trigger('focus');
+    //     })
+    // });
+    // $('#btnComplete').click(() => {
+    //     var tbody = $("#tableproductmaterial tbody");
+    //     if (tbody.children().length > 0) {
+    //         jsonObj = [];
+    //         $("#tableproductmaterial tbody tr").each(function () {
+    //             item = {}
+    //             $(this).find('td').each(function (col_idx) {
+    //                 item["col_" + (col_idx + 1)] = $(this).text();
+    //             });
+    //             jsonObj.push(item);
+    //         });
+    //         console.log(jsonObj);
 
-            var productID = $('#product').val();
-            $.ajax({
-                type: "POST",
-                data: {
-                    tableData: jsonObj,
-                    productID: productID,
-                },
-                url: 'process/productmaterialprocess.php',
-                success: function (result) {
-                    action(result);
-                }
-            });
+    //         var productID = $('#product').val();
+    //         $.ajax({
+    //             type: "POST",
+    //             data: {
+    //                 tableData: jsonObj,
+    //                 productID: productID,
+    //             },
+    //             url: 'process/productmaterialprocess.php',
+    //             success: function (result) {
+    //                 action(result);
+    //             }
+    //         });
 
-        }
-    })
-    $('#tablelist tbody').on('click', '.btnView', function () {
-        let productid = $(this).attr('id')
-        $.ajax({
-            type: "POST",
-            data: {
-                recordID: productid
-            },
-            url: 'getprocess/getmaterialproductdetails.php',
-            success: function (result) {
-                $('#detailsbody').html(result)
-                $('#modaproductmaterial').modal('show')
+    //     }
+    // })
+    // $('#tablelist tbody').on('click', '.btnView', function () {
+    //     let productid = $(this).attr('id')
+    //     $.ajax({
+    //         type: "POST",
+    //         data: {
+    //             recordID: productid
+    //         },
+    //         url: 'getprocess/getmaterialproductdetails.php',
+    //         success: function (result) {
+    //             $('#detailsbody').html(result)
+    //             $('#modaproductmaterial').modal('show')
 
-            }
-        });
-    })
+    //         }
+    //     });
+    // })
 
-    $('#btnassembleorder').click(function () { //alert('IN');
-        if (!$("#assembleorderform")[0].checkValidity()) {
-            // If the form is invalid, submit it. The form won't actually submit;
-            // this will just cause the browser to display the native HTML5 error messages.
-            $("#assemblesubmit").click();
-        } else {
-            var tbody = $("#tableassemble tbody");
+    // $('#btnassembleorder').click(function () { //alert('IN');
+    //     if (!$("#assembleorderform")[0].checkValidity()) {
+    //         // If the form is invalid, submit it. The form won't actually submit;
+    //         // this will just cause the browser to display the native HTML5 error messages.
+    //         $("#assemblesubmit").click();
+    //     } else {
+    //         var tbody = $("#tableassemble tbody");
 
-            if (tbody.children().length > 0) {
-                jsonObj = [];
-                $("#tableassemble tbody tr").each(function () {
-                    item = {}
-                    $(this).find('td').each(function (col_idx) {
-                        item["col_" + (col_idx + 1)] = $(this).text();
-                    });
-                    jsonObj.push(item);
-                });
-                // console.log(jsonObj);
+    //         if (tbody.children().length > 0) {
+    //             jsonObj = [];
+    //             $("#tableassemble tbody tr").each(function () {
+    //                 item = {}
+    //                 $(this).find('td').each(function (col_idx) {
+    //                     item["col_" + (col_idx + 1)] = $(this).text();
+    //                 });
+    //                 jsonObj.push(item);
+    //             });
+    //             // console.log(jsonObj);
 
-                var orderdate = $('#aorderdate').val();
-                var remark = $('#aremark').val();
-                var productid = $('#aproduct').val();
-                var qty = $('#anewqty').val();
+    //             var orderdate = $('#aorderdate').val();
+    //             var remark = $('#aremark').val();
+    //             var productid = $('#aproduct').val();
+    //             var qty = $('#anewqty').val();
 
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        tableData: jsonObj,
-                        orderdate: orderdate,
-                        productid: productid,
-                        qty: qty,
-                        remark: remark
-                    },
-                    url: 'process/assembleorderprocess.php',
-                    success: function (result) { //alert(result);
-                        action(result);
-                        location.reload();
-                    }
-                });
-            }
-        }
+    //             $.ajax({
+    //                 type: "POST",
+    //                 data: {
+    //                     tableData: jsonObj,
+    //                     orderdate: orderdate,
+    //                     productid: productid,
+    //                     qty: qty,
+    //                     remark: remark
+    //                 },
+    //                 url: 'process/assembleorderprocess.php',
+    //                 success: function (result) { //alert(result);
+    //                     action(result);
+    //                     location.reload();
+    //                 }
+    //             });
+    //         }
+    //     }
 
-    });
+    // });
 
-    $('#aproduct').change(function () {
-        var productID = $(this).val();
-        $('#btnassembleorder').attr('disabled',false);
+    // $('#aproduct').change(function () {
+    //     var productID = $(this).val();
+    //     $('#btnassembleorder').attr('disabled',false);
 
-        $.ajax({
-            type: "POST",
-            data: {
-                productID: productID
-            },
-            url: 'getprocess/getproductassembledetails.php',
-            success: function (result) { //alert(result);
-                $('#tableassemble > tbody').empty();
-                var obj = JSON.parse(result);
+    //     $.ajax({
+    //         type: "POST",
+    //         data: {
+    //             productID: productID
+    //         },
+    //         url: 'getprocess/getproductassembledetails.php',
+    //         success: function (result) { //alert(result);
+    //             $('#tableassemble > tbody').empty();
+    //             var obj = JSON.parse(result);
 
-                $.each(obj, function (i, item) {
-                    $('#tableassemble > tbody:last').append('<tr><td>' +
-                        obj[i].materialid +
-                        '</td><td class="">' + obj[i].materialname +
-                        '</td><td class="text-left reqqty">' + obj[i]
-                        .requiredqty + '</td><td class="d-none staticqty">' + obj[i]
-                        .requiredqty + '</td></tr>');
+    //             $.each(obj, function (i, item) {
+    //                 $('#tableassemble > tbody:last').append('<tr><td>' +
+    //                     obj[i].materialid +
+    //                     '</td><td class="">' + obj[i].materialname +
+    //                     '</td><td class="text-left reqqty">' + obj[i]
+    //                     .requiredqty + '</td><td class="d-none staticqty">' + obj[i]
+    //                     .requiredqty + '</td></tr>');
 
-                });
-            }
-        });
-    });
+    //             });
+    //         }
+    //     });
+    // });
 
-    function checkstock(materialid, requiredqty){
-        $.ajax({
-            type: "POST",
-            data: {
-                materialid: materialid,
-                requiredqty: requiredqty,
-            },
-            url: 'getprocess/checkmaterialstock.php',
-            success: function (result) { //alert(result);
-                var obj = JSON.parse(result);
-                if(!obj.qty){
-                    $('#btnassembleorder').attr('disabled','disabled');
+    // function checkstock(materialid, requiredqty){
+    //     $.ajax({
+    //         type: "POST",
+    //         data: {
+    //             materialid: materialid,
+    //             requiredqty: requiredqty,
+    //         },
+    //         url: 'getprocess/checkmaterialstock.php',
+    //         success: function (result) { //alert(result);
+    //             var obj = JSON.parse(result);
+    //             if(!obj.qty){
+    //                 $('#btnassembleorder').attr('disabled','disabled');
 
-                    var error = ` <div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>Warning!</strong> The material with id '${materialid}' don't have enough stock available<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>`
-                    $('#errordiv').html(error)
+    //                 var error = ` <div class='alert alert-danger alert-dismissible fade show' role='alert'><strong>Warning!</strong> The material with id '${materialid}' don't have enough stock available<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>`
+    //                 $('#errordiv').html(error)
 
-                }
-            }
-        });
-    }
+    //             }
+    //         }
+    //     });
+    // }
 
-    $('#anewqty').keyup(function () {
-        var qty = $(this).val();
-        let newqty = 0;
-        let materialId;
+    // $('#anewqty').keyup(function () {
+    //     var qty = $(this).val();
+    //     let newqty = 0;
+    //     let materialId;
 
-        $(".staticqty").each(function () {
-            var row = $(this);
+    //     $(".staticqty").each(function () {
+    //         var row = $(this);
 
-            reqqty = parseFloat($(this).text());
-            newqty = reqqty * qty;
+    //         reqqty = parseFloat($(this).text());
+    //         newqty = reqqty * qty;
 
-            row.closest("tr").find('td:eq(2)').html(newqty)
-            materialId = row.closest("tr").find('td:eq(0)').text()
+    //         row.closest("tr").find('td:eq(2)').html(newqty)
+    //         materialId = row.closest("tr").find('td:eq(0)').text()
 
-            checkstock(materialId, newqty)
-        });
+    //         checkstock(materialId, newqty)
+    //     });
 
-    });
+    // });
 
-    function action(data) { //alert(data);
-        var obj = JSON.parse(data);
-        $.notify({
-            // options
-            icon: obj.icon,
-            title: obj.title,
-            message: obj.message,
-            url: obj.url,
-            target: obj.target
-        }, {
-            // settings
-            element: 'body',
-            position: null,
-            type: obj.type,
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: "top",
-                align: "center"
-            },
-            offset: 100,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 1000,
-            url_target: '_blank',
-            mouse_over: null,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            },
-            onShow: null,
-            onShown: null,
-            onClose: null,
-            onClosed: null,
-            icon_type: 'class',
-            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-                '<span data-notify="icon"></span> ' +
-                '<span data-notify="title">{1}</span> ' +
-                '<span data-notify="message">{2}</span>' +
-                '<div class="progress" data-notify="progressbar">' +
-                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                '</div>' +
-                '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                '</div>'
-        });
-        location.reload();
-    }
+    // function action(data) { //alert(data);
+    //     var obj = JSON.parse(data);
+    //     $.notify({
+    //         // options
+    //         icon: obj.icon,
+    //         title: obj.title,
+    //         message: obj.message,
+    //         url: obj.url,
+    //         target: obj.target
+    //     }, {
+    //         // settings
+    //         element: 'body',
+    //         position: null,
+    //         type: obj.type,
+    //         allow_dismiss: true,
+    //         newest_on_top: false,
+    //         showProgressbar: false,
+    //         placement: {
+    //             from: "top",
+    //             align: "center"
+    //         },
+    //         offset: 100,
+    //         spacing: 10,
+    //         z_index: 1031,
+    //         delay: 5000,
+    //         timer: 1000,
+    //         url_target: '_blank',
+    //         mouse_over: null,
+    //         animate: {
+    //             enter: 'animated fadeInDown',
+    //             exit: 'animated fadeOutUp'
+    //         },
+    //         onShow: null,
+    //         onShown: null,
+    //         onClose: null,
+    //         onClosed: null,
+    //         icon_type: 'class',
+    //         template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+    //             '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
+    //             '<span data-notify="icon"></span> ' +
+    //             '<span data-notify="title">{1}</span> ' +
+    //             '<span data-notify="message">{2}</span>' +
+    //             '<div class="progress" data-notify="progressbar">' +
+    //             '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+    //             '</div>' +
+    //             '<a href="{3}" target="{4}" data-notify="url"></a>' +
+    //             '</div>'
+    //     });
+    //     location.reload();
+    // }
 </script>
 <?php include "include/footer.php"; ?>
 
