@@ -39,15 +39,14 @@ include "include/topnavbar.php";
                                             <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                                 <thead>
                                                     <tr>
-                                                        <th>Invoice</th>
-                                                        <th>ASM or CSM</th>
+                                                        <th>Invoice No</th>
                                                         <th>Date</th>
+                                                        <th>Purchase Order</th>
                                                         <th>Customer</th>
-                                                        <th>Sale Rep</th>
                                                         <th>Area</th>
+                                                        <th>Sale Rep</th>
                                                         <th class="text-right">Total</th>
                                                         <th>Payment</th>
-
                                                         <th class="text-right">Actions</th>
                                                     </tr>
                                                 </thead>
@@ -179,36 +178,31 @@ include "include/topnavbar.php";
             "order": [
                 [0, "desc"]
             ],
-            "columns": [{
-                    "targets": -1,
-                    "className": '',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        return 'INV-' + full['idtbl_invoice'];
-                    }
-                },
+            "columns": [
                 {
-                    "data": "empname"
+                    "data": "invoiceno"
                 },
                 {
                     "data": "date"
                 },
-
+                {
+                    "data": "cuspono"
+                },
                 {
                     "data": "name"
                 },
                 {
-                    "data": "salepep"
+                    "data": "area"
                 },
                 {
-                    "data": "area"
+                    "data": "salepep"
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
-                        var payment = addCommas(parseFloat(full['total']).toFixed(2));
+                        var payment = addCommas(parseFloat(full['nettotal']).toFixed(2));
                         return payment;
                     }
                 },
@@ -230,59 +224,10 @@ include "include/topnavbar.php";
                     "data": null,
                     "render": function(data, type, full) {
                         var button = '';
-                        button +=
-                            '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' +
-                            full['idtbl_invoice'] +
-                            '"><i class="fas fa-eye"></i></button> ';
-
-                        // button +=
-                        //     '<button class="btn btn-outline-primary btn-sm btnCheck mr-1" id="' +
-                        //     full['idtbl_invoice'] +
-                        //     '"><i class="fas fa-eye"></i></button> ';
-
-                        if (full['paymentcomplete'] == 0) {
-                            // button += '<a href="process/statusinvoice.php?record=' + full[
-                            //         'idtbl_invoice'] +
-                            //     '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
-                            if (full['shipstatus'] == 0 && full['status'] == 1) {
-                                button +=
-                                    '<button class="btn btn-outline-danger btn-sm mr-1 btnship" data-toggle="tooltip" data-placement="bottom" title="Order not ship" id="' +
-                                    full['idtbl_porder'] +
-                                    '"><i class="fas fa-dolly"></i></button>';
-                            } else if (full['status'] == 1) {
-                                button +=
-                                    '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Order shipped"><i class="fas fa-dolly"></i></button>';
-                            }
-
-                            if (full['deliverystatus'] == 0 && full['status'] == 1) {
-                                button +=
-                                    '<button class="btn btn-outline-danger btn-sm mr-1 btndelivery" data-toggle="tooltip" data-placement="bottom" title="Delivery not completed" id="' +
-                                    full['idtbl_porder'] +
-                                    '"><i class="fas fa-truck"></i></button>';
-                            } else if (full['status'] == 1) {
-                                button +=
-                                    '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Delivery completed"><i class="fas fa-truck"></i></button>';
-                            }
-
-                            if (full['deliverystatus'] == 0 && full['status'] == 1) {
-                                button +=
-                                    '<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="' +
-                                    full['idtbl_porder'] +
-                                    '"><i class="fas fa-window-close"></i></button><button class="btn btn-primary btn-sm btnreturn" id="' +
-                                    full['idtbl_porder'] +
-                                    '"><i class="fas fa-redo-alt"></i></button>';
-                            }
-
-
-                            if (deletecheck != 0) {
-                                button +=
-                                    '<button class="btn btn-outline-danger btn-sm btnDelete ml-1 " id="' +
-                                    full['idtbl_invoice'] +
-                                    '"><i class="fas fa-trash"></i></button> ';
-                            }
+                        button += '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' + full['idtbl_invoice'] + '"><i class="fas fa-eye"></i></button> ';
+                        if (full['paymentcomplete'] == 0 && deletecheck != 0) {
+                            button += '<button class="btn btn-outline-danger btn-sm btnDelete" id="' + full['idtbl_invoice'] + '"><i class="fas fa-trash"></i></button> ';
                         }
-
-
                         return button;
                     }
                 }
@@ -315,146 +260,10 @@ include "include/topnavbar.php";
                 backdrop: 'static'
             });
         });
-
-        $('#dataTable tbody').on('click', '.btnship', function() {
-            var r = confirm("Are you sure, Ship this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '2';
-                statuschange(id, type);
-            }
-        });
-        $('#dataTable tbody').on('click', '.btndelivery', function() {
-            var r = confirm("Are you sure, Delivery complete this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '3';
-                statuschange(id, type);
-            }
-        });
-
-
-        // $('#dataTable tbody').on('click', '.btnQty', function () {
-
-        //     $('#hiddenid').val(id);
-        //     var r = quantity_correct();
-        //     if (r == true) {
-
-        //         var status = $(this).attr('name');
-
-        //         if (status == 0) {
-        //             $('#modalquantitycheck').modal('show');
-        //             $('#hiddenstatus').val("0");
-        //         } else {
-        //             $('#qtyreason').val("Quantity is correct");
-        //             $('#hiddenstatus').val("1");
-        //             document.getElementById("qtySubmitBtn").click();
-        //         }
-        //     }
-        // });
-
-        // $('#dataTable tbody').on('click', '.btnQty2', function () {
-        //     var r = quantity_confirm();
-        //     if (r == true) {
-        //         var id = $(this).attr('id');
-        //         var status = $(this).attr('name');
-        //         $('#hiddenid').val(id);
-        //         if (status == 0) {
-        //             $('#modalquantitycheck').modal('show');
-        //             $('#hiddenstatus').val("0");
-        //         } else {
-        //             $('#qtyreason').val("Quantity is correct");
-        //             $('#hiddenstatus').val("1");
-        //             document.getElementById("qtySubmitBtn").click();
-        //         }
-        //     }
-        // });
-
-        $('#dataTable tbody').on('click', '.btnCheck', function() {
-            var id = $(this).attr('id');
-            $('#hiddenid').val(id);
-            $('#modalquantitycheck').modal('show');
-            $('#hiddenstatus').val("0");
-
-        });
-        $('#dataTable tbody').on('click', '.btnDelete', function() {
-            var id = $(this).attr('id');
-            $('#record').val(id);
-            $('#modalcancelreason').modal('show');
-            $('#hiddenstatus').val("0");
-
-        });
-
-        document.getElementById('btnreceiptprint').addEventListener("click", print);
     });
-
-    $('input[type="radio"]').change(function(e) {
-        var value = $('input[name="qtycheckratio"]:checked').val()
-        // alert(value)
-        if (value == 1) {
-            $('#hiddenqtydiv').addClass('d-none');
-            $('#qtyreason').prop('required', false);
-
-        } else {
-            $('#hiddenqtydiv').removeClass('d-none');
-            $('#qtyreason').prop('required', true);
-        }
-    });
-
-    function statuschange(id, type) { //alert(id);
-        var cancelreason = '';
-        $.ajax({
-            type: "POST",
-            data: {
-                recordID: id,
-                type: type,
-                cancelreason: cancelreason
-            },
-            url: 'process/statuscusporder.php',
-            success: function(result) { //alert(result);
-                // action(result);
-                $('#dataTable').DataTable().ajax.reload(null, false);
-                // loaddatatable();
-            }
-        });
-    }
-
-    function print() {
-        printJS({
-            printable: 'viewreceiptprint',
-            type: 'html',
-            style: '@page { size: portrait; margin:0.25cm; }',
-            targetStyles: ['*']
-        })
-    }
 
     function delete_confirm() {
         return confirm("Are you sure you want to remove this?");
-    }
-
-    function quantity_confirm() {
-        return confirm("Are you sure the quantity is wrong?");
-    }
-
-    function quantity_correct() {
-        return confirm("Are you sure the quantity is correct?");
-    }
-
-    function delivery_confirm() {
-        return confirm("Are you sure that the delivery is completed?");
-    }
-
-    function delivery_not_confirm() {
-        return confirm("Are you sure that the delivery is not completed?");
-    }
-
-
-    function deactive_confirm() {
-        return confirm("Are you sure you want to deactive this?");
-    }
-
-    function active_confirm() {
-        return confirm("Are you sure you want to active this?");
     }
 
     function addCommas(nStr) {

@@ -4,8 +4,8 @@ include "include/header.php";
 $sql="SELECT * FROM `tbl_vehicle` WHERE `status` IN (1,2)";
 $result =$conn-> query($sql); 
 
-$sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
-$resultcustomer =$conn-> query($sqlcustomer);
+// $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
+// $resultcustomer =$conn-> query($sqlcustomer);
 
 $sqlbank="SELECT `idtbl_bank`, `bankname` FROM `tbl_bank` WHERE `status`=1 AND `idtbl_bank`!=1";
 $resultbank =$conn-> query($sqlbank); 
@@ -41,9 +41,6 @@ include "include/topnavbar.php";
                                         <label class="small font-weight-bold text-dark">Customer*</label>
                                         <select class="form-control form-control-sm" name="customer" id="customer" required>
                                             <option value="">Select</option>
-                                            <?php if($resultcustomer->num_rows > 0) {while ($rowcustomer = $resultcustomer-> fetch_assoc()) { ?>
-                                            <option value="<?php echo $rowcustomer['idtbl_customer'] ?>"><?php echo $rowcustomer['name']; ?></option>
-                                            <?php }} ?>
                                         </select>
                                     </div>
                                     <div class="col-3">
@@ -56,13 +53,16 @@ include "include/topnavbar.php";
                                         </select>
                                     </div>
                                     <div class="col-3">
-                                        <label class="small font-weight-bold text-dark">Invoice Search</label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" class="form-control" placeholder="" aria-label="Invoice Number" aria-describedby="button-addon2" id="formInvNum">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-dark" type="button" id="formSearchBtn"><i class="fas fa-search"></i>&nbsp;Search</button>
+                                        <form id="searchform">
+                                            <label class="small font-weight-bold text-dark">Invoice Search</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" placeholder="" aria-label="Invoice Number" aria-describedby="button-addon2" id="formInvNum" required>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-dark" type="button" id="formSearchBtn"><i class="fas fa-search"></i>&nbsp;Search</button>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <input type="submit" id="hidesearchsubmit" class="d-none">
+                                        </form>
                                     </div>
                                     <div class="col">&nbsp;</div>
                                 </div>
@@ -121,13 +121,14 @@ include "include/topnavbar.php";
                                 <label class="small font-weight-bold text-dark">Net Payment Amount</label>
                                 <input id="paymentPayAmount" name="paymentPayAmount" type="text" class="form-control form-control-sm" placeholder="Total Amount" readonly>
                             </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentMethod1" name="paymentMethod" class="custom-control-input" value="1" data-toggle="collapse" href="#collapseOne">
-                                <label class="custom-control-label" for="paymentMethod1">Cash</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentMethod2" name="paymentMethod" class="custom-control-input" value="2" data-toggle="collapse" href="#collapseTwo">
-                                <label class="custom-control-label" for="paymentMethod2">Bank / Cheque</label>
+                            <div class="form-group mb-1">
+                                <label class="small font-weight-bold text-dark">Payment Method</label>
+                                <select name="paymentMethod" id="paymentMethod" class="form-control form-control-sm">
+                                    <option value="">Select</option>
+                                    <option value="1">Cash</option>
+                                    <option value="2">Bank / Cheque</option>
+                                    <option value="3">Credit Note</option>
+                                </select>
                             </div>
                             <div class="accordion" id="accordionExample">
                                 <div class="card shadow-none border-0">
@@ -265,70 +266,50 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function() {
-        $('.dpd1a').datepicker({
-            uiLibrary: 'bootstrap4',
-            autoclose: 'true',
-            todayHighlight: true,
-            format: 'yyyy-mm-dd'
+        $("#customer").select2({
+            ajax: {
+                url: 'getprocess/getcustomerlist.php',
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term 
+                    };
+                },
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
         });
 
         $('#customer').change(function(){
             var customerID = $(this).val();
-            $('#invoiceviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    customerID: customerID
-                },
-                url: 'getprocess/getinvoicepayment.php',
-                success: function(result) {//alert(result);
-                    $('#invoiceviewdetail').html(result);
-                    $('#invPaymentCheckBtn').prop("disabled", false);
-                    tblcheckboxevent();
-                }
-            });  
+            var asmID = '';
+            var invoiceno = '';
+            loadinvoice(customerID, asmID, invoiceno);
         });
 
         $('#asm').change(function(){
-            var customerID = $(this).val();
-            $('#invoiceviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    customerID: customerID
-                },
-                url: 'getprocess/getinvoicepayment.php',
-                success: function(result) {//alert(result);
-                    $('#invoiceviewdetail').html(result);
-                    $('#invPaymentCheckBtn').prop("disabled", false);
-                    tblcheckboxevent();
-                }
-            });  
+            var customerID = '';
+            var asmID = $(this).val();
+            var invoiceno = '';
+            loadinvoice(customerID, asmID, invoiceno);
         });
 
         $('#formSearchBtn').click(function(){
-            $('#invoiceviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
-
-            var invoiceno = $('#formInvNum').val();
-            if(invoiceno!=''){
-                $('#formInvNum').removeClass('bg-danger-soft');
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        invoiceno: invoiceno
-                    },
-                    url: 'getprocess/getinvoicepayment.php',
-                    success: function(result) {//alert(result);
-                        $('#invoiceviewdetail').html(result);
-                        $('#invPaymentCheckBtn').prop("disabled", false);
-                        tblcheckboxevent();
-                    }
-                });
-            }
-            else{
-                $('#formInvNum').addClass('bg-danger-soft');
+            if (!$("#searchform")[0].checkValidity()) {
+                // If the form is invalid, submit it. The form won't actually submit;
+                // this will just cause the browser to display the native HTML5 error messages.
+                $("#hidesearchsubmit").click();
+            } else {
+                var customerID = '';
+                var asmID = '';
+                var invoiceno = $('#formInvNum').val();
+                loadinvoice(customerID, asmID, invoiceno);
             }
         });
 
@@ -401,42 +382,53 @@ include "include/topnavbar.php";
                 });
                 $('#invPaymentCreateBtn').prop("disabled", true);
             } else {
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        tablejson: tablejson
-                    },
-                    url: 'getprocess/getdiscountamountaccobillamount.php',
-                    success: function(result) { //alert(result);
-                        // console.log(result);
-                        var obj = JSON.parse(result);
-
-                        var discount=parseFloat(obj.totaldiscount).toFixed(2);
-
-                        var baltotal=parseFloat(invnetBal-discount).toFixed(2);
-
-                        $('#paymentPayAmountWithoutdis').val(invnetBal);
-                        $('#paymentPayDiscount').val(discount);
-                        $('#paymentPayAmount').val(baltotal);
-                        $('#totAmount').html(baltotal);
-                        $('#hideAllBalAmount').val(baltotal);
-                        $('#discountlist').val(obj.paymentlist);
-                        $('#paymentmodal').modal({
-                            keyboard: false,
-                            backdrop: 'static'
-                        });
-                    }
+                $('#paymentPayAmountWithoutdis').val(invnetBal);
+                $('#paymentPayDiscount').val('0');
+                $('#paymentPayAmount').val(invnetBal);
+                $('#totAmount').html(invnetBal);
+                $('#hideAllBalAmount').val(invnetBal);
+                $('#paymentmodal').modal({
+                    keyboard: false,
+                    backdrop: 'static'
                 });
+                // $.ajax({
+                //     type: "POST",
+                //     data: {
+                //         tablejson: tablejson
+                //     },
+                //     url: 'getprocess/getdiscountamountaccobillamount.php',
+                //     success: function(result) { //alert(result);
+                //         // console.log(result);
+                //         var obj = JSON.parse(result);
+
+                //         var discount=parseFloat(obj.totaldiscount).toFixed(2);
+
+                //         var baltotal=parseFloat(invnetBal-discount).toFixed(2);
+
+                //         $('#paymentPayAmountWithoutdis').val(invnetBal);
+                //         $('#paymentPayDiscount').val(discount);
+                //         $('#paymentPayAmount').val(baltotal);
+                //         $('#totAmount').html(baltotal);
+                //         $('#hideAllBalAmount').val(baltotal);
+                //         $('#discountlist').val(obj.paymentlist);
+                //         $('#paymentmodal').modal({
+                //             keyboard: false,
+                //             backdrop: 'static'
+                //         });
+                //     }
+                // });
             }
         });
-        $('input[type=radio][name=paymentMethod]').change(function() {
-            if (this.value == '1') {
+        $('#paymentMethod').change(function() {
+            if ($(this).val() == '1') {
                 $('#paymentCheque').prop("readonly", true);
                 $('#paymentChequeNum').prop("readonly", true);
                 $('#paymentReceiptNum').prop("readonly", true);
                 $('#paymentchequeDate').prop("readonly", true);
                 $('#paymentBank').prop("disabled", true);
                 $('#paymentCash').prop("readonly", false);
+                $('#collapseOne').collapse('show')
+                $('#collapseTwo').collapse('hide')
             } else {
                 $('#paymentCheque').prop("readonly", false);
                 $('#paymentChequeNum').prop("readonly", false);
@@ -444,6 +436,8 @@ include "include/topnavbar.php";
                 $('#paymentchequeDate').prop("readonly", false);
                 $('#paymentBank').prop("disabled", false);
                 $('#paymentCash').prop("readonly", true);
+                $('#collapseOne').collapse('hide')
+                $('#collapseTwo').collapse('show')
             }
         });
         $("#submitBtnModal").click(function() {
@@ -566,6 +560,25 @@ include "include/topnavbar.php";
         });
     });
 
+    function loadinvoice(customerID, asmID, invoiceno){
+        $('#invoiceviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
+
+        $.ajax({
+            type: "POST",
+            data: {
+                customerID: customerID,
+                asmID: asmID,
+                invoiceno: invoiceno
+            },
+            url: 'getprocess/getinvoicepayment.php',
+            success: function(result) {//alert(result);
+                $('#invoiceviewdetail').html(result);
+                $('#invPaymentCheckBtn').prop("disabled", false);
+                tblcheckboxevent();
+            }
+        });  
+    }
+
     function tblcheckboxevent() {
         $('#paymentDetailTable tbody').on('click', '.fullAmount', function() {
             var row = $(this);
@@ -579,24 +592,6 @@ include "include/topnavbar.php";
                 row.closest("tr").find('td:eq(9)').text('0.00');
             }
         });
-
-        //Change on 30/05/2022 Get information Sampath
-
-        // $('#paymentDetailTable tbody').on('click', '.halfAmount', function() {
-        //     var row = $(this);
-        //     if ((row.closest('.halfAmount')).is(':checked')) {
-        //         var fullAmount = row.closest("tr").find('td:eq(4)').text();
-        //         row.closest("tr").find('td:eq(7)').find('.fullAmount').prop('checked', false);
-        //         row.closest("tr").find('td:eq(9)').text(fullAmount);
-        //         // row.closest("tr").find('td:eq(8)').text('0.00');
-        //         row.closest("tr").find('td:eq(10)').text('2');
-        //         tblpayamount();
-        //     } else {
-        //         tblTextRemove();
-        //         row.closest("tr").find('td:eq(10)').text('0');
-        //         row.closest("tr").find('td:eq(9)').text('0.00');
-        //     }
-        // });
 
         $('#paymentDetailTable tbody').on('click', '.halfAmount', function() {
             var row = $(this);
