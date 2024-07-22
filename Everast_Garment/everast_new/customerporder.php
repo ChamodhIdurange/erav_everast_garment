@@ -1,8 +1,8 @@
 <?php
 include "include/header.php";
 
-$sql = "SELECT * FROM `tbl_porder` WHERE `confirmstatus` IN (1,0,2)";
-$result = $conn->query($sql);
+// $sql = "SELECT * FROM `tbl_porder` WHERE `confirm` IN (1,0,2)";
+// $result = $conn->query($sql);
 
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 
@@ -99,9 +99,6 @@ include "include/topnavbar.php";
                                                 <th class="text-right">Discount</th>
                                                 <th class="text-right">Nettotal</th>
                                                 <th class="text-center">Confirm</th>
-                                                <!-- <th class="text-center">Ship</th>
-                                                <th class="text-center">Delivery</th> -->
-                                                <th class="text-center">Tracking No</th>
                                                 <th class="text-right">Actions</th>
                                             </tr>
                                         </thead>
@@ -225,12 +222,12 @@ include "include/topnavbar.php";
                                         <label class="small font-weight-bold text-dark">Qty*</label>
                                         <input type="text" id="newqty" name="newqty" class="form-control form-control-sm" value="0" required>
                                     </div>
-                                    <div class="col">
+                                    <div class="col d-none">
                                         <label class="small font-weight-bold text-dark">Free Qty</label>
                                         <input type="text" id="freeqty" name="freeqty" class="form-control form-control-sm" value="0">
                                     </div>
                                 </div>
-                                <div class="form-group mb-1 col-3">
+                                <div class="form-group mb-1 col-3 d-none">
                                     <label class="small font-weight-bold text-dark">Free Product</label>
                                     <input type="text" id="freeproductname" name="freeproductname" class="form-control form-control-sm" readonly>
                                 </div>
@@ -364,6 +361,7 @@ include "include/topnavbar.php";
                 </button>
             </div>
             <input type="hidden" id="hiddenpoid">
+            <input type="hidden" id="acceptanceType">
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -379,9 +377,6 @@ include "include/topnavbar.php";
                             <th>Product</th>
                             <th class="d-none">ProductID</th>
                             <th class="text-center"> Qty</th>
-                            <th class=""> Free Product</th>
-                            <th class="d-none"> Freeproductid</th>
-                            <th class="text-center"> Free Qty</th>
                             <th class="text-right">Total</th>
                         </tr>
                     </thead>
@@ -467,40 +462,6 @@ include "include/topnavbar.php";
                 <a href="dayend.php" class="btn btn-outline-light btn-sm">Go To Day End</a>
             </div>
         </div>
-    </div>
-</div>
-<!-- Modal Track -->
-<div class="modal fade" id="modaltrack" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <form action="process/trackingprocess.php" method="post" autocomplete="off">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="">Tracking Information</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="formtracking">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Tracking Code*</label>
-                            <input type="text" class="form-control form-control-sm" name="trackingcode" id="trackingcode">
-                        </div>
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Url</label>
-                            <input type="text" class="form-control form-control-sm" name="trackingurl" id="trackingurl" required value="">
-                        </div>
-                        <div class="form-group mt-3">
-                            <button type="submit" id="submitBtn" class="btn btn-outline-primary btn-sm w-50 fa-pull-right" <?php if ($addcheck == 0) {
-                                                                                                                                echo 'disabled';
-                                                                                                                            } ?>><i class="far fa-save"></i>&nbsp;Add</button>
-                            <!-- <input type="submit" id="hidesubmit" class="d-none"> -->
-                        </div>
-                        <input type="hidden" name="orderid" id="orderid" value="">
-                    </form>
-                </div>
-            </div>
-        </form>
     </div>
 </div>
 <!-- Modal Porder Edit -->
@@ -619,17 +580,17 @@ include "include/topnavbar.php";
                 [0, "desc"]
             ],
             "columns": [{
-                    "data": "idtbl_porder"
+                    "data": "idtbl_customer_order"
                 },
                 {
-                    "data": "orderdate"
+                    "data": "date"
                 },
                 {
                     "targets": -1,
                     "className": '',
                     "data": null,
                     "render": function(data, type, full) {
-                        return 'PO0' + full['idtbl_porder'];
+                        return 'PO0' + full['idtbl_customer_order'];
                     }
                 },
                 {
@@ -646,7 +607,7 @@ include "include/topnavbar.php";
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
-                        return parseFloat(full['subtotal']).toFixed(2);
+                        return parseFloat(full['total']).toFixed(2);
                     }
                 },
                 {
@@ -654,7 +615,7 @@ include "include/topnavbar.php";
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
-                        return parseFloat(full['disamount']).toFixed(2);
+                        return parseFloat(full['discount']).toFixed(2);
                     }
                 },
                 {
@@ -671,18 +632,15 @@ include "include/topnavbar.php";
                     "data": null,
                     "render": function(data, type, full) {
                         var html = '';
-                        if (full['confirmstatus'] == 1) {
+                        if (full['confirm'] == 1) {
                             html += '<i class="fas fa-check text-success"></i>&nbsp;Confirm';
-                        } else if (full['confirmstatus'] == 2) {
+                        } else if (full['confirm'] == 2) {
                             html += '<i class="fas fa-times text-danger"></i>&nbsp;Cancelled';
                         } else {
                             html += '<i class="fas fa-times text-danger"></i>&nbsp;Not Confirm';
                         }
                         return html;
                     }
-                },
-                {
-                    "data": "trackingno"
                 },
                 {
                     "targets": -1,
@@ -692,68 +650,74 @@ include "include/topnavbar.php";
                         var button = '';
                         button +=
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
-                            full['idtbl_porder'] + '" name="' + full['confirmstatus'] +
+                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="far fa-eye"></i></button>';
                         if (usertype == 2 || usertype == 1) {
                             button +=
                                 '<button class="btn btn-outline-secondary btn-sm btneditorder mr-1" id="' +
-                                full['idtbl_porder'] +
+                                full['idtbl_customer_order'] +
                                 '"><i class="fas fa-pen"></i></button>';
                         }
                         if (full['status'] == 2) {
                             button +=
                                 '<button class="btn btn-secondary btn-sm btnreactive mr-1" id="' +
-                                full['idtbl_porder'] +
+                                full['idtbl_customer_order'] +
                                 '"><i class="fas fa-check"></i></button>';
                         }
-                        if (full['status'] == 1) {
+                        if (full['status'] == 1 && full['confirm'] == null) {
                             button +=
-                                '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
-                                full['idtbl_porder'] +
-                                '"><i class="fas fa-print"></i></button>';
+                                '<button class="btn btn-warning btn-sm btnConfirm mr-1" data-toggle="tooltip" data-placement="bottom" title="Confirm Order" name="' + full['confirm'] +
+                            '" id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-times"></i></button>';
+                        }else if(full['status'] == 1 && full['confirm'] == 1) {
+                             button += '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Confirmed"  id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-check"></i></button>';
+                        }
+                        
+                        if (full['status'] == 1 && full['confirm'] == 1 && full['dispatchissue'] == null) {
+                            button +=
+                                '<button class="btn btn-warning btn-sm btnDispatch mr-1" data-toggle="tooltip" data-placement="bottom" title="Dispatch Order" name="' + full['confirm'] +
+                            '" id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-paper-plane"></i></button>';
+                        }else if(full['status'] == 1 && full['confirm'] == 1 && full['dispatchissue'] == 1) {
+                             button += '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Dispatched"  id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-paper-plane"></i></button>';
                         }
 
-                        if (full['callstatus'] == 0 && full['status'] == 1) {
+                        if (full['status'] == 1 && full['confirm'] == 1 && full['dispatchissue'] == 1 && full['delivered'] == null) {
                             button +=
-                                '<button class="btn btn-danger btn-sm btncall mr-1" data-toggle="tooltip" data-placement="bottom" title="Call to customer" id="' +
-                                full['idtbl_porder'] +
-                                '"><i class="fas fa-phone"></i></button>';
-                        } else if (full['status'] == 1) {
-                            button +=
-                                '<button class="btn btn-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Call completed" ><i class="fas fa-phone"></i></button>';
+                                '<button class="btn btn-warning btn-sm btnDeliver mr-1" data-toggle="tooltip" data-placement="bottom" title="Deliver Order" name="' + full['confirm'] +
+                            '" id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-truck"></i></button>';
+                        }else if(full['status'] == 1 && full['confirm'] == 1 && full['dispatchissue'] == 1 && full['delivered'] == 1) {
+                             button += '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Delivered"  id="' +
+                                full['idtbl_customer_order'] +
+                                '"><i class="fa fa-truck"></i></button>';
                         }
-
-                        if (full['status'] == 1) {
-                            button +=
-                                '<button class="btn btn-outline-secondary btn-sm btntracking mr-1" id="' +
-                                full['idtbl_porder'] +
-                                '"><i class="fas fa-map-marker-alt"></i></button>'
-                        }
-
-                        if (full['confirmstatus'] == 0 && full['status'] == 1) {
-                            button +=
-                                '<button class="btn btn-outline-orange btn-sm btnaccept mr-1" data-toggle="tooltip" data-placement="bottom" title="Not Accept Order" id="' +
-                                full['idtbl_porder'] +
-                                '"><i class="fas fa-times"></i></button>';
-                        } else if (full['confirmstatus'] == 1 && full['status'] == 1) {
-                            button +=
-                                '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
-                        }
-
-                        // if(full['paystatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btnpayment" data-toggle="tooltip" data-placement="bottom" title="Payment not Completed" id="'+full['idtbl_porder']+'"><i class="fas fa-money-bill-alt"></i></button>';}
-                        // else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 btnpaydone" data-toggle="tooltip" data-placement="bottom" title="Payment Completed" id="'+full['idtbl_porder']+'"><i class="fas fa-money-bill-alt"></i></button>';}
-
-                        // if(full['shipstatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btnship" data-toggle="tooltip" data-placement="bottom" title="Order not ship" id="'+full['idtbl_porder']+'"><i class="fas fa-dolly"></i></button>';}
-                        // else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Order shipped"><i class="fas fa-dolly"></i></button>';}
-
-                        // if(full['deliverystatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btndelivery" data-toggle="tooltip" data-placement="bottom" title="Delivery not completed" id="'+full['idtbl_porder']+'"><i class="fas fa-truck"></i></button>';}
-                        // else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Delivery completed"><i class="fas fa-truck"></i></button>';}
-
-                        // if(full['deliverystatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="'+full['idtbl_porder']+'"><i class="fas fa-window-close"></i></button><button class="btn btn-primary btn-sm btnreturn" id="'+full['idtbl_porder']+'"><i class="fas fa-redo-alt"></i></button>';}
-                        if (full['deliverystatus'] == 0 && full['status'] == 1) {
+                        // if (full['status'] == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fas fa-print"></i></button>';
+                        // }
+                        // if (full['confirm'] == 0 && full['status'] == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-orange btn-sm btnaccept mr-1" data-toggle="tooltip" data-placement="bottom" title="Not Accept Order" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fas fa-times"></i></button>';
+                        // } else if (full['confirm'] == 1 && full['status'] == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
+                        // }
+                        if (full['delivered'] == 0 && full['status'] == 1) {
                             button +=
                                 '<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="' +
-                                full['idtbl_porder'] +
+                                full['idtbl_customer_order'] +
                                 '"><i class="fas fa-window-close"></i></button>';
                         }
                         return button;
@@ -784,15 +748,6 @@ include "include/topnavbar.php";
                 var type = '3';
                 statuschange(id, type);
             }
-        });
-        $('#dataTable tbody').on('click', '.btntracking', function() {
-
-            var id = $(this).attr('id');
-            $('#orderid').val(id);
-            // alert(id)
-            $('#modaltrack').modal('show');
-
-
         });
         $('#dataTable tbody').on('click', '.btneditorder', function() {
             recordID = $('#recordOption').val();
@@ -865,10 +820,7 @@ include "include/topnavbar.php";
                             records = JSON.parse(data);
                             console.log(records);
                             updateTable(records);
-
                         }
-
-
                     });
 
 
@@ -890,7 +842,151 @@ include "include/topnavbar.php";
             row.find('.totalsumshow').text(addCommas(totalprice));
 
             calculateTotaleditable();
+        });
 
+        $('#dataTable tbody').on('click', '.btnConfirm', function() {
+            var id = $(this).attr('id');
+            var confirmstatus = $(this).attr('name');
+
+            $('#hiddenpoid').val(id);
+            $.ajax({
+                type: "POST",
+                data: {
+                    orderID: id
+                },
+                url: 'getprocess/getcusorderlistaccoorderid.php',
+                success: function(result) { //console.log(result);
+                    var obj = JSON.parse(result);
+
+                    $('#divsubtotalview').html(obj.subtotal);
+                    $('#divdiscountview').html(obj.disamount);
+                    $('#divdiscountPOview').html(obj.po_amount);
+                    $('#divtotalview').html(obj.nettotalshow);
+                    $('#remarkview').html(obj.remark);
+                    $('#dcusname').html(obj.cusname);
+                    $('#dcuscontact').html(obj.cuscontact);
+                    $('#viewmodaltitle').html('Order No: PO-' + id);
+
+                    var objfirst = obj.tablelist;
+                    $.each(objfirst, function(i, item) {
+                        //alert(objfirst[i].id);
+
+                        $('#tableorderview > tbody:last').append('<tr><td>' +
+                            objfirst[i].productname +
+                            '</td><td class="d-none">' + objfirst[i].productid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].newqty + '</td><td class="d-none">' +
+                            objfirst[i].freeproduct +
+                            '</td><td class="d-none">' + objfirst[i]
+                            .freeproductid + '</td><td class="text-center d-none">' +
+                            objfirst[i].freeqty +
+                            '</td><td class="text-right total">' + objfirst[i]
+                            .total + '</td><td class="d-none">' + objfirst[i]
+                            .unitprice + '</td></tr>');
+                    });
+                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Confirm');
+                    $('#btnUpdate').prop('disabled', false);
+                    $('#acceptanceType').val(1)
+                    
+                    $('#modalorderview').modal('show');
+                }
+            });
+        });
+        $('#dataTable tbody').on('click', '.btnDeliver', function() {
+            var id = $(this).attr('id');
+            var confirmstatus = $(this).attr('name');
+
+            $('#hiddenpoid').val(id);
+            $.ajax({
+                type: "POST",
+                data: {
+                    orderID: id
+                },
+                url: 'getprocess/getcusorderlistaccoorderid.php',
+                success: function(result) { //console.log(result);
+                    var obj = JSON.parse(result);
+
+                    $('#divsubtotalview').html(obj.subtotal);
+                    $('#divdiscountview').html(obj.disamount);
+                    $('#divdiscountPOview').html(obj.po_amount);
+                    $('#divtotalview').html(obj.nettotalshow);
+                    $('#remarkview').html(obj.remark);
+                    $('#dcusname').html(obj.cusname);
+                    $('#dcuscontact').html(obj.cuscontact);
+                    $('#viewmodaltitle').html('Order No: PO-' + id);
+
+                    var objfirst = obj.tablelist;
+                    $.each(objfirst, function(i, item) {
+                        //alert(objfirst[i].id);
+
+                        $('#tableorderview > tbody:last').append('<tr><td>' +
+                            objfirst[i].productname +
+                            '</td><td class="d-none">' + objfirst[i].productid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].newqty + '</td><td class="d-none">' +
+                            objfirst[i].freeproduct +
+                            '</td><td class="d-none">' + objfirst[i]
+                            .freeproductid + '</td><td class="text-center d-none">' +
+                            objfirst[i].freeqty +
+                            '</td><td class="text-right total">' + objfirst[i]
+                            .total + '</td><td class="d-none">' + objfirst[i]
+                            .unitprice + '</td></tr>');
+                    });
+                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
+                    $('#btnUpdate').prop('disabled', false);
+                    $('#acceptanceType').val(3)
+                    
+                    $('#modalorderview').modal('show');
+                }
+            });
+        });
+        $('#dataTable tbody').on('click', '.btnDispatch', function() {
+            var id = $(this).attr('id');
+            var confirmstatus = $(this).attr('name');
+
+            $('#hiddenpoid').val(id);
+            $.ajax({
+                type: "POST",
+                data: {
+                    orderID: id
+                },
+                url: 'getprocess/getcusorderlistaccoorderid.php',
+                success: function(result) { //console.log(result);
+                    var obj = JSON.parse(result);
+
+                    $('#divsubtotalview').html(obj.subtotal);
+                    $('#divdiscountview').html(obj.disamount);
+                    $('#divdiscountPOview').html(obj.po_amount);
+                    $('#divtotalview').html(obj.nettotalshow);
+                    $('#remarkview').html(obj.remark);
+                    $('#dcusname').html(obj.cusname);
+                    $('#dcuscontact').html(obj.cuscontact);
+                    $('#viewmodaltitle').html('Order No: PO-' + id);
+
+                    var objfirst = obj.tablelist;
+                    $.each(objfirst, function(i, item) {
+                        //alert(objfirst[i].id);
+
+                        $('#tableorderview > tbody:last').append('<tr><td>' +
+                            objfirst[i].productname +
+                            '</td><td class="d-none">' + objfirst[i].productid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].newqty + '</td><td class="d-none">' +
+                            objfirst[i].freeproduct +
+                            '</td><td class="d-none">' + objfirst[i]
+                            .freeproductid + '</td><td class="text-center d-none">' +
+                            objfirst[i].freeqty +
+                            '</td><td class="text-right total">' + objfirst[i]
+                            .total + '</td><td class="d-none">' + objfirst[i]
+                            .unitprice + '</td></tr>');
+                    });
+                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Dispatch');
+                    $('#btnUpdate').prop('disabled', false);
+                    $('#acceptanceType').val(2)
+                    
+                    $('#modalorderview').modal('show');
+                }
+            });
         });
 
         $('#dataTable tbody').on('click', '.btncall', function() {
@@ -1092,11 +1188,12 @@ include "include/topnavbar.php";
                     orderID: id
                 },
                 url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function(result) { //alert(result);
+                success: function(result) { //console.log(result);
                     var obj = JSON.parse(result);
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
+                    $('#divdiscountPOview').html(obj.po_amount);
                     $('#divtotalview').html(obj.nettotalshow);
                     $('#remarkview').html(obj.remark);
                     $('#dcusname').html(obj.cusname);
@@ -1111,10 +1208,10 @@ include "include/topnavbar.php";
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
                             '</td><td class="text-center editnewqty">' +
-                            objfirst[i].newqty + '</td><td class="">' +
+                            objfirst[i].newqty + '</td><td class="d-none">' +
                             objfirst[i].freeproduct +
                             '</td><td class="d-none">' + objfirst[i]
-                            .freeproductid + '</td><td class="text-center">' +
+                            .freeproductid + '</td><td class="text-center d-none">' +
                             objfirst[i].freeqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
@@ -1433,7 +1530,7 @@ include "include/topnavbar.php";
                         recordID: recordID
                     },
                     url: 'process/customerporderprocess.php',
-                    success: function(result) { //alert(result);
+                    success: function(result) { //console.log(result);
                         $('#modalcreateorder').modal('hide');
                         action(result);
                         setTimeout(function() {
@@ -1458,6 +1555,7 @@ include "include/topnavbar.php";
             // console.log(jsonObj);
 
             var poID = $('#hiddenpoid').val();
+            var acceptanceType = $('#acceptanceType').val();
 
 
             var discount = $('#divdiscountview').text();
@@ -1476,6 +1574,7 @@ include "include/topnavbar.php";
                 data: {
                     poID: poID,
                     tableData: jsonObj,
+                    acceptanceType: acceptanceType,
                     discount: cleandiscount,
                     nettotal: clearnettotal,
                     total: cleartotal,
