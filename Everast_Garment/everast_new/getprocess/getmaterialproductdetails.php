@@ -1,4 +1,6 @@
 <?php
+
+// NOT IN USE
 require_once('../connection/db.php');
 
 $productid = $_POST['recordID'];

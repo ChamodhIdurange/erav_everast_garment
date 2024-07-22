@@ -2,6 +2,7 @@
 require_once('../connection/db.php');
 $productid = $_POST['productID'];
 
+// NOT IN USE
 $sql = "SELECT `m`.`materialname`, `m`.`idtbl_material`, `pm`.`qty`, `pm`.`idtbl_product_materials` FROM `tbl_material` AS `m` JOIN `tbl_product_materials` AS `pm` ON (`m`.`idtbl_material` = `pm`.`tbl_material_idtbl_material`) WHERE `pm`.`status`=1 AND `pm`.`tbl_product_idtbl_product` = '$productid'";
 $result = $conn->query($sql);
 

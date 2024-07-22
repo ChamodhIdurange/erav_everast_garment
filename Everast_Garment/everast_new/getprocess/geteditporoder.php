@@ -14,10 +14,8 @@ $result2 = $conn->query($sql2);
 $row2 = $result2->fetch_assoc();
 
 $sql3 = "SELECT `subtotal` FROM `tbl_porder` WHERE `idtbl_porder`= '$recordID'";
-
 $result3 = $conn->query($sql3);
 $row3 = $result3->fetch_assoc();
-
 
 
 $obj = new stdClass();

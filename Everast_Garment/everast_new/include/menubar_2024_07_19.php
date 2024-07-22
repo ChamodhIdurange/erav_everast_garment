@@ -473,6 +473,11 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 104, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 104, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 104, 4);
+}else if ($lastElement == 'creditnote.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 105, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 105, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 105, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 105, 4);
 }
 function checkprivilege($arraymenu, $menuID, $type)
 {
@@ -534,14 +539,14 @@ function checkprivilege($arraymenu, $menuID, $type)
             <!-- Added by Chamodh -->
         <?php }
                 if (menucheck($menuprivilegearray, 101) == 1 | menucheck($menuprivilegearray, 102) == 1) { ?>
-            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseproduct" aria-expanded="false" aria-controls="collapseproduct">
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseproductcatalog" aria-expanded="false" aria-controls="collapseproduct">
                 <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
                 Product Catalog
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
             <div class="collapse <?php if ($lastElement == "productcatalog.php" | $lastElement == "catalogcategoies.php") {
                                         echo 'show';
-                                    } ?>" id="collapseproduct" data-parent="#accordionSidenav">
+                                    } ?>" id="collapseproductcatalog" data-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                     <?php if (menucheck($menuprivilegearray, 102) == 1) { ?>
                         <a class="nav-link p-0 px-3 py-1" href="catalogcategoies.php">Categories</a>
@@ -734,7 +739,14 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <?php } ?>
                 </nav>
             </div>
+            <?php }
+                if (menucheck($menuprivilegearray, 105) == 1) { ?>
+            <a class="nav-link p-0 px-3 py-2" href="creditnote.php">
+                <div class="nav-link-icon"><i data-feather="file"></i></div>
+                Credit Note
+            </a>
         <?php } ?>
+        
         <!-- 2021/12/25 -->
         <?php if (menucheck($menuprivilegearray, 86) == 1 | menucheck($menuprivilegearray, 87) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsefreeissue" aria-expanded="false" aria-controls="collapsefreeissue">

@@ -1,7 +1,7 @@
 <?php
 $sessionusertype = $_SESSION['type'];
 
-$sqlnotfication = "SELECT COUNT(`idtbl_porder`) AS `count` FROM `tbl_porder` WHERE `confirmstatus` = '0'";
+$sqlnotfication = "SELECT COUNT(`idtbl_customer_order`) AS `count` FROM `tbl_customer_order` WHERE `confirm` = '0'";
 $resultnotfication = $conn->query($sqlnotfication);
 
 $sqlnotficationre = "SELECT COUNT(`idtbl_return`) AS `count` FROM `tbl_return` WHERE `acceptance_status` = '0'";
