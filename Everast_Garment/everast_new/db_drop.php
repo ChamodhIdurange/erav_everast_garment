@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli('localhost', 'root', 'asela123' , 'erav_ansengas');
+$mysqli = new mysqli('localhost', 'root', '' , 'erav_ansengas');
 $mysqli->query('SET foreign_key_checks = 0');
 if ($result = $mysqli->query("SHOW TABLES"))
 {
