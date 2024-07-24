@@ -106,7 +106,8 @@ include "include/topnavbar.php";
     </div>
 </div>
 <!-- Modal order view -->
-<div class="modal fade" id="modalorderview" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalorderview" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header p-2">
@@ -179,7 +180,8 @@ include "include/topnavbar.php";
     </div>
 </div>
 <!-- Modal Invoice Create -->
-<div class="modal fade" id="modalinvoicecreate" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalinvoicecreate" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header p-2">
@@ -196,9 +198,11 @@ include "include/topnavbar.php";
                             <div class="form-group mb-1">
                                 <label class="small font-weight-bold text-dark">Order Date*</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control dpd1a" placeholder="" name="orderdate" id="orderdate" value="" readonly>
+                                    <input type="text" class="form-control dpd1a" placeholder="" name="orderdate"
+                                        id="orderdate" value="" readonly>
                                     <div class="input-group-append">
-                                        <span class="btn btn-light border-gray-500"><i class="far fa-calendar"></i></span>
+                                        <span class="btn btn-light border-gray-500"><i
+                                                class="far fa-calendar"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -310,7 +314,9 @@ include "include/topnavbar.php";
                             <textarea name="remark" id="remark" class="form-control form-control-sm"></textarea>
                         </div>
                         <div class="form-group mt-2">
-                            <button type="button" id="btncreateinvoice" class="btn btn-outline-primary btn-sm fa-pull-right" <?php if ($addcheck == 0) {
+                            <button type="button" id="btncreateinvoice"
+                                class="btn btn-outline-primary btn-sm fa-pull-right"
+                                <?php if ($addcheck == 0) {
                                                                                                                                     echo 'disabled';
                                                                                                                                 } ?>><i class="fas fa-save"></i>&nbsp;Create
                                 Invoice</button>
@@ -321,7 +327,8 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalcreateorder" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalcreateorder" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header p-2">
@@ -338,9 +345,11 @@ include "include/topnavbar.php";
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Order Date*</label>
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control dpd1a" placeholder="" name="orderdate1" id="orderdate1" required>
+                                        <input type="text" class="form-control dpd1a" placeholder="" name="orderdate1"
+                                            id="orderdate1" required>
                                         <div class="input-group-append">
-                                            <span class="btn btn-light border-gray-500"><i class="far fa-calendar"></i></span>
+                                            <span class="btn btn-light border-gray-500"><i
+                                                    class="far fa-calendar"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -350,20 +359,21 @@ include "include/topnavbar.php";
                                         <option value="">Select</option>
                                         <?php if ($resulthelperlist1->num_rows > 0) {
                                             while ($rowemplist1 = $resulthelperlist1->fetch_assoc()) { ?>
-                                                <option value="<?php echo $rowemplist1['idtbl_employee'] ?>">
-                                                    <?php echo $rowemplist1['name'] ?></option>
+                                        <option value="<?php echo $rowemplist1['idtbl_employee'] ?>">
+                                            <?php echo $rowemplist1['name'] ?></option>
                                         <?php }
                                         } ?>
                                     </select>
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Location*</label>
-                                    <select class="form-control form-control-sm" name="location1" id="location1" required>
+                                    <select class="form-control form-control-sm" name="location1" id="location1"
+                                        required>
                                         <option value="">Select</option>
                                         <?php if ($resultlocationlist1->num_rows > 0) {
                                             while ($rowloclist = $resultlocationlist1->fetch_assoc()) { ?>
-                                                <option value="<?php echo $rowloclist['idtbl_locations'] ?>">
-                                                    <?php echo $rowloclist['locationname'] ?></option>
+                                        <option value="<?php echo $rowloclist['idtbl_locations'] ?>">
+                                            <?php echo $rowloclist['locationname'] ?></option>
                                         <?php }
                                         } ?>
                                     </select>
@@ -377,7 +387,9 @@ include "include/topnavbar.php";
 
                                 <div class="form-group mb-2 col-3" id="directcustomerdiv" hidden>
                                     <label class="small font-weight-bold text-dark">Customers*</label>
-                                    <input type="text" placeholder="Enter customer name" class="form-control form-control-sm" name="directcustomer" id="directcustomer" readonly></input>
+                                    <input type="text" placeholder="Enter customer name"
+                                        class="form-control form-control-sm" name="directcustomer" id="directcustomer"
+                                        readonly></input>
                                 </div>
 
                                 <div class="form-group mb-2 col-3" id="customerdiv">
@@ -388,25 +400,29 @@ include "include/topnavbar.php";
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Customer address*</label>
-                                    <input type="text" id="customeraddress" name="customeraddress" class="form-control form-control-sm" readonly>
+                                    <input type="text" id="customeraddress" name="customeraddress"
+                                        class="form-control form-control-sm" readonly>
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Customer contact*</label>
-                                    <input type="text" id="customercontact" name="customercontact" class="form-control form-control-sm" readonly>
+                                    <input type="text" id="customercontact" name="customercontact"
+                                        class="form-control form-control-sm" readonly>
                                 </div>
 
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Discount %</label>
-                                    <input type="number" id="discountpresentage" name="discountpresentage" class="form-control form-control-sm" value="25">
+                                    <input type="number" id="discountpresentage" name="discountpresentage"
+                                        class="form-control form-control-sm" value="25">
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Common name*</label>
-                                    <select class="form-control form-control-sm" name="productcommonname" id="productcommonname">
+                                    <select class="form-control form-control-sm" name="productcommonname"
+                                        id="productcommonname">
                                         <option value="">Select</option>
                                         <?php if ($resultcommonnames1->num_rows > 0) {
                                             while ($rowcommonname = $resultcommonnames1->fetch_assoc()) { ?>
-                                                <option value="<?php echo $rowcommonname['common_name'] ?>">
-                                                    <?php echo $rowcommonname['common_name'] ?></option>
+                                        <option value="<?php echo $rowcommonname['common_name'] ?>">
+                                            <?php echo $rowcommonname['common_name'] ?></option>
                                         <?php }
                                         } ?>
                                     </select>
@@ -428,27 +444,33 @@ include "include/topnavbar.php";
                                 <div class="form-row mb-1 col-3">
                                     <div class="col">
                                         <label class="small font-weight-bold text-dark">Qty*</label>
-                                        <input type="text" id="newqty" name="newqty" class="form-control form-control-sm" value="0" required>
+                                        <input type="text" id="newqty" name="newqty"
+                                            class="form-control form-control-sm" value="0" required>
                                     </div>
                                     <div class="col">
                                         <label class="small font-weight-bold text-dark">Free Qty</label>
-                                        <input type="text" id="freeqty" name="freeqty" class="form-control form-control-sm" value="0">
+                                        <input type="text" id="freeqty" name="freeqty"
+                                            class="form-control form-control-sm" value="0">
                                     </div>
                                 </div>
                                 <div class="form-group mb-1 col-3">
                                     <label class="small font-weight-bold text-dark">Free Product</label>
-                                    <input type="text" id="freeproductname" name="freeproductname" class="form-control form-control-sm" readonly>
+                                    <input type="text" id="freeproductname" name="freeproductname"
+                                        class="form-control form-control-sm" readonly>
                                 </div>
                                 <div class="form-group mb-1 col-3">
                                     <label class="small font-weight-bold text-dark">Sale Price</label>
-                                    <input type="text" id="saleprice" name="saleprice" class="form-control form-control-sm" value="0" readonly>
+                                    <input type="text" id="saleprice" name="saleprice"
+                                        class="form-control form-control-sm" value="0" readonly>
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">PO Discount %</label>
-                                    <input type="number" id="discountpo" name="discountpo" class="form-control form-control-sm" value="0">
+                                    <input type="number" id="discountpo" name="discountpo"
+                                        class="form-control form-control-sm" value="0">
                                 </div>
                                 <div class="form-group mt-4 col-3">
-                                    <button type="button" id="formsubmit" class="btn btn-outline-primary btn-sm" <?php if ($addcheck == 0) {
+                                    <button type="button" id="formsubmit" class="btn btn-outline-primary btn-sm"
+                                        <?php if ($addcheck == 0) {
                                                                                                                         echo 'disabled';
                                                                                                                     } ?>><i class="fas fa-plus"></i>&nbsp;Add
                                         Product</button>
@@ -524,11 +546,13 @@ include "include/topnavbar.php";
                         <div class="form-group col-4">
                             <label class="small font-weight-bold text-dark">Payment option</label><br>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentoption1" name="paymentoption" class="custom-control-input" value="0" checked>
+                                <input type="radio" id="paymentoption1" name="paymentoption"
+                                    class="custom-control-input" value="0" checked>
                                 <label class="custom-control-label" for="paymentoption1">Cash on Delivery</label>
                             </div>
                             <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentoption2" name="paymentoption" class="custom-control-input" value="1">
+                                <input type="radio" id="paymentoption2" name="paymentoption"
+                                    class="custom-control-input" value="1">
                                 <label class="custom-control-label" for="paymentoption2">Credit</label>
                             </div>
                         </div>
@@ -540,7 +564,8 @@ include "include/topnavbar.php";
 
 
                     <div class="form-group mt-2">
-                        <button type="button" id="btncreateorder" class="btn btn-outline-primary btn-sm fa-pull-right" <?php if ($addcheck == 0) {
+                        <button type="button" id="btncreateorder" class="btn btn-outline-primary btn-sm fa-pull-right"
+                            <?php if ($addcheck == 0) {
                                                                                                                             echo 'disabled';
                                                                                                                         } ?>><i class="fas fa-save"></i>&nbsp;Create
                             Order</button>
@@ -560,7 +585,7 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     var prodCount = 0;
-    $(document).ready(function() {
+    $(document).ready(function () {
         checkdayendprocess();
         $("#helpername").select2();
 
@@ -597,7 +622,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": '',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         return 'PO0' + full['tbl_porder_idtbl_porder'];
                     }
                 },
@@ -614,7 +639,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         return parseFloat(full['subtotal']).toFixed(2);
                     }
                 },
@@ -622,7 +647,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         return parseFloat(full['disamount']).toFixed(2);
                     }
                 },
@@ -630,7 +655,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         return parseFloat(full['nettotal']).toFixed(2);
                     }
                 },
@@ -638,7 +663,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
                         if (full['confirmstatus'] == 1) {
                             html += '<i class="fas fa-check text-success"></i>&nbsp;Confirm';
@@ -654,7 +679,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
                         if (full['shipstatus'] == 1) {
                             html += '<i class="fas fa-check text-success"></i>&nbsp;Shipped';
@@ -668,7 +693,7 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
                         if (full['deliverystatus'] == 1) {
                             html += '<i class="fas fa-check text-success"></i>&nbsp;Delivered';
@@ -686,11 +711,12 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var button = '';
                         button +=
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1" id="' +
-                            full['tbl_porder_idtbl_porder'] + '"><i class="far fa-eye"></i></button>';
+                            full['tbl_porder_idtbl_porder'] +
+                            '"><i class="far fa-eye"></i></button>';
                         //  if (usertype == 2 || usertype == 1) {
                         button +=
                             '<button class="btn btn-outline-secondary btn-sm btneditorder mr-1" id="' +
@@ -702,7 +728,8 @@ include "include/topnavbar.php";
                             '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
                         button +=
                             '<button class="btn btn-outline-primary btn-sm mr-1 btninvoice" data-toggle="tooltip" data-placement="bottom" title="Create Invoice" id="' +
-                            full['tbl_porder_idtbl_porder'] + '"><i class="far fa-file-alt"></i></button>';
+                            full['tbl_porder_idtbl_porder'] +
+                            '"><i class="far fa-file-alt"></i></button>';
 
                         return button;
                     }
@@ -710,9 +737,9 @@ include "include/topnavbar.php";
             ]
         });
 
-        $('#btnordercreate').click(function() {
+        $('#btnordercreate').click(function () {
             $('#modalcreateorder').modal('show');
-            $('#modalcreateorder').on('shown.bs.modal', function() {
+            $('#modalcreateorder').on('shown.bs.modal', function () {
                 $('#orderdate1').trigger('focus');
             })
         });
@@ -720,7 +747,7 @@ include "include/topnavbar.php";
         // $('#orderdate1').change(function() {
         //     $('#repnam2').focus();
         // });
-        $('#dataTable tbody').on('click', '.btneditorder', function() {
+        $('#dataTable tbody').on('click', '.btneditorder', function () {
             recordID = $('#recordOption').val();
             // alert(recordID);
             var id = $(this).attr('id');
@@ -733,7 +760,7 @@ include "include/topnavbar.php";
                     recordID: id
                 },
                 url: 'getprocess/getwerehouseedit.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     //  console.log(result);
                     var obj = JSON.parse(result);
                     // alert(obj.name);
@@ -789,7 +816,7 @@ include "include/topnavbar.php";
                             recordID: id
                         },
                         url: 'getprocess/geteditwarehousetable.php',
-                        success: function(data) {
+                        success: function (data) {
                             records = JSON.parse(data);
                             updateTable(records);
 
@@ -805,7 +832,7 @@ include "include/topnavbar.php";
 
         });
 
-        $('#area1').change(function() {
+        $('#area1').change(function () {
             var repId = $('#repname2').val();
             var areaID = $(this).val();
 
@@ -817,12 +844,12 @@ include "include/topnavbar.php";
                     repId: repId
                 },
                 url: 'getprocess/getcustomerlistaccoarea.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     var objfirst = JSON.parse(result);
 
                     var html = '';
                     html += '<option value="">Select</option>';
-                    $.each(objfirst, function(i, item) {
+                    $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
                         html += '<option value="' + objfirst[i].id + '">';
                         html += objfirst[i].name;
@@ -833,7 +860,7 @@ include "include/topnavbar.php";
                 }
             });
         })
-        $('#repname2').change(function() {
+        $('#repname2').change(function () {
             var areaID = $('#area1').val();
             var repId = $(this).val();
 
@@ -863,12 +890,12 @@ include "include/topnavbar.php";
                     repId: repId
                 },
                 url: 'getprocess/getareasaccoemployee.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     var objfirst = JSON.parse(result);
 
                     var html = '';
                     html += '<option value="">Select</option>';
-                    $.each(objfirst, function(i, item) {
+                    $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
                         html += '<option value="' + objfirst[i].id + '">';
                         html += objfirst[i].name;
@@ -880,7 +907,7 @@ include "include/topnavbar.php";
             });
         })
 
-        $('#productcommonname').change(function() {
+        $('#productcommonname').change(function () {
             var productcommonname = $('#productcommonname option:selected').val();
             var value = '';
 
@@ -890,11 +917,11 @@ include "include/topnavbar.php";
                     productcommonname: productcommonname
                 },
                 url: 'getprocess/getproductsaccocommonname.php',
-                success: function(result) { // alert(result);
+                success: function (result) { // alert(result);
                     var objfirst = JSON.parse(result);
                     var html1 = '';
                     html1 += '<option value="">Select</option>';
-                    $.each(objfirst, function(i, item) {
+                    $.each(objfirst, function (i, item) {
                         // alert(objfirst[i].id);
                         html1 += '<option value="' + objfirst[i].id + '">';
                         html1 += objfirst[i].name;
@@ -911,7 +938,7 @@ include "include/topnavbar.php";
 
         })
 
-        $('#product').change(function() {
+        $('#product').change(function () {
             var productID = $(this).val();
             var customerID = $('#customer').val();
             var customerType = $('#hiddencustomertype').val();
@@ -923,7 +950,7 @@ include "include/topnavbar.php";
                     customerType: customerType
                 },
                 url: 'getprocess/getsalpriceaccoproductcustomer.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     var obj = JSON.parse(result);
                     $('#unitprice').val(obj.unitprice);
                     $('#saleprice').val(obj.saleprice);
@@ -936,7 +963,7 @@ include "include/topnavbar.php";
             });
         });
 
-        $("#formsubmit").click(function() {
+        $("#formsubmit").click(function () {
             if (!$("#createorderform")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
@@ -953,108 +980,80 @@ include "include/topnavbar.php";
             var repID = $('#repname2').val();
             var orderdate = $('#orderdate1').val();
 
-            $.ajax({
-                type: 'POST',
-                data: {
-                    productID: productID,
-                    repID: repID,
-                    orderdate: orderdate
-                },
-                url: 'getprocess/checkemptarget.php',
-                success: function(result) {
-                    var obj = JSON.parse(result);
-                    var val = obj.count
+            prodCount++;
+            var discount = parseFloat($('#discountpresentage').val());
+            var productID = $('#product').val();
+            var product = $("#product option:selected").text();
+            var unitprice = parseFloat($('#unitprice').val());
+            var saleprice = parseFloat($('#saleprice').val());
+            var newqty = parseFloat($('#newqty').val());
+            var freeqty = parseFloat($('#freeqty').val());
 
-                    //Change below to if(val > 0)
-                    if (true) {
+            var freeproductname = $('#freeproductname').val();
+            var freeproductid = $('#freeproductid').val();
 
-                        prodCount++;
-                        var discount = parseFloat($('#discountpresentage').val());
-                        var productID = $('#product').val();
-                        var product = $("#product option:selected").text();
-                        var unitprice = parseFloat($('#unitprice').val());
-                        var saleprice = parseFloat($('#saleprice').val());
-                        var newqty = parseFloat($('#newqty').val());
-                        var freeqty = parseFloat($('#freeqty').val());
+            var newtotal = parseFloat(saleprice * newqty);
+            var totalqty = parseFloat(freeqty + newqty);
 
-                        var freeproductname = $('#freeproductname').val();
-                        var freeproductid = $('#freeproductid').val();
+            var total = parseFloat(newtotal);
+            var showtotal = addCommas(parseFloat(total).toFixed(2));
 
-                        var newtotal = parseFloat(saleprice * newqty);
-                        var totalqty = parseFloat(freeqty + newqty);
+            $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td>' +
+                product +
+                '</td><td class="d-none">' + productID +
+                '</td><td class="d-none">' + unitprice +
+                '</td><td class="d-none">' + saleprice +
+                '</td><td class="text-center">' + newqty + '</td><td class="">' +
+                freeproductname + '</td><td class="d-none">' + freeproductid +
+                '</td><td class="text-center">' + freeqty +
+                '</td><td class="text-center">' + totalqty +
+                '</td><td class="text-right">' + addCommas(saleprice.toFixed(2)) +
+                '</td><td class="total1 d-none">' + total +
+                '</td><td class="text-right">' + showtotal + '</td><td class="d-none">' + saleprice +
+                '</td><td class="d-none"></td></tr>');
 
-                        var total = parseFloat(newtotal);
-                        var showtotal = addCommas(parseFloat(total).toFixed(2));
+            $('#product').val('');
+            $('#unitprice').val('');
+            $('#saleprice').val('');
+            $('#newqty').val('0');
+            $('#freeqty').val('0');
+            $('#freeproductname').val('');
+            $('#freeproductid').val('0');
 
-                        $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td>' + product +
-                            '</td><td class="d-none">' + productID +
-                            '</td><td class="d-none">' + unitprice +
-                            '</td><td class="d-none">' + saleprice +
-                            '</td><td class="text-center">' + newqty + '</td><td class="">' +
-                            freeproductname + '</td><td class="d-none">' + freeproductid +
-                            '</td><td class="text-center">' + freeqty +
-                            '</td><td class="text-center">' + totalqty +
-                            '</td><td class="text-right">' + addCommas(saleprice.toFixed(2)) +
-                            '</td><td class="total1 d-none">' + total +
-                            '</td><td class="text-right">' + showtotal + '</td><td class="d-none">' + saleprice +
-                            '</td><td class="d-none"></td></tr>');
+            var sum = 0;
+            $(".total1").each(function () {
+                sum += parseFloat($(this).text());
+            });
+            var discount = parseFloat($('#discountpresentage').val());
+            var discountpo = parseFloat($('#discountpo').val());
+            var disvalue = (sum * discount) / 100;
+            var nettotal = sum - disvalue;
+            var disvaluepo = (nettotal * discountpo) / 100;
+            var nettotal = nettotal - disvaluepo;
 
-                        $('#product').val('');
-                        $('#unitprice').val('');
-                        $('#saleprice').val('');
-                        $('#newqty').val('0');
-                        $('#freeqty').val('0');
-                        $('#freeproductname').val('');
-                        $('#freeproductid').val('0');
+            var showsum = addCommas(parseFloat(sum).toFixed(2));
+            var showdis = addCommas(parseFloat(disvalue).toFixed(2));
+            var showdispo = addCommas(parseFloat(disvaluepo).toFixed(2));
+            var shownettotal = addCommas(parseFloat(nettotal).toFixed(2));
 
-                        var sum = 0;
-                        $(".total1").each(function() {
-                            sum += parseFloat($(this).text());
-                        });
-                        var discount = parseFloat($('#discountpresentage').val());
-                        var discountpo = parseFloat($('#discountpo').val());
-                        var disvalue = (sum * discount) / 100;
-                        var nettotal = sum - disvalue;
-                        var disvaluepo = (nettotal * discountpo) / 100;
-                        var nettotal = nettotal - disvaluepo;
-
-                        var showsum = addCommas(parseFloat(sum).toFixed(2));
-                        var showdis = addCommas(parseFloat(disvalue).toFixed(2));
-                        var showdispo = addCommas(parseFloat(disvaluepo).toFixed(2));
-                        var shownettotal = addCommas(parseFloat(nettotal).toFixed(2));
-
-                        $('#divsubtotal1').html('Rs. ' + showsum);
-                        $('#hidetotalorder1').val(sum);
-                        $('#divdiscount1').html('Rs. ' + showdis);
-                        $('#divdiscountPO1').html('Rs. ' + showdispo);
-                        $('#hidediscount1').val(disvalue);
-                        $('#hidediscountPO1').val(disvaluepo);
-                        $('#divtotal1').html('Rs. ' + shownettotal);
-                        $('#hidenettotalorder1').val(nettotal);
-                        $('#product').focus();
-                    } else {
-                        var productname = $("#product option:selected").text();
-
-                        $('#errordiv').empty().html(
-                            "  <div class='alert alert-danger alert-dismissible fade show' role='alert'><h5 id = 'errormessage'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>"
-                        )
-
-
-                        $('#errormessage').html("There is no targets for employee '" + repname +
-                            "' in the product " + productname)
-                    }
-                }
-            })
-
+            $('#divsubtotal1').html('Rs. ' + showsum);
+            $('#hidetotalorder1').val(sum);
+            $('#divdiscount1').html('Rs. ' + showdis);
+            $('#divdiscountPO1').html('Rs. ' + showdispo);
+            $('#hidediscount1').val(disvalue);
+            $('#hidediscountPO1').val(disvaluepo);
+            $('#divtotal1').html('Rs. ' + shownettotal);
+            $('#hidenettotalorder1').val(nettotal);
+            $('#product').focus();
         }
 
-        $('#tableorder').on('click', 'tr', function() {
+        $('#tableorder').on('click', 'tr', function () {
             var r = confirm("Are you sure, You want to remove this product ? ");
             if (r == true) {
                 $(this).closest('tr').remove();
 
                 var sum = 0;
-                $(".total1").each(function() {
+                $(".total1").each(function () {
                     sum += parseFloat($(this).text());
                 });
                 var discount = parseFloat($('#discountpresentage').val());
@@ -1081,14 +1080,14 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#btncreateorder').click(function() { //alert('IN');
+        $('#btncreateorder').click(function () { //alert('IN');
             var tbody = $("#tableorder tbody");
 
             if (tbody.children().length > 0) {
                 jsonObj = [];
-                $("#tableorder tbody tr").each(function() {
+                $("#tableorder tbody tr").each(function () {
                     item = {}
-                    $(this).find('td').each(function(col_idx) {
+                    $(this).find('td').each(function (col_idx) {
                         item["col_" + (col_idx + 1)] = $(this).text();
                     });
                     jsonObj.push(item);
@@ -1113,7 +1112,7 @@ include "include/topnavbar.php";
                 var paymentoption = $("input[name='paymentoption']:checked").val();
                 var recordOption = $('#recordOption').val();
                 var recordID = $('#recordID').val();
-               // console.log(discountpresentage + ',' + repname + ',' + total + ',' + discount + ',' + nettotal + ',' + recordOption + ',' + recordID + ',' + podiscount + ',' + podiscountamount);
+                // console.log(discountpresentage + ',' + repname + ',' + total + ',' + discount + ',' + nettotal + ',' + recordOption + ',' + recordID + ',' + podiscount + ',' + podiscountamount);
                 $.ajax({
                     type: "POST",
                     data: {
@@ -1133,15 +1132,15 @@ include "include/topnavbar.php";
                         directcustomer: directcustomer,
                         recordOption: recordOption,
                         recordID: recordID,
-                        podiscountamount:podiscountamount,
-                        podiscount:podiscount
+                        podiscountamount: podiscountamount,
+                        podiscount: podiscount
 
                     },
                     url: 'process/warehouseprocess.php',
                     success: function (result) { //alert(result);
                         $('#modalcreateorder').modal('hide');
                         action(result);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.location.reload();
 
                         }, 1500);
@@ -1150,7 +1149,7 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#dataTable tbody').on('click', '.btninvoice', function() {
+        $('#dataTable tbody').on('click', '.btninvoice', function () {
             $('#hiddenqtyflag').val(0)
             var id = $(this).attr('id');
             $('#hideorderid').val(id);
@@ -1160,7 +1159,7 @@ include "include/topnavbar.php";
                     orderID: id
                 },
                 url: 'getprocess/getorderdetailaccoorderid.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     var obj = JSON.parse(result);
                     $('#orderdate').val(obj.orderdate);
 
@@ -1175,7 +1174,8 @@ include "include/topnavbar.php";
                     $('#area').empty().append(htmlarea);
 
                     let htmllocation = '';
-                    htmllocation += '<option value="' + obj.idtbl_locations + '">' + obj.locationname +
+                    htmllocation += '<option value="' + obj.idtbl_locations + '">' + obj
+                        .locationname +
                         '</option>'
                     $('#location').empty().append(htmllocation);
 
@@ -1184,9 +1184,10 @@ include "include/topnavbar.php";
                         .cusname + '</option>'
                     $('#customer').empty().append(htmlcustomer);
 
-                    $('#divsubtotal').html(addCommas(parseFloat(obj.subtotal).toFixed(2))); 
+                    $('#divsubtotal').html(addCommas(parseFloat(obj.subtotal).toFixed(2)));
                     $('#divdiscount').html(addCommas(parseFloat(obj.disamount).toFixed(2)));
-                    $('#divdiscountpo').html(addCommas(parseFloat(obj.po_amount).toFixed(2)));
+                    $('#divdiscountpo').html(addCommas(parseFloat(obj.po_amount).toFixed(
+                        2)));
                     $('#divdiscountpercentage').html(obj.discount + '%');
                     $('#divtotal').html(addCommas(parseFloat(obj.nettotal).toFixed(2)));
                     $('#hidetotalorder').val(obj.nettotal);
@@ -1194,7 +1195,7 @@ include "include/topnavbar.php";
 
                     $('#invoicetable > tbody:last').empty();
                     var objfirst = obj.datainfo;
-                    $.each(objfirst, function(i, item) {
+                    $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
                         let saleprice = parseFloat(objfirst[i].saleprice);
@@ -1231,7 +1232,7 @@ include "include/topnavbar.php";
                 }
             });
         });
-        $('#invoicetable tbody').on('click', '.editnewqty', function(e) {
+        $('#invoicetable tbody').on('click', '.editnewqty', function (e) {
             var row = $(this);
             // var rowid = row.closest("tr").find('td:eq(0)').text();
             // var selectvalueone = $('.optionpiorityone' + rowid).val();
@@ -1252,7 +1253,7 @@ include "include/topnavbar.php";
                 .appendTo($this);
             textremove('.optionnewqty', row);
         });
-        $('#invoicetable tbody').on('click', '.editfreeqty', function(e) {
+        $('#invoicetable tbody').on('click', '.editfreeqty', function (e) {
             var row = $(this);
             // var rowid = row.closest("tr").find('td:eq(0)').text();
             // var selectvalueone = $('.optionpiorityone' + rowid).val();
@@ -1274,7 +1275,7 @@ include "include/topnavbar.php";
             textremove('.optionfreeqty', row);
         });
 
-        $('#btncreateinvoice').click(function() { //alert('IN');
+        $('#btncreateinvoice').click(function () { //alert('IN');
             if (!$("#hiddenform")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
@@ -1289,9 +1290,9 @@ include "include/topnavbar.php";
 
                 if (tbody.children().length > 0) {
                     jsonObj = [];
-                    $("#invoicetable tbody tr").each(function() {
+                    $("#invoicetable tbody tr").each(function () {
                         item = {}
-                        $(this).find('td').each(function(col_idx) {
+                        $(this).find('td').each(function (col_idx) {
                             item["col_" + (col_idx + 1)] = $(this).text();
                         });
                         jsonObj.push(item);
@@ -1325,7 +1326,7 @@ include "include/topnavbar.php";
                             // trackingnumber: trackingnumber
                         },
                         url: 'process/createinvoiceaccoporderprocess.php',
-                        success: function(result) { //alert(result);
+                        success: function (result) { //alert(result);
                             $('#modalinvoicecreate').modal('hide');
                             action(result);
                             // location.reload();
@@ -1344,7 +1345,7 @@ include "include/topnavbar.php";
         });
 
         // Order view part
-        $('#dataTable tbody').on('click', '.btnview', function() {
+        $('#dataTable tbody').on('click', '.btnview', function () {
             var id = $(this).attr('id');
             //  alert(id);
             $.ajax({
@@ -1353,7 +1354,7 @@ include "include/topnavbar.php";
                     orderID: id
                 },
                 url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function(result) { //alert(result);
+                success: function (result) { //alert(result);
                     var obj = JSON.parse(result);
                     console.log(obj);
                     $('#divsubtotalview').html(obj.subtotal);
@@ -1367,7 +1368,7 @@ include "include/topnavbar.php";
 
                     var objfirst = obj.tablelist;
                     console.log(objfirst);
-                    $.each(objfirst, function(i, item) {
+                    $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
                         $('#tableorderview > tbody:last').append('<tr><td>' +
@@ -1385,7 +1386,7 @@ include "include/topnavbar.php";
                 }
             });
         });
-        $('#modalorderview').on('hidden.bs.modal', function(e) {
+        $('#modalorderview').on('hidden.bs.modal', function (e) {
             $('#tableorderview > tbody').html('');
         });
     });
@@ -1398,7 +1399,7 @@ include "include/topnavbar.php";
                 productid: productid
             },
             url: 'getprocess/checkstock.php',
-            success: function(result) {
+            success: function (result) {
                 var obj = JSON.parse(result);
                 var availableqty = obj.qty
 
@@ -1418,12 +1419,12 @@ include "include/topnavbar.php";
                 repId: repId
             },
             url: 'getprocess/getareasaccoemployee.php',
-            success: function(result) { //alert(result);
+            success: function (result) { //alert(result);
                 var objfirst = JSON.parse(result);
 
                 var html = '';
                 html += '<option value="">Select</option>';
-                $.each(objfirst, function(i, item) {
+                $.each(objfirst, function (i, item) {
                     //alert(objfirst[i].id);
                     html += '<option value="' + objfirst[i].id + '">';
                     html += objfirst[i].name;
@@ -1443,7 +1444,7 @@ include "include/topnavbar.php";
         var count = 0;
         $('#tableorder > tbody').empty(); // Clear existing rows
 
-        records.forEach(function(obj) {
+        records.forEach(function (obj) {
             count++;
             var freeqty = parseFloat(obj.freeqty);
             var qty = parseFloat(obj.qty);
@@ -1467,7 +1468,8 @@ include "include/topnavbar.php";
                 '<td class="text-right">' + saleprice + '</td>' +
                 '<td class="d-none total1">' + totalprice + '</td>' +
                 '<td class="text-right totalsumshow">' + addCommas(totalprice.toFixed(2)) + '</td>' +
-                '<td class="total d-none totalsum saleprice">' + obj.saleprice + '</td><td class=" d-none">' + obj.idtbl_porder_detail + '</td></tr>');
+                '<td class="total d-none totalsum saleprice">' + obj.saleprice +
+                '</td><td class=" d-none">' + obj.idtbl_porder_detail + '</td></tr>');
 
 
         });
@@ -1478,7 +1480,7 @@ include "include/topnavbar.php";
 
     function calculateTotaleditable() {
         var sum = 0;
-        $(".total1").each(function() {
+        $(".total1").each(function () {
             sum += parseFloat($(this).text());
         });
         // alert(sum);
@@ -1520,12 +1522,12 @@ include "include/topnavbar.php";
                 repId: repId
             },
             url: 'getprocess/getcustomerlistaccoarea.php',
-            success: function(result) { //alert(result);
+            success: function (result) { //alert(result);
                 var objfirst = JSON.parse(result);
 
                 var html = '';
                 html += '<option value="">Select</option>';
-                $.each(objfirst, function(i, item) {
+                $.each(objfirst, function (i, item) {
                     //  alert(objfirst[i].id);
                     html += '<option value="' + objfirst[i].id + '">';
                     html += objfirst[i].name;
@@ -1613,7 +1615,7 @@ include "include/topnavbar.php";
 
     function tabletotal() {
         var sum = 0;
-        $(".totaldispatch").each(function() {
+        $(".totaldispatch").each(function () {
             sum += parseFloat($(this).text());
         });
 
@@ -1634,7 +1636,7 @@ include "include/topnavbar.php";
 
             },
             url: 'getprocess/getstatuslastdayendinfo.php',
-            success: function(result) { //alert(result);
+            success: function (result) { //alert(result);
                 if (result == 1) {
                     $('#viewmessage').html("Can't create anything, because today transaction is end");
                     $('#warningDayEndModal').modal('show');
@@ -1648,7 +1650,7 @@ include "include/topnavbar.php";
     }
 
     function textremove(classname, row) {
-        $('#invoicetable tbody').on('keyup', classname, function(e) {
+        $('#invoicetable tbody').on('keyup', classname, function (e) {
             if (e.keyCode === 13) {
                 $this = $(this);
                 var val = $this.val();
@@ -1679,7 +1681,7 @@ include "include/topnavbar.php";
 
     function tabletotal() {
         var sum = 0;
-        $(".total").each(function() {
+        $(".total").each(function () {
             sum += parseFloat($(this).text());
         });
 
