@@ -1,22 +1,22 @@
 <?php
 include "include/header.php";
 
-$sqlreturncustomer = "SELECT `e`.`name` as `asm`, `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) WHERE `u`.`acceptance_status` = '0' and `u`.`returntype` = '1'";
+$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` = '0' and `u`.`returntype` = '1'";
 $resultreturncustomer = $conn->query($sqlreturncustomer);
 
-$sqlreturncustomeraccepted = "SELECT `e`.`name` as `asm`, `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`credit_note` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '0'";
+$sqlreturncustomeraccepted = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`credit_note` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '0'";
 $resultreturncustomeraccepted = $conn->query($sqlreturncustomeraccepted);
 
-$sqlreturncustomerdeliverycompleted = "SELECT `e`.`name` as `asm`, `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '0'";
+$sqlreturncustomerdeliverycompleted = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '0'";
 $resultreturndeliverycompleted = $conn->query($sqlreturncustomerdeliverycompleted);
 
-$sqlquantitycorrect = "SELECT `e`.`name` as `asm`, `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '1'";
+$sqlquantitycorrect = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '1'";
 $resultqtycorrect = $conn->query($sqlquantitycorrect);
 
-$sqlquantitywrong = "SELECT `e`.`name` as `asm`, `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '2'";
+$sqlquantitywrong = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` = '1' and `u`.`returntype` = '1' and `u`.`recieved_status` = '1' and `qtystatus` = '2'";
 $resultqtywrong = $conn->query($sqlquantitywrong);
 
-// $sqlreturncustomerdetails="SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`,`ua`.`name` FROM `tbl_return` AS `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_supplier` AS `us` ON (`us`.`idtbl_supplier` = `u`.`tbl_supplier_idtbl_supplier`) WHERE `u`.`acceptance_status` = '0' and `u`.`returntype` = '3'";
+// $sqlreturncustomerdetails="SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`,`ua`.`name` FROM `tbl_return` AS `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  LEFT JOIN `tbl_supplier` AS `us` ON (`us`.`idtbl_supplier` = `u`.`tbl_supplier_idtbl_supplier`) WHERE `u`.`acceptance_status` = '0' and `u`.`returntype` = '3'";
 // $resultreturncustomerdetails =$conn-> query($sqlreturncustomerdetails);
 
 
@@ -71,7 +71,6 @@ include "include/topnavbar.php";
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>ASM</th>
                                                             <th>Customer name</th>
                                                             <th>Date</th>
                                                             <th>Total</th>
@@ -85,7 +84,6 @@ include "include/topnavbar.php";
                                                                 <tr>
 
                                                                     <td><?php echo $row['idtbl_return'] ?></td>
-                                                                    <td><?php echo $row['asm'] ?></td>
                                                                     <td><?php echo $row['name'] ?></td>
                                                                     <td><?php echo $row['returndate'] ?></td>
                                                                     <td class="text-right">Rs.<?php echo number_format($row['total'], 2); ?>
@@ -116,7 +114,6 @@ include "include/topnavbar.php";
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>ASM</th>
                                                             <th>Customer name</th>
                                                             <th>Date</th>
                                                             <th>Total</th>
@@ -130,7 +127,6 @@ include "include/topnavbar.php";
                                                                 <tr>
 
                                                                     <td><?php echo $row['idtbl_return'] ?></td>
-                                                                    <td><?php echo $row['asm'] ?></td>
                                                                     <td><?php echo $row['name'] ?></td>
                                                                     <td><?php echo $row['returndate'] ?></td>
                                                                     <td class="text-right">Rs.<?php echo number_format($row['total'], 2); ?>
@@ -169,7 +165,6 @@ include "include/topnavbar.php";
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>ASM</th>
                                                             <th>Customer name</th>
                                                             <th>Date</th>
                                                             <th>Total</th>
@@ -183,7 +178,6 @@ include "include/topnavbar.php";
                                                                 <tr>
 
                                                                     <td><?php echo $row['idtbl_return'] ?></td>
-                                                                    <td><?php echo $row['asm'] ?></td>
                                                                     <td><?php echo $row['name'] ?></td>
                                                                     <td><?php echo $row['returndate'] ?></td>
                                                                     <td class="text-right">Rs.<?php echo number_format($row['total'], 2); ?>
@@ -217,7 +211,6 @@ include "include/topnavbar.php";
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>ASM</th>
                                                             <th>Customer name</th>
                                                             <th>Date</th>
                                                             <th>Total</th>
@@ -231,7 +224,6 @@ include "include/topnavbar.php";
                                                                 <tr>
 
                                                                     <td><?php echo $row['idtbl_return'] ?></td>
-                                                                    <td><?php echo $row['asm'] ?></td>
                                                                     <td><?php echo $row['name'] ?></td>
                                                                     <td><?php echo $row['returndate'] ?></td>
                                                                     <td class="text-right">Rs.<?php echo number_format($row['total'], 2); ?>
@@ -264,7 +256,6 @@ include "include/topnavbar.php";
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
-                                                            <th>ASM</th>
                                                             <th>Customer name</th>
                                                             <th>Date</th>
                                                             <th>Total</th>
@@ -278,7 +269,6 @@ include "include/topnavbar.php";
                                                                 <tr>
 
                                                                     <td><?php echo $row['idtbl_return'] ?></td>
-                                                                    <td><?php echo $row['asm'] ?></td>
                                                                     <td><?php echo $row['name'] ?></td>
                                                                     <td><?php echo $row['returndate'] ?></td>
                                                                     <td class="text-right">Rs.<?php echo number_format($row['total'], 2); ?>
