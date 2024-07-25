@@ -100,6 +100,8 @@ include "include/topnavbar.php";
                                                 <th class="text-right">Discount</th>
                                                 <th class="text-right">Nettotal</th>
                                                 <th class="text-center">Confirm</th>
+                                                <th class="text-center">Dispatch</th>
+                                                <th class="text-center">Deliver</th>
                                                 <th class="text-right">Actions</th>
                                             </tr>
                                         </thead>
@@ -258,9 +260,7 @@ include "include/topnavbar.php";
                                 </div>
                                 <div class="form-group mt-4 col-3">
                                     <button type="button" id="formsubmit" class="btn btn-outline-primary btn-sm"
-                                        <?php if ($addcheck == 0) {
-                                                                                                                        echo 'disabled';
-                                                                                                                    } ?>><i class="fas fa-plus"></i>&nbsp;Add
+                                        <?php if ($addcheck == 0) {echo 'disabled';} ?>><i class="fas fa-plus"></i>&nbsp;Add
                                         Product</button>
                                     <input name="submitBtn" type="submit" value="Save" id="submitBtn" class="d-none">
                                 </div>
@@ -281,9 +281,9 @@ include "include/topnavbar.php";
                                 <th class="d-none">Unitprice</th>
                                 <th class="d-none">Saleprice</th>
                                 <th class="text-center">Qty</th>
-                                <th class="">Free Product</th>
+                                <th class="d-none">Free Product</th>
                                 <th class="d-none">Freeproductid</th>
-                                <th class="text-center">Free Qty</th>
+                                <th class="text-center d-none">Free Qty</th>
                                 <th class="text-center">Total Qty</th>
                                 <th class="text-right">Sale Price</th>
                                 <th class="d-none">HideTotal</th>
@@ -330,19 +330,6 @@ include "include/topnavbar.php";
                     </div>
                     <hr>
                     <div class='row'>
-                        <div class="form-group col-4">
-                            <label class="small font-weight-bold text-dark">Payment option</label><br>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentoption1" name="paymentoption"
-                                    class="custom-control-input" value="0" checked>
-                                <label class="custom-control-label" for="paymentoption1">Cash on Delivery</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="paymentoption2" name="paymentoption"
-                                    class="custom-control-input" value="1">
-                                <label class="custom-control-label" for="paymentoption2">Credit</label>
-                            </div>
-                        </div>
                         <div class="form-group col-8">
                             <label class="small font-weight-bold text-dark">Remark</label>
                             <textarea name="remark" id="remark" class="form-control form-control-sm"></textarea>
@@ -352,9 +339,7 @@ include "include/topnavbar.php";
 
                     <div class="form-group mt-2">
                         <button type="button" id="btncreateorder" class="btn btn-outline-primary btn-sm fa-pull-right"
-                            <?php if ($addcheck == 0) {
-                                                                                                                            echo 'disabled';
-                                                                                                                        } ?>><i class="fas fa-save"></i>&nbsp;Create
+                            <?php if ($addcheck == 0) {echo 'disabled';} ?>><i class="fas fa-save"></i>&nbsp;Create
                             Order</button>
                     </div>
                     <div class="form-group mt-3 text-danger small">
@@ -398,6 +383,7 @@ include "include/topnavbar.php";
                         <tr>
                             <th>Product</th>
                             <th class="d-none">ProductID</th>
+                            <th class="d-none">PoDetailID</th>
                             <th class="text-center"> Qty</th>
                             <th class="text-right">Total</th>
                         </tr>
@@ -463,65 +449,6 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
-<!-- Modal Warning -->
-<div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-body bg-danger text-white text-center">
-                <div id="warningdesc"></div>
-            </div>
-            <div class="modal-footer bg-danger rounded-0">
-                <button type="button" class="btn btn-outline-light btn-sm" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Day End Warning -->
-<div class="modal fade" id="warningDayEndModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-body bg-danger text-white text-center">
-                <div id="viewmessage"></div>
-            </div>
-            <div class="modal-footer bg-danger rounded-0">
-                <a href="dayend.php" class="btn btn-outline-light btn-sm">Go To Day End</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Porder Edit -->
-<div class="modal fade" id="modalporderedit" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="">Edit Order Date</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="process/editcusorderdate.php" method="post" id="formeditorder">
-                    <div class="form-group mb-1">
-                        <label class="small font-weight-bold text-dark">Order date*</label>
-                        <input type="date" class="form-control form-control-sm" name="orderdate" id="orderdate"
-                            required>
-                        <input type="text" class="form-control form-control-sm d-none" name="editorderid"
-                            id="editorderid">
-                    </div>
-                    <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-outline-primary btn-sm w-50 fa-pull-right" <?php if ($addcheck == 0) {
-                                                                                                            echo 'disabled';
-                                                                                                        } ?>><i
-                                class="far fa-save"></i>&nbsp;Update</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Modal Cancel Reason -->
 <div class="modal fade" id="modalcancel" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -534,7 +461,7 @@ include "include/topnavbar.php";
                 </button>
             </div>
             <div class="modal-body">
-                <form action="process/statusorder.php" method="post">
+                <form action="process/cancelstatus.php" method="post">
                     <div class="form-group mb-1">
                         <label class="small font-weight-bold text-dark">Cancel Reason*</label>
                         <textarea type="text" class="form-control form-control-sm" name="cancelreason" id="cancelreason"
@@ -542,9 +469,7 @@ include "include/topnavbar.php";
                     </div>
                     <div class="form-group mt-3">
                         <button type="submit" id="submitBtn" class="btn btn-outline-danger btn-sm px-4 fa-pull-right"
-                            <?php if ($addcheck == 0) {
-                                                                                                                            echo 'disabled';
-                                                                                                                        } ?>><i class="far fa-save"></i>&nbsp;Cancel
+                            <?php if ($addcheck == 0) {echo 'disabled';} ?>><i class="far fa-save"></i>&nbsp;Cancel
                             Order</button>
                     </div>
                     <input type="hidden" name="recordID" id="recordID" value="">
@@ -554,42 +479,11 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
-<!-- Modal EDIT QTY -->
-<div class="modal fade" id="modalEdit" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="">Edit Qty</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editQtyForm" method="post">
-                    <div class="form-group mb-1">
-                        <label class="small font-weight-bold text-dark">Edit Qty*</label>
-                        <input type="text" class="form-control form-control-sm" name="editqty" id="editqty"
-                            required></input>
-                    </div>
-                    <div class="form-group mt-3">
-                        <button id="Btnedit" class="btn btn-outline-primary btn-sm px-4 fa-pull-right" <?php if ($addcheck == 0) {
-                                                                                                            echo 'disabled';
-                                                                                                        } ?>><i
-                                class="far fa-save"></i>&nbsp;Edit Qty</button>
-                    </div>
-                    <input type="hidden" name="recordID" id="recordID" value="">
 
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <?php include "include/footerscripts.php"; ?>
 <script>
     var prodCount = 0;
     $(document).ready(function () {
-        // checkdayendprocess();
         $("#helpername").select2();
 
         $('body').tooltip({
@@ -603,8 +497,7 @@ include "include/topnavbar.php";
         var editcheck = '<?php echo $editcheck; ?>';
         var statuscheck = '<?php echo $statuscheck; ?>';
         var deletecheck = '<?php echo $deletecheck; ?>';
-        var usertype = '<?php echo $_SESSION['
-        type ']; ?>';
+        var usertype = '<?php echo $_SESSION['type']; ?>';
 
         $('#dataTable').DataTable({
             "destroy": true,
@@ -675,7 +568,35 @@ include "include/topnavbar.php";
                         } else if (full['confirm'] == 2) {
                             html += '<i class="fas fa-times text-danger"></i>&nbsp;Cancelled';
                         } else {
-                            html += '<i class="fas fa-times text-danger"></i>&nbsp;Not Confirm';
+                            html += '<i class="fas fa-times text-danger"></i>&nbsp;Not Confirmed';
+                        }
+                        return html;
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function (data, type, full) {
+                        var html = '';
+                        if (full['dispatchissue'] == 1) {
+                            html += '<i class="fas fa-check text-success"></i>&nbsp;Dispatched';
+                        }else {
+                            html += '<i class="fas fa-times text-warning"></i>&nbsp;Not Dispatched';
+                        }
+                        return html;
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function (data, type, full) {
+                        var html = '';
+                        if (full['delivered'] == 1) {
+                            html += '<i class="fas fa-check text-success"></i>&nbsp;Delivered';
+                        }else {
+                            html += '<i class="fas fa-times text-warning"></i>&nbsp;Not Delivered';
                         }
                         return html;
                     }
@@ -690,12 +611,12 @@ include "include/topnavbar.php";
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="far fa-eye"></i></button>';
-                        if (usertype == 2 || usertype == 1) {
-                            button +=
-                                '<button class="btn btn-outline-secondary btn-sm btneditorder mr-1" id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fas fa-pen"></i></button>';
-                        }
+                        // if (usertype == 2 || usertype == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-secondary btn-sm btneditorder mr-1" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fas fa-pen"></i></button>';
+                        // }
                         if (full['status'] == 2) {
                             button +=
                                 '<button class="btn btn-secondary btn-sm btnreactive mr-1" id="' +
@@ -717,7 +638,7 @@ include "include/topnavbar.php";
                         }
 
                         if (full['status'] == 1 && full['confirm'] == 1 && full[
-                            'dispatchissue'] == null) {
+                                'dispatchissue'] == null) {
                             button +=
                                 '<button class="btn btn-warning btn-sm btnDispatch mr-1" data-toggle="tooltip" data-placement="bottom" title="Dispatch Order" name="' +
                                 full['confirm'] +
@@ -733,7 +654,7 @@ include "include/topnavbar.php";
                         }
 
                         if (full['status'] == 1 && full['confirm'] == 1 && full[
-                            'dispatchissue'] == 1 && full['delivered'] == null) {
+                                'dispatchissue'] == 1 && full['delivered'] == null) {
                             button +=
                                 '<button class="btn btn-warning btn-sm btnDeliver mr-1" data-toggle="tooltip" data-placement="bottom" title="Deliver Order" name="' +
                                 full['confirm'] +
@@ -762,7 +683,7 @@ include "include/topnavbar.php";
                         //     button +=
                         //         '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
                         // }
-                        if (full['delivered'] == 0 && full['status'] == 1) {
+                        if (full['delivered'] != 1 && full['status'] == 1) {
                             button +=
                                 '<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="' +
                                 full['idtbl_customer_order'] +
@@ -773,30 +694,7 @@ include "include/topnavbar.php";
                 }
             ]
         });
-        $('#dataTable tbody').on('click', '.btnpayment', function () {
-            var r = confirm("Are you sure, Payment complete this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '1';
-                statuschange(id, type);
-            }
-        });
-        $('#dataTable tbody').on('click', '.btnship', function () {
-            var r = confirm("Are you sure, Ship this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '2';
-                statuschange(id, type);
-            }
-        });
-        $('#dataTable tbody').on('click', '.btndelivery', function () {
-            var r = confirm("Are you sure, Delivery complete this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '3';
-                statuschange(id, type);
-            }
-        });
+
         $('#dataTable tbody').on('click', '.btneditorder', function () {
             recordID = $('#recordOption').val();
             // alert(recordID);
@@ -850,11 +748,7 @@ include "include/topnavbar.php";
 
                     $('#remark').val(obj.remark);
 
-                    if (obj.payfullhalf == 0) {
-                        $('#paymentoption1').prop('checked', true);
-                    } else {
-                        $('#paymentoption2').prop('checked', true);
-                    }
+                  
                     $('#recordOption').val('2');
                     $('#btncreateorder').html('<i class="far fa-save"></i>&nbsp;Update');
 
@@ -922,13 +816,10 @@ include "include/topnavbar.php";
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].newqty + '</td><td class="d-none">' +
-                            objfirst[i].freeproduct +
                             '</td><td class="d-none">' + objfirst[i]
-                            .freeproductid +
-                            '</td><td class="text-center d-none">' +
-                            objfirst[i].freeqty +
+                            .podetailid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].orderqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td></tr>');
@@ -942,10 +833,12 @@ include "include/topnavbar.php";
             });
         });
         $('#dataTable tbody').on('click', '.btnDeliver', function () {
-            var id = $(this).attr('id');
-            var confirmstatus = $(this).attr('name');
 
+            var id = $(this).attr('id');
+
+            var confirmstatus = $(this).attr('name');
             $('#hiddenpoid').val(id);
+
             $.ajax({
                 type: "POST",
                 data: {
@@ -968,16 +861,14 @@ include "include/topnavbar.php";
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
+
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].newqty + '</td><td class="d-none">' +
-                            objfirst[i].freeproduct +
                             '</td><td class="d-none">' + objfirst[i]
-                            .freeproductid +
-                            '</td><td class="text-center d-none">' +
-                            objfirst[i].freeqty +
+                            .podetailid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].dispatchqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td></tr>');
@@ -993,7 +884,6 @@ include "include/topnavbar.php";
         $('#dataTable tbody').on('click', '.btnDispatch', function () {
             var id = $(this).attr('id');
             var confirmstatus = $(this).attr('name');
-
             $('#hiddenpoid').val(id);
             $.ajax({
                 type: "POST",
@@ -1017,16 +907,14 @@ include "include/topnavbar.php";
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
+
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].newqty + '</td><td class="d-none">' +
-                            objfirst[i].freeproduct +
                             '</td><td class="d-none">' + objfirst[i]
-                            .freeproductid +
-                            '</td><td class="text-center d-none">' +
-                            objfirst[i].freeqty +
+                            .podetailid +
+                            '</td><td class="text-center editnewqty">' +
+                            objfirst[i].confirmqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td></tr>');
@@ -1038,15 +926,6 @@ include "include/topnavbar.php";
                     $('#modalorderview').modal('show');
                 }
             });
-        });
-
-        $('#dataTable tbody').on('click', '.btncall', function () {
-            var r = confirm("Are you sure, customer call to customer ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '6';
-                statuschange(id, type);
-            }
         });
         $('#dataTable tbody').on('click', '.btnaccept', function () {
             var r = confirm("Are you sure, Accept this order ? ");
@@ -1208,25 +1087,25 @@ include "include/topnavbar.php";
             });
         });
 
-        $("#newqty").keyup(function () {
-            var qty = $(this).val();
-            var productID = $('#product').val();
+        // $("#newqty").keyup(function () {
+        //     var qty = $(this).val();
+        //     var productID = $('#product').val();
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    productID: productID,
-                    qty: qty
-                },
-                url: 'getprocess/getproductfreewtyaccoproductqty.php',
-                success: function (result) { //alert(result);
-                    var obj = JSON.parse(result);
-                    $('#freeqty').val(obj.freecount);
-                    $('#freeproductname').val(obj.productname);
-                    $('#freeproductid').val(obj.productid);
-                }
-            });
-        });
+        //     $.ajax({
+        //         type: "POST",
+        //         data: {
+        //             productID: productID,
+        //             qty: qty
+        //         },
+        //         url: 'getprocess/getproductfreewtyaccoproductqty.php',
+        //         success: function (result) { //alert(result);
+        //             var obj = JSON.parse(result);
+        //             $('#freeqty').val(obj.freecount);
+        //             $('#freeproductname').val(obj.productname);
+        //             $('#freeproductid').val(obj.productid);
+        //         }
+        //     });
+        // });
 
         // Order view part
         $('#dataTable tbody').on('click', '.btnview', function () {
@@ -1251,32 +1130,35 @@ include "include/topnavbar.php";
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
 
+                    var confirmstatus = obj.confirm;
+                    var dispatchstatus = obj.dispatchissue;
+                    var deliverstatus = obj.delivered;
+
                     var objfirst = obj.tablelist;
                     $.each(objfirst, function (i, item) {
-                        //alert(objfirst[i].id);
+
+                        var showqty = 0;
+                        if(confirmstatus == null){
+                            showqty = objfirst[i].orderqty;
+                        }else if(confirmstatus == 1 && dispatchstatus == null){
+                            showqty = objfirst[i].confirmqty;
+                        }else if(confirmstatus == 1 && dispatchstatus == 1 && deliverstatus == null){
+                            showqty = objfirst[i].dispatchqty;
+                        }
 
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].newqty + '</td><td class="d-none">' +
-                            objfirst[i].freeproduct +
                             '</td><td class="d-none">' + objfirst[i]
-                            .freeproductid +
-                            '</td><td class="text-center d-none">' +
-                            objfirst[i].freeqty +
+                            .podetailid +
+                            '</td><td class="text-center editnewqty">' +
+                            showqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td></tr>');
                     });
-                    if (confirmstatus == 1) {
-                        $('#btnUpdate').html(
-                            '<i class="far fa-save"></i>&nbsp;Already confirmed');
-                        $('#btnUpdate').prop('disabled', true);
-                    } else {
-                        $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Update');
-                        $('#btnUpdate').prop('disabled', false);
-                    }
+                    $('#btnUpdate').prop('disabled', true);
+                    
                     $('#modalorderview').modal('show');
                 }
             });
@@ -1315,16 +1197,15 @@ include "include/topnavbar.php";
                     td.empty().html(val).data('editing', false);
 
                     var rowID = row.closest("td").parent()[0].rowIndex;
-                    var unitprice = parseFloat(row.closest("tr").find('td:eq(7)').text());
-                    var newqty = parseFloat(row.closest("tr").find('td:eq(2)').text());
+                    var unitprice = parseFloat(row.closest("tr").find('td:eq(5)').text());
+                    var newqty = parseFloat(row.closest("tr").find('td:eq(3)').text());
                     var totnew = newqty * unitprice;
 
                     var showtotnew = addCommas(parseFloat(totnew).toFixed(2));
                     // var total = parseFloat(totrefill+totnew).toFixed(2);
                     // var showtotal = addCommas(total);
 
-                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(6)').text(showtotnew);
-                    // $('#tableorderview').find('tr').eq(rowID).find('td:eq(11)').text(showtotal);
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(4)').text(showtotnew);
 
                     tabletotal1();
                 }
@@ -1407,19 +1288,44 @@ include "include/topnavbar.php";
             $('#hidetotalorder').val('0');
             $('#tableorder > tbody').html('');
         })
+
         $('#orderdate').change(function () {
             $('#repname').focus();
         });
+
         $("#formsubmit").click(function () {
             if (!$("#createorderform")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
                 $("#submitBtn").click();
             } else {
-                checkTarget()
+                checkStock();
             }
         });
 
+        function checkStock(){
+            var productID = $('#product').val();
+            var newqty = parseFloat($('#newqty').val());
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    productID: productID
+                },
+                url: 'getprocess/checkavailablestock.php',
+                success: function (result) {//alert(result)
+                    var obj = JSON.parse(result);
+                    if(obj.availableqty >= newqty){
+                        checkTarget()
+                    }else{
+                        var productname = $("#product option:selected").text();
+
+                        $('#errordiv').empty().html("  <div class='alert alert-danger alert-dismissible fade show' role='alert'><h5 id = 'errormessage'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>")
+                        $('#errormessage').html("There is not enough stock available for product '" + productname)
+                    }
+                }
+            });
+        }
         function checkTarget() {
             var productID = $('#product').val();
             var product = $("#product option:selected").text();
@@ -1452,15 +1358,15 @@ include "include/topnavbar.php";
                 '</td><td class="d-none">' + productID +
                 '</td><td class="d-none">' + unitprice +
                 '</td><td class="d-none">' + saleprice +
-                '</td><td class="text-center">' + newqty + '</td><td class="">' +
+                '</td><td class="text-center">' + newqty + '</td><td class="d-none">' +
                 freeproductname + '</td><td class="d-none">' + freeproductid +
-                '</td><td class="text-center">' + freeqty +
+                '</td><td class="text-center d-none">' + freeqty +
                 '</td><td class="text-center">' + totalqty +
                 '</td><td class="text-right">' + addCommas(saleprice) +
                 '</td><td class="total d-none">' + total +
                 '</td><td class="text-right">' + showtotal +
                 '</td><td><button type="button" class="btn btn-danger btn-sm btndlt"><i class="fas fa-trash-alt"></i></td></tr>'
-                );
+            );
 
             $('#product').val('');
             $('#unitprice').val('');
@@ -1529,7 +1435,6 @@ include "include/topnavbar.php";
                 var nettotal = $('#hidenettotalorder').val();
                 var customeraddress = $('#customeraddress').val();
                 var customercontact = $('#customercontact').val();
-                var paymentoption = $("input[name='paymentoption']:checked").val();
                 var recordOption = $('#recordOption').val();
                 var recordID = $('#recordID').val();
                 //  alert(recordOption);
@@ -1547,7 +1452,6 @@ include "include/topnavbar.php";
                         area: area,
                         location: location,
                         customer: customer,
-                        paymentoption: paymentoption,
                         customercontact: customercontact,
                         customeraddress: customeraddress,
                         directcustomer: directcustomer,
@@ -1556,7 +1460,7 @@ include "include/topnavbar.php";
                         recordOption: recordOption,
                         recordID: recordID
                     },
-                    url: 'process/customerporderprocess.php',
+                url: 'process/customerporderprocess.php',
                     success: function (result) { //console.log(result);
                         $('#modalcreateorder').modal('hide');
                         action(result);
@@ -1609,7 +1513,10 @@ include "include/topnavbar.php";
                 url: 'process/updatecustomerpoprocess.php',
                 success: function (result) { //alert(result);
                     action(result);
-                    location.reload();
+                    $('#modalorderview').modal('hide');
+
+                    $('#dataTable').DataTable().ajax.reload();
+                    // location.reload();
                 }
             });
 
@@ -1724,7 +1631,7 @@ include "include/topnavbar.php";
                 '<td class="text-center chngeqty" contenteditable="true">' + obj.qty + '</td>' +
                 '<td></td>' +
                 '<td class="d-none">' + obj.freeproductid + '</td>' +
-                '<td class="text-center chngeqtyfree">' + obj.freeqty + '</td>' +
+                '<td class="text-center chngeqtyfree d-none">' + obj.freeqty + '</td>' +
                 '<td class="text-center totalqty">' + totalqty + '</td>' +
                 '<td class="text-right">' + addCommas(obj.saleprice) + '</td>' +
                 '<td class="d-none total1">' + totalprice + '</td>' +
@@ -1968,26 +1875,6 @@ include "include/topnavbar.php";
             todayHighlight: true,
             startDate: 'today',
             format: 'yyyy-mm-dd'
-        });
-    }
-
-    function checkdayendprocess() {
-        $.ajax({
-            type: "POST",
-            data: {
-
-            },
-            url: 'getprocess/getstatuslastdayendinfo.php',
-            success: function (result) { //alert(result);
-                if (result == 1) {
-                    $('#viewmessage').html("Can't create anything, because today transaction is end");
-                    $('#warningDayEndModal').modal('show');
-                } else if (result == 0) {
-                    $('#viewmessage').html(
-                        "Can't create anythind, because yesterday day end process end not yet.");
-                    $('#warningDayEndModal').modal('show');
-                }
-            }
         });
     }
 
