@@ -1299,9 +1299,30 @@ include "include/topnavbar.php";
                 // this will just cause the browser to display the native HTML5 error messages.
                 $("#submitBtn").click();
             } else {
-                checkStock();
+                checkCommon()
             }
         });
+
+        function checkCommon(){
+            var productID = $('#product').val();
+            var existsflag = 0;
+
+            $(".productIds").each(function () {
+                var id = $(this).text()
+                if(productID == id){
+                    existsflag = 1;
+                }
+            });
+            
+            if(existsflag == 1){
+                var productname = $("#product option:selected").text();
+
+                $('#errordiv').empty().html("  <div class='alert alert-warning alert-dismissible fade show' role='alert'><h5 id = 'errormessage'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>")
+                $('#errormessage').html("The product '" + productname + " is already selected")
+            }else{
+                checkStock();
+            }
+        }
 
         function checkStock(){
             var productID = $('#product').val();
@@ -1355,7 +1376,7 @@ include "include/topnavbar.php";
 
             $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td>' +
                 product +
-                '</td><td class="d-none">' + productID +
+                '</td><td class="d-none productIds">' + productID +
                 '</td><td class="d-none">' + unitprice +
                 '</td><td class="d-none">' + saleprice +
                 '</td><td class="text-center">' + newqty + '</td><td class="d-none">' +
@@ -1625,7 +1646,7 @@ include "include/topnavbar.php";
             $('#tableorder > tbody:last').append('<tr class="pointer">' +
                 '<td>' + count + '</td>' +
                 '<td>' + obj.product_name + '</td>' +
-                '<td class="d-none">' + obj.tbl_product_idtbl_product + '</td>' +
+                '<td class="d-none productIds">' + obj.tbl_product_idtbl_product + '</td>' +
                 '<td class="d-none">' + obj.unitprice + '</td>' +
                 '<td class="d-none">' + obj.saleprice + '</td>' +
                 '<td class="text-center chngeqty" contenteditable="true">' + obj.qty + '</td>' +
