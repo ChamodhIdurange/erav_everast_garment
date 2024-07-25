@@ -18,7 +18,7 @@ $repname = $_POST['repname'];
 $area = $_POST['area'];
 $location = $_POST['location'];
 $customer = $_POST['customer'];
-$paymentoption = $_POST['paymentoption'];
+// $paymentoption = $_POST['paymentoption'];
 $tableData = $_POST['tableData'];
 $podiscount = $_POST['podiscount'];
 $tableData = json_decode($tableData);
@@ -61,6 +61,9 @@ if ($recordOption == 1) {
 
             $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$orderID','$product')";
             $conn->query($insertorderdetail);
+
+            $insertholdstock = "INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$newqty', '0', '1', '$updatedatetime', '$userID', '$product','$orderID')";
+            $conn->query($insertholdstock);
         }
 
         $actionObj = new stdClass();
@@ -83,64 +86,65 @@ if ($recordOption == 1) {
 
         echo $actionJSON = json_encode($actionObj);
     }
-} else {
+} 
+// else {
 
-    if ($_POST['directcustomer'] != '') {
-        $directcustomer =  $_POST['directcustomer'];
-        $customercontact =  $_POST['customercontact'];
-        $customeraddress =  $_POST['customeraddress'];
+//     if ($_POST['directcustomer'] != '') {
+//         $directcustomer =  $_POST['directcustomer'];
+//         $customercontact =  $_POST['customercontact'];
+//         $customeraddress =  $_POST['customeraddress'];
 
-        $insertcustomer = "INSERT INTO `tbl_customer`(`type`, `name`, `nic`, `phone`, `email`, `address`, `vat_num`, `s_vat`, `numofvisitdays`, `creditlimit`, `credittype`, `creditperiod`, `emergencydate`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`) VALUES ('1', '$directcustomer', '', '$customercontact', '', '$customeraddress', '', '', 0, 0, 0, 0,'','1','$updatedatetime', '$userID', '1')";
-        $conn->query($insertcustomer);
+//         $insertcustomer = "INSERT INTO `tbl_customer`(`type`, `name`, `nic`, `phone`, `email`, `address`, `vat_num`, `s_vat`, `numofvisitdays`, `creditlimit`, `credittype`, `creditperiod`, `emergencydate`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`) VALUES ('1', '$directcustomer', '', '$customercontact', '', '$customeraddress', '', '', 0, 0, 0, 0,'','1','$updatedatetime', '$userID', '1')";
+//         $conn->query($insertcustomer);
 
-        $customer = $conn->insert_id;
-    }
+//         $customer = $conn->insert_id;
+//     }
 
-    $month = date('n');
+//     $month = date('n');
 
 
-    $insretorder = "UPDATE `tbl_porder` SET `orderdate`='$orderdate', `subtotal`='$total', `disamount`='$discount', `discount`='$discountpresentage', `podiscount`='$podiscount', `po_amount`='$podiscountamount', `nettotal`='$nettotal', `payfullhalf`='$paymentoption', `remark`='$remark', `updatedatetime`='$updatedatetime', `tbl_user_idtbl_user`='$userID', `tbl_locations_idtbl_locations`='$location' WHERE `idtbl_porder` = '$recordID'";
-    if ($conn->query($insretorder) == true) {
+//     $insretorder = "UPDATE `tbl_porder` SET `orderdate`='$orderdate', `subtotal`='$total', `disamount`='$discount', `discount`='$discountpresentage', `podiscount`='$podiscount', `po_amount`='$podiscountamount', `nettotal`='$nettotal', `payfullhalf`='$paymentoption', `remark`='$remark', `updatedatetime`='$updatedatetime', `tbl_user_idtbl_user`='$userID', `tbl_locations_idtbl_locations`='$location' WHERE `idtbl_porder` = '$recordID'";
+//     if ($conn->query($insretorder) == true) {
 
-        $insertporderother = "UPDATE `tbl_porder_otherinfo` SET `areaid`='$area', `customerid`='$customer', `repid`='$repname', `updatedatetime`='$updatedatetime' WHERE `porderid` ='$recordID'";
-        $conn->query($insertporderother);
-       // $deleterecode = " DELETE FROM `tbl_porder_detail` WHERE `tbl_porder_idtbl_porder` = '$recordID'";
+//         $insertporderother = "UPDATE `tbl_porder_otherinfo` SET `areaid`='$area', `customerid`='$customer', `repid`='$repname', `updatedatetime`='$updatedatetime' WHERE `porderid` ='$recordID'";
+//         $conn->query($insertporderother);
+//        // $deleterecode = " DELETE FROM `tbl_porder_detail` WHERE `tbl_porder_idtbl_porder` = '$recordID'";
 
-        foreach ($tableData as $rowtabledata) {
-            $productID = $rowtabledata->col_1;
-            $product = $rowtabledata->col_3;
-            $unitprice = $rowtabledata->col_4;
-            $saleprice = $rowtabledata->col_5;
-            $newqty = $rowtabledata->col_6;
-            $freeprodcutid = $rowtabledata->col_8;
-            $freeqty = $rowtabledata->col_9;
-            $totqty = $rowtabledata->col_10;
-            $total = $rowtabledata->col_12;
-            $id = $rowtabledata->col_17;
+//         foreach ($tableData as $rowtabledata) {
+//             $productID = $rowtabledata->col_1;
+//             $product = $rowtabledata->col_3;
+//             $unitprice = $rowtabledata->col_4;
+//             $saleprice = $rowtabledata->col_5;
+//             $newqty = $rowtabledata->col_6;
+//             $freeprodcutid = $rowtabledata->col_8;
+//             $freeqty = $rowtabledata->col_9;
+//             $totqty = $rowtabledata->col_10;
+//             $total = $rowtabledata->col_12;
+//             $id = $rowtabledata->col_17;
 
-            $insertorderdetail = "UPDATE `tbl_porder_detail` SET `type`='0', `qty`='$newqty', `freeqty`='$freeqty', `freeproductid`='$freeprodcutid', `unitprice`='$unitprice', `saleprice`='$saleprice', `status`='1', `updatedatetime`='$updatedatetime', `tbl_user_idtbl_user`='$userID', `tbl_product_idtbl_product`='$product' WHERE `idtbl_porder_detail`='$id'";
-            $conn->query($insertorderdetail);
+//             $insertorderdetail = "UPDATE `tbl_porder_detail` SET `type`='0', `qty`='$newqty', `freeqty`='$freeqty', `freeproductid`='$freeprodcutid', `unitprice`='$unitprice', `saleprice`='$saleprice', `status`='1', `updatedatetime`='$updatedatetime', `tbl_user_idtbl_user`='$userID', `tbl_product_idtbl_product`='$product' WHERE `idtbl_porder_detail`='$id'";
+//             $conn->query($insertorderdetail);
 
-        }
+//         }
 
-        $actionObj = new stdClass();
-        $actionObj->icon = 'fas fa-check-circle';
-        $actionObj->title = '';
-        $actionObj->message = 'Update Successfully';
-        $actionObj->url = '';
-        $actionObj->target = '_blank';
-        $actionObj->type = 'primary';
+//         $actionObj = new stdClass();
+//         $actionObj->icon = 'fas fa-check-circle';
+//         $actionObj->title = '';
+//         $actionObj->message = 'Update Successfully';
+//         $actionObj->url = '';
+//         $actionObj->target = '_blank';
+//         $actionObj->type = 'primary';
 
-        echo $actionJSON = json_encode($actionObj);
-    } else {
-        $actionObj = new stdClass();
-        $actionObj->icon = 'fas fa-exclamation-triangle';
-        $actionObj->title = '';
-        $actionObj->message = 'Record Error';
-        $actionObj->url = '';
-        $actionObj->target = '_blank';
-        $actionObj->type = 'danger';
+//         echo $actionJSON = json_encode($actionObj);
+//     } else {
+//         $actionObj = new stdClass();
+//         $actionObj->icon = 'fas fa-exclamation-triangle';
+//         $actionObj->title = '';
+//         $actionObj->message = 'Record Error';
+//         $actionObj->url = '';
+//         $actionObj->target = '_blank';
+//         $actionObj->type = 'danger';
 
-        echo $actionJSON = json_encode($actionObj);
-    }
-}
+//         echo $actionJSON = json_encode($actionObj);
+//     }
+// }
