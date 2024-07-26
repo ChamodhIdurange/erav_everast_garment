@@ -33,10 +33,10 @@ $columns = array(
 	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
 	array( 'db' => '`u`.`payment`', 'dt' => 'payment', 'field' => 'payment' ),
 	array( 'db' => '`u`.`balance`', 'dt' => 'balance', 'field' => 'balance' ),
-	array( 'db' => '`i`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
-	array( 'db' => '`i`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
+	array( 'db' => '`ub`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
+	array( 'db' => '`ub`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`d`.`method`',   'dt' => 'method', 'field' => 'method' )
+	array( 'db' => '`uc`.`method`',   'dt' => 'method', 'field' => 'method' )
 );
 
 // SQL server connection information
@@ -56,9 +56,9 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_invoice_payment` AS `u` JOIN `tbl_invoice_payment_has_tbl_invoice` AS `p` ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) JOIN `tbl_invoice_payment_detail` as `d` ON (`d`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`)";
+$joinQuery = "FROM `tbl_invoice_payment` AS `u` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ua` ON (`ua`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) LEFT JOIN `tbl_invoice` AS `ub` ON (`ub`.`idtbl_invoice` = `ua`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_invoice_payment_detail` as `uc` ON (`uc`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`)";
 
-$extraWhere = "`u`.`status` IN (1, 2) GROUP BY `p`.`tbl_invoice_idtbl_invoice`";
+$extraWhere = "`u`.`status` IN (1, 2) GROUP BY `ua`.`tbl_invoice_idtbl_invoice`";
 
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
