@@ -152,7 +152,6 @@ include "include/topnavbar.php";
                         <div class="embed-responsive embed-responsive-16by9" id="frame">
                             <iframe class="embed-responsive-item" frameborder="0"></iframe>
                         </div>
-
                     </div>
                 </div>
             </div>
