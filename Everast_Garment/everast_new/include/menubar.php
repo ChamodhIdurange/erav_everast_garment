@@ -332,12 +332,6 @@ function checkprivilege($arraymenu, $menuID, $type)
                         Vat Info
                     </a>
                 <?php }
-                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="grn.php">
-                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
-                        Good Receive
-                    </a>
-                <?php }
                     if (menucheck($menuprivilegearray, 17) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-2" href="customerporder.php">
                         <div class="nav-link-icon"><i data-feather="archive"></i></div>
