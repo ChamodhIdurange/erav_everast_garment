@@ -12,7 +12,7 @@ $numRowsGrnNum=$rowGrnNum['idtbl_grn']+1;
 $grnid=$numRowsGrnNum;
 if($numRowsGrnNum>0){$GRNNum="GRN-".($numRowsGrnNum);}else{$GRNNum="GRN-1";}
 
-$sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1 AND `grnissuestatus`=0";
+$sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1";
 $resultorder =$conn-> query($sqlorder); 
 
 include "include/topnavbar.php"; 
@@ -88,27 +88,12 @@ include "include/topnavbar.php";
                                             <th>Product</th>
                                             <th class="d-none">ProductID</th>
                                             <th class="d-none">Unitprice</th>
-                                            <th class="d-none">Refillprice</th>
-                                            <th class="d-none">Emptyprice</th>
-                                            <th class="d-none">Unitprice + VAT</th>
-                                            <th class="d-none">Refillprice + VAT</th>
-                                            <th class="d-none">Emptyprice + VAT</th>
-                                            <th class="text-right">New Price</th>
-                                            <th class="text-center">Refill Price</th>
-                                            <th class="text-center">Empty Price</th>
-                                            <th class="text-right">New Price+(VAT)</th>
-                                            <th class="text-center">Refill Price+(VAT)</th>
-                                            <th class="text-center">Empty Price+(VAT)</th>
-                                            <th class="text-center">New</th>
-                                            <th class="text-center">Refill</th>
-                                            <th class="text-center">Empty</th>
-                                            <th class="text-center">Trust</th>
-                                            <th class="text-center">Safty</th>
-                                            <th class="d-none">HidetotalWithoutVat</th>
+                                            <th class="text-right">Unit Price</th>
+                                            <th class="text-center">Qty</th>
                                             <th class="d-none">Hidetotal</th>
+                                            <!-- <th class="text-center">(VAT%)</th> -->
                                             <th class="text-right">Total</th>
-                                            <th class="text-center">(VAT%)</th>
-                                            <th class="text-right">Total+(VAT)</th>
+                                            <!-- <th class="text-right">Total+(VAT)</th> -->
                                         </tr>
                                     </thead>
                                     <tbody id="tbodygrncreate"></tbody>
@@ -116,13 +101,13 @@ include "include/topnavbar.php";
                                 <div class="row">
                                     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total : </h4></div>
                                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPricewithoutvat">0.00</h3></div>
-                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Tax Amount : </h4></div>
+                                    <!-- <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Tax Amount : </h4></div>
                                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showtaxAmount">0.00</h3></div>
                                     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total + (VAT) : </h4></div>
-                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div>
+                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div> -->
                                     <input type="hidden" id="txtShowPricewithoutvat" value="">
-                                    <input type="hidden" id="txtShowtaxAmount" value="">
-                                    <input type="hidden" id="txtShowPrice" value="">
+                                    <!-- <input type="text" id="txtShowtaxAmount" value="">
+                                    <input type="text" id="txtShowPrice" value=""> -->
                                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <hr class="border-dark">
                                     </div>
@@ -167,19 +152,6 @@ include "include/topnavbar.php";
             </div>
             <div class="modal-body">
                 <div id="viewgrndetail"></div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Day End Warning -->
-<div class="modal fade" id="warningDayEndModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-body bg-danger text-white text-center">
-                <div id="viewmessage"></div>
-            </div>
-            <div class="modal-footer bg-danger rounded-0">
-                <a href="dayend.php" class="btn btn-outline-light btn-sm">Go To Day End</a>
             </div>
         </div>
     </div>
@@ -232,9 +204,9 @@ include "include/topnavbar.php";
                 var grndate = $('#grndate').val();
                 var grninvoice = $('#grninvoice').val();
                 var grndispatch = $('#grndispatch').val();
-                var grnnettotal = $('#txtShowPrice').val();
+                // var grnnettotal = $('#txtShowPrice').val();
                 var grnnettotalwithoutvat = $('#txtShowPricewithoutvat').val();
-                var taxamount = $('#txtShowtaxAmount').val();
+                // var taxamount = $('#txtShowtaxAmount').val();
 
                 $.ajax({
                     type: "POST",
@@ -245,9 +217,9 @@ include "include/topnavbar.php";
                         grndate: grndate,
                         grninvoice: grninvoice,
                         grndispatch: grndispatch,
-                        grnnettotal: grnnettotal,
-                        grnnettotalwithoutvat: grnnettotalwithoutvat,
-                        taxamount: taxamount
+                        // grnnettotal: grnnettotal,
+                        grnnettotalwithoutvat: grnnettotalwithoutvat
+                        // taxamount: taxamount
 
                     },
                     url: 'process/grnprocess.php',
@@ -294,86 +266,6 @@ include "include/topnavbar.php";
 
             $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val).appendTo($this);
             textremove('.optionnewqty', row);
-        });
-        $('#tableGrnList tbody').on('click', '.editrefillqty', function(e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            $this = $(this);
-            if ($this.data('editing')) return;
-
-            var val = $this.text();
-
-            $this.empty();
-            $this.data('editing', true);
-
-            $('<input type="Text" class="form-control form-control-sm optionrefillqty">').val(val).appendTo($this);
-            textremove('.optionrefillqty', row);
-        });
-        $('#tableGrnList tbody').on('click', '.editemptyqty', function(e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            $this = $(this);
-            if ($this.data('editing')) return;
-
-            var val = $this.text();
-
-            $this.empty();
-            $this.data('editing', true);
-
-            $('<input type="Text" class="form-control form-control-sm optionemptyqty">').val(val).appendTo($this);
-            textremove('.optionemptyqty', row);
-        });
-        $('#tableGrnList tbody').on('click', '.edittrustqty', function(e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            $this = $(this);
-            if ($this.data('editing')) return;
-
-            var val = $this.text();
-
-            $this.empty();
-            $this.data('editing', true);
-
-            $('<input type="Text" class="form-control form-control-sm optiontrustqty">').val(val).appendTo($this);
-            textremove('.optiontrustqty', row);
-        });
-        $('#tableGrnList tbody').on('click', '.editsaftyqty', function(e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
-
-            e.preventDefault();
-            e.stopImmediatePropagation();
-
-            $this = $(this);
-            if ($this.data('editing')) return;
-
-            var val = $this.text();
-
-            $this.empty();
-            $this.data('editing', true);
-
-            $('<input type="Text" class="form-control form-control-sm optionsaftyqty">').val(val).appendTo($this);
-            textremove('.optionsaftyqty', row);
         });
     }
 
@@ -447,6 +339,35 @@ include "include/topnavbar.php";
         });
     }
 
+    // function tabletotal(){
+    //     var sum = 0;
+    //     var sumwithoutvat = 0;
+
+    //     $(".total").each(function(){
+    //         sum += parseFloat($(this).text());
+    //     });
+
+    //     $(".totalwithoutvat").each(function(){
+    //         sumwithoutvat += parseFloat($(this).text());
+    //     });
+
+    //     var taxamount = sum - sumwithoutvat;
+        
+    //     var showsum = addCommas(parseFloat(sum).toFixed(2));
+    //     var showsumwithoutvat = addCommas(parseFloat(sumwithoutvat).toFixed(2));
+    //     var showtaxamount = addCommas(parseFloat(taxamount).toFixed(2));
+
+
+    //     $('#showPrice').html('Rs. '+showsum);
+    //     $('#txtShowPrice').val(sum);
+
+    //     $('#showPricewithoutvat').html('Rs. '+showsumwithoutvat);
+    //     $('#txtShowPricewithoutvat').val(sumwithoutvat);
+
+    //     $('#showtaxAmount').html('Rs. '+showtaxamount);
+    //     $('#txtShowtaxAmount').val(taxamount);
+    // }
+
     function tabletotal(){
         var sum = 0;
         var sumwithoutvat = 0;
@@ -469,8 +390,8 @@ include "include/topnavbar.php";
         $('#showPrice').html('Rs. '+showsum);
         $('#txtShowPrice').val(sum);
 
-        $('#showPricewithoutvat').html('Rs. '+showsumwithoutvat);
-        $('#txtShowPricewithoutvat').val(sumwithoutvat);
+        $('#showPricewithoutvat').html('Rs. '+showsum);
+        $('#txtShowPricewithoutvat').val(sum);
 
         $('#showtaxAmount').html('Rs. '+showtaxamount);
         $('#txtShowtaxAmount').val(taxamount);
@@ -498,38 +419,16 @@ include "include/topnavbar.php";
                 
                 var rowID = row.closest("td").parent()[0].rowIndex;
                 var unitprice = parseFloat(row.closest("tr").find('td:eq(2)').text());
-                var refillprice = parseFloat(row.closest("tr").find('td:eq(3)').text());
-                var emptyprice = parseFloat(row.closest("tr").find('td:eq(4)').text());
-                var unitpricewithvat = parseFloat(row.closest("tr").find('td:eq(5)').text());
-                var refillpricewithvat = parseFloat(row.closest("tr").find('td:eq(6)').text());
-                var emptypricewithvat = parseFloat(row.closest("tr").find('td:eq(7)').text());
 
+                var newqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
 
-                var newqty = parseFloat(row.closest("tr").find('td:eq(14)').text());
-                var refillqty = parseFloat(row.closest("tr").find('td:eq(15)').text());
-                var emptyqty = parseFloat(row.closest("tr").find('td:eq(16)').text());
-                var trustqty = parseFloat(row.closest("tr").find('td:eq(17)').text());
-                var saftyqty = parseFloat(row.closest("tr").find('td:eq(18)').text());
-
-                var totrefill = ((refillqty+trustqty+saftyqty)*refillprice);
                 var totnew = newqty*unitprice;
-                var totempty = emptyqty*emptyprice;
 
-                var totrefillwithvat = ((refillqty+trustqty+saftyqty)*refillpricewithvat);
-                var totnewwithvat = newqty*unitpricewithvat;
-                var totemptywithvat = emptyqty*emptypricewithvat;
-
-                var total = parseFloat(totrefill+totnew+totempty).toFixed(2);
+                var total = parseFloat(totnew).toFixed(2);
                 var showtotal = addCommas(total);
 
-                var totalwithvat = parseFloat(totrefillwithvat+totnewwithvat+totemptywithvat).toFixed(2);
-                var showtotalwithvat = addCommas(totalwithvat);
-
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(19)').text(total);
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(21)').text(showtotal);
-
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(20)').text(totalwithvat);
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(23)').text(showtotalwithvat);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(5)').text(total);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(6)').text(showtotal);
 
                 tabletotal();
             }
