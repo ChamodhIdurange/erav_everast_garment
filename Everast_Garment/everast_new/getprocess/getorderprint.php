@@ -4,7 +4,7 @@ require_once('../connection/db.php');
 
 $orderID=$_POST['orderID'];
 
-$sqlorder="SELECT `idtbl_porder`, `subtotal`, `disamount`, `nettotal`, `remark`, `orderdate` FROM `tbl_porder` WHERE `idtbl_porder`='$orderID'";
+$sqlorder="SELECT `idtbl_porder`, `total`, `nettotal`, `remark`, `orderdate` FROM `tbl_porder` WHERE `idtbl_porder`='$orderID'";
 $resultorder=$conn->query($sqlorder);
 $roworder=$resultorder->fetch_assoc();
 
@@ -16,29 +16,6 @@ $rowordercount=$resultordercount->fetch_assoc();
 
 $sqlorderinfo="SELECT `tbl_porder_detail`.*, `tbl_product`.`product_name` FROM `tbl_porder_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_porder_detail`.`tbl_product_idtbl_product` WHERE `tbl_porder_detail`.`status`=1 AND `tbl_porder_detail`.`tbl_porder_idtbl_porder`='$orderID'";
 $resultorderinfo=$conn->query($sqlorderinfo);
-
-// $sqlorderproductfive="SELECT `refillqty`, `returnqty`, `newqty` FROM `tbl_porder_detail` WHERE `status`=1 AND `tbl_porder_idtbl_porder`='$orderID' AND `tbl_product_idtbl_product`=5";
-// $resultorderproductfive=$conn->query($sqlorderproductfive);
-// $roworderproductfive=$resultorderproductfive->fetch_assoc();
-
-// $sqlcheque="SELECT `chequeno`, `chequedate` FROM `tbl_porder_payment` WHERE `tbl_porder_idtbl_porder`='$orderID' AND `status`=1";
-// $resultcheque=$conn->query($sqlcheque);
-// $rowcheque=$resultcheque->fetch_assoc();
-
-$sqldelivery="SELECT * FROM `tbl_porder_delivery` WHERE `tbl_porder_idtbl_porder`='$orderID' AND `status`=1";
-$resultdelivery=$conn->query($sqldelivery);
-$rowdelivery=$resultdelivery->fetch_assoc();
-
-$lorryID=$rowdelivery['vehicleid'];
-$trailerID=$rowdelivery['trailerid'];
-
-$sqlvehicle="SELECT `vehicleno` FROM `tbl_vehicle` WHERE `idtbl_vehicle`='$lorryID' AND `status`=1 AND `type`=0";
-$resultvehicle=$conn->query($sqlvehicle);
-$rowvehicle=$resultvehicle->fetch_assoc();
-
-$sqltrailer="SELECT `vehicleno` FROM `tbl_vehicle` WHERE `idtbl_vehicle`='$trailerID' AND `status`=1 AND `type`=1";
-$resulttrailer=$conn->query($sqltrailer);
-$rowtrailer=$resulttrailer->fetch_assoc();
 
 $arrayaccessories=array();
 $sqlaccessories="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1 AND `tbl_product_category_idtbl_product_category`=2";

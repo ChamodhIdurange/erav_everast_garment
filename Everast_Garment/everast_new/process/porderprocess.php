@@ -1,68 +1,78 @@
-<?php 
+<?php
 session_start();
-if(!isset($_SESSION['userid'])){header ("Location:index.php");}
-if(!isset($_POST['assembledpo'])){
-    $assempledpo=0;
-}else{
-    $assempledpo=1;
+if (!isset($_SESSION['userid'])) {
+    header("Location: index.php");
+    exit();
 }
-require_once('../connection/db.php');//die('bc');
-$userID=$_SESSION['userid'];
 
-$orderdate=$_POST['orderdate'];
-$ismaterialpo=$_POST['ordertype'];
-$remark=$_POST['remark'];
-$total=$_POST['total'];
-$tableData=$_POST['tableData'];
+require_once('../connection/db.php');
 
-$updatedatetime=date('Y-m-d h:i:s');
+$userID = $_SESSION['userid'];
 
-if($assempledpo == 0){
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    $insretorder="INSERT INTO `tbl_porder`(`potype`, `ismaterialpo`, `orderdate`, `subtotal`, `disamount`, `discount`, `nettotal`, `payfullhalf`, `remark`, `confirmstatus`, `dispatchissue`, `grnissuestatus`, `paystatus`, `shipstatus`, `deliverystatus`, `trackingno`, `trackingwebsite`, `callstatus`, `narration`, `cancelreason`, `returnstatus`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_locations_idtbl_locations`) VALUES ('0', '$ismaterialpo', '$orderdate','$total','0','0','$total','0','$remark','0','0','0','0','0','0','','-','0','-','-','0','1','$updatedatetime','$userID', '5')";
-}else{
-    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-    $insretorder="INSERT INTO `tbl_porder`(`potype`, `ismaterialpo`, `isassemblepo`, `orderdate`, `subtotal`, `disamount`, `discount`, `nettotal`, `payfullhalf`, `remark`, `confirmstatus`, `dispatchissue`, `grnissuestatus`, `paystatus`, `shipstatus`, `deliverystatus`, `trackingno`, `trackingwebsite`, `callstatus`, `narration`, `cancelreason`, `returnstatus`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_locations_idtbl_locations`) VALUES ('0', '$ismaterialpo', '$assempledpo', '$orderdate','$total','0','0','$total','0','$remark','0','1','0','1','1','1','','-','0','-','-','0','1','$updatedatetime','$userID', '5')";
-}
-if($conn->query($insretorder)==true){
-    $orderID=$conn->insert_id;
-    foreach($tableData as $rowtabledata){
-        $product=$rowtabledata['col_2'];
-        $unitprice=$rowtabledata['col_3'];
-        $saleprice=$rowtabledata['col_4'];
-        $newqty=$rowtabledata['col_5'];
-        $total=$rowtabledata['col_6'];
+$orderDate = $_POST['orderdate'];
+$remark = $_POST['remark'];
+$orderDetails = $_POST['orderDetails'];
+$total = $_POST['total'];
+$nettotal = $_POST['nettotal'];
+$vatper = $_POST['vatper'];
+$vatamount = $_POST['vatamount'];
+$supplierId = $_POST['supplierId'];
+$updatedatetime = date('Y-m-d h:i:s');
 
-        if($ismaterialpo == 0){
-            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-            $insertorderdetail="INSERT INTO `tbl_porder_detail`(`type`, `qty`, `freeqty`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`, `tbl_product_idtbl_product`) VALUES ('0','$newqty','0','$unitprice','$saleprice','1','$updatedatetime','$userID','$orderID','$product')";
-        }else{
-            $insertorderdetail="INSERT INTO `tbl_porder_detail`(`type`, `qty`, `freeqty`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`, `tbl_material_idtbl_material`) VALUES ('0','$newqty','0','$unitprice','$saleprice','1','$updatedatetime','$userID','$orderID','$product')";
+// Insert order
+$insertOrderQuery = "INSERT INTO `tbl_porder` (`orderdate`, `total`, `vat`, `nettotal`, `vatpre`, `remark`, `confirmstatus`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_supplier_idtbl_supplier`) 
+VALUES ('$orderDate', '$total', '$vatamount', '$nettotal', '$vatper', '$remark', '0', '1', '$updatedatetime', '$userID', '$supplierId')";
+
+if ($conn->query($insertOrderQuery) === TRUE) {
+    $orderID = $conn->insert_id;
+
+    foreach ($orderDetails as $detail) {
+        $productId = $detail['productId'];
+        $unitPrice = $detail['unitPrice'];
+        $newQty = str_replace(',', '', $detail['newQty']);
+
+        $newPrice = !empty($newQty) ? $unitPrice : null;
+
+        if ($newPrice !== null) {
+            $totalPrice = $newQty * $unitPrice;
+
+            $insertDetailQuery = "INSERT INTO tbl_porder_detail (`qty`, `unitprice`, `total`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_porder_idtbl_porder`) 
+                                VALUES ('$newQty', '$newPrice', '$totalPrice', '1', '$updatedatetime', '$userID', '$productId', '$orderID')";
+
+            if ($conn->query($insertDetailQuery) !== TRUE) {
+                // Handle error inserting order detail
+                echo json_encode([
+                    'icon' => 'fas fa-exclamation-triangle',
+                    'title' => '',
+                    'message' => 'Error inserting order detail',
+                    'url' => '',
+                    'target' => '_blank',
+                    'type' => 'danger'
+                ]);
+                exit();
+            }
         }
-        $conn->query($insertorderdetail);
     }
 
-    $insertpayment = "INSERT INTO `tbl_porder_payment`(`date`, `ordertotal`, `previousbill`, `balancetotal`, `accountstatus`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`) VALUES ('$orderdate','$total','0','0','0','1','$updatedatetime','$userID','$orderID')";
-    $conn->query($insertpayment);
-
-    $actionObj=new stdClass();
-    $actionObj->icon='fas fa-check-circle';
-    $actionObj->title='';
-    $actionObj->message='Add Successfully';
-    $actionObj->url='';
-    $actionObj->target='_blank';
-    $actionObj->type='success';
-
-    echo $actionJSON=json_encode($actionObj);
+    echo json_encode([
+        'icon' => 'fas fa-check-circle',
+        'title' => '',
+        'message' => 'Add Successfully',
+        'url' => '',
+        'target' => '_blank',
+        'type' => 'success'
+    ]);
+} else {
+    // Handle error inserting order
+    echo json_encode([
+        'icon' => 'fas fa-exclamation-triangle',
+        'title' => '',
+        'message' => 'Error inserting order',
+        'url' => '',
+        'target' => '_blank',
+        'type' => 'danger'
+    ]);
 }
-else{
-    $actionObj=new stdClass();
-    $actionObj->icon='fas fa-exclamation-triangle';
-    $actionObj->title='';
-    $actionObj->message='Record Error';
-    $actionObj->url='';
-    $actionObj->target='_blank';
-    $actionObj->type='danger';
 
-    echo $actionJSON=json_encode($actionObj);
-}
+$conn->close();
+?>

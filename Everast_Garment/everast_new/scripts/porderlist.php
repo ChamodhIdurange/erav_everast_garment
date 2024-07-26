@@ -33,10 +33,9 @@ $columns = array(
 	array( 'db' => '`u`.`orderdate`', 'dt' => 'orderdate', 'field' => 'orderdate' ),
 	array( 'db' => '`u`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
 	array( 'db' => '`uc`.`name`', 'dt' => 'name', 'field' => 'name' ),
-	array( 'db' => '`ud`.`idtbl_dispatch`', 'dt' => 'idtbl_dispatch', 'field' => 'idtbl_dispatch' ),
 	array( 'db' => '`u`.`confirmstatus`', 'dt' => 'confirmstatus', 'field' => 'confirmstatus' ),
-	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`u`.`grnissuestatus`',   'dt' => 'grnissuestatus', 'field' => 'grnissuestatus' )
+	array( 'db' => '`u`.`completestatus`', 'dt' => 'completestatus', 'field' => 'completestatus' ),
+	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
 // SQL server connection information
@@ -56,9 +55,9 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_porder` AS `u` LEFT JOIN `tbl_dispatch` AS `ud` ON (`ud`.`porder_id` = `u`.`idtbl_porder`) LEFT JOIN `tbl_user` AS `uc` ON (`uc`.`idtbl_user` = `u`.`tbl_user_idtbl_user`)";
+$joinQuery = "FROM `tbl_porder` AS `u` LEFT JOIN `tbl_user` AS `uc` ON (`uc`.`idtbl_user` = `u`.`tbl_user_idtbl_user`)";
 
-$extraWhere = "`u`.`confirmstatus` IN (1,0,2) AND `u`.`status`=1 AND `u`.`potype`=0";
+$extraWhere = "`u`.`confirmstatus` IN (1,0,2) AND `u`.`status`=1";
 
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
