@@ -79,7 +79,7 @@ $resulthelper =$conn-> query($sqlhelper);
                                 <?php while($rowdispatchdetail=$resultdispatchdetail->fetch_assoc()){ ?>
                                 <tr>
                                     <td><?php echo $rowdispatchdetail['product_name'] ?></td>
-                                    <td class="text-center"><?php echo $rowdispatchdetail['refillqty']+$rowdispatchdetail['returnqty']+$rowdispatchdetail['newqty']+$rowdispatchdetail['trustqty']+$rowdispatchdetail['saftyqty']+$rowdispatchdetail['saftyreturnqty'] ?></td>
+                                    <td class="text-center"><?php echo $rowdispatchdetail['refillqty']+$rowdispatchdetail['returnqty']+$rowdispatchdetail['newqty']+$rowdispatchdetail['emptyqty']+$rowdispatchdetail['trustqty']+$rowdispatchdetail['saftyqty']+$rowdispatchdetail['saftyreturnqty'] ?></td>
                                 </tr>
                                 <?php } ?>
                             </tbody>

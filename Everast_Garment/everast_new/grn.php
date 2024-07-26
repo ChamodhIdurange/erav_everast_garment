@@ -42,22 +42,17 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4">
+                        <div class="col-12">
                                 <form action="#" method="post" autocomplete="off" id="grnFrom">
                                     <div class="form-row mb-1">
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">GRN Number</label>
                                             <input type="text" class="form-control form-control-sm" placeholder="" name="grnnum" id="grnnum" value="<?php echo $GRNNum; ?>" readonly>
                                         </div>
-                                    </div>
-                                    <div class="form-row mb-1">
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">GRN Date</label>
                                             <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control dpd1a" placeholder="" name="grndate" id="grndate" required>
-                                                <div class="input-group-append">
-                                                    <span class="btn btn-light border-gray-500"><i class="far fa-calendar"></i></span>
-                                                </div>
+                                                <input type="date" id="grndate" name="grndate" class="form-control form-control-sm" value="<?php echo date('Y-m-d') ?>" required>
                                             </div> 
                                         </div>  
                                         <div class="col">
@@ -68,9 +63,7 @@ include "include/topnavbar.php";
                                                 <option value="<?php echo $roworder['idtbl_porder'] ?>"><?php echo 'PO-'.$roworder['idtbl_porder'] ?></option>
                                                 <?php }} ?>
                                             </select>
-                                        </div>                                      
-                                    </div>
-                                    <div class="form-row mb-1">
+                                        </div>   
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">Invoice Number*</label>
                                             <input type="text" class="form-control form-control-sm" placeholder="" name="grninvoice" id="grninvoice" required>
@@ -78,14 +71,16 @@ include "include/topnavbar.php";
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">Delivery Number*</label>
                                             <input type="text" class="form-control form-control-sm" placeholder="" name="grndispatch" id="grndispatch" required>
-                                        </div>
+                                        </div> 
                                     </div>
                                     <div class="form-group mt-2">
                                         <input name="submitBtn" type="submit" value="Save" id="submitBtn" class="d-none">
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-8">
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
                                 <h6 class="title-style small font-weight-bold mt-2"><span>GRN Detail</span></h6>
                                 <table class="table table-bordered table-sm table-striped" id="tableGrnList">
                                     <thead>
@@ -93,17 +88,40 @@ include "include/topnavbar.php";
                                             <th>Product</th>
                                             <th class="d-none">ProductID</th>
                                             <th class="d-none">Unitprice</th>
-                                            <th class="text-right">Unit Price</th>
-                                            <th class="text-center">Qty</th>
+                                            <th class="d-none">Refillprice</th>
+                                            <th class="d-none">Emptyprice</th>
+                                            <th class="d-none">Unitprice + VAT</th>
+                                            <th class="d-none">Refillprice + VAT</th>
+                                            <th class="d-none">Emptyprice + VAT</th>
+                                            <th class="text-right">New Price</th>
+                                            <th class="text-center">Refill Price</th>
+                                            <th class="text-center">Empty Price</th>
+                                            <th class="text-right">New Price+(VAT)</th>
+                                            <th class="text-center">Refill Price+(VAT)</th>
+                                            <th class="text-center">Empty Price+(VAT)</th>
+                                            <th class="text-center">New</th>
+                                            <th class="text-center">Refill</th>
+                                            <th class="text-center">Empty</th>
+                                            <th class="text-center">Trust</th>
+                                            <th class="text-center">Safty</th>
+                                            <th class="d-none">HidetotalWithoutVat</th>
                                             <th class="d-none">Hidetotal</th>
                                             <th class="text-right">Total</th>
+                                            <th class="text-center">(VAT%)</th>
+                                            <th class="text-right">Total+(VAT)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbodygrncreate"></tbody>
                                 </table>
                                 <div class="row">
                                     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total : </h4></div>
+                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPricewithoutvat">0.00</h3></div>
+                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Tax Amount : </h4></div>
+                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showtaxAmount">0.00</h3></div>
+                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total + (VAT) : </h4></div>
                                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div>
+                                    <input type="hidden" id="txtShowPricewithoutvat" value="">
+                                    <input type="hidden" id="txtShowtaxAmount" value="">
                                     <input type="hidden" id="txtShowPrice" value="">
                                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <hr class="border-dark">
@@ -124,7 +142,7 @@ include "include/topnavbar.php";
 <!-- Modal GRN List -->
 <div class="modal fade" id="modalgrnlist" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header p-2">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -140,8 +158,8 @@ include "include/topnavbar.php";
 <!-- Modal GRn Detail -->
 <div class="modal fade" id="modalgrndetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content  bg-warning-soft">
             <div class="modal-header p-2">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -169,13 +187,12 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function() {
-        var today = new Date();
         checkdayendprocess();
         $('.dpd1a').datepicker({
             uiLibrary: 'bootstrap4',
             autoclose: 'true',
-            endDate: "today",
-            maxDate: today,
+            todayHighlight: true,
+            startDate: 'today',
             format: 'yyyy-mm-dd'
         });
         $('#ponumber').change(function(){
@@ -191,20 +208,6 @@ include "include/topnavbar.php";
                     $('#tbodygrncreate').html(result);
                     tabletotal();
                     orderoption();
-                }
-            });
-        });
-        $('#btnviewallgrn').click(function(){
-            $('#viewgrnlist').empty().html('<div class="card border-0 shadow-none"><div class="card-body text-center"><img src="images/spinner.gif"></div></div>');
-            $('#modalgrnlist').modal('show');
-            
-            $.ajax({
-                type: "POST",
-                data: {},
-                url: 'getprocess/getgrnlist.php',
-                success: function(result) {//alert(result);
-                    $('#viewgrnlist').html(result);
-                    grnoption();
                 }
             });
         });
@@ -230,6 +233,8 @@ include "include/topnavbar.php";
                 var grninvoice = $('#grninvoice').val();
                 var grndispatch = $('#grndispatch').val();
                 var grnnettotal = $('#txtShowPrice').val();
+                var grnnettotalwithoutvat = $('#txtShowPricewithoutvat').val();
+                var taxamount = $('#txtShowtaxAmount').val();
 
                 $.ajax({
                     type: "POST",
@@ -240,7 +245,10 @@ include "include/topnavbar.php";
                         grndate: grndate,
                         grninvoice: grninvoice,
                         grndispatch: grndispatch,
-                        grnnettotal: grnnettotal
+                        grnnettotal: grnnettotal,
+                        grnnettotalwithoutvat: grnnettotalwithoutvat,
+                        taxamount: taxamount
+
                     },
                     url: 'process/grnprocess.php',
                     success: function(result) { //alert(result);
@@ -250,7 +258,20 @@ include "include/topnavbar.php";
                 });
             }
         });
-        modalgrnlist
+        $('#btnviewallgrn').click(function(){
+            $('#viewgrnlist').empty().html('<div class="card border-0 shadow-none"><div class="card-body text-center"><img src="images/spinner.gif"></div></div>');
+            $('#modalgrnlist').modal('show');
+            
+            $.ajax({
+                type: "POST",
+                data: {},
+                url: 'getprocess/getgrnlist.php',
+                success: function(result) {//alert(result);
+                    $('#viewgrnlist').html(result);
+                    grnoption();
+                }
+            });
+        });
     });
 
     function orderoption(){
@@ -293,6 +314,26 @@ include "include/topnavbar.php";
 
             $('<input type="Text" class="form-control form-control-sm optionrefillqty">').val(val).appendTo($this);
             textremove('.optionrefillqty', row);
+        });
+        $('#tableGrnList tbody').on('click', '.editemptyqty', function(e) {
+            var row = $(this);
+            // var rowid = row.closest("tr").find('td:eq(0)').text();
+            // var selectvalueone = $('.optionpiorityone' + rowid).val();
+            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            $this = $(this);
+            if ($this.data('editing')) return;
+
+            var val = $this.text();
+
+            $this.empty();
+            $this.data('editing', true);
+
+            $('<input type="Text" class="form-control form-control-sm optionemptyqty">').val(val).appendTo($this);
+            textremove('.optionemptyqty', row);
         });
         $('#tableGrnList tbody').on('click', '.edittrustqty', function(e) {
             var row = $(this);
@@ -337,20 +378,16 @@ include "include/topnavbar.php";
     }
 
     function grnoption(){
-        $('#grnlisttable').dataTable({
-            "order": [[ 0, "desc" ]]
-        });
+        $('#grnlisttable').dataTable();
         $('#grnlisttable tbody').on('click', '.btnviewgrn', function() {
             var grnid=$(this).attr('id');
-            var confirmstatus=$(this).attr('name');
 
             $('#modalgrndetail').modal('show');
 
             $.ajax({
                 type: "POST",
                 data: {
-                    grnid:grnid,
-                    confirmstatus:confirmstatus
+                    grnid:grnid
                 },
                 url: 'getprocess/getgrndetail.php',
                 success: function(result) {//alert(result);
@@ -409,16 +446,34 @@ include "include/topnavbar.php";
                 '</div>'
         });
     }
+
     function tabletotal(){
         var sum = 0;
+        var sumwithoutvat = 0;
+
         $(".total").each(function(){
             sum += parseFloat($(this).text());
         });
+
+        $(".totalwithoutvat").each(function(){
+            sumwithoutvat += parseFloat($(this).text());
+        });
+
+        var taxamount = sum - sumwithoutvat;
         
         var showsum = addCommas(parseFloat(sum).toFixed(2));
+        var showsumwithoutvat = addCommas(parseFloat(sumwithoutvat).toFixed(2));
+        var showtaxamount = addCommas(parseFloat(taxamount).toFixed(2));
+
 
         $('#showPrice').html('Rs. '+showsum);
         $('#txtShowPrice').val(sum);
+
+        $('#showPricewithoutvat').html('Rs. '+showsumwithoutvat);
+        $('#txtShowPricewithoutvat').val(sumwithoutvat);
+
+        $('#showtaxAmount').html('Rs. '+showtaxamount);
+        $('#txtShowtaxAmount').val(taxamount);
     }
 
     function addCommas(nStr){
@@ -444,23 +499,37 @@ include "include/topnavbar.php";
                 var rowID = row.closest("td").parent()[0].rowIndex;
                 var unitprice = parseFloat(row.closest("tr").find('td:eq(2)').text());
                 var refillprice = parseFloat(row.closest("tr").find('td:eq(3)').text());
+                var emptyprice = parseFloat(row.closest("tr").find('td:eq(4)').text());
+                var unitpricewithvat = parseFloat(row.closest("tr").find('td:eq(5)').text());
+                var refillpricewithvat = parseFloat(row.closest("tr").find('td:eq(6)').text());
+                var emptypricewithvat = parseFloat(row.closest("tr").find('td:eq(7)').text());
 
-                var newqty = parseFloat(row.closest("tr").find('td:eq(6)').text());
-                var editqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
-                var refillqty = parseFloat(row.closest("tr").find('td:eq(7)').text());
-                var trustqty = parseFloat(row.closest("tr").find('td:eq(8)').text());
-                var saftyqty = parseFloat(row.closest("tr").find('td:eq(9)').text());
 
-                // var totrefill = ((refillqty+trustqty+saftyqty)*refillprice);
-                var totnew = unitprice*editqty;
+                var newqty = parseFloat(row.closest("tr").find('td:eq(14)').text());
+                var refillqty = parseFloat(row.closest("tr").find('td:eq(15)').text());
+                var emptyqty = parseFloat(row.closest("tr").find('td:eq(16)').text());
+                var trustqty = parseFloat(row.closest("tr").find('td:eq(17)').text());
+                var saftyqty = parseFloat(row.closest("tr").find('td:eq(18)').text());
 
-                var total = parseFloat(totnew).toFixed(2);
+                var totrefill = ((refillqty+trustqty+saftyqty)*refillprice);
+                var totnew = newqty*unitprice;
+                var totempty = emptyqty*emptyprice;
 
+                var totrefillwithvat = ((refillqty+trustqty+saftyqty)*refillpricewithvat);
+                var totnewwithvat = newqty*unitpricewithvat;
+                var totemptywithvat = emptyqty*emptypricewithvat;
+
+                var total = parseFloat(totrefill+totnew+totempty).toFixed(2);
                 var showtotal = addCommas(total);
-                // alert(showtotal)
 
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(5)').text(total);
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(6)').text(showtotal);
+                var totalwithvat = parseFloat(totrefillwithvat+totnewwithvat+totemptywithvat).toFixed(2);
+                var showtotalwithvat = addCommas(totalwithvat);
+
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(19)').text(total);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(21)').text(showtotal);
+
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(20)').text(totalwithvat);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(23)').text(showtotalwithvat);
 
                 tabletotal();
             }

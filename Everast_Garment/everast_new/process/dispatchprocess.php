@@ -66,17 +66,19 @@ else{
             $product=$rowtabledata['col_2'];
             $unitprice=$rowtabledata['col_3'];
             $refillprice=$rowtabledata['col_4'];
-            $newsaleprice=$rowtabledata['col_5'];
-            $refillsaleprice=$rowtabledata['col_6'];
-            $fillqty=$rowtabledata['col_7'];
-            $newqty=$rowtabledata['col_8'];
-            $reqty=$rowtabledata['col_9'];
-            $trustqty=$rowtabledata['col_10'];
-            $saftyqty=$rowtabledata['col_11'];
-            $saftyreturnqty=$rowtabledata['col_12'];
-            $total=$rowtabledata['col_13'];
+            $emptyprice=$rowtabledata['col_5'];
+            $newsaleprice=$rowtabledata['col_6'];
+            $refillsaleprice=$rowtabledata['col_7'];
+            $fillqty=$rowtabledata['col_8'];
+            $newqty=$rowtabledata['col_9'];
+            $emptyqty=$rowtabledata['col_10'];
+            $reqty=$rowtabledata['col_11'];
+            $trustqty=$rowtabledata['col_12'];
+            $saftyqty=$rowtabledata['col_13'];
+            $saftyreturnqty=$rowtabledata['col_14'];
+            $total=$rowtabledata['col_15'];
 
-            $insertdispatchdetail="INSERT INTO `tbl_dispatch_detail`(`type`, `refillqty`, `returnqty`, `newqty`, `trustqty`, `saftyqty`, `saftyreturnqty`, `unitprice`, `refillprice`, `newsaleprice`, `refillsaleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_dispatch_idtbl_dispatch`, `tbl_product_idtbl_product`) VALUES ('0','$fillqty','$reqty','$newqty','$trustqty','$saftyqty','$saftyreturnqty','$unitprice','$refillprice','$newsaleprice','$refillsaleprice','1','$updatedatetime','$userID','$dispatchID','$product')";
+            $insertdispatchdetail="INSERT INTO `tbl_dispatch_detail`(`type`, `refillqty`, `returnqty`, `newqty`, `emptyqty`, `trustqty`, `saftyqty`, `saftyreturnqty`, `unitprice`, `refillprice`,`emptyprice`, `newsaleprice`, `refillsaleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_dispatch_idtbl_dispatch`, `tbl_product_idtbl_product`) VALUES ('0','$fillqty','$reqty','$newqty','$emptyqty','$trustqty','$saftyqty','$saftyreturnqty','$unitprice','$refillprice','$emptyprice','$newsaleprice','$refillsaleprice','1','$updatedatetime','$userID','$dispatchID','$product')";
             $conn->query($insertdispatchdetail);
 
             $netqty=$netqty+($fillqty+$newqty+$reqty+$trustqty+$saftyqty+$saftyreturnqty);
@@ -88,12 +90,16 @@ else{
             }
             //Trust return update in trsut stock
             if($reqty>0){
-                $updatetruststock="UPDATE `tbl_stock_trust` SET `returnqty`=(`returnqty`-'$reqty'), `saftyreturnqty`=(`saftyreturnqty`-'$saftyreturnqty') WHERE `tbl_product_idtbl_product`='$product'";
+                $updatetruststock="UPDATE `tbl_stock_trust` SET `trustqty`=(`trustqty`-'$reqty'), `saftyqty`=(`saftyqty`-'$saftyreturnqty') WHERE `tbl_product_idtbl_product`='$product'";
                 $conn->query($updatetruststock);
 
                 $updatestock="UPDATE `tbl_stock` SET `emptyqty`=(`emptyqty`-'$reqty') WHERE `tbl_product_idtbl_product`='$product'";
                 $conn->query($updatestock);
-            }        
+            }    
+            if($saftyreturnqty>0){
+                $updatestock="UPDATE `tbl_stock` SET `emptyqty`=(`emptyqty`-'$saftyreturnqty') WHERE `tbl_product_idtbl_product`='$product'";
+                $conn->query($updatestock);
+            }       
         }
 
         $updatedispatch="UPDATE `tbl_dispatch` SET `netqty`='$netqty' WHERE `idtbl_dispatch`='$dispatchID'";

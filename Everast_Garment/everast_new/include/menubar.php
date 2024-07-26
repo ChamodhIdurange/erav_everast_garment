@@ -479,6 +479,12 @@ if ($lastElement == 'useraccount.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 105, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 105, 4);
 }
+else if ($lastElement == 'vatinfo.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 107, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 107, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 107, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 107, 4);
+}
 function checkprivilege($arraymenu, $menuID, $type)
 {
     foreach ($arraymenu as $array) {
@@ -789,13 +795,13 @@ function checkprivilege($arraymenu, $menuID, $type)
                 </nav>
             </div> -->
         <?php }
-        if (menucheck($menuprivilegearray, 11) == 1 | menucheck($menuprivilegearray, 12) == 1 | menucheck($menuprivilegearray, 13) == 1 | menucheck($menuprivilegearray, 70) == 1) { ?>
+        if (menucheck($menuprivilegearray, 11) == 1 | menucheck($menuprivilegearray, 12) == 1 | menucheck($menuprivilegearray, 13) == 1 | menucheck($menuprivilegearray, 70) == 1 | menucheck($menuprivilegearray, 107) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseother" aria-expanded="false" aria-controls="collapseother">
                 <div class="nav-link-icon"><i data-feather="settings"></i></div>
                 Other
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
-            <div class="collapse <?php if ($lastElement == "vehicle.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "expensestype.php") {
+            <div class="collapse <?php if ($lastElement == "vehicle.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "expensestype.php" | $lastElement == "vatinfo.php") {
                                         echo 'show';
                                     } ?>" id="collapseother" data-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
@@ -813,6 +819,9 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <?php }
                     if (menucheck($menuprivilegearray, 70) == 1) { ?>
                         <a class="nav-link p-0 px-3 py-1" href="expensestype.php">Expenses Type</a>
+                    <?php }
+                    if (menucheck($menuprivilegearray, 107) == 1) { ?>
+                        <a class="nav-link p-0 px-3 py-1" href="vatinfo.php">VAT Info</a>
                     <?php } ?>
                 </nav>
             </div>
