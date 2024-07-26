@@ -11,6 +11,10 @@ if (empty($commonName)) {
 $query = "SELECT `product_name`, `idtbl_product`, `unitprice` FROM `tbl_product` WHERE `common_name` = '$commonName' AND `status` = '1'";
 $result = mysqli_query($conn, $query);
 
+$sqlvat = "SELECT `idtbl_vat_info`, `vat` FROM `tbl_vat_info` ORDER BY `idtbl_vat_info` DESC LIMIT 1";
+$resultvat = $conn->query($sqlvat);
+$rowvat = $resultvat->fetch_assoc();
+
 if (!$result) {
     die(json_encode(array('error' => 'Query failed: ' . mysqli_error($conn))));
 }
@@ -19,6 +23,8 @@ $products = array();
 while ($row = mysqli_fetch_assoc($result)) {
     $products[] = $row;
 }
+
+$products['vat'] = $rowvat['vat'];
 
 mysqli_close($conn);
 

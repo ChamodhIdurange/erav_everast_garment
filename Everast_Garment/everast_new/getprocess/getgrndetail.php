@@ -23,8 +23,8 @@ $result=$conn->query($sql);
         <?php while($row=$result->fetch_assoc()){ ?>
         <tr>
             <td><?php echo $row['product_name']; ?></td>
-            <td><?php echo number_format($row['unitprice'],2); ?></td>
-            <td><?php echo $row['qty']; ?></td>
+            <td class="text-center"><?php echo number_format($row['unitprice'],2); ?></td>
+            <td class="text-center"><?php echo $row['qty']; ?></td>
             <td class="text-right"><?php echo number_format($row['total'], 2); ?></td>
         </tr>
         <?php } ?>

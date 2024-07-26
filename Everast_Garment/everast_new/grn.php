@@ -12,7 +12,7 @@ $numRowsGrnNum=$rowGrnNum['idtbl_grn']+1;
 $grnid=$numRowsGrnNum;
 if($numRowsGrnNum>0){$GRNNum="GRN-".($numRowsGrnNum);}else{$GRNNum="GRN-1";}
 
-$sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1";
+$sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1  AND `grnissuestatus` = 0";
 $resultorder =$conn-> query($sqlorder); 
 
 include "include/topnavbar.php"; 
@@ -91,9 +91,7 @@ include "include/topnavbar.php";
                                             <th class="text-right">Unit Price</th>
                                             <th class="text-center">Qty</th>
                                             <th class="d-none">Hidetotal</th>
-                                            <!-- <th class="text-center">(VAT%)</th> -->
                                             <th class="text-right">Total</th>
-                                            <!-- <th class="text-right">Total+(VAT)</th> -->
                                         </tr>
                                     </thead>
                                     <tbody id="tbodygrncreate"></tbody>
@@ -101,13 +99,13 @@ include "include/topnavbar.php";
                                 <div class="row">
                                     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total : </h4></div>
                                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPricewithoutvat">0.00</h3></div>
-                                    <!-- <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Tax Amount : </h4></div>
+                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>VAT Amount : </h4></div>
                                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showtaxAmount">0.00</h3></div>
                                     <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total + (VAT) : </h4></div>
-                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div> -->
+                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div>
                                     <input type="hidden" id="txtShowPricewithoutvat" value="">
-                                    <!-- <input type="text" id="txtShowtaxAmount" value="">
-                                    <input type="text" id="txtShowPrice" value=""> -->
+                                    <input type="hidden" id="txtShowtaxAmount" value="">
+                                    <input type="hidden" id="txtShowPrice" value="">
                                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                         <hr class="border-dark">
                                     </div>
@@ -204,9 +202,9 @@ include "include/topnavbar.php";
                 var grndate = $('#grndate').val();
                 var grninvoice = $('#grninvoice').val();
                 var grndispatch = $('#grndispatch').val();
-                // var grnnettotal = $('#txtShowPrice').val();
+                var grnnettotal = $('#txtShowPrice').val();
                 var grnnettotalwithoutvat = $('#txtShowPricewithoutvat').val();
-                // var taxamount = $('#txtShowtaxAmount').val();
+                var taxamount = $('#txtShowtaxAmount').val();
 
                 $.ajax({
                     type: "POST",
@@ -217,9 +215,9 @@ include "include/topnavbar.php";
                         grndate: grndate,
                         grninvoice: grninvoice,
                         grndispatch: grndispatch,
-                        // grnnettotal: grnnettotal,
-                        grnnettotalwithoutvat: grnnettotalwithoutvat
-                        // taxamount: taxamount
+                        grnnettotal: grnnettotal,
+                        grnnettotalwithoutvat: grnnettotalwithoutvat,
+                        taxamount: taxamount
 
                     },
                     url: 'process/grnprocess.php',
@@ -339,62 +337,34 @@ include "include/topnavbar.php";
         });
     }
 
-    // function tabletotal(){
-    //     var sum = 0;
-    //     var sumwithoutvat = 0;
-
-    //     $(".total").each(function(){
-    //         sum += parseFloat($(this).text());
-    //     });
-
-    //     $(".totalwithoutvat").each(function(){
-    //         sumwithoutvat += parseFloat($(this).text());
-    //     });
-
-    //     var taxamount = sum - sumwithoutvat;
-        
-    //     var showsum = addCommas(parseFloat(sum).toFixed(2));
-    //     var showsumwithoutvat = addCommas(parseFloat(sumwithoutvat).toFixed(2));
-    //     var showtaxamount = addCommas(parseFloat(taxamount).toFixed(2));
-
-
-    //     $('#showPrice').html('Rs. '+showsum);
-    //     $('#txtShowPrice').val(sum);
-
-    //     $('#showPricewithoutvat').html('Rs. '+showsumwithoutvat);
-    //     $('#txtShowPricewithoutvat').val(sumwithoutvat);
-
-    //     $('#showtaxAmount').html('Rs. '+showtaxamount);
-    //     $('#txtShowtaxAmount').val(taxamount);
-    // }
-
-    function tabletotal(){
+    function tabletotal() {
         var sum = 0;
-        var sumwithoutvat = 0;
 
-        $(".total").each(function(){
+        $(".total").each(function () {
             sum += parseFloat($(this).text());
         });
 
-        $(".totalwithoutvat").each(function(){
-            sumwithoutvat += parseFloat($(this).text());
-        });
+        var vatRateElement = document.getElementById('vatRate');
+        if (vatRateElement) {
+            var vatRate = parseFloat(vatRateElement.value);
+            var vatAmount = sum * vatRate;
+            var totalWithVAT = sum + vatAmount;
 
-        var taxamount = sum - sumwithoutvat;
-        
-        var showsum = addCommas(parseFloat(sum).toFixed(2));
-        var showsumwithoutvat = addCommas(parseFloat(sumwithoutvat).toFixed(2));
-        var showtaxamount = addCommas(parseFloat(taxamount).toFixed(2));
+            var showSum = addCommas(parseFloat(sum).toFixed(2));
+            var showVatAmount = addCommas(parseFloat(vatAmount).toFixed(2));
+            var showTotalWithVAT = addCommas(parseFloat(totalWithVAT).toFixed(2));
 
+            $('#showPricewithoutvat').html('Rs. ' + showSum);
+            $('#txtShowPricewithoutvat').val(sum);
 
-        $('#showPrice').html('Rs. '+showsum);
-        $('#txtShowPrice').val(sum);
+            $('#showtaxAmount').html('Rs. ' + showVatAmount);
+            $('#txtShowtaxAmount').val(vatAmount);
 
-        $('#showPricewithoutvat').html('Rs. '+showsum);
-        $('#txtShowPricewithoutvat').val(sum);
-
-        $('#showtaxAmount').html('Rs. '+showtaxamount);
-        $('#txtShowtaxAmount').val(taxamount);
+            $('#showPrice').html('Rs. ' + showTotalWithVAT);
+            $('#txtShowPrice').val(totalWithVAT);
+        } else {
+            console.error('VAT rate element not found');
+        }
     }
 
     function addCommas(nStr){

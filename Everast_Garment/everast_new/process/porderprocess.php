@@ -13,12 +13,15 @@ $orderDate = $_POST['orderdate'];
 $remark = $_POST['remark'];
 $orderDetails = $_POST['orderDetails'];
 $total = $_POST['total'];
+$nettotal = $_POST['nettotal'];
+$vatper = $_POST['vatper'];
+$vatamount = $_POST['vatamount'];
 $supplierId = $_POST['supplierId'];
 $updatedatetime = date('Y-m-d h:i:s');
 
 // Insert order
 $insertOrderQuery = "INSERT INTO `tbl_porder` (`orderdate`, `total`, `vat`, `nettotal`, `vatpre`, `remark`, `confirmstatus`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_supplier_idtbl_supplier`) 
-VALUES ('$orderDate', '$total', '0', '$total', '0', '$remark', '0', '1', '$updatedatetime', '$userID', '$supplierId')";
+VALUES ('$orderDate', '$total', '$vatamount', '$nettotal', '$vatper', '$remark', '0', '1', '$updatedatetime', '$userID', '$supplierId')";
 
 if ($conn->query($insertOrderQuery) === TRUE) {
     $orderID = $conn->insert_id;

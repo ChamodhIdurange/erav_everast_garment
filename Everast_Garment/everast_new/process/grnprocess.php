@@ -10,14 +10,14 @@ $porderID=$_POST['ponumber'];
 $grndate=$_POST['grndate'];
 $grninvoice=$_POST['grninvoice'];
 $grndispatch=$_POST['grndispatch'];
-// $grnnettotal=$_POST['grnnettotal'];
+$grnnettotal=$_POST['grnnettotal'];
 $grnnettotalwithoutvat=$_POST['grnnettotalwithoutvat'];
-// $taxamount=$_POST['taxamount'];
+$taxamount=$_POST['taxamount'];
 $tableData=$_POST['tableData'];
 
 $updatedatetime=date('Y-m-d h:i:s');
 
-$insertgrn="INSERT INTO `tbl_grn`(`date`, `total`, `invoicenum`, `dispatchnum`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`) VALUES ('$grndate','$grnnettotalwithoutvat','$grninvoice','$grndispatch','1','$updatedatetime','$userID','$porderID')";
+$insertgrn="INSERT INTO `tbl_grn`(`date`, `total`, `vatamount`, `nettotal`, `invoicenum`, `dispatchnum`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`) VALUES ('$grndate','$grnnettotalwithoutvat','$taxamount','$grnnettotal','$grninvoice','$grndispatch','1','$updatedatetime','$userID','$porderID')";
 if($conn->query($insertgrn)==true){
     $grnid=$conn->insert_id;
 

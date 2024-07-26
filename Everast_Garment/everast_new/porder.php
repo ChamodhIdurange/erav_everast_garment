@@ -139,12 +139,44 @@ include "include/topnavbar.php";
                                 </table>
                             </div>
                         <div class="row">
-                            <div class="col text-right">
+                            <div class="col-7 text-right">
+                                <h1 class="font-weight-600">Total</h1>
+                            </div>
+                            <div class="col-1 text-right">
+                                <h1 class="font-weight-600">:</h1>
+                            </div>
+                            <div class="col-4 text-right">
                                 <h1 class="font-weight-600" id="divtotal">Rs. 0.00</h1>
                             </div>
                             <input type="hidden" id="hidetotalorder" value="0">
                         </div>
+                        <div class="row">
+                            <div class="col-7 text-right">
+                                <h1 class="font-weight-600">VAT %</h1>
+                            </div>
+                            <div class="col-1 text-right">
+                                <h1 class="font-weight-600">:</h1>
+                            </div>
+                            <div class="col-4 text-right">
+                                <input type="hidden" id="hidevatper" value="0">
+                                <input type="hidden" id="hidevatamount" value="0">
+                                <h1 class="font-weight-600" id="divvat">Rs. 0.00</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-7 text-right">
+                                <h1 class="font-weight-600">Net Total</h1>
+                            </div>
+                            <div class="col-1 text-right">
+                                <h1 class="font-weight-600">:</h1>
+                            </div>
+                            <div class="col-4 text-right">
+                                <h1 class="font-weight-600" id="divnettotal">Rs. 0.00</h1>
+                            </div>
+                            <input type="hidden" id="hidenettotal" value="0">
+                        </div>
                         <hr>
+
                         <div class="form-group col-6 ">
                             <label class="small font-weight-bold text-dark">Remark</label>
                             <textarea name="remark" id="remark" class="form-control form-control-sm"></textarea>
@@ -406,17 +438,21 @@ include "include/topnavbar.php";
                         var tableBody = $('#tableBody');
                         tableBody.empty();
 
-                        $.each(data, function (index, product) {
+                        // Set VAT value in the hidden field
+                        $('#hidevatper').val(data.vat);
 
-                            tableBody.append('<tr>' +
-                                '<td>' + product.product_name + '</td>' +
-                                '<td class="d-none">' + product.idtbl_product + '</td>' +
-                                '<td class="d-none">' + product.unitprice + '</td>' +
-                                '<td class="text-center">' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '</td>' +
-                                '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
-                                '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
-                                '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td>' +
-                                '</tr>');
+                        $.each(data, function (index, product) {
+                            if (index !== 'vat') {
+                                tableBody.append('<tr>' +
+                                    '<td>' + product.product_name + '</td>' +
+                                    '<td class="d-none">' + product.idtbl_product + '</td>' +
+                                    '<td class="d-none">' + product.unitprice + '</td>' +
+                                    '<td class="text-center">' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '</td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
+                                    '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
+                                    '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td>' +
+                                    '</tr>');
+                            }
 
                             $('.input-integer').on('input', function () {
                                 var inputValue = $(this).val().replace(/\D/g, '');
@@ -460,36 +496,38 @@ include "include/topnavbar.php";
 
         function updateTotalForRow(row) {
             var newQuantity = parseFloat(row.find('input[name^="new_quantity"]').val()) || 0;
-
             var unitPrice = parseFloat(row.find('td:eq(2)').text()) || 0;
-
 
             var newTotal = newQuantity * unitPrice;
 
             var totalColumn = row.find('td:eq(6)');
-            var calculatedTotal = newTotal;
-            var formattedTotal = calculatedTotal.toFixed(2);
+            var formattedTotal = newTotal.toFixed(2);
             totalColumn.find('input[name^="total_quantity"]').val(formattedTotal);
 
-
             var hideTotalColumn = row.find('.hide-total-column');
-            var calculatedTotal = newTotal;
-            var formattedTotal = calculatedTotal.toFixed(5);
-            hideTotalColumn.find('input[name^="hidetotal_quantity"]').val(formattedTotal);
-
+            var formattedHideTotal = newTotal.toFixed(5);
+            hideTotalColumn.find('input[name^="hidetotal_quantity"]').val(formattedHideTotal);
         }
 
         function updateGrandTotal() {
             var grandTotal = 0;
-            var grandTotalwithoutvat = 0;
 
             $('#tableBody').find('input[name^="total_quantity"]').each(function () {
                 var total = parseFloat($(this).val().replace(/,/g, '')) || 0;
                 grandTotal += total;
             });
 
+            var vatPercentage = parseFloat($('#hidevatper').val()) || 0;
+            var vatAmount = grandTotal * (vatPercentage / 100);
+            var netTotal = grandTotal + vatAmount;
+
             $('#divtotal').text('Rs. ' + addCommas(grandTotal.toFixed(2)));
-            $('#hidetotalorder').val(grandTotal);
+            $('#divvat').text('Rs. ' + addCommas(vatAmount.toFixed(2)));
+            $('#divnettotal').text('Rs. ' + addCommas(netTotal.toFixed(2)));
+
+            $('#hidetotalorder').val(grandTotal.toFixed(2));
+            $('#hidenettotal').val(netTotal.toFixed(2));
+            $('#hidevatamount').val(vatAmount.toFixed(2));
 
         }
 
@@ -499,6 +537,9 @@ include "include/topnavbar.php";
             var remark = $('#remark').val();
             var total = $('#hidetotalorder').val();
             var supplierId = $('#supplierId').val();
+            var vatper = $('#hidevatper').val();
+            var vatamount = $('#hidevatamount').val();
+            var nettotal = $('#hidenettotal').val();
 
             var orderDetails = [];
             $('#tableBody tr').each(function () {
@@ -524,6 +565,9 @@ include "include/topnavbar.php";
                     orderdate: orderDate,
                     remark: remark,
                     total: total,
+                    nettotal: nettotal,
+                    vatper: vatper,
+                    vatamount: vatamount,
                     supplierId: supplierId,
                     orderDetails: orderDetails
                 },
