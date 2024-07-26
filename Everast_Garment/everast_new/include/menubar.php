@@ -198,7 +198,12 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 39, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 39, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 39, 4);
-} 
+} else if ($lastElement == 'vatinfo.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 40, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 40, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 40, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 40, 4);
+}
 
 function checkprivilege($arraymenu, $menuID, $type)
 {
@@ -313,6 +318,18 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <a class="nav-link p-0 px-3 py-2" href="porder.php">
                         <div class="nav-link-icon"><i data-feather="archive"></i></div>
                         Purchsing Order
+                    </a>
+                <?php }
+                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="grn.php">
+                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
+                        Good Receive
+                    </a>
+                <?php }
+                    if (menucheck($menuprivilegearray, 40) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">
+                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                        Vat Info
                     </a>
                 <?php }
                         if (menucheck($menuprivilegearray, 16) == 1) { ?>

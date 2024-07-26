@@ -11,55 +11,38 @@ $grndate=$_POST['grndate'];
 $grninvoice=$_POST['grninvoice'];
 $grndispatch=$_POST['grndispatch'];
 $grnnettotal=$_POST['grnnettotal'];
+$grnnettotalwithoutvat=$_POST['grnnettotalwithoutvat'];
+$taxamount=$_POST['taxamount'];
 $tableData=$_POST['tableData'];
 
 $updatedatetime=date('Y-m-d h:i:s');
 
-
-$sqlorder="SELECT `ismaterialpo` FROM `tbl_porder` WHERE `idtbl_porder`='$porderID'";
-$resultorder=$conn->query($sqlorder);
-$roworder=$resultorder->fetch_assoc();
-
-$ismaterialpo = $roworder['ismaterialpo'];
-
-$insertgrn="INSERT INTO `tbl_grn`(`date`, `total`, `invoicenum`, `dispatchnum`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$grndate','$grnnettotal','$grninvoice','$grndispatch','1','$updatedatetime','$userID')";
+$insertgrn="INSERT INTO `tbl_grn`(`date`, `total`, `vatamount`, `nettotal`, `invoicenum`, `dispatchnum`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`) VALUES ('$grndate','$grnnettotalwithoutvat','$taxamount','$grnnettotal','$grninvoice','$grndispatch','1','$updatedatetime','$userID','$porderID')";
 if($conn->query($insertgrn)==true){
     $grnid=$conn->insert_id;
 
-    $insertpordergrn="INSERT INTO `tbl_porder_grn`(`tbl_grn_idtbl_grn`, `tbl_porder_idtbl_porder`) VALUES ('$grnid','$porderID')";
+    foreach($tableData as $rowtabledata){
+        $product=$rowtabledata['col_2'];
+        $unitprice=$rowtabledata['col_3'];
+        $newqty=$rowtabledata['col_5'];
+        $total=$rowtabledata['col_6'];
 
-    if($conn->query($insertpordergrn)==true){
-        foreach($tableData as $rowtabledata){
-            $product=$rowtabledata['col_2'];
-            $unitprice=$rowtabledata['col_3'];
-            $newqty=$rowtabledata['col_5'];
-            $total=$rowtabledata['col_6'];
-
-            if($ismaterialpo == 0){
-                $insretgrndetail="INSERT INTO `tbl_grndetail`(`date`, `type`, `qty`, `unitprice`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_grn_idtbl_grn`, `tbl_product_idtbl_product`) VALUES ('$grndate','0','$newqty','$unitprice','$total','1','$updatedatetime','$userID','$grnid','$product')";
-                $conn->query($insretgrndetail);
-            }else{
-                $insretgrndetail="INSERT INTO `tbl_grndetail`(`date`, `type`, `qty`, `unitprice`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_grn_idtbl_grn`, `tbl_material_idtbl_material`) VALUES ('$grndate','0','$newqty','$unitprice','$total','1','$updatedatetime','$userID','$grnid','$product')";
-                $conn->query($insretgrndetail);
-            }
-            $totqty=($newqty);
-            // update in stock
-            // if($totqty>0){
-            //     $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`+'$totqty') WHERE `tbl_product_idtbl_product`='$product'";
-            //     $conn->query($updatestock);
-            // }   
-        }
+        $insretgrndetail="INSERT INTO `tbl_grndetail`(`date`, `type`, `qty`, `unitprice`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_grn_idtbl_grn`, `tbl_product_idtbl_product`) VALUES ('$grndate','0','$newqty','$unitprice','$total','1','$updatedatetime','$userID','$grnid','$product')";
+        $conn->query($insretgrndetail);
         
-        $actionObj=new stdClass();
-        $actionObj->icon='fas fa-check-circle';
-        $actionObj->title='';
-        $actionObj->message='Add Successfully';
-        $actionObj->url='';
-        $actionObj->target='_blank';
-        $actionObj->type='success';
-
-        echo $actionJSON=json_encode($actionObj);
+        $updateorder="UPDATE `tbl_porder` SET `grnissuestatus`='1',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_porder`='$porderID'";
+        $conn->query($updateorder);
     }
+    
+    $actionObj=new stdClass();
+    $actionObj->icon='fas fa-check-circle';
+    $actionObj->title='';
+    $actionObj->message='Add Successfully';
+    $actionObj->url='';
+    $actionObj->target='_blank';
+    $actionObj->type='success';
+
+    echo $actionJSON=json_encode($actionObj);
 }
 else{
     $actionObj=new stdClass();

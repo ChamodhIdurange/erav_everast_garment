@@ -1,18 +1,18 @@
 <?php
 require_once('../connection/db.php');
 
-$sql="SELECT `g`.`confirm_status`, `g`.`idtbl_grn`, `g`.`date`, `g`.`total`, `g`.`invoicenum`, `p`.`tbl_porder_idtbl_porder`, `u`.`name` FROM `tbl_grn` as `g` JOIN `tbl_porder_grn` as `p` ON (`g`.`idtbl_grn` = `p`.`tbl_grn_idtbl_grn`) LEFT JOIN `tbl_user` AS `u` ON (`u`.`idtbl_user`=`g`.`tbl_user_idtbl_user`) WHERE `g`.`status`=1";
+$sql="SELECT `idtbl_grn`, `date`, `total`, `vatamount`, `nettotal`, `invoicenum` FROM `tbl_grn` WHERE `tbl_grn`.`status`=1 ORDER BY `idtbl_grn` DESC";
 $result=$conn->query($sql);
 ?>
 <table class="table table-striped table-bordered table-sm" id="grnlisttable">
     <thead>
         <tr>
             <th>Date</th>
-            <th>GRN By</th>
-            <th>PO</th>
             <th>GRN</th>
             <th>Invoice</th>
             <th class="text-right">Total</th>
+            <th class="text-right">VAT</th>
+            <th class="text-right">Net Total</th>
             <th class="text-right">&nbsp;</th>
         </tr>
     </thead>
@@ -20,23 +20,12 @@ $result=$conn->query($sql);
         <?php while($row=$result->fetch_assoc()){ ?>
         <tr>
             <td><?php echo $row['date']; ?></td>
-            <td><?php echo $row['name']; ?></td>
-            <td>PO-<?php echo $row['tbl_porder_idtbl_porder']; ?></td>
             <td><?php echo 'GRN-'.$row['idtbl_grn']; ?></td>
             <td><?php echo $row['invoicenum']; ?></td>
             <td class="text-right"><?php echo number_format($row['total'], 2); ?></td>
-            <td class="text-center">
-                <button class="btn btn-outline-dark btn-sm btnviewgrn" id="<?php echo $row['idtbl_grn']; ?>"  name="<?php echo $row['confirm_status']; ?>"><i class="fas fa-eye"></i></button>
-                <?php if($row['confirm_status'] == 0){?>
-                    <a href="process/statusgrnconfirm.php?record=<?php echo $row['idtbl_grn'] ?>"
-                                                        onclick="return confirm('Are you sure you want to confirm this GRN?');"
-                                                        target="_self" class="btn btn-outline-danger btn-sm"><i
-                                                            class="fas fa-window-close"></i></a>
-                <?php }else{?>
-                    <button class="btn btn-outline-success btn-sm " id="<?php echo $row['idtbl_grn']; ?>"><i class="fas fa-check"></i></button>
-                <?php }?>
-
-            </td>
+            <td class="text-right"><?php echo number_format($row['vatamount'], 2); ?></td>
+            <td class="text-right"><?php echo number_format($row['nettotal'], 2); ?></td>
+            <td class="text-center"><button class="btn btn-outline-dark btn-sm btnviewgrn" id="<?php echo $row['idtbl_grn']; ?>"><i class="fas fa-eye"></i></button></td>
         </tr>
         <?php } ?>
     </tbody>

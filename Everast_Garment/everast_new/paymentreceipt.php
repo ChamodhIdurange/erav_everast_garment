@@ -66,10 +66,9 @@ include "include/topnavbar.php";
                 </button>
             </div>
             <div class="modal-body">
-                <div id="viewreceiptprint"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger btn-sm fa-pull-right" id="btnreceiptprint"><i class="fas fa-print"></i>&nbsp;Print Receipt</button>
+                <div class="embed-responsive embed-responsive-16by9" id="frame">
+                    <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -133,58 +132,40 @@ include "include/topnavbar.php";
                     "render": function(data, type, full) {
                         var button='';
                         button+='<button class="btn btn-outline-dark btn-sm btnview mr-1" id="'+full['idtbl_invoice_payment']+'"><i class="fas fa-eye"></i></button>';
-                        button+='<a href="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';if(deletecheck==0){button+='d-none';}button+='"><i class="far fa-trash-alt"></i></a>';
+                        if(full['paymentcomplete']==0){
+                            button+='<a href="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';if(deletecheck==0){button+='d-none';}button+='"><i class="far fa-trash-alt"></i></a>';
                         
-                        if(full['paymentcomplete']==0 && full['status']==1){
-                            // button+='<button class="btn btn-outline-danger btn-sm mr-1 btnpayment" data-toggle="tooltip" data-placement="bottom" title="Payment not Completed" id="'+full['idtbl_invoice']+'"><i class="fas fa-money-bill-alt"></i></button>';
-                        button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
-
-                            }
-                        else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 btnpaydone" data-toggle="tooltip" data-placement="bottom" title="Payment Completed" id="'+full['idtbl_invoice']+'"><i class="fas fa-money-bill-alt"></i></button>';}
-
-                        // if(full['shipstatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btnship" data-toggle="tooltip" data-placement="bottom" title="Order not ship" id="'+full['idtbl_porder']+'"><i class="fas fa-dolly"></i></button>';}
-                        // else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Order shipped"><i class="fas fa-dolly"></i></button>';}
-
-                        // if(full['deliverystatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btndelivery" data-toggle="tooltip" data-placement="bottom" title="Delivery not completed" id="'+full['idtbl_porder']+'"><i class="fas fa-truck"></i></button>';}
-                        // else if(full['status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Delivery completed"><i class="fas fa-truck"></i></button>';}
-
-                        // if(full['deliverystatus']==0 && full['status']==1){button+='<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="'+full['idtbl_porder']+'"><i class="fas fa-window-close"></i></button><button class="btn btn-primary btn-sm btnreturn" id="'+full['idtbl_porder']+'"><i class="fas fa-redo-alt"></i></button>';}
+                            // button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
+                        }
                         return button;
                     }
                 }
             ]
         } );
-
-        // $('#dataTable tbody').on('click', '.btnpayment', function() {
-        //     var id = $(this).attr('id');
-        
-        //     alert(id)
-        //     $.ajax({
-        //         type: "POST",
-        //         data: {
-        //             recordID: id
-        //         },
-        //         url: 'process/changepaymentstatus.php',
-        //         success: function(result) { alert(result);
-        //             location.reload()
-        //         }
-        //     });
-        // });
         $('#dataTable tbody').on('click', '.btnview', function() {
-            var paymentinoiceID =$(this).attr('id');
-            // alert(paymentinoiceID)
-            $('#modalpaymentreceipt').modal('show');
-            $('#viewreceiptprint').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
+            var id = $(this).attr('id');
+           // alert(id);
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#modalpaymentreceipt iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    paymentinoiceID: paymentinoiceID
-                },
-                url: 'getprocess/getpaymentreceipt.php',
-                success: function(result) { //alert(result);
-                    $('#viewreceiptprint').html(result);
-                }
+            var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
+            //            alert(src);
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#modalpaymentreceipt iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#modalpaymentreceipt').modal({
+                keyboard: false,
+                backdrop: 'static'
             });
         });
 
