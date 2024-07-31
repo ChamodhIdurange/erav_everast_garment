@@ -12,6 +12,9 @@ $numRowsGrnNum=$rowGrnNum['idtbl_grn']+1;
 $grnid=$numRowsGrnNum;
 if($numRowsGrnNum>0){$GRNNum="GRN-".($numRowsGrnNum);}else{$GRNNum="GRN-1";}
 
+$currentDate = date('mdY');
+$batchNo = "BTCH" . $currentDate . $grnid;
+
 $sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1  AND `grnissuestatus` = 0";
 $resultorder =$conn-> query($sqlorder); 
 
@@ -37,84 +40,30 @@ include "include/topnavbar.php";
                 <div class="card">
                     <div class="card-body p-0 p-2">
                         <div class="row">
-                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right px-3" id="btnviewallgrn"><i class="fas fa-eye"></i>&nbsp;View GRN</button>
-                            </div>
+                            <div class="col">
+                                    <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right" id="btnordercreate">
+                                        <i class="fas fa-plus"></i>&nbsp;Create Goods Received Note
+                                    </button>
+                                </div>
                         </div>
-                        <div class="row">
-                        <div class="col-12">
-                                <form action="#" method="post" autocomplete="off" id="grnFrom">
-                                    <div class="form-row mb-1">
-                                        <div class="col">
-                                            <label class="small font-weight-bold text-dark">GRN Number</label>
-                                            <input type="text" class="form-control form-control-sm" placeholder="" name="grnnum" id="grnnum" value="<?php echo $GRNNum; ?>" readonly>
-                                        </div>
-                                        <div class="col">
-                                            <label class="small font-weight-bold text-dark">GRN Date</label>
-                                            <div class="input-group input-group-sm">
-                                                <input type="date" id="grndate" name="grndate" class="form-control form-control-sm" value="<?php echo date('Y-m-d') ?>" required>
-                                            </div> 
-                                        </div>  
-                                        <div class="col">
-                                            <label class="small font-weight-bold text-dark">Purches Order</label>
-                                            <select name="ponumber" id="ponumber" class="form-control form-control-sm">
-                                                <option value="">Select</option>
-                                                <?php if($resultorder->num_rows > 0) {while ($roworder = $resultorder-> fetch_assoc()) { ?>
-                                                <option value="<?php echo $roworder['idtbl_porder'] ?>"><?php echo 'PO-'.$roworder['idtbl_porder'] ?></option>
-                                                <?php }} ?>
-                                            </select>
-                                        </div>   
-                                        <div class="col">
-                                            <label class="small font-weight-bold text-dark">Invoice Number*</label>
-                                            <input type="text" class="form-control form-control-sm" placeholder="" name="grninvoice" id="grninvoice" required>
-                                        </div>
-                                        <div class="col">
-                                            <label class="small font-weight-bold text-dark">Delivery Number*</label>
-                                            <input type="text" class="form-control form-control-sm" placeholder="" name="grndispatch" id="grndispatch" required>
-                                        </div> 
-                                    </div>
-                                    <div class="form-group mt-2">
-                                        <input name="submitBtn" type="submit" value="Save" id="submitBtn" class="d-none">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <h6 class="title-style small font-weight-bold mt-2"><span>GRN Detail</span></h6>
-                                <table class="table table-bordered table-sm table-striped" id="tableGrnList">
+                        <hr>
+                                <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                     <thead>
                                         <tr>
-                                            <th>Product</th>
-                                            <th class="d-none">ProductID</th>
-                                            <th class="d-none">Unitprice</th>
-                                            <th class="text-right">Unit Price</th>
-                                            <th class="text-center">Qty</th>
-                                            <th class="d-none">Hidetotal</th>
+                                            <th>#</th>
+                                            <th>Date</th>
+                                            <th>GRN</th>
+                                            <th>Invoice No</th>
+                                            <th>Dispatch No</th>
+                                            <th>Batch No</th>
                                             <th class="text-right">Total</th>
+                                            <th class="text-right">VAT</th>
+                                            <th class="text-right">Nettotal</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="tbodygrncreate"></tbody>
                                 </table>
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total : </h4></div>
-                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPricewithoutvat">0.00</h3></div>
-                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>VAT Amount : </h4></div>
-                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showtaxAmount">0.00</h3></div>
-                                    <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right"><h4>Total + (VAT) : </h4></div>
-                                    <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right"><h3 class="text-dark" id="showPrice">0.00</h3></div>
-                                    <input type="hidden" id="txtShowPricewithoutvat" value="">
-                                    <input type="hidden" id="txtShowtaxAmount" value="">
-                                    <input type="hidden" id="txtShowPrice" value="">
-                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                        <hr class="border-dark">
-                                    </div>
-                                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                        <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right px-5" id="btnSaveGrn"><i class="far fa-save"></i>&nbsp;Save GRN</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -122,18 +71,117 @@ include "include/topnavbar.php";
         <?php include "include/footerbar.php"; ?>
     </div>
 </div>
-<!-- Modal GRN List -->
-<div class="modal fade" id="modalgrnlist" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<!-- Modal Create Order -->
+<div class="modal fade" id="modalcreateorder" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered porder-modal modal-xl" role="document">
         <div class="modal-content">
-            <div class="modal-header p-2">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">CREATE GOODS RECEIVED NOTE</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <div id="viewgrnlist"></div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <form action="#" method="post" autocomplete="off" id="grnFrom">
+                            <div class="form-row mb-1">
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">GRN Number</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder="" name="grnnum"
+                                        id="grnnum" value="<?php echo $GRNNum; ?>" readonly>
+                                </div>
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">GRN Date</label>
+                                    <div class="input-group input-group-sm">
+                                        <input type="date" id="grndate" name="grndate"
+                                            class="form-control form-control-sm" value="<?php echo date('Y-m-d') ?>"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">Purches Order</label>
+                                    <select name="ponumber" id="ponumber" class="form-control form-control-sm">
+                                        <option value="">Select</option>
+                                        <?php if($resultorder->num_rows > 0) {while ($roworder = $resultorder-> fetch_assoc()) { ?>
+                                        <option value="<?php echo $roworder['idtbl_porder'] ?>">
+                                            <?php echo 'PO-'.$roworder['idtbl_porder'] ?></option>
+                                        <?php }} ?>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">Invoice Number*</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        name="grninvoice" id="grninvoice" required>
+                                </div>
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">Delivery Number*</label>
+                                    <input type="text" class="form-control form-control-sm" placeholder=""
+                                        name="grndispatch" id="grndispatch" required>
+                                </div>
+                                <div class="col">
+                                    <label class="small font-weight-bold text-dark">Batch Number*</label>
+                                    <input type="text" class="form-control form-control-sm" name="batchno" id="batchno"
+                                        value="<?php echo $batchNo; ?>" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group mt-2">
+                                <input name="submitBtn" type="submit" value="Save" id="submitBtn" class="d-none">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <h6 class="title-style small font-weight-bold mt-2"><span>GRN Detail</span></h6>
+                        <table class="table table-bordered table-sm table-striped" id="tableGrnList">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="d-none">ProductID</th>
+                                    <th class="d-none">Unitprice</th>
+                                    <th class="text-right">Unit Price</th>
+                                    <th class="text-right">Sale Price</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="d-none">Hidetotal</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodygrncreate"></tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right">
+                                <h4>Total : </h4>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
+                                <h3 class="text-dark" id="showPricewithoutvat">0.00</h3>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right">
+                                <h4>VAT Amount : </h4>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
+                                <h3 class="text-dark" id="showtaxAmount">0.00</h3>
+                            </div>
+                            <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right">
+                                <h4>Total + (VAT) : </h4>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
+                                <h3 class="text-dark" id="showPrice">0.00</h3>
+                            </div>
+                            <input type="hidden" id="txtShowPricewithoutvat" value="">
+                            <input type="hidden" id="txtShowtaxAmount" value="">
+                            <input type="hidden" id="txtShowPrice" value="">
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <hr class="border-dark">
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right px-5"
+                                    id="btnSaveGrn"><i class="far fa-save"></i>&nbsp;Save GRN</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -181,6 +229,111 @@ include "include/topnavbar.php";
                 }
             });
         });
+
+        var addcheck='<?php echo $addcheck; ?>';
+        var editcheck='<?php echo $editcheck; ?>';
+        var statuscheck='<?php echo $statuscheck; ?>';
+        var deletecheck='<?php echo $deletecheck; ?>';
+
+        $('#dataTable').DataTable( {
+            "destroy": true,
+            "processing": true,
+            "serverSide": true,
+            ajax: {
+                url: "scripts/grnlist.php",
+                type: "POST", // you can use GET
+            },
+            "order": [[ 0, "desc" ]],
+            "columns": [
+                {
+                    "data": "idtbl_grn"
+                },
+                {
+                    "data": "date"
+                },
+                {
+                    "data": "idtbl_grn",
+                    "render": function(data, type, row) {
+                        return 'GRN-' + data;
+                    }
+                },
+                {
+                    "data": "invoicenum"
+                },
+                {
+                    "data": "dispatchnum"
+                },
+                {
+                    "data": "batchno"
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        return parseFloat(full['total']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        return parseFloat(full['vatamount']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        return parseFloat(full['nettotal']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        var html = '';
+                        if(full['confirm_status']==0){
+                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Not Approved';
+                        }
+                        else{
+                            html+='<i class="fas fa-check text-success"></i>&nbsp;Approved GRN';
+                        }
+                        return html;     
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        var button='';
+
+                        button += '<button class="btn btn-outline-dark btn-sm mr-1 btnView ';
+                        if (editcheck == 0) {
+                            button += 'd-none';
+                        }
+                        button +=
+                            '" data-toggle="tooltip" data-placement="bottom" title="View Order" id="' +
+                            full['idtbl_grn'] + '"><i class="far fa-eye"></i></button>';
+
+                        if(full['confirm_status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';}
+                        else{button+='<a href="process/statusgrn.php?record='+full['idtbl_grn']+'&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-times"></i></a>';}
+                        
+                        return button;
+                    }
+                }
+            ]
+        } );
+        $('#btnordercreate').click(function () {
+            $('#modalcreateorder').modal('show');
+            $('#modalcreateorder').on('shown.bs.modal', function () {
+                $('#orderdate').trigger('focus');
+            });
+        });
         $('#btnSaveGrn').click(function(){
             if (!$("#grnFrom")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
@@ -198,6 +351,7 @@ include "include/topnavbar.php";
                 // console.log(jsonObj);
 
                 var grnnum = $('#grnnum').val();
+                var batchno = $('#batchno').val();
                 var ponumber = $('#ponumber').val();
                 var grndate = $('#grndate').val();
                 var grninvoice = $('#grninvoice').val();
@@ -211,6 +365,7 @@ include "include/topnavbar.php";
                     data: {
                         tableData: jsonObj,
                         grnnum: grnnum,
+                        batchno: batchno,
                         ponumber: ponumber,
                         grndate: grndate,
                         grninvoice: grninvoice,
@@ -228,20 +383,24 @@ include "include/topnavbar.php";
                 });
             }
         });
-        $('#btnviewallgrn').click(function(){
-            $('#viewgrnlist').empty().html('<div class="card border-0 shadow-none"><div class="card-body text-center"><img src="images/spinner.gif"></div></div>');
-            $('#modalgrnlist').modal('show');
-            
+
+        $('#dataTable tbody').on('click', '.btnView', function() {
+            var grnid=$(this).attr('id');
+
+            $('#modalgrndetail').modal('show');
+
             $.ajax({
                 type: "POST",
-                data: {},
-                url: 'getprocess/getgrnlist.php',
+                data: {
+                    grnid:grnid
+                },
+                url: 'getprocess/getgrndetail.php',
                 success: function(result) {//alert(result);
-                    $('#viewgrnlist').html(result);
-                    grnoption();
+                    $('#viewgrndetail').html(result);
                 }
             });
         });
+
     });
 
     function orderoption(){
@@ -264,26 +423,6 @@ include "include/topnavbar.php";
 
             $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val).appendTo($this);
             textremove('.optionnewqty', row);
-        });
-    }
-
-    function grnoption(){
-        $('#grnlisttable').dataTable();
-        $('#grnlisttable tbody').on('click', '.btnviewgrn', function() {
-            var grnid=$(this).attr('id');
-
-            $('#modalgrndetail').modal('show');
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    grnid:grnid
-                },
-                url: 'getprocess/getgrndetail.php',
-                success: function(result) {//alert(result);
-                    $('#viewgrndetail').html(result);
-                }
-            });
         });
     }
 
@@ -390,15 +529,15 @@ include "include/topnavbar.php";
                 var rowID = row.closest("td").parent()[0].rowIndex;
                 var unitprice = parseFloat(row.closest("tr").find('td:eq(2)').text());
 
-                var newqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
+                var newqty = parseFloat(row.closest("tr").find('td:eq(6)').text());
 
                 var totnew = newqty*unitprice;
 
                 var total = parseFloat(totnew).toFixed(2);
                 var showtotal = addCommas(total);
 
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(5)').text(total);
-                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(6)').text(showtotal);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(7)').text(total);
+                $('#tableGrnList').find('tr').eq(rowID).find('td:eq(8)').text(showtotal);
 
                 tabletotal();
             }
@@ -422,6 +561,10 @@ include "include/topnavbar.php";
                 }
             }
         });
+    }
+
+    function order_confirm() {
+        return confirm("Are you sure you want to Confirm this GRN?");
     }
 </script>
 <?php include "include/footer.php"; ?>

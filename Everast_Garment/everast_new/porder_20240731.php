@@ -130,7 +130,6 @@ include "include/topnavbar.php";
                                             <th class="d-none" style="width: 100px;">ProductID</th>
                                             <th class="d-none" style="width: 100px;">UnitPrice</th>
                                             <th class="text-center" style="width: 50px;">Unit Price</th>
-                                            <th class="text-center" style="width: 50px;">Sale Price</th>
                                             <th class="text-center" style="width: 50px;">Qty</th>
                                             <th class="d-none" style="width: 100px;">HideTotal</th>
                                             <th class="text-right" style="width: 100px;">Total</th>
@@ -449,7 +448,6 @@ include "include/topnavbar.php";
                                     '<td class="d-none">' + product.idtbl_product + '</td>' +
                                     '<td class="d-none">' + product.unitprice + '</td>' +
                                     '<td class="text-center">' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '</td>' +
-                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="0"></td>' +
                                     '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
                                     '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
                                     '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td>' +
@@ -502,7 +500,7 @@ include "include/topnavbar.php";
 
             var newTotal = newQuantity * unitPrice;
 
-            var totalColumn = row.find('td:eq(7)');
+            var totalColumn = row.find('td:eq(6)');
             var formattedTotal = newTotal.toFixed(2);
             totalColumn.find('input[name^="total_quantity"]').val(formattedTotal);
 
@@ -547,7 +545,6 @@ include "include/topnavbar.php";
             $('#tableBody tr').each(function () {
             var productId = $(this).find('td:eq(1)').text();
             var unitprice = $(this).find('td:eq(2)').text();
-            var saleprice = $(this).find('input[name^="saleprice"]').val();
             var newQty = $(this).find('input[name^="new_quantity"]').val();
             var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
 
@@ -555,7 +552,6 @@ include "include/topnavbar.php";
             orderDetails.push({
                 productId: productId,
                 unitPrice: unitprice,
-                saleprice: saleprice,
                 newQty: newQty
             });
         });

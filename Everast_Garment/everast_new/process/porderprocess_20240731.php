@@ -29,18 +29,15 @@ if ($conn->query($insertOrderQuery) === TRUE) {
     foreach ($orderDetails as $detail) {
         $productId = $detail['productId'];
         $unitPrice = $detail['unitPrice'];
-        $saleprice = $detail['saleprice'];
         $newQty = str_replace(',', '', $detail['newQty']);
 
         $newPrice = !empty($newQty) ? $unitPrice : null;
-        $newsalePrice = !empty($newQty) ? $saleprice : null;
-
 
         if ($newPrice !== null) {
             $totalPrice = $newQty * $unitPrice;
 
-            $insertDetailQuery = "INSERT INTO tbl_porder_detail (`qty`, `unitprice`, `saleprice`, `total`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_porder_idtbl_porder`) 
-                                VALUES ('$newQty', '$newPrice', '$newsalePrice', '$totalPrice', '1', '$updatedatetime', '$userID', '$productId', '$orderID')";
+            $insertDetailQuery = "INSERT INTO tbl_porder_detail (`qty`, `unitprice`, `total`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_porder_idtbl_porder`) 
+                                VALUES ('$newQty', '$newPrice', '$totalPrice', '1', '$updatedatetime', '$userID', '$productId', '$orderID')";
 
             if ($conn->query($insertDetailQuery) !== TRUE) {
                 // Handle error inserting order detail
