@@ -23,7 +23,7 @@
 <script src="assets/js/jquery.serializejson.js"></script>
 <script src="assets/slick/slick.js"></script>
 <script src="assets/js/print.js"></script>
-
+<script src="assets/js/jquery-inputformat.js"></script>
 
 <?php if(isset($optional_header_includes) && is_array($optional_header_includes)){   ?>
     <!-- Page Specific footer scripts are specified here -->
