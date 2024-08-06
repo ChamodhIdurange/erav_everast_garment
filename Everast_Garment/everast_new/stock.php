@@ -1,9 +1,5 @@
 <?php 
 include "include/header.php";  
-
-// $sqlstock="SELECT `p`.`retail`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`,`pc`.`category` as `maincat`, `p`.`product_name`, `s`.`qty`, `s`.`batchqty`, `s`.`batchno`FROM `tbl_stock` as `s` JOIN `tbl_product` as `p` ON (`p`.`idtbl_product`=`s`.`tbl_product_idtbl_product`) JOIN `tbl_product_category` AS `pc` ON (`p`.`tbl_product_category_idtbl_product_category` = `pc`.`idtbl_product_category`) JOIN `tbl_sub_product_category` AS `sp` ON (`p`.`tbl_sub_product_category_idtbl_sub_product_category` = `sp`.`idtbl_sub_product_category`) JOIN `tbl_group_category` AS `gp` ON (`p`.`tbl_group_category_idtbl_group_category` = `gp`.`idtbl_group_category`) WHERE `s`.`status`=1 AND `p`.`status`=1";
-// $resultstock =$conn-> query($sqlstock); 
-
 include "include/topnavbar.php"; 
 ?>
 
@@ -52,8 +48,26 @@ include "include/topnavbar.php";
                             </div>
                             <div class="col-12">
                                 <hr class="border-dark">
-                                <div id="targetviewdetail"></div>
-                                <!-- <canvas id="salechart"></canvas> -->
+                                <div id="targetviewdetail" style="display: none;">
+                                    <table id="dataTable" class="display table table-striped table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Color</th>
+                                                <th>Category</th>
+                                                <th>Group Category</th>
+                                                <th>Size</th>
+                                                <th>Retail price</th>
+                                                <th class="text-center">Available Stock</th>
+                                                <th>Total price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <!-- <button class="btn btn-outline-danger btn-sm fa-pull-right" id="btnprint" style="display: none;">
+                                    <i class="fas fa-print"></i>&nbsp;Print Report
+                                </button> -->
                             </div>
                         </div>
                     </div>
@@ -74,41 +88,68 @@ include "include/topnavbar.php";
             format: 'yyyy-mm-dd'
         });
 
-    });
+        $('#formSearchBtn').click(function () {
+            if (!$("#searchform")[0].checkValidity()) {
+                $("#hidesubmit").click();
+            } else {
+                var fromdate = $('#fromdate').val();
 
-    $('#formSearchBtn').click(function () {
-        if (!$("#searchform")[0].checkValidity()) {
-            // If the form is invalid, submit it. The form won't actually submit;
-            // this will just cause the browser to display the native HTML5 error messages.
-            $("#hidesubmit").click();
-        } else {
-            var fromdate = $('#fromdate').val();
+                $('#targetviewdetail').html(
+                    '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
+                ).show();
 
-            $('#targetviewdetail').html(
-                '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
-            );
+                $.ajax({
+                    type: "POST",
+                    data: { fromdate: fromdate },
+                    url: 'getprocess/getselectedstock.php',
+                    success: function (result) {
+                        $('#targetviewdetail').html(result);
+                        if ($.fn.DataTable.isDataTable('#dataTable')) {
+                            $('#dataTable').DataTable().destroy();
+                        }
+                        $('#dataTable').DataTable({
+                            dom: 'Blfrtip',
+                            "lengthMenu": [
+                                [10, 25, 50, -1],
+                                [10, 25, 50, "All"]
+                            ],
+                            "buttons": [
+                                { 
+                                    extend: 'csv', 
+                                    className: 'btn btn-success btn-sm', 
+                                    title: 'Stock Report', 
+                                    text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                                },
+                                { 
+                                    extend: 'pdf', 
+                                    className: 'btn btn-danger btn-sm', 
+                                    title: 'Stock Report', 
+                                    text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                                },
+                                { 
+                                    extend: 'print', 
+                                    className: 'btn btn-primary btn-sm', 
+                                    title: 'Stock Report',
+                                    text: '<i class="fas fa-print mr-2"></i> Print'
+                                }
+                            ],
+                            "paging": true,
+                            "searching": true,
+                            "ordering": true,
+                        });
+                        $('#btnprint').show();
+                    }
+                });
+            }
+        });
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    fromdate: fromdate,
-                },
-                url: 'getprocess/getselectedstock.php',
-                success: function (result) { //alert(result);
-
-                    $('#targetviewdetail').html(result);
-                }
+        $('#btnprint').click(function () {
+            printJS({
+                printable: 'printarea',
+                type: 'html',
+                targetStyles: ['*']
             });
-        }
+        });
     });
-
-    function print() {
-        printJS({
-            printable: 'printarea',
-            type: 'html',
-            // style: '@page { size: landscape; }',
-            targetStyles: ['*']
-        })
-    }
 </script>
 <?php include "include/footer.php"; ?>

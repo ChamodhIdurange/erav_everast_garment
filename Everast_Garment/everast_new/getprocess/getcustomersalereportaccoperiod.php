@@ -1,63 +1,82 @@
 <?php 
 require_once('../connection/db.php');
 
-$validfrom=$_POST['validfrom'];
-$validto=$_POST['validto'];
-$customer=$_POST['customer'];
+$validfrom = $_POST['validfrom'];
+$validto = $_POST['validto'];
+$customerID = $_POST['customer'];
+$productID = $_POST['product'];
+$areaID = $_POST['area'];
+$repID = $_POST['rep'];
 
-if(!empty($_POST['customer'])){
-    $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 AND `idtbl_customer`='$customer'";
-    $resultcustomer =$conn-> query($sqlcustomer);
+$totalAmount = 0;
+
+$sql = "SELECT `u`.`idtbl_invoice`, `u`.`total`, `ua`.`product_name`, `ub`.`area`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`
+        FROM `tbl_invoice` AS `u`
+        LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
+        LEFT JOIN `tbl_employee` AS `ue` ON `u`.`ref_id` = `ue`.`idtbl_employee`
+        LEFT JOIN `tbl_area` AS `ub` ON `u`.`tbl_area_idtbl_area` = `ub`.`idtbl_area`
+        LEFT JOIN `tbl_invoice_detail` AS `ud` ON `u`.`idtbl_invoice` = `ud`.`tbl_invoice_idtbl_invoice`
+        LEFT JOIN `tbl_product` AS `ua` ON `ud`.`tbl_product_idtbl_product` = `ua`.`idtbl_product`
+        WHERE `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+
+if ($customerID > 0) {
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
 }
-else{
-    $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1";
-    $resultcustomer =$conn-> query($sqlcustomer);
+
+if ($productID > 0) {
+    $sql .= " AND `ud`.`tbl_product_idtbl_product` = '$productID'";
 }
-?>
-<table class="table table-striped table-bordered table-sm" id="tableoutstanding">
+
+if ($areaID > 0) {
+    $sql .= " AND `u`.`tbl_area_idtbl_area` = '$areaID'";
+}
+
+if ($repID > 0) {
+    $sql .= " AND `u`.`ref_id` = '$repID'";
+}
+
+$result = $conn->query($sql);
+
+if ($result->num_rows == 0) {
+    echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
+    return;
+}
+
+$html = '<table class="table table-striped table-bordered table-sm small" id="reportTable">
     <thead>
         <tr>
-            <th>Customer</th>
-            <th>Product</th>
-            <th class="text-center">New Qty</th>
-            <th class="text-center">Refill Qty</th>
-            <th class="text-center">Trust Qty</th>
-            <th class="text-center">Total Qty</th>
+            <th>Invoice</th>
+            <th class="text-center">Customer</th>
+            <th class="text-center">Product</th>
+            <th class="text-center">Rep</th>
+            <th class="text-center">Area</th>
+            <th class="text-center">Amount</th>
         </tr>
     </thead>
-    <tbody>
-        <?php 
-        while($rowcustomer = $resultcustomer-> fetch_assoc()){ 
-            $customerID=$rowcustomer['idtbl_customer'];
+    <tbody>';
 
-            $sqlinvcount="SELECT COUNT(*) AS `count` FROM `tbl_invoice` WHERE `status`=1 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto'";
-            $resultinvcount =$conn-> query($sqlinvcount);
-            $rowinvcount = $resultinvcount-> fetch_assoc();
+$totalAmount = 0;
 
-            $sqlproductlist="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1 AND `tbl_product_category_idtbl_product_category`=1";
-            $resultproductlist =$conn-> query($sqlproductlist);
+while($row = $result->fetch_assoc()) {
+    $html .= '<tr>
+        <td>INV-' . $row['idtbl_invoice'] . '</td>
+        <td class="text-center">' . $row['cusname'] . '</td>
+        <td class="text-center">' . $row['product_name'] . '</td>
+        <td class="text-center">' . $row['repname'] . '</td>
+        <td class="text-center">' . $row['area'] . '</td>
+        <td class="text-center">' . $row['total'] . '</td>
+    </tr>';
+    $totalAmount += $row['total'];
+}
 
-            if($rowinvcount['count']>0){
-        ?>
+$html .= '</tbody>
+    <tfoot>
         <tr>
-            <td colspan="7"><?php echo $rowcustomer['name']; ?></td>
+            <td colspan="5" class="text-right"><strong>Total</strong></td>
+            <td class="text-center"><strong>' . $totalAmount . '</strong></td>
         </tr>
-        <?php 
-            while($rowproductlist = $resultproductlist-> fetch_assoc()){  
-                $productID=$rowproductlist['idtbl_product'];
+    </tfoot>
+</table>';
 
-                $sqlsaleinfo="SELECT SUM(`newqty`) AS `newqty`, SUM(`refillqty`) AS `refillqty`, SUM(`trustqty`) AS `trustqty` FROM `tbl_invoice_detail` WHERE `tbl_product_idtbl_product`='$productID' AND `status`=1 AND `tbl_invoice_idtbl_invoice` IN (SELECT `idtbl_invoice` FROM `tbl_invoice` WHERE `status`=1 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto')";
-                $resultsaleinfo =$conn-> query($sqlsaleinfo);
-                $rowsaleinfo = $resultsaleinfo-> fetch_assoc()
-        ?>
-        <tr>
-            <td>&nbsp;</td>
-            <td><?php echo $rowproductlist['product_name'] ?></td>
-            <td class="text-center"><?php echo $rowsaleinfo['newqty']; ?></td>
-            <td class="text-center"><?php echo $rowsaleinfo['refillqty']; ?></td>
-            <td class="text-center"><?php echo $rowsaleinfo['trustqty'] ?></td>
-            <th class="text-center"><?php echo $rowsaleinfo['newqty']+$rowsaleinfo['refillqty']+$rowsaleinfo['trustqty'] ?></th>
-        </tr>
-        <?php }}} ?>
-    </tbody>
-</table>
+echo $html;
+?>
