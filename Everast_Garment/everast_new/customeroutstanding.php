@@ -1,8 +1,11 @@
 <?php 
 include "include/header.php";  
 
-$sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
-$resultcustomer =$conn-> query($sqlcustomer);
+$sqlcustomer = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
+$resultcustomer = $conn->query($sqlcustomer);
+
+$sqlrep = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 ORDER BY `name` ASC";
+$resultrep = $conn->query($sqlrep);
 
 include "include/topnavbar.php"; 
 ?>
@@ -27,41 +30,82 @@ include "include/topnavbar.php";
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col-12">
-                                <form id="searchform">
+                                <form id="saleInformationForm">
                                     <div class="form-row">
-                                        <div class="col-3">
-                                            <label class="small font-weight-bold text-dark">Date*</label>
-                                            <div class="input-group input-group-sm mb-3">
-                                                <input type="text" class="form-control dpd1a rounded-0" id="fromdate" name="fromdate" value="<?php echo date('Y-m-d') ?>" required>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text rounded-0" id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
-                                                </div>
-                                                <input type="text" class="form-control dpd1a rounded-0 border-left-0" id="todate" name="todate" value="<?php echo date('Y-m-d') ?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="small font-weight-bold text-dark">Customer</label>
+                                        <div class="col-2">
+                                            <label class="small font-weight-bold text-dark">Search Type*</label>
                                             <div class="input-group input-group-sm">
-                                                <select class="form-control form-control-sm rounded-0" name="customer" id="customer">
-                                                    <option value="">All Customer</option>
-                                                    <?php if($resultcustomer->num_rows > 0) {while ($rowcustomer = $resultcustomer-> fetch_assoc()) { ?>
-                                                    <option value="<?php echo $rowcustomer['idtbl_customer'] ?>"><?php echo $rowcustomer['name']; ?></option>
-                                                    <?php }} ?>
+                                                <select class="form-control form-control-sm" name="searchType" id="searchType">
+                                                    <option value="0">Select Type</option>
+                                                    <option value="1">All</option>
+                                                    <option value="2">Rep Vise</option>
+                                                    <option value="3">Customer Vise</option>
                                                 </select>
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-dark rounded-0" type="button" id="formSearchBtn"><i class="fas fa-search"></i>&nbsp;Search</button>
-                                                    <button class="btn btn-outline-danger rounded-0" type="button" id="formAllSearchBtn"><i class="fas fa-list"></i>&nbsp;All Outstanding</button>
-                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col">&nbsp;</div>
+                                        <div class="col-2 search-dependent" style="display: none" id="selectSaleRepDiv">
+                                            <label class="small font-weight-bold text-dark">Rep*</label>
+                                            <select class="form-control form-control-sm" style="width: 100%;" name="selectSaleRep" id="selectSaleRep">
+                                                <option value="0">All</option>
+                                                <?php while ($rowresultrep = $resultrep->fetch_assoc()) { ?>
+                                                <option value="<?php echo $rowresultrep['idtbl_employee']; ?>">
+                                                    <?php echo $rowresultrep['name']; ?>
+                                                </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-2 search-dependent" style="display: none" id="selectCustomerDiv">
+                                            <label class="small font-weight-bold text-dark">Customer*</label>
+                                            <select class="form-control form-control-sm" style="width: 100%;" name="selectCustomer" id="selectCustomer">
+                                                <option value="0">All</option>
+                                                <?php while ($rowcustomerlist = $resultcustomer->fetch_assoc()) { ?>
+                                                <option value="<?php echo $rowcustomerlist['idtbl_customer']; ?>">
+                                                    <?php echo $rowcustomerlist['name']; ?>
+                                                </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">
+                                            <label class="small font-weight-bold text-dark">From*</label>
+                                            <input type="date" class="form-control form-control-sm" name="fromdate" id="fromdate" required>
+                                        </div>
+                                        <div class="col-2 search-dependent" style="display: none" id="selectDateTo">
+                                            <label class="small font-weight-bold text-dark">To*</label>
+                                            <input type="date" class="form-control form-control-sm" name="todate" id="todate" required>
+                                        </div>
+                                        <div class="col-1 search-dependent" style="display: none;" id="hidesumbit">
+                                            &nbsp;<br>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm ml-auto w-25 mt-2 px-5 btnPdf" id="submitBtn">
+                                                <i class="fas fa-file-pdf"></i>&nbsp;View
+                                            </button>
+                                        </div>
                                     </div>
-                                    <input type="submit" class="d-none" id="hidesubmit">
+                                    <input type="hidden" name="recordID" id="recordID" value="">
                                 </form>
                             </div>
-                            <div class="col-12">
-                                <hr class="border-dark">
-                                <div id="targetviewdetail"></div>                                
+                        </div>
+                        <hr>
+                        <div class="col-12">
+                            <hr class="border-dark">
+                            <div id="targetviewdetail" style="display: none;">
+                                <table id="outstandingReportTable" class="display table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Rep</th>
+                                            <th>Date</th>
+                                            <th>Invoice</th>
+                                            <th>Invoice Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-right"><strong>Total</strong></td>
+                                            <td class="text-center"><strong id="totalAmount"></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -71,157 +115,95 @@ include "include/topnavbar.php";
         <?php include "include/footerbar.php"; ?>
     </div>
 </div>
-<!-- Modal Invoice detail Load -->
-<div class="modal fade" id="modalinvoicelist" data-backdrop="static" data-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header p-2">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <h6 class="title-style small"><span>View Invoice</span></h6>
-                        <div id="viewinvoicedetail"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-    $(document).ready(function() {
-        $('.dpd1a').datepicker('remove');
-        $('.dpd1a').datepicker({
-            uiLibrary: 'bootstrap4',
-            autoclose: 'true',
-            todayHighlight: true,
-            format: 'yyyy-mm-dd'
-        });
+$(document).ready(function() {
+    $('#searchType').change(function() {
+        var searchType = $(this).val();
+        resetFields();
+        if (searchType == 1) {
+            $('#selectDateFrom, #selectDateTo, #hidesumbit').show();
+        } else if (searchType == 2) {
+            $('#selectSaleRepDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
+        } else if (searchType == 3) {
+            $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
+        }
+    });
 
-        $('#formSearchBtn').click(function(){
-            if (!$("#searchform")[0].checkValidity()) {
-                // If the form is invalid, submit it. The form won't actually submit;
-                // this will just cause the browser to display the native HTML5 error messages.
-                $("#hidesubmit").click();
-            } else {   
-                var validfrom = $('#fromdate').val();
-                var validto = $('#todate').val();
-                var customer = $('#customer').val();
+    $('#saleInformationForm').submit(function(event) {
+        event.preventDefault();
 
-                $('#targetviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
-
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        validfrom: validfrom,
-                        validto: validto,
-                        customer: customer
-                    },
-                    url: 'getprocess/getoutstandingreport.php',
-                    success: function(result) {//alert(result);
-                        $('#targetviewdetail').html(result);
-                        invoiceviewoption();
-                    }
-                });
-            }
-        });
-        $('#formAllSearchBtn').click(function(){
-            $('#targetviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
-
-            var validfrom='';
-            var validto='';
-            var customer='';
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    validfrom: validfrom,
-                    validto: validto,
-                    customer: customer
-                },
-                url: 'getprocess/getoutstandingreport.php',
-                success: function(result) {//alert(result);
-                    $('#targetviewdetail').html(result);
-                    invoiceviewoption();
+        var validfrom = $('#fromdate').val();
+        var validto = $('#todate').val();
+        var customer = getElementValue('#selectCustomer');
+        var rep = getElementValue('#selectSaleRep');
+        $.ajax({
+            type: "POST",
+            data: {
+                validfrom: validfrom,
+                validto: validto,
+                customer: customer,
+                rep: rep,
+            },
+            url: 'getprocess/getoutstandingreport.php',
+            success: function(result) {
+                $('#targetviewdetail').html(result).show(); // Show the table
+                if ($.fn.DataTable.isDataTable('#outstandingReportTable')) {
+                    $('#outstandingReportTable').DataTable().destroy(); 
                 }
-            });
+
+                $('#outstandingReportTable').DataTable({
+                    "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
+                           "<'row'<'col-sm-12'tr>>" +
+                           "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    "buttons": [
+                        { 
+                            extend: 'csv', 
+                            className: 'btn btn-success btn-sm', 
+                            title: 'Everest Outstanding Report Information', 
+                            text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                        },
+                        { 
+                            extend: 'pdf', 
+                            className: 'btn btn-danger btn-sm', 
+                            title: 'Everest Outstanding Report Information', 
+                            text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                        },
+                        { 
+                            extend: 'print', 
+                            title: 'Everest Outstanding Report Information',
+                            className: 'btn btn-primary btn-sm', 
+                            text: '<i class="fas fa-print mr-2"></i> Print'
+                        }
+                    ],
+                    "paging": true,
+                    "searching": true,
+                    "ordering": true,
+                });
+
+                $('#totalAmount').text($('#totalAmount').text());
+                resetForm();
+            }
         });
     });
 
-    function invoiceviewoption(){
-        $('#tableoutstanding tbody').on('click', '.viewbtninv', function() {
-            var invID = $(this).attr('id');
-
-            $('#viewinvoicedetail').html('<div class="text-center"><img src="images/spinner.gif"></div>');
-            $('#modalinvoicelist').modal('show');
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    invID : invID
-                },
-                url: 'getprocess/getissueinvoiceinfo.php',
-                success: function(result) {//alert(result);
-                    $('#viewinvoicedetail').html(result);
-                }
-            });
-        });
+    function getElementValue(id) {
+        var element = $(id);
+        if (element.length === 0) {
+            console.error('Element with ID', id, 'not found.');
+            return null;
+        }
+        return element.val();
     }
 
-    function action(data) { //alert(data);
-        var obj = JSON.parse(data);
-        $.notify({
-            // options
-            icon: obj.icon,
-            title: obj.title,
-            message: obj.message,
-            url: obj.url,
-            target: obj.target
-        }, {
-            // settings
-            element: 'body',
-            position: null,
-            type: obj.type,
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: "top",
-                align: "center"
-            },
-            offset: 100,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 1000,
-            url_target: '_blank',
-            mouse_over: null,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            },
-            onShow: null,
-            onShown: null,
-            onClose: null,
-            onClosed: null,
-            icon_type: 'class',
-            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-                '<span data-notify="icon"></span> ' +
-                '<span data-notify="title">{1}</span> ' +
-                '<span data-notify="message">{2}</span>' +
-                '<div class="progress" data-notify="progressbar">' +
-                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                '</div>' +
-                '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                '</div>'
-        });
+    function resetFields() {
+        $('.search-dependent').hide(); 
     }
 
+    function resetForm() {
+        $('#saleInformationForm')[0].reset(); 
+        resetFields();
+        $('#searchType').val(0);
+    }
+});
 </script>
-<?php include "include/footer.php"; ?>
