@@ -1,11 +1,7 @@
 <?php
 include "include/header.php";
 
-// $sql = "SELECT * FROM `tbl_porder` WHERE `confirm` IN (1,0,2)";
-// $result = $conn->query($sql);
-
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
-
 $resultcommonnames = $conn->query($sqlcommonnames);
 
 $sqlproduct = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
@@ -355,7 +351,6 @@ include "include/topnavbar.php";
     </div>
 </div>
 </div>
-
 <!-- Modal order view -->
 <div class="modal fade" id="modalorderview" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -475,6 +470,28 @@ include "include/topnavbar.php";
                     <input type="hidden" name="recordID" id="recordID" value="">
                     <input type="hidden" name="type" id="type" value="4">
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="printreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">View Porder PDF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="embed-responsive embed-responsive-16by9" id="frame">
+                            <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -607,6 +624,17 @@ include "include/topnavbar.php";
                     "data": null,
                     "render": function (data, type, full) {
                         var button = '';
+                        
+                        button +=
+                            '<button class="btn btn-outline-';
+                        if (full['is_printed'] == 0) {
+                            button += 'secondary';
+                        }else{
+                            button += 'success';
+                        }
+                        button += ' btn-sm btnPrint mr-1 " data-toggle="tooltip" data-placement="bottom" title="Print PO Details" id="' +
+                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                            '"><i class="fas fa-file-invoice-dollar"></i></button>';
                         button +=
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
@@ -694,6 +722,39 @@ include "include/topnavbar.php";
                 }
             ]
         });
+
+        $('#dataTable tbody').on('click', '.btnPrint', function() {
+            var id = $(this).attr('id');
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreport iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/porderpdf.php?id=' + id;
+            var width = $(this).attr('data-width') || 640; // width of the iframe, default is 640
+            var height = $(this).attr('data-height') || 360; // height of the iframe, default is 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // set allowfullscreen attribute if it's a video to allow fullscreen mode
+
+            // Set iframe attributes
+            $("#printreport iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+
+            // Show the modal
+            $('#printreport').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
+
+            // Refresh DataTable after the modal is closed
+            $('#printreport').on('hidden.bs.modal', function () {
+                $('#dataTable').DataTable().ajax.reload();
+            });
+        });
+
 
         $('#dataTable tbody').on('click', '.btneditorder', function () {
             recordID = $('#recordOption').val();

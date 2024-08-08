@@ -3,7 +3,7 @@ require_once('../connection/db.php');
 
 $record=$_POST['recordID'];
 
-$sql="SELECT `d`.`actualqty`, `d`.`idtbl_return_details`,`p`.`product_name`, `d`.`unitprice`, `d`.`qty`, `d`.`discount`, `d`.`total`, `d`.`tbl_invoice_idtblinvoice` FROM `tbl_return` as `r` join `tbl_return_details` as `d` ON (`r`.`idtbl_return` = `d`.`tbl_return_idtbl_return`) JOIN `tbl_product` as `p` ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) WHERE `d`.`tbl_return_idtbl_return` = '$record'";
+$sql="SELECT `d`.`actualqty`, `d`.`idtbl_return_details`,`p`.`product_name`, `d`.`unitprice`, `d`.`qty`, `d`.`discount`, `d`.`total`, `r`.`tbl_invoice_idtbl_invoice` FROM `tbl_return` as `r` join `tbl_return_details` as `d` ON (`r`.`idtbl_return` = `d`.`tbl_return_idtbl_return`) JOIN `tbl_product` as `p` ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) WHERE `d`.`tbl_return_idtbl_return` = '$record'";
 $result=$conn->query($sql);
 
 $sqlReturn = "SELECT `recieved_status`, `returntype` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
@@ -18,7 +18,7 @@ if($recievedStatus == 0){
 
 <div class="row">
     <div class="col-md-12">
-        <form action="process/returnprocess.php" method="post" autocomplete="off">
+        <form action="process/updatereturns.php" method="post" autocomplete="off">
 
             <div class="row">
 
@@ -29,7 +29,7 @@ if($recievedStatus == 0){
                         <input id="qty" type="text" name="qty" class="form-control form-control-sm" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 d-none">
 
                     <div class="form-group mb-1">
                         <label class="small font-weight-bold text-dark">
@@ -38,9 +38,6 @@ if($recievedStatus == 0){
                             placeholder="">
                     </div>
                 </div>
-            </div>
-            <div class="row">
-
                 <div class="col-md-6">
 
                     <div class="form-group mb-1">
@@ -57,16 +54,14 @@ if($recievedStatus == 0){
             <input type="hidden" name="hiddendiscount" id="hiddendiscount" value="">
             <input type="hidden" name="mainID" id="mainID" value="">
             <input type="hidden" name="returntype" id="returntype" value="<?php echo $type ?>">
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <button type="submit" id="submitBtn" class="btn btn-outline-primary btn-sm w-50 fa-pull-right"><i
                         class="far fa-save"></i>&nbsp;Update</button>
             </div>
             <br>
             <br>
+        </form>
     </div>
-
-
-    </form>
 </div>
 <?php }?>
 
@@ -90,7 +85,7 @@ if($recievedStatus == 0){
             <?php while($row=$result->fetch_assoc()){ ?>
             <tr>
                 <td><?php echo $row['idtbl_return_details'] ?></td>
-                <td>INV-<?php echo $row['tbl_invoice_idtblinvoice'] ?></td>
+                <td>INV-<?php echo $row['tbl_invoice_idtbl_invoice'] ?></td>
                 <td><?php echo $row['product_name'] ?></td>
                 <td class="text-right">Rs.<?php echo number_format($row['unitprice'], 2) ?></td>
                 <td class="text-center"><?php echo $row['qty'] ?></td>

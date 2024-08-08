@@ -38,6 +38,7 @@ $columns = array(
 	array( 'db' => '`u`.`dispatchnum`', 'dt' => 'dispatchnum', 'field' => 'dispatchnum' ),
 	array( 'db' => '`u`.`batchno`', 'dt' => 'batchno', 'field' => 'batchno' ),
 	array( 'db' => '`u`.`confirm_status`', 'dt' => 'confirm_status', 'field' => 'confirm_status' ),
+	array( 'db' => '`u`.`transferstatus`', 'dt' => 'transferstatus', 'field' => 'transferstatus' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 

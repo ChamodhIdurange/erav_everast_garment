@@ -2,41 +2,22 @@
 require_once('../connection/db.php');
 
 session_start();
-$customer = $_POST['customer'];
-$productID = $_POST['productID'];
+$invoiceId = $_POST['invoiceId'];
 
-$sql = "SELECT 
-`p`.`product_name`, 
-`p`.`idtbl_product`, 
-`d`.`idtbl_invoice_detail`, 
-`d`.`unitprice`, 
-`d`.`qty`,
-`inv`.`total`,
-`d`.`saleprice`, 
-`d`.`tbl_invoice_idtbl_invoice`, 
-`inv`.`tbl_customer_idtbl_customer` 
-FROM 
-`tbl_product` AS `p` 
-LEFT JOIN 
-`tbl_invoice_detail` AS `d` 
-ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) 
-LEFT JOIN 
-`tbl_invoice` AS `inv` 
-ON (`inv`.`idtbl_invoice` = `d`.`tbl_invoice_idtbl_invoice`) 
-WHERE 
-`inv`.`tbl_customer_idtbl_customer` = '$customer' AND `p`.`idtbl_product`='$productID'";
+$sql = "SELECT `d`.`tbl_product_idtbl_product`, `d`.`idtbl_invoice_detail`, `p`.`product_name`, `d`.`saleprice`, `d`.`qty` FROM `tbl_invoice` AS `i` LEFT JOIN `tbl_invoice_detail` AS `d` ON (`i`.`idtbl_invoice` = `d`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_product` AS `p` ON (`p`.`idtbl_product` = `d`.`tbl_product_idtbl_product`) WHERE `i`.`idtbl_invoice` = '$invoiceId'";
 $result = $conn->query($sql);
 ?>
- <small id="" class="form-text text-danger">click Qty and Discount columns for add Qty & Discount</small>
-<table class="table table-hover small" id="tablamount">
+ <small id="" class="form-text text-danger">Select and Enter Return Quantity</small>
+<table class="table table-hover small" id="tablereturnamount">
     <thead>
         <tr>
             <th class="d-none">#</th>
-            <th>INV</th>
-            <th>Unit Price</th>
+            <th class="d-none">Product Id</th>
+            <th class="d-none">Detail Id</th>
+            <th>Product</th>
+            <th>Sale Price</th>
             <th>Qty</th>
-            <th>Discount %</th>
-            <th class="d-none">name</th>
+            <th>Return Qty</th>
             <th></th>
         </tr>
     </thead>
@@ -45,17 +26,14 @@ $result = $conn->query($sql);
         <?php
         while ($rowresult = $result->fetch_assoc()) { ?>
             <tr>
-                <td class="d-none"><?php echo $rowresult['idtbl_product']; ?></td>
-                
-                <td>INV-<?php echo $rowresult['tbl_invoice_idtbl_invoice']; ?></td>
-                <td><?php echo number_format($rowresult['unitprice'], 2); ?></td>
-                <td contenteditable="true"></td>
-                <td contenteditable="true"></td>
-                <td class="d-none"><?php echo $rowresult['product_name']; ?></td>
-                <td class="d-none"><?php echo $rowresult['tbl_invoice_idtbl_invoice']; ?></td>
-                <td>
-                    <div class="custom-control custom-checkbox"><input type="checkbox" class="form-check-input checkinvoice" id="<?php echo $rowresult['idtbl_product']; ?>"></div>
-                </td>
+                <td class="d-none"><?php echo $rowresult['idtbl_invoice']; ?></td>
+                <td class="d-none"><?php echo $rowresult['tbl_product_idtbl_product']; ?></td>
+                <td class="d-none"><?php echo $rowresult['idtbl_invoice_detail']; ?></td>
+
+                <td class=""><?php echo $rowresult['product_name']; ?></td>
+                <td class=""><?php echo number_format($rowresult['saleprice'], 2); ?></td>
+                <td class=""><?php echo $rowresult['qty']; ?></td>
+                <td class=""><input type = "text" name="editqtyreturn" value="0"></td>
             </tr>
         <?php } ?>
     </tbody>

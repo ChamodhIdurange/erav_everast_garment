@@ -60,7 +60,6 @@ include "include/topnavbar.php";
                                             <th class="text-right">VAT</th>
                                             <th class="text-right">Nettotal</th>
                                             <th class="text-center">Status</th>
-                                            <th class="text-center">Transfer Status</th>
                                             <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -308,21 +307,6 @@ include "include/topnavbar.php";
                 },
                 {
                     "targets": -1,
-                    "className": 'text-center',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        var html = '';
-                        if(full['transferstatus']==0){
-                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Not Issued to the Stock';
-                        }
-                        else{
-                            html+='<i class="fas fa-check text-success"></i>&nbsp;Issued to the Stock';
-                        }
-                        return html;     
-                    }
-                },
-                {
-                    "targets": -1,
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
@@ -335,16 +319,6 @@ include "include/topnavbar.php";
                         button +=
                             '" data-toggle="tooltip" data-placement="bottom" title="View Order" id="' +
                             full['idtbl_grn'] + '"><i class="far fa-eye"></i></button>';
-
-                        if (full['transferstatus'] == 1) {
-                            button += '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
-                        } else {
-                            button += '<a href="process/grnstocktransfer.php?record=' + full['idtbl_grn'] + '" data-toggle="tooltip" data-placement="bottom" title="Transfer to Stock" onclick="return stock_transfer()" target="_self" class="btn btn-outline-secondary btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-exchange-alt"></i></a>';
-                        }
 
                         if(full['confirm_status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';}
                         else{button+='<a href="process/statusgrn.php?record='+full['idtbl_grn']+'&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-times"></i></a>';}
@@ -591,9 +565,6 @@ include "include/topnavbar.php";
 
     function order_confirm() {
         return confirm("Are you sure you want to Confirm this GRN?");
-    }
-    function stock_transfer() {
-        return confirm("Are you sure you want to Transfer to Stock?");
     }
 </script>
 <?php include "include/footer.php"; ?>

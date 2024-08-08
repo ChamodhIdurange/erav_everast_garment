@@ -19,30 +19,26 @@
  */
 
 // DB table to use
-$table = 'tbl_customer_order';
+$table = 'tbl_grn';
 
 // Table's primary key
-$primaryKey = 'idtbl_customer_order';
+$primaryKey = 'idtbl_grn';
 
 // Array of database columns which should be read and sent back to DataTables.
 // The `db` parameter represents the column name in the database, while the `dt`
 // parameter represents the DataTables column identifier. In this case simple
 // indexes
 $columns = array(
-	array( 'db' => '`u`.`idtbl_customer_order`', 'dt' => 'idtbl_customer_order', 'field' => 'idtbl_customer_order' ),
+	array( 'db' => '`u`.`idtbl_grn`', 'dt' => 'idtbl_grn', 'field' => 'idtbl_grn' ),
 	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
-	array( 'db' => '`u`.`total`', 'dt' => 'total', 'field' => 'total' ),
-	array( 'db' => '`u`.`discount`', 'dt' => 'discount', 'field' => 'discount' ),
 	array( 'db' => '`u`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
-	array( 'db' => '`u`.`confirm`', 'dt' => 'confirm', 'field' => 'confirm' ),
-	array( 'db' => '`u`.`dispatchissue`', 'dt' => 'dispatchissue', 'field' => 'dispatchissue' ),
-	array( 'db' => '`u`.`ship`',   'dt' => 'ship', 'field' => 'ship' ),
-	array( 'db' => '`u`.`delivered`',   'dt' => 'delivered', 'field' => 'delivered' ),
-	array( 'db' => '`u`.`is_printed`',   'dt' => 'is_printed', 'field' => 'is_printed' ),
-	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`ub`.`area`', 'dt' => 'area', 'field' => 'area' ),
-    array( 'db' => '`uc`.`name`', 'dt' => 'cusname', 'field' => 'cusname', 'as' => 'cusname' ),
-    array( 'db' => '`ud`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' )
+	array( 'db' => '`u`.`total`', 'dt' => 'total', 'field' => 'total' ),
+	array( 'db' => '`u`.`vatamount`', 'dt' => 'vatamount', 'field' => 'vatamount' ),
+    array( 'db' => '`u`.`invoicenum`', 'dt' => 'invoicenum', 'field' => 'invoicenum' ),
+	array( 'db' => '`u`.`dispatchnum`', 'dt' => 'dispatchnum', 'field' => 'dispatchnum' ),
+	array( 'db' => '`u`.`batchno`', 'dt' => 'batchno', 'field' => 'batchno' ),
+	array( 'db' => '`u`.`confirm_status`', 'dt' => 'confirm_status', 'field' => 'confirm_status' ),
+	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
 // SQL server connection information
@@ -62,9 +58,9 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`)";
+$joinQuery = "FROM `tbl_grn` AS `u`";
 
-$extraWhere = "`u`.`status`=1";
+$extraWhere = "`u`.`status` IN (1,2)";
 
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
