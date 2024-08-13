@@ -203,6 +203,16 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 40, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 40, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 40, 4);
+} else if ($lastElement == 'accountpettycashreimburse.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 41, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 41, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 41, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 41, 4);
+} else if ($lastElement == 'accountpettycashexpenses.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 42, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 42, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 42, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 42, 4);
 }
 
 function checkprivilege($arraymenu, $menuID, $type)
@@ -387,6 +397,23 @@ function checkprivilege($arraymenu, $menuID, $type)
                     </nav>
                 </div>
                 <?php }
+                if (menucheck($menuprivilegearray, 41) == 1 | menucheck($menuprivilegearray, 42) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsepettycash" aria-expanded="false" aria-controls="collapsepettycash">
+                        <div class="nav-link-icon"><i data-feather="corner-down-left"></i></div>
+                        Petty Cash
+                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse <?php if ($lastElement == "accountpettycashreimburse.php" | $lastElement == "accountpettycashexpenses.php") {echo 'show';} ?>" id="collapsepettycash" data-parent="#accordionSidenav">
+                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                            <?php if (menucheck($menuprivilegearray, 41) == 1) { ?>
+                                <a class="nav-link p-0 px-3 py-1" href="accountpettycashreimburse.php">Petty Cash Reimburse</a>
+                            <?php }
+                            if (menucheck($menuprivilegearray, 42) == 1) { ?>
+                                <a class="nav-link p-0 px-3 py-1" href="accountpettycashexpenses.php">Petty Cash Expenses</a>
+                            <?php } ?>
+                        </nav>
+                    </div>
+                    <?php }
                 if (menucheck($menuprivilegearray, 31) == 1 | menucheck($menuprivilegearray, 32) == 1 | menucheck($menuprivilegearray, 33) == 1 | menucheck($menuprivilegearray, 34) == 1 | menucheck($menuprivilegearray, 35) == 1 | menucheck($menuprivilegearray, 36) == 1 | menucheck($menuprivilegearray, 37) == 1 | menucheck($menuprivilegearray, 38) == 1 | menucheck($menuprivilegearray, 39) == 1 ) { ?> 
                     <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsereport" aria-expanded="false" aria-controls="collapsereport">
                         <div class="nav-link-icon"><i data-feather="file"></i></div>
