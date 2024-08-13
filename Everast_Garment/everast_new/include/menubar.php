@@ -432,7 +432,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                                 <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Customer Outstanding</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 34) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a>
+                                <!-- <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a> -->
                             <?php }
                                     if (menucheck($menuprivilegearray, 35) == 1) { ?>
                                 <a class="nav-link p-0 px-3 py-1" href="dailycash.php">Daily Cash & Cheque</a>
@@ -441,10 +441,10 @@ function checkprivilege($arraymenu, $menuID, $type)
                                 <a class="nav-link p-0 px-3 py-1" href="salereportcustomer.php">Sale Report Customer</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 37) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="salereportproduct.php">Sale Report Product</a>
+                                <!-- <a class="nav-link p-0 px-3 py-1" href="salereportproduct.php">Sale Report Product</a> -->
                             <?php }
                                     if (menucheck($menuprivilegearray, 38) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="bufferstockmaintainreport.php">Buffer Maintainance</a>
+                                <!-- <a class="nav-link p-0 px-3 py-1" href="bufferstockmaintainreport.php">Buffer Maintainance</a> -->
                             <?php }
                                     if (menucheck($menuprivilegearray, 39) == 1) { ?>
                                 <a class="nav-link p-0 px-3 py-1" href="ouritemrange.php">Our Item Range</a>

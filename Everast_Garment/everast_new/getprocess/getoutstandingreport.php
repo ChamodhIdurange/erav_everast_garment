@@ -1,114 +1,75 @@
 <?php 
 require_once('../connection/db.php');
-ini_set('max_execution_time', 6200); //6200 seconds = 120 minutes
 
-$validfrom=$_POST['validfrom'];
-$validto=$_POST['validto'];
-$customer=$_POST['customer'];
+$validfrom = $_POST['validfrom'];
+$validto = $_POST['validto'];
+$customerID = $_POST['customer'];
+$repID = $_POST['rep'];
 
-if(!empty($_POST['customer'])){
-    $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 AND `idtbl_customer`='$customer'";
-    $resultcustomer =$conn-> query($sqlcustomer);
+$date = date('Y-m-d');
+
+$customerarray = array();
+$totalAmount = 0;
+
+$sql = "SELECT `u`.`idtbl_invoice`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`
+        FROM `tbl_invoice` AS `u`
+        LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
+        LEFT JOIN `tbl_employee` AS `ue` ON `u`.`ref_id` = `ue`.`idtbl_employee`
+        WHERE `u`.`status`=1 
+        AND `u`.`paymentcomplete`=0 
+        AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+
+if ($customerID > 0) {
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
 }
-else{
-    $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1";
-    $resultcustomer =$conn-> query($sqlcustomer);
+if ($repID > 0) {
+    $sql .= " AND `u`.`ref_id` = '$repID'";
 }
 
-if(!empty($_POST['customer'])){
-?>
-<table class="table table-striped table-bordered table-sm" id="tableoutstanding">
+$sql .= " GROUP BY `u`.`idtbl_invoice`";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows == 0) {
+    echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
+    return;
+}
+
+while($row = $result->fetch_assoc()) {
+    array_push($customerarray, $row);
+    $totalAmount += $row['total'];
+}
+
+$html = '<table class="table table-striped table-bordered table-sm small" id="outstandingReportTable">
     <thead>
         <tr>
             <th>Customer</th>
+            <th>Rep</th>
             <th>Date</th>
             <th>Invoice</th>
-            <th class="text-right">Invoice Total</th>
-            <th class="text-right">Invoice Payment</th>
-            <th class="text-right">Balance</th>
-            <th>&nbsp;</th>
+            <th>Invoice Total</th>
         </tr>
     </thead>
-    <tbody>
-        <?php 
-        while($rowcustomer = $resultcustomer-> fetch_assoc()){ 
-            $customerID=$rowcustomer['idtbl_customer'];
-            
-            $sqlinvcount="SELECT COUNT(*) AS `count` FROM `tbl_invoice` WHERE `status`=1 AND `paymentcomplete`=0 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto'";
-            $resultinvcount =$conn-> query($sqlinvcount);
-            $rowinvcount = $resultinvcount-> fetch_assoc();
+    <tbody>';
 
-            $sqlinvoicelist="SELECT `idtbl_invoice`, `date`, `total` FROM `tbl_invoice` WHERE `status`=1 AND `paymentcomplete`=0 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto'";
-            $resultinvoicelist =$conn-> query($sqlinvoicelist);
+foreach($customerarray as $rowcustomerarray) { 
+    $html .= '<tr>
+        <td>' . htmlspecialchars($rowcustomerarray['cusname']) . '</td>
+        <td>' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
+        <td>' . htmlspecialchars($rowcustomerarray['date']) . '</td>
+        <td>INV-' . htmlspecialchars($rowcustomerarray['idtbl_invoice']) . '</td>
+        <td class="text-center">' . htmlspecialchars($rowcustomerarray['total']) . '</td>
+    </tr>';
+}
 
-            if($rowinvcount['count']>0){
-        ?>
+$html .= '</tbody>
+    <tfoot>
         <tr>
-            <td colspan="7"><?php echo $rowcustomer['name']; ?></td>
+            <td colspan="4" class="text-right"><strong>Total</strong></td>
+            <td class="text-center"><strong>' . htmlspecialchars($totalAmount) . '</strong></td>
         </tr>
-        <?php 
-            while($rowinvoicelist = $resultinvoicelist-> fetch_assoc()){  
-                $invID=$rowinvoicelist['idtbl_invoice'];
+    </tfoot>
+</table>';
 
-                $sqlpayment="SELECT SUM(`payamount`) AS `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_idtbl_invoice`='$invID'";
-                $resultpayment =$conn-> query($sqlpayment);
-                $rowpayment = $resultpayment-> fetch_assoc()
-        ?>
-        <tr>
-            <td>&nbsp;</td>
-            <td><?php echo $rowinvoicelist['date'] ?></td>
-            <td><?php echo 'INV-'.$rowinvoicelist['idtbl_invoice'] ?></td>
-            <td class="text-right"><?php echo number_format($rowinvoicelist['total'], 2); ?></td>
-            <td class="text-right"><?php echo number_format($rowpayment['payamount'], 2); ?></td>
-            <td class="text-right"><?php echo number_format(($rowinvoicelist['total']-$rowpayment['payamount']), 2) ?></td>
-            <td class="text-center"><button class="btn btn-outline-dark btn-sm viewbtninv" id="<?php echo $rowinvoicelist['idtbl_invoice'] ?>"><i class="fas fa-eye"></i></button></td>
-        </tr>
-        <?php }}} ?>
-    </tbody>
-</table>
-<?php } else{ ?>
-<table class="table table-striped table-bordered table-sm" id="tableoutstanding">
-    <thead>
-        <tr>
-            <th>Customer</th>
-            <th class="text-right">Invoice Total</th>
-            <th class="text-right">Invoice Payment</th>
-            <th class="text-right">Balance</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php 
-        while($rowcustomer = $resultcustomer-> fetch_assoc()){ 
-            $customerID=$rowcustomer['idtbl_customer'];
-
-            if($validfrom=='' && $validto==''){
-                $sqlinvoicelist="SELECT SUM(`total`) AS `total` FROM `tbl_invoice` WHERE `status`=1 AND `paymentcomplete`=0 AND `tbl_customer_idtbl_customer`='$customerID'";
-                $resultinvoicelist =$conn-> query($sqlinvoicelist);
-                $rowinvoicelist = $resultinvoicelist-> fetch_assoc();
-
-                $sqlpayment="SELECT SUM(`payamount`) AS `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_idtbl_invoice` IN (SELECT `idtbl_invoice` FROM `tbl_invoice` WHERE `status`=1 AND `tbl_customer_idtbl_customer`='$customerID')";
-                $resultpayment =$conn-> query($sqlpayment);
-                $rowpayment = $resultpayment-> fetch_assoc();
-            }
-            else{
-                $sqlinvoicelist="SELECT SUM(`total`) AS `total` FROM `tbl_invoice` WHERE `status`=1 AND `paymentcomplete`=0 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto'";
-                $resultinvoicelist =$conn-> query($sqlinvoicelist);
-                $rowinvoicelist = $resultinvoicelist-> fetch_assoc();
-
-                $sqlpayment="SELECT SUM(`payamount`) AS `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_idtbl_invoice` IN (SELECT `idtbl_invoice` FROM `tbl_invoice` WHERE `status`=1 AND `tbl_customer_idtbl_customer`='$customerID' AND `date` BETWEEN '$validfrom' AND '$validto')";
-                $resultpayment =$conn-> query($sqlpayment);
-                $rowpayment = $resultpayment-> fetch_assoc();
-            }
-
-            if($rowinvoicelist['total']>0){
-        ?>
-        <tr>
-            <td><?php echo $rowcustomer['name']; ?></td>
-            <td class="text-right"><?php echo number_format($rowinvoicelist['total'], 2); ?></td>
-            <td class="text-right"><?php echo number_format($rowpayment['payamount'], 2); ?></td>
-            <td class="text-right"><?php echo number_format(($rowinvoicelist['total']-$rowpayment['payamount']), 2) ?></td>
-        </tr>
-        <?php }} ?>
-    </tbody>
-</table>
-<?php } ?>
+echo $html;
+?>
