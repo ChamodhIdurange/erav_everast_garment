@@ -213,6 +213,26 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 42, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 42, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 42, 4);
+} else if ($lastElement == 'account.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 43, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 43, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 43, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 43, 4);
+} else if ($lastElement == 'accounttype.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 44, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 44, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 44, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 44, 4);
+} else if ($lastElement == 'bank-info.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 45, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 45, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 45, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 45, 4);
+} else if ($lastElement == 'branch-info.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 46, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 46, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 46, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 46, 4);
 }
 
 function checkprivilege($arraymenu, $menuID, $type)
@@ -397,9 +417,43 @@ function checkprivilege($arraymenu, $menuID, $type)
                     </nav>
                 </div>
                 <?php }
+                if (menucheck($menuprivilegearray, 43) == 1 | menucheck($menuprivilegearray, 44) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseaccount" aria-expanded="false" aria-controls="collapseaccount">
+                        <div class="nav-link-icon"><i class="fas fa-university"></i></div>
+                        Account
+                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse <?php if ($lastElement == "account.php" | $lastElement == "accounttype.php") {echo 'show';} ?>" id="collapseaccount" data-parent="#accordionSidenav">
+                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                            <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
+                                <a class="nav-link p-0 px-3 py-1" href="account.php">Account</a>
+                            <?php }
+                            if (menucheck($menuprivilegearray, 44) == 1) { ?>
+                                <a class="nav-link p-0 px-3 py-1" href="accounttype.php">Account Type</a>
+                            <?php } ?>
+                        </nav>
+                    </div>
+                    <?php }
+                    if (menucheck($menuprivilegearray, 45) == 1 | menucheck($menuprivilegearray, 46) == 1) { ?>
+                        <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsebank" aria-expanded="false" aria-controls="collapsebank">
+                            <div class="nav-link-icon"><i data-feather="dollar-sign"></i></div>
+                            Bank
+                            <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse <?php if ($lastElement == "bank-info.php" | $lastElement == "branch-info.php") {echo 'show';} ?>" id="collapsebank" data-parent="#accordionSidenav">
+                            <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                                <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
+                                    <a class="nav-link p-0 px-3 py-1" href="bank-info.php">Bank</a>
+                                <?php }
+                                if (menucheck($menuprivilegearray, 44) == 1) { ?>
+                                    <a class="nav-link p-0 px-3 py-1" href="branch-info.php">Bank Branch</a>
+                                <?php } ?>
+                            </nav>
+                        </div>
+                        <?php }
                 if (menucheck($menuprivilegearray, 41) == 1 | menucheck($menuprivilegearray, 42) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsepettycash" aria-expanded="false" aria-controls="collapsepettycash">
-                        <div class="nav-link-icon"><i data-feather="corner-down-left"></i></div>
+                        <div class="nav-link-icon"><i class="fas fa-university"></i></div>
                         Petty Cash
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
