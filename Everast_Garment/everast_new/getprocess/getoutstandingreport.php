@@ -3,18 +3,19 @@ require_once('../connection/db.php');
 
 $validfrom = $_POST['validfrom'];
 $validto = $_POST['validto'];
-$customerID = $_POST['customer'];
-$repID = $_POST['rep'];
+$customerID = isset($_POST['customer']) ? $_POST['customer'] : 0;
+$repID = isset($_POST['rep']) ? $_POST['rep'] : 0;
 
 $date = date('Y-m-d');
 
 $customerarray = array();
 $totalAmount = 0;
 
-$sql = "SELECT `u`.`idtbl_invoice`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`
+$sql = "SELECT `u`.`idtbl_invoice`,`u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
-        LEFT JOIN `tbl_employee` AS `ue` ON `u`.`ref_id` = `ue`.`idtbl_employee`
+        LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
+        LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
         WHERE `u`.`status`=1 
         AND `u`.`paymentcomplete`=0 
         AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
@@ -23,7 +24,7 @@ if ($customerID > 0) {
     $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
 }
 if ($repID > 0) {
-    $sql .= " AND `u`.`ref_id` = '$repID'";
+    $sql .= " AND `ue`.`idtbl_employee` = '$repID'";
 }
 
 $sql .= " GROUP BY `u`.`idtbl_invoice`";
@@ -38,16 +39,22 @@ if ($result->num_rows == 0) {
 while($row = $result->fetch_assoc()) {
     array_push($customerarray, $row);
     $totalAmount += $row['total'];
+
+    $date = new DateTime($row['date']);
+    $today = new DateTime();  
+    $interval = $today->diff($date);  
+    $datecount = $interval->days;  
 }
 
 $html = '<table class="table table-striped table-bordered table-sm small" id="outstandingReportTable">
     <thead>
         <tr>
             <th>Customer</th>
-            <th>Rep</th>
-            <th>Date</th>
-            <th>Invoice</th>
-            <th>Invoice Total</th>
+            <th class="text-center">Rep</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">Days</th>
+            <th class="text-center">Invoice</th>
+            <th class="text-center">Invoice Total</th>
         </tr>
     </thead>
     <tbody>';
@@ -55,18 +62,19 @@ $html = '<table class="table table-striped table-bordered table-sm small" id="ou
 foreach($customerarray as $rowcustomerarray) { 
     $html .= '<tr>
         <td>' . htmlspecialchars($rowcustomerarray['cusname']) . '</td>
-        <td>' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
-        <td>' . htmlspecialchars($rowcustomerarray['date']) . '</td>
-        <td>INV-' . htmlspecialchars($rowcustomerarray['idtbl_invoice']) . '</td>
-        <td class="text-center">' . htmlspecialchars($rowcustomerarray['total']) . '</td>
+        <td class="text-center">' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
+        <td class="text-center">' . htmlspecialchars($rowcustomerarray['date']) . '</td>
+        <td class="text-center">' . $datecount . '</td>
+        <td class="text-center">' . htmlspecialchars($rowcustomerarray['invoiceno']) . '</td>
+        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['total'])) . '</td>
     </tr>';
 }
 
 $html .= '</tbody>
     <tfoot>
         <tr>
-            <td colspan="4" class="text-right"><strong>Total</strong></td>
-            <td class="text-center"><strong>' . htmlspecialchars($totalAmount) . '</strong></td>
+            <td colspan="5" class="text-center"><strong>Total</strong></td>
+            <td class="text-center"><strong>' . number_format(htmlspecialchars($totalAmount)) . '</strong></td>
         </tr>
     </tfoot>
 </table>';
