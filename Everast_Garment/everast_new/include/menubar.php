@@ -183,7 +183,7 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 36, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 36, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 36, 4);
-} else if ($lastElement == 'salereportproduct.php') {
+} else if ($lastElement == 'accountreport.php') {
     $addcheck = checkprivilege($menuprivilegearray, 37, 1);
     $editcheck = checkprivilege($menuprivilegearray, 37, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 37, 3);
@@ -474,7 +474,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                         Reports
                         <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
-                    <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "salereportproduct.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php") {echo 'show';} ?>" id="collapsereport" data-parent="#accordionSidenav">
+                    <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "accountreport.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php") {echo 'show';} ?>" id="collapsereport" data-parent="#accordionSidenav">
                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                             <?php if (menucheck($menuprivilegearray, 31) == 1) { ?>
                                 <a class="nav-link p-0 px-3 py-1" href="stock.php">Stock</a>
@@ -483,7 +483,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                                 <a class="nav-link p-0 px-3 py-1" href="bincard.php">Bin Card</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 33) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Customer Outstanding</a>
+                                <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Outstanding Reports</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 34) == 1) { ?>
                                 <!-- <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a> -->
@@ -492,10 +492,10 @@ function checkprivilege($arraymenu, $menuID, $type)
                                 <a class="nav-link p-0 px-3 py-1" href="dailycash.php">Daily Cash & Cheque</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 36) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="salereportcustomer.php">Sale Report Customer</a>
+                                <a class="nav-link p-0 px-3 py-1" href="salereportcustomer.php">Sale Reports</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 37) == 1) { ?>
-                                <!-- <a class="nav-link p-0 px-3 py-1" href="salereportproduct.php">Sale Report Product</a> -->
+                                <a class="nav-link p-0 px-3 py-1" href="accountreport.php">Account Reports</a>
                             <?php }
                                     if (menucheck($menuprivilegearray, 38) == 1) { ?>
                                 <!-- <a class="nav-link p-0 px-3 py-1" href="bufferstockmaintainreport.php">Buffer Maintainance</a> -->

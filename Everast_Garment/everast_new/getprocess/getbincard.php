@@ -46,7 +46,7 @@ $sqlgrn = "SELECT * FROM (
         (`porder`.`idtbl_porder` = `po`.`tbl_porder_idtbl_porder`) 
     WHERE 
         `po`.`tbl_product_idtbl_product` = '$item'
-        AND `porder`.`potype` = '1'
+        AND `porder`.`completestatus` = '1'
     
     UNION
     
