@@ -3,7 +3,7 @@ require_once('../connection/db.php');
 
 $validfrom = $_POST['validfrom'];
 $validto = $_POST['validto'];
-$accountID = $_POST['selectAccount'];
+$accountID = $_POST['selectedAccount'];
 
 $sql = "SELECT `u`.`account`, `u`.`accountno`,`u`.`idtbl_account`,`ub`.`bankname`,`uc`.`amount`,`uc`.`narration` FROM `tbl_account` AS `u` 
         LEFT JOIN `tbl_bank` AS `ub` ON `u`.`tbl_bank_idtbl_bank`= `ub`.`idtbl_bank`

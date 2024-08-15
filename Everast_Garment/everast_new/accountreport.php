@@ -50,7 +50,7 @@ include "include/topnavbar.php";
                                         <div class="col-2 search-dependent" style="display: none" id="selectAccount">
                                             <label class="small font-weight-bold text-dark">Account*</label>
                                             <select class="form-control form-control-sm" style="width: 100%;"
-                                                name="selectAccount" id="selectAccount">
+                                                name="selectedAccount" id="selectedAccount">
                                                 <option value="0">All</option>
                                                 <?php while ($rowresultaccount = $resultaccount->fetch_assoc()) { ?>
                                                 <option value="<?php echo $rowresultaccount['idtbl_account']; ?>">
@@ -160,7 +160,7 @@ $(document).ready(function() {
         var searchType = $('#searchType').val();
         var validfrom = $('#fromdate').val();
         var validto = $('#todate').val();
-        var selectAccount = getElementValue('#selectAccount');
+        var selectedAccount = getElementValue('#selectedAccount');
 
         $.ajax({
             type: "POST",
@@ -168,7 +168,7 @@ $(document).ready(function() {
                 searchType: searchType,
                 validfrom: validfrom,
                 validto: validto,
-                selectAccount: selectAccount,
+                selectedAccount: selectedAccount,
             },
             url: 'getprocess/getaccountdetailes.php',
             success: function(result) {
@@ -216,10 +216,7 @@ $(document).ready(function() {
         var searchType = encodeURIComponent($('#searchType').val());
         var validfrom = encodeURIComponent($('#fromdate').val());
         var validto = encodeURIComponent($('#todate').val());
-        var customer = encodeURIComponent(getElementValue('#selectCustomer'));
-        var product = encodeURIComponent(getElementValue('#selectProduct'));
-        var rep = encodeURIComponent(getElementValue('#selectSaleRep'));
-        var area = encodeURIComponent(getElementValue('#selectArea'));
+        var selectedAccount = encodeURIComponent(getElementValue('#selectedAccount'));
 
         $('#frame').html('');
         $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
@@ -227,8 +224,8 @@ $(document).ready(function() {
             "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
         );
 
-        var params =`?validfrom=${validfrom}&validto=${validto}&searchType=${searchType}&customer=${customer}&rep=${rep}&area=${area}&product=${product}`;
-        var src = 'pdfprocess/salereportpdf.php' + params;
+        var params =`?validfrom=${validfrom}&validto=${validto}&searchType=${searchType}&selectedAccount=${selectedAccount}`;
+        var src = 'pdfprocess/accountpdf.php' + params;
 
         var width = $(this).attr('data-width') || 640;
         var height = $(this).attr('data-height') || 360;
