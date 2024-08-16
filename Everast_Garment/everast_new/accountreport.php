@@ -36,22 +36,22 @@ include "include/topnavbar.php";
                                                 <select class="form-control form-control-sm" name="searchType"
                                                     id="searchType">
                                                     <option value="0">Select Type</option>
-                                                    <option value="1">All</option>
-                                                    <option value="2">Account Vise</option>
+                                                    <option value="1">All Expencess</option>
+                                                    <option value="2">Account Vise Expencess</option>
                                                     <!-- <option value="3">Product Vise</option>
                                                     <option value="4">Customer Vise</option>
                                                     <option value="5">Area Vise</option> -->
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-2 search-dependent" style="display: none" id="selectAll">
+                                        <!-- <div class="col-2 search-dependent" style="display: none" id="selectAll">
                                             <label class="small font-weight-bold text-dark">All*</label>
-                                        </div>
+                                        </div> -->
                                         <div class="col-2 search-dependent" style="display: none" id="selectAccount">
                                             <label class="small font-weight-bold text-dark">Account*</label>
                                             <select class="form-control form-control-sm" style="width: 100%;"
                                                 name="selectedAccount" id="selectedAccount">
-                                                <option value="0">All</option>
+                                                <option value="0">Select Account</option>
                                                 <?php while ($rowresultaccount = $resultaccount->fetch_assoc()) { ?>
                                                 <option value="<?php echo $rowresultaccount['idtbl_account']; ?>">
                                                     <?php echo $rowresultaccount['account']; ?>
@@ -145,12 +145,6 @@ $(document).ready(function() {
             $('#selectDateFrom, #selectDateTo, #hidesumbit').show();
         } else if (searchType == 2) {
             $('#selectAccount, #selectDateFrom, #selectDateTo, #hidesumbit').show();
-        // } else if (searchType == 3) {
-        //     $('#selectProductDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
-        // } else if (searchType == 4) {
-        //     $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
-        // } else if (searchType == 5) {
-        //     $('#selectAreaDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
         }
     });
 
@@ -209,9 +203,6 @@ $(document).ready(function() {
     });
 
     $('#printBtn').click(function() {
-        // var validfrom = encodeURIComponent($('#fromdate').val());
-        // var validto = encodeURIComponent($('#todate').val());
-        // var customer = encodeURIComponent(getElementValue('#selectCustomer'));
 
         var searchType = encodeURIComponent($('#searchType').val());
         var validfrom = encodeURIComponent($('#fromdate').val());
