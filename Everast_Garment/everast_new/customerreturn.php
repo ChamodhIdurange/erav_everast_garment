@@ -1,7 +1,7 @@
 <?php
 include "include/header.php";
 
-$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `U`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1) and `u`.`returntype` = '1'";
+$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1) and `u`.`returntype` = '1'";
 $resultreturncustomer = $conn->query($sqlreturncustomer);
 
 

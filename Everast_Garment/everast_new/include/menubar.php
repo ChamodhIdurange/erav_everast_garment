@@ -410,7 +410,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                         <?php //}
                         // if (menucheck($menuprivilegearray, 25) == 1) { ?>
                         <!-- //     <a class="nav-link p-0 px-3 py-1" href="supplierreturn.php">Supplier Return</a> -->
-                        // <?php //}
+                        <?php //}
                         // if (menucheck($menuprivilegearray, 26) == 1) { ?>
                         <!-- //     <a class="nav-link p-0 px-3 py-1" href="damagereturns.php">Damage Return</a> -->
                         <?php } ?>
