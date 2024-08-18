@@ -259,9 +259,7 @@ $(document).ready(function() {
     });
 
     $('#printBtn').click(function() {
-        // var validfrom = encodeURIComponent($('#fromdate').val());
-        // var validto = encodeURIComponent($('#todate').val());
-        // var customer = encodeURIComponent(getElementValue('#selectCustomer'));
+        
 
         var searchType = encodeURIComponent($('#searchType').val());
         var validfrom = encodeURIComponent($('#fromdate').val());

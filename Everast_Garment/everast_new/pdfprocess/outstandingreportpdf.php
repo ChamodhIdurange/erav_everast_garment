@@ -13,167 +13,158 @@ $options->set('isPhpEnabled', true);
 $dompdf = new Dompdf($options);
 
 $validfrom = $_GET['validfrom'];
-$validto = $_GET['validto'];
-$searchType = intval($_GET['searchType']);
-$customer = intval($_GET['customer']);
-$rep = intval($_GET['rep']);
+$validto =  $_GET['validto'];
+$customerID = isset( $_GET['customer']) ?  $_GET['customer'] : 0;
+$repID = isset( $_GET['rep']) ?  $_GET['rep'] : 0;
+$searchType =  $_GET['searchType'];
+$aginvalue = isset( $_GET['aginvalue']) ?  $_GET['aginvalue'] : 0;
 
-
-$sqlinfo = "SELECT `u`.`idtbl_invoice`,`u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`
+$sql = "SELECT `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, 
+        `ue`.`name` AS `repname`, `uf`.`payamount`
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
         LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
+        LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
         AND `u`.`paymentcomplete`=0 
         AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
 
-
-if ($searchType == 3 && $customer > 0) { 
-    $sqlinfo .= " AND `u`.`tbl_customer_idtbl_customer` = '$customer'";
+if ($searchType == '3' && $customerID > 0) {
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
+} elseif ($searchType == '2' && $repID > 0) {
+    $sql .= " AND `ue`.`idtbl_employee` = '$repID'";
 }
 
-if ($searchType == 2 && $rep > 0) { 
-    $sqlinfo .= " AND `ue`.`idtbl_employee` = '$rep'";
+$sql .= " GROUP BY `u`.`idtbl_invoice`";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows == 0) {
+    echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
+    return;
 }
 
-$sqlinfo .= " GROUP BY `u`.`idtbl_invoice`";
+$totalAmount = 0;
+$totalPayAmount = 0;
+$totalBalance = 0;
 
-$resultsqlinfo = $conn->query($sqlinfo);
-
-if ($resultsqlinfo->num_rows > 0) {
-    $html = '
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sales Report</title>
-        <style>
-            @page {
-                margin-top: 5px;
-            }
-            body {
-                margin: 0px;
-                padding: 0px;
-                font-family: Arial, sans-serif;
-                width: 100%;
-                font-size: small;
-            }
-            .tablec {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                font-size: 10px;
-                border: 1px solid #ddd;
-            }
-            .thc, .tdc {
-                padding: 5px;
-                text-align: center;
-            }
-            .thc {
-                background-color: #f2f2f2;
-            }
-            .tdc {
-                border: 1px solid #ddd;
-            }
-        </style>
-    </head>
-    <body>
-    <div class="row">
-        <div class="col-12">
-            <table class="w-100 tableprint">
-                <tbody>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><strong>EVEREST HARDWARE PRIVATE LIMITED.</strong><br>
-                            363/10/01, Malwatta, Kal-Eliya, Mirigama.<br>
-                            Tel: 033 4 950 951, Mobile: 0772710710, FAX: 0372221580<br>
-                            <strong>E-Mail: info@everesthardware.lk  Web: www.everesthardware.lk</strong></td>
-                        <td>&nbsp;</td>
-                    </tr>
-                </tbody>            
-            </table>
-        </div>
+$html = '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outstanding Report</title>
+    <style>
+        @page {
+            margin: 20px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+        .tablec {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .tablec th, .tablec td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+        }
+        .tablec th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2 style="text-align: center;">EVEREST HARDWARE PRIVATE LIMITED</h2>
+        <p style="text-align: center;">363/10/01, Malwatta, Kal-Eliya, Mirigama.<br>
+        Tel: 033 4 950 951, Mobile: 0772710710, FAX: 0372221580<br>
+        E-Mail: info@everesthardware.lk  Web: www.everesthardware.lk</p>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-12">
-            <p>Outstanding Report';
-    
-    if ($searchType == 3) {
-        $html .= ' - Customer Wise';
-    } elseif ($searchType == 2) {
-        $html .= ' - Rep Wise';
-    } else {
-        $html .= ' - All';
-    }
-    
-    $html .= '</p>
-            <br>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <h4 class="text-center">Outstanding Report Filtered By ' . $validfrom . ' to ' . $validto . '</h4>
-            <hr class="border-dark">
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-12">
-            <table class="tablec">
-                <thead>
-                    <tr>
-                        <th class="thc">Customer</th>
-                        <th class="thc">Rep</th>
-                        <th class="thc">Date</th>
-                        <th class="thc">Days</th>
-                        <th class="thc">Invoice</th>
-                        <th class="thc">Invoice Total</th>
-                    </tr>  
-                </thead>
-                <tbody>';
+    <hr>
+    <div style="text-align: center;">
+        <h3>Outstanding Report ';
 
-    $totalAmount = 0;
-    while ($rowsqlinfo = $resultsqlinfo->fetch_assoc()) {
+if ($searchType == '3') {
+    $html .= '- Customer Wise';
+} elseif ($searchType == '2') {
+    $html .= '- Rep Wise';
+} else {
+    $html .= '- All';
+}
 
-        $date = new DateTime($rowsqlinfo['date']);
-        $today = new DateTime();  
-        $interval = $today->diff($date);  
-        $datecount = $interval->days;  
+$html .= '</h3>
+        <p>Filtered By: ' . htmlspecialchars($validfrom) . ' to ' . htmlspecialchars($validto) . '</p>
+    </div>
+    <table class="tablec">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Rep</th>
+                <th>Date</th>
+                <th>Days</th>
+                <th>Invoice</th>
+                <th>Invoice Total</th>
+                <th>Pay Amount</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>';
+
+while ($row = $result->fetch_assoc()) {
+    $date = new DateTime($row['date']);
+    $today = new DateTime();  
+    $interval = $today->diff($date);  
+    $datecount = $interval->days;
+
+    $balance = $row['total'] - $row['payamount'];
+
+    // Apply aging value filters
+    if ($aginvalue == 0 || 
+        ($aginvalue == 1 && $datecount >= 0 && $datecount <= 15) ||
+        ($aginvalue == 2 && $datecount > 15 && $datecount <= 30) ||
+        ($aginvalue == 3 && $datecount > 30 && $datecount <= 45)) {
+
+        $totalAmount += $row['total'];
+        $totalPayAmount += $row['payamount'];
+        $totalBalance += $balance;
 
         $html .= '
         <tr>
-            <td class="tdc">' . $rowsqlinfo['cusname'] . '</td> 
-            <td class="tdc">' . $rowsqlinfo['repname'] . '</td> 
-            <td class="tdc">' . $rowsqlinfo['date'] . '</td> 
-            <td class="tdc">DAYS ' . $datecount . '</td>
-            <td class="tdc">' . $rowsqlinfo['invoiceno'] . '</td>
-            <td class="tdc">' . number_format($rowsqlinfo['total'], 2) . '</td>
+            <td>' . htmlspecialchars($row['cusname']) . '</td>
+            <td>' . htmlspecialchars($row['repname']) . '</td>
+            <td>' . htmlspecialchars($row['date']) . '</td>
+            <td>DAYS ' . $datecount . '</td>
+            <td>' . htmlspecialchars($row['invoiceno']) . '</td>
+            <td>' . number_format($row['total'], 2) . '</td>
+            <td>' . number_format($row['payamount'], 2) . '</td>
+            <td>' . number_format($balance, 2) . '</td>
         </tr>';
-        $totalAmount += $rowsqlinfo['total'];
     }
-
-    $html .= '
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="5" class="thc"><strong>Total</strong></td>
-                        <td class="thc"><strong>' . number_format($totalAmount, 2) . '</strong></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </div>
-    </body>
-    </html>';
-
-    $dompdf->loadHtml($html); 
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
-    $dompdf->stream("Outstanding_Report.pdf", ["Attachment" => 0]);
-
-} else {
-    echo "No records found for the selected date range.";
 }
+
+$html .= '
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="5">Total</th>
+                <th>' . number_format($totalAmount, 2) . '</th>
+                <th>' . number_format($totalPayAmount, 2) . '</th>
+                <th>' . number_format($totalBalance, 2) . '</th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>';
+
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4', 'portrait');
+$dompdf->render();
+$dompdf->stream("Outstanding_Report.pdf", ["Attachment" => 0]);
+
 ?>
