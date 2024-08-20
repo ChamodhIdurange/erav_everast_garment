@@ -155,7 +155,7 @@ if ($resultsqlinfo->num_rows > 0) {
     while ($rowsqlinfo =     $resultsqlinfo->fetch_assoc()) {
         $html .= '
         <tr>
-            <td class="tdc">INV-' . $rowsqlinfo['invoiceno'] . '</td> 
+            <td class="tdc">' . $rowsqlinfo['invoiceno'] . '</td> 
             <td class="tdc">' . $rowsqlinfo['cusname'] . '</td> 
             <td class="tdc">' . $rowsqlinfo['product_name'] . '</td>
             <td class="tdc">' . $rowsqlinfo['repname'] . '</td>

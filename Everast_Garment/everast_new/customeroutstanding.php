@@ -42,6 +42,7 @@ include "include/topnavbar.php";
                                                     <option value="1">All</option>
                                                     <option value="2">Rep Vise</option>
                                                     <option value="3">Customer Vise</option>
+                                                    
                                                 </select>
                                             </div>
                                         </div>
@@ -73,12 +74,24 @@ include "include/topnavbar.php";
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">
                                             <label class="small font-weight-bold text-dark">From*</label>
                                             <input type="date" class="form-control form-control-sm" name="fromdate"
-                                                id="fromdate" required>
+                                                id="fromdate" >
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateTo">
                                             <label class="small font-weight-bold text-dark">To*</label>
                                             <input type="date" class="form-control form-control-sm" name="todate"
-                                                id="todate" required>
+                                                id="todate" >
+                                        </div>
+                                        <div class="col-2"style="display: none" id="aginreportshow">
+                                            <label class="small font-weight-bold text-dark">Agin Report*</label>
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-control form-control-sm" name="aginvalue"
+                                                    id="aginvalue">
+                                                    <option value="0">ALL</option>
+                                                    <option value="1">0-15 Days</option>
+                                                    <option value="2">15-30 Days</option>
+                                                    <option value="3">30-45 Days</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="col-1 search-dependent" style="display: none;" id="hidesumbit">
                                             &nbsp;<br>
@@ -168,12 +181,12 @@ $(document).ready(function() {
         var searchType = $(this).val();
         resetFields();
         if (searchType == 1) {
-            $('#selectDateFrom, #selectDateTo, #hidesumbit').show();
+            $('#selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
         } else if (searchType == 2) {
-            $('#selectSaleRepDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
+            $('#selectSaleRepDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
         } else if (searchType == 3) {
-            $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
-        }
+            $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
+        } 
     });
 
     $('#outstandingForm').submit(function(event) {
@@ -182,8 +195,10 @@ $(document).ready(function() {
         var searchType = $('#searchType').val();
         var validfrom = $('#fromdate').val();
         var validto = $('#todate').val();
-        var customer = getElementValue('#selectCustomer');
-        var rep = getElementValue('#selectSaleRep');
+        var customer = $('#selectCustomer').val();
+        var rep = $('#selectSaleRep').val();
+        var aginvalue = $('#aginvalue').val();
+
         $.ajax({
             type: "POST",
             data: {
@@ -192,6 +207,7 @@ $(document).ready(function() {
                 validto: validto,
                 customer: customer,
                 rep: rep,
+                aginvalue: aginvalue
             },
             url: 'getprocess/getoutstandingreport.php',
             success: function(result) {
@@ -237,41 +253,42 @@ $(document).ready(function() {
     });
 
     $('#printBtn').click(function() {
-        // var validfrom = encodeURIComponent($('#fromdate').val());
-        // var validto = encodeURIComponent($('#todate').val());
-        // var customer = encodeURIComponent(getElementValue('#selectCustomer'));
+        var searchType = $('#searchType').val();
+        var validfrom = $('#fromdate').val();
+        var validto = $('#todate').val();
+        var customer = getElementValue('#selectCustomer');
+        var rep = getElementValue('#selectSaleRep');
+        var aginvalue = getElementValue('#aginvalue');
 
-        var searchType = encodeURIComponent($('#searchType').val());
-        var validfrom = encodeURIComponent($('#fromdate').val());
-        var validto = encodeURIComponent($('#todate').val());
-        var customer = encodeURIComponent(getElementValue('#selectCustomer'));
-        var rep = encodeURIComponent(getElementValue('#selectSaleRep'));
-
-
+        
         $('#frame').html('');
         $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
         $('#printreport iframe').contents().find('body').html(
             "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
         );
 
-        var params =`?validfrom=${validfrom}&validto=${validto}&searchType=${searchType}&customer=${customer}&rep=${rep}`;
-        var src = 'pdfprocess/outstandingreportpdf.php' + params;
         
+        var params = `?validfrom=${encodeURIComponent(validfrom)}&validto=${encodeURIComponent(validto)}&searchType=${encodeURIComponent(searchType)}&customer=${encodeURIComponent(customer)}&rep=${encodeURIComponent(rep)}&aginvalue=${encodeURIComponent(aginvalue)}`;
+        var src = 'pdfprocess/outstandingreportpdf.php' + params;
+
         var width = $(this).attr('data-width') || 640;
         var height = $(this).attr('data-height') || 360;
 
         $("#printreport iframe").attr({
-            'src': src,
+            'src': src,  
             'height': height,
             'width': width,
-            'allowfullscreen': ''
+            'allowfullscreen': true
         });
 
         $('#printreport').modal({
             keyboard: false,
             backdrop: 'static'
         });
+        resetForm();
+
     });
+
 
     function getElementValue(id) {
         var element = $(id);

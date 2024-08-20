@@ -47,7 +47,7 @@ $totalAmount = 0;
 
 while($row = $result->fetch_assoc()) {
     $html .= '<tr>
-        <td>INV-' . $row['invoiceno'] . '</td>
+        <td>' . $row['invoiceno'] . '</td>
         <td class="text-center">' . $row['cusname'] . '</td>
         <td class="text-center">' . $row['product_name'] . '</td>
         <td class="text-center">' . $row['repname'] . '</td>
