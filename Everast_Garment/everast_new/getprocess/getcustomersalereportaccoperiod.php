@@ -4,9 +4,6 @@ require_once('../connection/db.php');
 $validfrom = $_POST['validfrom'];
 $validto = $_POST['validto'];
 $customerID = $_POST['customer'];
-$productID = $_POST['product'];
-$areaID = $_POST['area'];
-$repID = $_POST['rep'];
 
 $totalAmount = 0;
 
@@ -24,17 +21,6 @@ if ($customerID > 0) {
     $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
 }
 
-if ($productID > 0) {
-    $sql .= " AND `ud`.`tbl_product_idtbl_product` = '$productID'";
-}
-
-if ($areaID > 0) {
-    $sql .= " AND `u`.`tbl_area_idtbl_area` = '$areaID'";
-}
-
-if ($repID > 0) {
-    $sql .= " AND `ue`.`idtbl_employee` = '$repID'";
-}
 $sql .= " GROUP BY `u`.`idtbl_invoice`";
 $result = $conn->query($sql);
 
