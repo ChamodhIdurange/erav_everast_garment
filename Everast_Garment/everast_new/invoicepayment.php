@@ -242,9 +242,9 @@ include "include/topnavbar.php";
                                 <div id="balanceAmount"></div>
                             </div>
                         </div>
-                        <input type="text" id="hidePayAmount" value="0">
-                        <input type="text" id="hideBalAmount" value="0">
-                        <input type="text" id="hideAllBalAmount" value="0">
+                        <input type="hidden" id="hidePayAmount" value="0">
+                        <input type="hidden" id="hideBalAmount" value="0">
+                        <input type="hidden" id="hideAllBalAmount" value="0">
                         <!-- <textarea name="discountlist" id="discountlist" class="d-none"></textarea> -->
                     </div>
                 </div>

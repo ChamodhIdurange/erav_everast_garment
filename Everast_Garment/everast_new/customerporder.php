@@ -13,6 +13,9 @@ $resultbank = $conn->query($sqlbank);
 $sqlreplist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
 $resultreplist = $conn->query($sqlreplist);
 
+$sqlsalemanagerlist = "SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
+$resultmanagerlist = $conn->query($sqlsalemanagerlist);
+
 $sqlcustomerlist = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1";
 $resultcustomerlist = $conn->query($sqlcustomerlist);
 
@@ -138,6 +141,18 @@ include "include/topnavbar.php";
                                                     class="far fa-calendar"></i></span>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group mb-2 col-3">
+                                    <label class="small font-weight-bold text-dark">Sales Manager*</label>
+                                    <select class="form-control form-control-sm" name="salesmanager" id="salesmanager">
+                                        <option value="">Select</option>
+                                        <?php if ($resultmanagerlist->num_rows > 0) {
+                                            while ($rowsalesmanager = $resultmanagerlist->fetch_assoc()) { ?>
+                                        <option value="<?php echo $rowsalesmanager['idtbl_sales_manager'] ?>">
+                                            <?php echo $rowsalesmanager['salesmanagername'] ?></option>
+                                        <?php }
+                                        } ?>
+                                    </select>
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Rep Name*</label>
@@ -1015,6 +1030,33 @@ include "include/topnavbar.php";
         });
 
         // Customer part
+        $('#salesmanager').change(function () {
+            var salesmanagerid = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    salesmanagerid: salesmanagerid
+                },
+                url: 'getprocess/getemployeesaccosalesmanager.php',
+                success: function (result) {//alert(result);
+                    var objfirst = JSON.parse(result);
+                    var html1 = '';
+                    html1 += '<option value="">Select</option>';
+                    $.each(objfirst, function (i, item) {
+                        // alert(objfirst[i].id);
+                        html1 += '<option value="' + objfirst[i].id + '">';
+                        html1 += objfirst[i].name;
+                        html1 += '</option>';
+                    });
+
+                    $('#repname').empty().append(html1);
+
+                    
+                }
+            });
+
+        })
         $('#productcommonname').change(function () {
             var productcommonname = $('#productcommonname option:selected').val();
             var value = '';
@@ -1980,3 +2022,5 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
+
+

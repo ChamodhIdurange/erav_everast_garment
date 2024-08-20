@@ -7,6 +7,9 @@ $result =$conn-> query($sql);
 $sqlusertypeuser="SELECT `idtbl_user_type`, `type` FROM `tbl_user_type` WHERE `status`=1 AND `idtbl_user_type` NOT IN (1,2)";
 $resultusertypeuser=$conn->query($sqlusertypeuser);
 
+$sqlsalesmanager="SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
+$resultsalesmanager=$conn->query($sqlsalesmanager);
+
 $sqlarea="SELECT * FROM `tbl_area` WHERE `status`=1 ";
 $resultarea=$conn->query($sqlarea);
 
@@ -58,6 +61,17 @@ include "include/topnavbar.php";
                                         <label class="small font-weight-bold text-dark">Address</label>
                                         <textarea class="form-control form-control-sm" id="empaddress"
                                             name="empaddress"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small font-weight-bold text-dark">Sales Manager*</label>
+                                        <select class="form-control form-control-sm" name="salesmanager" id="salesmanager">
+                                            <option value="">Select</option>
+                                            <?php if($resultsalesmanager->num_rows > 0) {while ($rowsalesmanager = $resultsalesmanager-> fetch_assoc()) { ?>
+                                            <option value="<?php echo $rowsalesmanager['idtbl_sales_manager'] ?>">
+                                                <?php echo $rowsalesmanager['salesmanagername'] ?></option>
+                                            <?php }} ?>
+                                            
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label class="small font-weight-bold text-dark">Emplyee Type*</label>
@@ -208,6 +222,7 @@ include "include/topnavbar.php";
                         $('#empmobile').val(obj.phone);
                         $('#empaddress').val(obj.address);
                         $('#emptype').val(obj.emptype);
+                        $('#salesmanager').val(obj.salesmanager);
 
                         $('#recordOption').val('2');
                         $('#submitBtn').html('<i class="far fa-save"></i>&nbsp;Update');

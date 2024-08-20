@@ -27,6 +27,7 @@ $obj->nic=$row['nic'];
 $obj->phone=$row['phone'];
 $obj->address=$row['address'];
 $obj->emptype=$row['tbl_user_type_idtbl_user_type'];
+$obj->salesmanager=$row['tbl_sales_manager_idtbl_sales_manager'];
 $obj->array=$array;
 
 echo json_encode($obj);

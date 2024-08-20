@@ -233,6 +233,11 @@ if ($lastElement == 'useraccount.php') {
     $editcheck = checkprivilege($menuprivilegearray, 46, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 46, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 46, 4);
+} else if ($lastElement == 'salesmanager.php') {
+    $addcheck = checkprivilege($menuprivilegearray, 47, 1);
+    $editcheck = checkprivilege($menuprivilegearray, 47, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 47, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 47, 4);
 }
 
 function checkprivilege($arraymenu, $menuID, $type)
@@ -269,13 +274,13 @@ function checkprivilege($arraymenu, $menuID, $type)
                     Locations
             </a>
             <?php }
-                if (menucheck($menuprivilegearray, 7) == 1 | menucheck($menuprivilegearray, 8) == 1 | menucheck($menuprivilegearray, 27) == 1 | menucheck($menuprivilegearray, 28) == 1 | menucheck($menuprivilegearray, 29) == 1 | menucheck($menuprivilegearray, 30) == 1) { ?>
+                if (menucheck($menuprivilegearray, 7) == 1 | menucheck($menuprivilegearray, 8) == 1 | menucheck($menuprivilegearray, 27) == 1 | menucheck($menuprivilegearray, 28) == 1 | menucheck($menuprivilegearray, 29) == 1 | menucheck($menuprivilegearray, 30) == 1 | menucheck($menuprivilegearray, 47) == 1) { ?>
                 <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsemasterdata" aria-expanded="false" aria-controls="collapsemasterdata">
                     <div class="nav-link-icon"><i class="fa fa-users" aria-hidden="true"></i></div>
                     Master Data
                     <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse <?php if ($lastElement == "supplier.php" | $lastElement == "customer.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "company.php" | $lastElement == "companybranch.php") {echo 'show';} ?>" id="collapsemasterdata" data-parent="#accordionSidenav">
+                <div class="collapse <?php if ($lastElement == "supplier.php" | $lastElement == "customer.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "company.php" | $lastElement == "companybranch.php" | $lastElement == "salesmanager.php") {echo 'show';} ?>" id="collapsemasterdata" data-parent="#accordionSidenav">
                     <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                         <?php if (menucheck($menuprivilegearray, 8) == 1) { ?>
                             <a class="nav-link p-0 px-3 py-1" href="customer.php">Customer</a>
@@ -285,6 +290,9 @@ function checkprivilege($arraymenu, $menuID, $type)
                         <?php }
                         if (menucheck($menuprivilegearray, 27) == 1) { ?>
                             <a class="nav-link p-0 px-3 py-1" href="employee.php">Employee</a>
+                        <?php }
+                        if (menucheck($menuprivilegearray, 47) == 1) { ?>
+                            <a class="nav-link p-0 px-3 py-1" href="salesmanager.php">Sales Manager</a>
                         <?php }
                         if (menucheck($menuprivilegearray, 28) == 1) { ?>
                             <a class="nav-link p-0 px-3 py-1" href="area.php">Area</a>
@@ -410,7 +418,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                         <?php //}
                         // if (menucheck($menuprivilegearray, 25) == 1) { ?>
                         <!-- //     <a class="nav-link p-0 px-3 py-1" href="supplierreturn.php">Supplier Return</a> -->
-                        // <?php //}
+                        <?php //}
                         // if (menucheck($menuprivilegearray, 26) == 1) { ?>
                         <!-- //     <a class="nav-link p-0 px-3 py-1" href="damagereturns.php">Damage Return</a> -->
                         <?php } ?>
