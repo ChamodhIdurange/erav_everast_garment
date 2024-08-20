@@ -12,11 +12,12 @@ $empnic = $_POST['empnic'];
 $empmobile = $_POST['empmobile'];
 $empaddress = $_POST['empaddress'];
 $emptype = $_POST['emptype'];
+$salesmanager = $_POST['salesmanager'];
 
 $updatedatetime=date('Y-m-d h:i:s');
 
 if($recordOption==1){
-    $query = "INSERT INTO `tbl_employee`(`name`, `epfno`, `nic`, `phone`, `address`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_user_type_idtbl_user_type`) VALUES ('$empname','$empepf','$empnic','$empmobile','$empaddress','1','$updatedatetime','$userID','$emptype')";
+    $query = "INSERT INTO `tbl_employee`(`name`, `epfno`, `nic`, `phone`, `address`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_user_type_idtbl_user_type`, `tbl_sales_manager_idtbl_sales_manager`) VALUES ('$empname','$empepf','$empnic','$empmobile','$empaddress','1','$updatedatetime','$userID','$emptype', '$salesmanager')";
     if($conn->query($query)==true){
         $last_id = mysqli_insert_id($conn); 
 
@@ -36,7 +37,7 @@ if($recordOption==1){
     else{header("Location:../employee.php?action=5");}
 }
 else{
-    $query = "UPDATE `tbl_employee` SET `name`='$empname',`epfno`='$empepf',`nic`='$empnic',`phone`='$empmobile',`address`='$empaddress',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_user_type_idtbl_user_type`='$emptype' WHERE `idtbl_employee`='$recordID'";
+    $query = "UPDATE `tbl_employee` SET `name`='$empname',`epfno`='$empepf',`nic`='$empnic',`phone`='$empmobile',`address`='$empaddress',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_user_type_idtbl_user_type`='$emptype', `tbl_sales_manager_idtbl_sales_manager` = '$salesmanager' WHERE `idtbl_employee`='$recordID'";
     if($conn->query($query)==true){
         $delete="DELETE FROM `tbl_employee_area` WHERE `tbl_employee_idtbl_employee` = '$recordID'";
 
