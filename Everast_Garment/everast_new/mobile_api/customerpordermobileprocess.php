@@ -13,6 +13,7 @@ $repname=$_POST['repname'];
 $area=$_POST['area'];
 $customer=$_POST['customer'];
 $location=$_POST['locationID'];
+$podiscount=$_POST['podiscount'];
 $paymentoption=1;
 $tableData=$_POST['tableData'];
 $tableData = json_decode($tableData);
@@ -23,44 +24,36 @@ $updatedatetime=date('Y-m-d h:i:s');
 $month=date('n');
 
 
-$insretorder="INSERT INTO `tbl_porder`(`potype`, `orderdate`, `subtotal`, `disamount`, `discount`, `nettotal`, `payfullhalf`, `remark`, `confirmstatus`, `dispatchissue`, `grnissuestatus`, `paystatus`, `shipstatus`, `deliverystatus`, `trackingno`, `trackingwebsite`, `callstatus`, `narration`, `cancelreason`, `returnstatus`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `podiscount`, `po_amount`, `tbl_locations_idtbl_locations`) VALUES ('1','$orderdate','$total','$discount','$discountpresentage','$nettotal','$paymentoption','$remark','0','0','0','0','0','0','','-','0','-','-','0','1','$updatedatetime','$userID', '0', '0', '$location')";
+$insretorder = "INSERT INTO `tbl_customer_order`(`date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`) VALUES ('$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer')";
 
-if($conn->query($insretorder)==true){
-    $orderID=$conn->insert_id;
+    if ($conn->query($insretorder) == true) {
+        $orderID = $conn->insert_id;
 
-    $insertporderother="INSERT INTO `tbl_porder_otherinfo`(`porderid`, `mobileid`, `areaid`, `customerid`, `repid`, `status`, `updatedatetime`) VALUES ('$orderID','0','$area','$customer','$repname','1','$updatedatetime')";
-    $conn->query($insertporderother);
+        foreach ($tableData as $item) {
+            $productID=$item->productID;
+            $product=0;
+            $unitprice=$item->unitprice;;
+            $saleprice=$item->saleprice;
+            $newqty=$item->newqty;
+            $freeprodcutid=0;
+            $freeqty=0;
+            $total==$item->total;
 
+            $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$orderID','$productID')";
+            $conn->query($insertorderdetail);
 
-    foreach ($tableData as $item) {
-        $productID=$item->productID;
-        $product=0;
-        $unitprice=$item->unitprice;;
-        $saleprice=$item->saleprice;
-        $newqty=$item->newqty;
-        $freeprodcutid=0;
-        $freeqty=0;
-        $total==$item->total;
+            $insertholdstock = "INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$newqty', '0', '1', '$updatedatetime', '$userID', '$productID','$orderID')";
+            $conn->query($insertholdstock);
+        }
 
-        $insertorderdetail="INSERT INTO `tbl_porder_detail`(`type`, `qty`, `freeqty`, `freeproductid`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`, `tbl_product_idtbl_product`) VALUES ('0','$newqty','$freeqty','$product','$unitprice','$saleprice','1','$updatedatetime','$userID','$orderID','$productID')";
-        $conn->query($insertorderdetail);
+        $actionObj=new stdClass();
+        $actionObj->code='200';
+        $actionObj->message='Addedd Successfully';
+    
+        echo json_encode($actionObj);
+    } else {
+        echo $actionJSON='Something went wrong';
 
-        $updatereptarget="UPDATE `tbl_employee_target` SET `targetqtycomplete`=(`targetqtycomplete`+'$newqty') WHERE MONTH(`month`)='$month' AND `status`=1 AND `tbl_employee_idtbl_employee`='$repname' AND `tbl_product_idtbl_product`='$productID'";
-        $conn->query($updatereptarget);
-
-        $updatereptargetfree="UPDATE `tbl_employee_target` SET `targetqtycomplete`=(`targetqtycomplete`+'$freeqty') WHERE MONTH(`month`)='$month' AND `status`=1 AND `tbl_employee_idtbl_employee`='$repname' AND `tbl_product_idtbl_product`='$product'";
-        $conn->query($updatereptargetfree);
     }
-    $actionObj=new stdClass();
-    $actionObj->code='200';
-    $actionObj->message='Addedd Successfully';
-
-    echo json_encode($actionObj);
-}
-else{
-    echo $actionJSON='Something went wrong';
-}
-
-
 
 

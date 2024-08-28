@@ -128,7 +128,6 @@ include "include/topnavbar.php";
                                         <tr>
                                             <th style="width: 100px;">Product</th>
                                             <th class="d-none" style="width: 100px;">ProductID</th>
-                                            <th class="d-none" style="width: 100px;">UnitPrice</th>
                                             <th class="text-center" style="width: 50px;">Unit Price</th>
                                             <th class="text-center" style="width: 50px;">Sale Price</th>
                                             <th class="text-center" style="width: 50px;">Qty</th>
@@ -447,8 +446,7 @@ include "include/topnavbar.php";
                                 tableBody.append('<tr>' +
                                     '<td>' + product.product_name + '</td>' +
                                     '<td class="d-none">' + product.idtbl_product + '</td>' +
-                                    '<td class="d-none">' + product.unitprice + '</td>' +
-                                    '<td class="text-center">' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '</td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="unitprice[]" value="' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '"></td>' +
                                     '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="0"></td>' +
                                     '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
                                     '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
@@ -498,11 +496,11 @@ include "include/topnavbar.php";
 
         function updateTotalForRow(row) {
             var newQuantity = parseFloat(row.find('input[name^="new_quantity"]').val()) || 0;
-            var unitPrice = parseFloat(row.find('td:eq(2)').text()) || 0;
+            var unitPrice = parseFloat(row.find('td:eq(2) input').val()) || 0;
 
             var newTotal = newQuantity * unitPrice;
 
-            var totalColumn = row.find('td:eq(7)');
+            var totalColumn = row.find('td:eq(6)');
             var formattedTotal = newTotal.toFixed(2);
             totalColumn.find('input[name^="total_quantity"]').val(formattedTotal);
 
@@ -546,7 +544,7 @@ include "include/topnavbar.php";
             var orderDetails = [];
             $('#tableBody tr').each(function () {
             var productId = $(this).find('td:eq(1)').text();
-            var unitprice = $(this).find('td:eq(2)').text();
+            var unitprice = $(this).find('td:eq(2) input').val();
             var saleprice = $(this).find('input[name^="saleprice"]').val();
             var newQty = $(this).find('input[name^="new_quantity"]').val();
             var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
