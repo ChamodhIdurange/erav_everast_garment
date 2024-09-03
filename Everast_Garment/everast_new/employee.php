@@ -10,6 +10,9 @@ $resultusertypeuser=$conn->query($sqlusertypeuser);
 $sqlsalesmanager="SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
 $resultsalesmanager=$conn->query($sqlsalesmanager);
 
+$sqluseraccount="SELECT `idtbl_user`, `name` FROM `tbl_user` WHERE `status`=1";
+$resultuseraccount=$conn->query($sqluseraccount);
+
 $sqlarea="SELECT * FROM `tbl_area` WHERE `status`=1 ";
 $resultarea=$conn->query($sqlarea);
 
@@ -69,6 +72,17 @@ include "include/topnavbar.php";
                                             <?php if($resultsalesmanager->num_rows > 0) {while ($rowsalesmanager = $resultsalesmanager-> fetch_assoc()) { ?>
                                             <option value="<?php echo $rowsalesmanager['idtbl_sales_manager'] ?>">
                                                 <?php echo $rowsalesmanager['salesmanagername'] ?></option>
+                                            <?php }} ?>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small font-weight-bold text-dark">User Account*</label>
+                                        <select class="form-control form-control-sm" name="useraccount" id="useraccount">
+                                            <option value="">Select User Account</option>
+                                            <?php if($resultuseraccount->num_rows > 0) {while ($rowuseraccount = $resultuseraccount-> fetch_assoc()) { ?>
+                                            <option value="<?php echo $rowuseraccount['idtbl_user'] ?>">
+                                                <?php echo $rowuseraccount['name'] ?></option>
                                             <?php }} ?>
                                             
                                         </select>
@@ -223,6 +237,7 @@ include "include/topnavbar.php";
                         $('#empaddress').val(obj.address);
                         $('#emptype').val(obj.emptype);
                         $('#salesmanager').val(obj.salesmanager);
+                        $('#useraccount').val(obj.useraccountid);
 
                         $('#recordOption').val('2');
                         $('#submitBtn').html('<i class="far fa-save"></i>&nbsp;Update');
@@ -237,7 +252,6 @@ include "include/topnavbar.php";
                                         'selected',
                                         true);
                                 }
-
                             } else {
                                 $("#area option:selected").removeAttr("selected");
                             }
