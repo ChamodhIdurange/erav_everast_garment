@@ -4,243 +4,243 @@ $url = explode('/', $getUrl);
 $lastElement = end($url);
 
 if ($lastElement == 'useraccount.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 1, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 1, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 1, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 1, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 1, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 1, 4);
 } else if ($lastElement == 'usertype.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 2, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 2, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 2, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 2, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 2, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 2, 4);
 } else if ($lastElement == 'userprivilege.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 3, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 3, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 3, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 3, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 3, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 3, 4);
 } else if ($lastElement == 'location.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 4, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 4, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 4, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 4, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 4, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 4, 4);
 }  else if ($lastElement == 'productcatalog.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 5, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 5, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 5, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 5, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 5, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 5, 4);
 } else if ($lastElement == 'catalogcategoies.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 6, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 6, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 6, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 6, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 6, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 6, 4);
 } else if ($lastElement == 'customer.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 7, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 7, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 7, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 7, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 7, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 7, 4);
 } else if ($lastElement == 'supplier.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 8, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 8, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 8, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 8, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 8, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 8, 4);
 } else if ($lastElement == 'product.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 9, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 9, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 9, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 9, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 9, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 9, 4);
 } else if ($lastElement == 'productcategory.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 10, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 10, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 10, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 10, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 10, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 10, 4);
 } else if ($lastElement == 'groupcategory.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 11, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 11, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 11, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 11, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 11, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 11, 4);
 } else if ($lastElement == 'subproductcategory.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 12, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 12, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 12, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 12, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 12, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 12, 4);
 } else if ($lastElement == 'sizecategories.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 13, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 13, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 13, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 13, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 13, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 13, 4);
 } else if ($lastElement == 'sizematrix.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 14, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 14, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 14, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 14, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 14, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 14, 4);
 } else if ($lastElement == 'porder.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 15, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 15, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 15, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 15, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 15, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 15, 4);
 } else if ($lastElement == 'grn.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 16, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 16, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 16, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 16, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 16, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 16, 4);
 }  else if ($lastElement == 'customerporder.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 17, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 17, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 17, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 17, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 17, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 17, 4);
 } else if ($lastElement == 'invoiceview.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 18, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 18, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 18, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 18, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 18, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 18, 4);
 } else if ($lastElement == 'invoicepayment.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 19, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 19, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 19, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 19, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 19, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 19, 4);
 } else if ($lastElement == 'invoicerecovery.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 20, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 20, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 20, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 20, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 20, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 20, 4);
 } else if ($lastElement == 'paymentreceipt.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 21, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 21, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 21, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 21, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 21, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 21, 4);
 } else if ($lastElement == 'cancelledinvoice.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 22, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 22, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 22, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 22, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 22, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 22, 4);
 } else if ($lastElement == 'productreturn.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 23, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 23, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 23, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 23, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 23, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 23, 4);
 } else if ($lastElement == 'customerreturn.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 24, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 24, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 24, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 24, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 24, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 24, 4);
 } else if ($lastElement == 'supplierreturn.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 25, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 25, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 25, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 25, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 25, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 25, 4);
 } else if ($lastElement == 'damagereturns.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 26, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 26, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 26, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 26, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 26, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 26, 4);
 } else if ($lastElement == 'employee.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 27, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 27, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 27, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 27, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 27, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 27, 4);
 } else if ($lastElement == 'area.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 28, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 28, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 28, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 28, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 28, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 28, 4);
 }  else if ($lastElement == 'company.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 29, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 29, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 29, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 29, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 29, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 29, 4);
 }  else if ($lastElement == 'companybranch.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 30, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 30, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 30, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 30, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 30, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 30, 4);
 } else if ($lastElement == 'stock.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 31, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 31, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 31, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 31, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 31, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 31, 4);
 } else if ($lastElement == 'bincard.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 32, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 32, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 32, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 32, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 32, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 32, 4);
 } else if ($lastElement == 'customeroutstanding.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 33, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 33, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 33, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 33, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 33, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 33, 4);
 } else if ($lastElement == 'dailysale.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 34, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 34, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 34, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 34, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 34, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 34, 4);
 } else if ($lastElement == 'dailycash.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 35, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 35, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 35, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 35, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 35, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 35, 4);
 } else if ($lastElement == 'salereportcustomer.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 36, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 36, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 36, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 36, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 36, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 36, 4);
 } else if ($lastElement == 'accountreport.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 37, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 37, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 37, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 37, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 37, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 37, 4);
 } else if ($lastElement == 'bufferstockmaintainreport.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 38, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 38, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 38, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 38, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 38, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 38, 4);
 } else if ($lastElement == 'ouritemrange.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 39, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 39, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 39, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 39, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 39, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 39, 4);
 } else if ($lastElement == 'vatinfo.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 40, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 40, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 40, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 40, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 40, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 40, 4);
 } else if ($lastElement == 'accountpettycashreimburse.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 41, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 41, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 41, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 41, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 41, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 41, 4);
 } else if ($lastElement == 'accountpettycashexpenses.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 42, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 42, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 42, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 42, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 42, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 42, 4);
 } else if ($lastElement == 'account.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 43, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 43, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 43, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 43, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 43, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 43, 4);
 } else if ($lastElement == 'accounttype.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 44, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 44, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 44, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 44, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 44, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 44, 4);
 } else if ($lastElement == 'bank-info.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 45, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 45, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 45, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 45, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 45, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 45, 4);
 } else if ($lastElement == 'branch-info.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 46, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 46, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 46, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 46, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 46, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 46, 4);
 } else if ($lastElement == 'salesmanager.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 47, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 47, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 47, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 47, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 47, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 47, 4);
 } else if ($lastElement == 'overpaymentreport.php') {
-    $addcheck = checkprivilege($menuprivilegearray, 48, 1);
-    $editcheck = checkprivilege($menuprivilegearray, 48, 2);
+    $addcheck    = checkprivilege($menuprivilegearray, 48, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 48, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 48, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 48, 4);
 }

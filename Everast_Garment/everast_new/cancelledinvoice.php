@@ -27,15 +27,14 @@ include "include/topnavbar.php";
                                 <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                     <thead>
                                         <tr>
-                                            <th>Invoice</th>
-                                            <th>ASM or CSM</th>
+                                            <th>Invoice No</th>
+                                            <th>Date</th>
+                                            <th>Purchase Order</th>
                                             <th>Customer</th>
-                                            <th>Sale Rep</th>
                                             <th>Area</th>
+                                            <th>Sale Rep</th>
                                             <th class="text-right">Total</th>
-                                            <th>Cancelled Reason</th>
-                                            <th>Cancellled Person</th>
-                                            <th>Cancellled Date</th>
+                                            <th>Payment</th>
                                             <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -47,6 +46,28 @@ include "include/topnavbar.php";
             </div>
         </main>
         <?php include "include/footerbar.php"; ?>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="printreport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">View Invoice PDF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="embed-responsive embed-responsive-16by9" id="frame">
+                            <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -75,6 +96,10 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function () {
+        var addcheck = '<?php echo $addcheck; ?>';
+        var editcheck = '<?php echo $editcheck; ?>';
+        var statuscheck = '<?php echo $statuscheck; ?>';
+        var deletecheck = '<?php echo $deletecheck; ?>';
 
         $('#dataTable').DataTable({
             "destroy": true,
@@ -87,85 +112,88 @@ include "include/topnavbar.php";
             "order": [
                 [0, "desc"]
             ],
-            "columns": [{
-                    "targets": -1,
-                    "className": '',
-                    "data": null,
-                    "render": function (data, type, full) {
-                        return 'INV-' + full['idtbl_invoice'];
-                    }
-                },
+            "columns": [
                 {
-                    "data": "empname"
-                },
-
-                {
-                    "data": "name"
-                },
-                {
-                    "data": "salepep"
-                },
-                {
-                    "data": "area"
-                },
-                {
-                    "targets": -1,
-                    "className": 'text-right',
-                    "data": null,
-                    "render": function (data, type, full) {
-                        var payment = addCommas(parseFloat(full['total']).toFixed(2));
-                        return payment;
-                    }
-                },
-                {
-                    "data": "invoice_cancel_reason"
-                },
-                {
-                    "data": "username"
+                    "data": "invoiceno"
                 },
                 {
                     "data": "date"
                 },
                 {
+                    "data": "cuspono"
+                },
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "area"
+                },
+                {
+                    "data": "salepep"
+                },
+                {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function (data, type, full) {
+                    "render": function(data, type, full) {
+                        var payment = addCommas(parseFloat(full['nettotal']).toFixed(2));
+                        return payment;
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": '',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        if (full['paymentcomplete'] == 1) {
+                            return 'Complete';
+                        } else {
+                            return 'Pending';
+                        }
+                    }
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
                         var button = '';
-                        button +=
-                            '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' +
-                            full['idtbl_invoice'] +
-                            '"><i class="fas fa-eye"></i></button> ';
-
+                        button += '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' + full['idtbl_invoice'] + '"><i class="fas fa-eye"></i></button> ';
                         return button;
                     }
                 }
             ]
         });
 
-        $('#dataTable tbody').on('click', '.btnView', function () {
+        $('#dataTable tbody').on('click', '.btnView', function() {
             var id = $(this).attr('id');
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreport iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
-            $('#modalinvoicereceipt').modal('show');
-            $('#viewreceiptprint').html(
-                '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
-            );
+            var src = 'pdfprocess/invoicepdf.php?id=' + id;
+            //            alert(src);
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    recordID: id
-                },
-                url: 'getprocess/getinvoiceprint.php',
-                success: function (result) { //alert(result);
-                    $('#viewreceiptprint').html(result);
-                }
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#printreport iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#printreport').modal({
+                keyboard: false,
+                backdrop: 'static'
             });
         });
     });
 
 
-       
+
     function addCommas(nStr) {
         nStr += '';
         x = nStr.split('.');
@@ -177,6 +205,5 @@ include "include/topnavbar.php";
         }
         return x1 + x2;
     }
-
 </script>
 <?php include "include/footer.php"; ?>

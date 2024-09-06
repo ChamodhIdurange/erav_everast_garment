@@ -1,6 +1,7 @@
 <?php
 include "include/header.php";
 $sql = "SELECT *, `tbl_catalog_category`.`category`, `tbl_catalog`.`status` FROM `tbl_catalog` LEFT JOIN `tbl_catalog_category` ON(`tbl_catalog_category`.`idtbl_catalog_category` = `tbl_catalog`.`tbl_catalog_category_idtbl_catalog_category`) WHERE `tbl_catalog`.`status`IN(1,2)";
+
 $result = $conn->query($sql);
 
 $productarray = array();
@@ -487,7 +488,7 @@ include "include/topnavbar.php";
             data: {
                 productID: productID,
             },
-            url: 'getprocess/getproductlistimages.php',
+        url: 'getprocess/getproductlistimages.php',
             success: function(result) { //alert(result);
                 $('#imagelist').removeClass('text-center');
                 $('#imagelist').html(result);
