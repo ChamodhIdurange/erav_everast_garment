@@ -131,13 +131,13 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                         <br>
-                        <div class="col-12" style="display: none" align="right" id="hideprintBtn">
+                        <!-- <div class="col-12" style="display: none" align="right" id="hideprintBtn">
                             <button type="button"
                                 class="btn btn-outline-danger btn-sm ml-auto w-10 mt-2 px-5 align-right printBtn"
                                 id="printBtn">
                                 <i class="fas fa-file-pdf"></i>&nbsp;Print
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-12" id="showpdfview" style="display: none;">
                             <div class="embed-responsive embed-responsive-1by1" id="pdfframe">
                                 <iframe class="embed-responsive-item" frameborder="0"></iframe>

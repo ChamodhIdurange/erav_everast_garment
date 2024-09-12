@@ -13,16 +13,18 @@ $totalAmount = 0;
 $totalPayAmount = 0;
 $totalBalance = 0;
 
-$sql = "SELECT `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, `uf`.`payamount`
+$sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, `uf`.`payamount`
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
         LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
-        AND `u`.`paymentcomplete`=0 
-        AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+        AND `u`.`paymentcomplete`=0";
 
+if (!empty($validfrom) && !empty($validto)) {
+    $sql .= " AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+}
 if ($searchType == '1') { 
     
 } elseif ($searchType == '3') { 
@@ -43,6 +45,8 @@ $result = $conn->query($sql);
 //     die("Query failed: " . $conn->error);
 // }
 
+// echo $aginvalue;
+
 if ($result->num_rows == 0) {
     echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
     return;
@@ -61,9 +65,9 @@ while($row = $result->fetch_assoc()) {
         ($aginvalue == 3 && $datecount > 30 && $datecount <= 45)) {
         
         array_push($customerarray, $row);
-        $totalAmount += $row['total'];
+        $totalAmount += $row['nettotal'];
         $totalPayAmount += $row['payamount'];
-        $balance = $row['total'] - $row['payamount'];
+        $balance = $row['nettotal'] - $row['payamount'];
         $totalBalance += $balance;
     }
 }
@@ -84,15 +88,15 @@ $html = '<table class="table table-striped table-bordered table-sm small" id="ou
     <tbody>';
 
 foreach($customerarray as $rowcustomerarray) { 
-    $balance = $rowcustomerarray['total'] - $rowcustomerarray['payamount'];
+    $balance = $rowcustomerarray['nettotal'] ?? 0 - $rowcustomerarray['payamount'] ?? 0;
     $html .= '<tr>
         <td>' . htmlspecialchars($rowcustomerarray['cusname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['date']) . '</td>
         <td class="text-center">' . $datecount . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['invoiceno']) . '</td>
-        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['total'])) . '</td>
-        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['payamount'])) . '</td>
+        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['nettotal'] ?? 0)) . '</td>
+        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['payamount'] ?? 0)) . '</td>
         <td class="text-center">' . number_format($balance) . '</td>
     </tr>';
 }

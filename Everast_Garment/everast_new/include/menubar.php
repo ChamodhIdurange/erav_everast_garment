@@ -287,10 +287,10 @@ function checkprivilege($arraymenu, $menuID, $type)
                 </a>
                 <div class="collapse <?php if ($lastElement == "supplier.php" | $lastElement == "customer.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "company.php" | $lastElement == "companybranch.php" | $lastElement == "salesmanager.php") {echo 'show';} ?>" id="collapsemasterdata" data-parent="#accordionSidenav">
                     <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 8) == 1) { ?>
+                        <?php if (menucheck($menuprivilegearray, 7) == 1) { ?>
                             <a class="nav-link p-0 px-3 py-1" href="customer.php">Customer</a>
                         <?php }
-                        if (menucheck($menuprivilegearray, 7) == 1) { ?>
+                        if (menucheck($menuprivilegearray, 8) == 1) { ?>
                             <a class="nav-link p-0 px-3 py-1" href="supplier.php">Supplier</a>
                         <?php }
                         if (menucheck($menuprivilegearray, 27) == 1) { ?>

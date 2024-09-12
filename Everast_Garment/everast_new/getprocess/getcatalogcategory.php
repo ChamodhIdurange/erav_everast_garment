@@ -10,6 +10,8 @@ $row=$result->fetch_assoc();
 $obj=new stdClass();
 $obj->id=$row['idtbl_catalog_category'];
 $obj->category=$row['category'];
+$obj->sequence=$row['sequence'];
+$obj->sizecategory=$row['tbl_size_categories_idtbl_size_categories'];
 
 echo json_encode($obj);
 ?>

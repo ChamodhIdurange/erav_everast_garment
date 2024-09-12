@@ -157,22 +157,20 @@ $html = '
             </tr>
             <tr>
                 <td class="leftboxtop" width="10cm">
-                    <table border="0" width="100%" style="margin-top:-43; padding-left:0.3cm;">
+                    <table border="0" width="100%" style="margin-top:-70; padding-left:0.3cm;">
                         <tr>
                             <th>Customer Details - '. $customerID .'</th>
                         </tr>
                         <tr>
-                            <td>'. $customername . '<br><br>' . $customeraddress . '<br><br>Tel : ' . $customerPhone . '</td>
+                            <td>'. $customername . '<br><br>' . $customeraddress . '<br><br>Tel : ' . $customerPhone . '<br><br>Date : ' . $today . '</td>
                         </tr>
                     </table>
                 </td>
                 <td style="padding-left:100px;" width="8cm">
-                    <table width="100%" height="100%" style="margin-top:-43;" border="0">
+                    <table width="100%" height="100%" style="margin-top:-70;" border="0">
                         <tr>
-                            <th align="center" colspan="2">Purchase Order Details</th>
+                            <th align="center" colspan="2">Purchase Order Details - '. $poderId .'</th>
                         </tr>
-                        <tr><td align="left" style="font-weight: bold;">DATE </td><td>' . $today . ' </td></tr>
-                        <tr><td align="left" style="font-weight: bold;">PO NUMBER </td><td>' . $poderId . ' </td></tr>
                         <tr><td align="left" style="font-weight: bold;">LOCATION </td><td>' . $location . ' </td></tr>
                         <tr><td align="left" style="font-weight: bold;">EMPLOYEE </td><td>' . $rowporderinfo['saleref'] . ' </td></tr>
                         <tr><td align="left" style="font-weight: bold;">CONTACT </td><td>' . $rowporderinfo['phone'] . ' </td></tr>
@@ -188,8 +186,8 @@ $html = '
             <thead>
                 <tr>
                     <th style="width:2cm;" id="detailth">#</th>
-                    <th style="width:7.5cm;" id="detailth">Product Name</th>
                     <th style="width:1.5cm;" id="detailth">Code</th>
+                    <th style="width:7.5cm;" id="detailth">Product Name</th>
                     <th style="width:1.5cm;" id="detailth" align="right">Quantity</th>
                     <th style="width:2.5cm;" id="detailth" align="right">Sale Price</th>
                     <th style="width:2.6cm;" id="detailth" align="right">Total</th>
@@ -208,8 +206,8 @@ $html = '
                 $html .= '
                     <tr>
                         <td style="width:2cm;" id="detailtd">' . $rowporderdetail['idtbl_product'] . '</td>
-                        <td style="width:7.5cm;" id="detailtd">' . $rowporderdetail['product_name'] . '</td>
                         <td style="width:1.5cm;" id="detailtd">' . $rowporderdetail['product_code'] . '</td>
+                        <td style="width:7.5cm;" id="detailtd">' . $rowporderdetail['product_name'] . '</td>
                         <td style="width:1.5cm;" id="detailtd" align="right">' . $rowporderdetail['qty'] . '</td>
                         <td style="width:2.5cm;" id="detailtd" align="right">' . number_format($rowporderdetail['saleprice'], 2) . '</td>
                         <td style="width:2.6cm;" id="detailtd" align="right">' . number_format(($rowporderdetail['saleprice'] * $rowporderdetail['qty']), 2) . '</td>

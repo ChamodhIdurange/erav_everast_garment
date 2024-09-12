@@ -26,7 +26,7 @@ $totalpayment = 0;
 $net_total = 0;
 $newtemp = 0;
 
-$sqlinvoiceinfo = "SELECT `tbl_invoice`.`idtbl_invoice`, `tbl_invoice`.`invoiceno`, `tbl_invoice`.`date`, `tbl_invoice`.`total`, `tbl_invoice`.`paymentcomplete`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone`, `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone`, `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_invoice` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_invoice`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_invoice`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_invoice`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_invoice`.`tbl_user_idtbl_user`WHERE `tbl_invoice`.`status`=1 AND `tbl_invoice`.`idtbl_invoice`='$recordID'";
+$sqlinvoiceinfo = "SELECT `tbl_invoice`.`discount`, `tbl_invoice`.`idtbl_invoice`, `tbl_invoice`.`invoiceno`, `tbl_invoice`.`date`, `tbl_invoice`.`total`, `tbl_invoice`.`paymentcomplete`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone`, `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone`, `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_invoice` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_invoice`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_invoice`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_invoice`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_invoice`.`tbl_user_idtbl_user`WHERE `tbl_invoice`.`status`=1 AND `tbl_invoice`.`idtbl_invoice`='$recordID'";
 $resultinvoiceinfo = $conn->query($sqlinvoiceinfo);
 $rowinvoiceinfo = $resultinvoiceinfo->fetch_assoc();
 
@@ -122,7 +122,7 @@ $html = '
                         <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['saleref'] . '</td></tr>
-                        <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['phone'] . '</td></tr>
+                        <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['discount'] . '</td></tr>
                     </table>
                 </td>
             </tr>
@@ -164,7 +164,6 @@ $html = '
                     $newtemp = 0;
                 }
             }
-            $discount = $fulltot - $rowinvoiceinfo['total'];
             $html .= '
             </table> 
             ';
@@ -175,7 +174,7 @@ $html = '
                         <div style="margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
-                                $discount = $fulltot - $rowinvoiceinfo["total"];
+                                $discount = $rowinvoiceinfo["discount"];
                                 $net_total = $fulltot - $discount;
 
                                 $html .= '

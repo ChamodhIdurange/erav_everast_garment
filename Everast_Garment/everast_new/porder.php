@@ -586,6 +586,15 @@ include "include/topnavbar.php";
 
     });
 
+    function print() {
+        printJS({
+            printable: 'viewdispatchprint',
+            type: 'html',
+            style: '@page { size: A4 portrait; margin:0.25cm; }',
+            targetStyles: ['*']
+        })
+    }
+
     function action(data) { //alert(data);
         var obj = JSON.parse(data);
         $.notify({

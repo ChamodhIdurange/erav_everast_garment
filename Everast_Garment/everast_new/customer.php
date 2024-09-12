@@ -617,24 +617,24 @@ include "include/topnavbar.php";
                         button += '<a href="customerprofile.php?record=' + full[
                                 'idtbl_customer'] +
                             '&type=1"  target="_self" class="btn btn-outline-primary btn-sm "><i class="far fa-eye"></i></a>'
-                        if (full['type'] == 2) {
-                            button +=
-                                '<button class="btn btn-outline-dark btn-sm btnAddProductStock mr-1 ';
-                            if (addcheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-warehouse"></i></button>';
-                        }
-                        if (full['type'] == 1 | full['type'] == 3) {
-                            button +=
-                                '<button class="btn btn-outline-purple btn-sm btnAddProduct mr-1 ';
-                            if (addcheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-shopping-cart"></i></button>';
-                        }
+                        // if (full['type'] == 2) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-dark btn-sm btnAddProductStock mr-1 ';
+                        //     if (addcheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '" id="' + full['idtbl_customer'] +
+                        //         '"><i class="fas fa-warehouse"></i></button>';
+                        // }
+                        // if (full['type'] == 1 | full['type'] == 3) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-purple btn-sm btnAddProduct mr-1 ';
+                        //     if (addcheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '" id="' + full['idtbl_customer'] +
+                        //         '"><i class="fas fa-shopping-cart"></i></button>';
+                        // }
                         button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 ';
                         if (editcheck == 0) {
                             button += 'd-none';
@@ -658,27 +658,27 @@ include "include/topnavbar.php";
                             }
                             button += '"><i class="fas fa-times"></i></a>';
                         }
-                        if (full['status'] == 1) {
-                            button +=
-                                '<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';
-                            if (deletecheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-times-circle"></i></button>';
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=4" onclick="return emergancyactive_confirm()" target="_self" class="btn btn-outline-dark btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="far fa-calendar-check"></i></a>';
-                        } else if (full['status'] == 5) {
-                            button +=
-                                '<button type="button" class="btn btn-outline-purple btn-sm mr-1 btncloseview" id="' +
-                                full['idtbl_customer'] +
-                                '"><i class="fas fa-file"></i></button>';
-                        }
+                        // if (full['status'] == 1) {
+                        //     button +=
+                        //         '<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';
+                        //     if (deletecheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '" id="' + full['idtbl_customer'] +
+                        //         '"><i class="fas fa-times-circle"></i></button>';
+                        //     button += '<a href="process/statuscustomer.php?record=' + full[
+                        //             'idtbl_customer'] +
+                        //         '&type=4" onclick="return emergancyactive_confirm()" target="_self" class="btn btn-outline-dark btn-sm mr-1 ';
+                        //     if (statuscheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '"><i class="far fa-calendar-check"></i></a>';
+                        // } else if (full['status'] == 5) {
+                        //     button +=
+                        //         '<button type="button" class="btn btn-outline-purple btn-sm mr-1 btncloseview" id="' +
+                        //         full['idtbl_customer'] +
+                        //         '"><i class="fas fa-file"></i></button>';
+                        // }
                         if (full['status'] != 5) {
                             button += '<a href="process/statuscustomer.php?record=' + full[
                                     'idtbl_customer'] +

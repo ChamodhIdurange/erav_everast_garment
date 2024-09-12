@@ -1,8 +1,11 @@
 <?php 
 include "include/header.php";  
 
-$sql="SELECT * FROM `tbl_catalog_category` WHERE `status` IN (1,2)";
+$sql="SELECT `u`.*, `ua`.`name` FROM `tbl_catalog_category` AS `u` LEFT JOIN `tbl_size_categories` AS `ua` ON (`ua`.`idtbl_size_categories` = `u`.`tbl_size_categories_idtbl_size_categories`) WHERE `u`.`status` IN (1,2)";
 $result =$conn-> query($sql); 
+
+$sqlsizescategories="SELECT `idtbl_size_categories`, `name` FROM `tbl_size_categories` WHERE `status`=1";
+$resultsizecategories=$conn->query($sqlsizescategories);
 
 include "include/topnavbar.php"; 
 ?>
@@ -30,10 +33,30 @@ include "include/topnavbar.php";
                                 <form action="process/catalogcategoryprocess.php" method="post" autocomplete="off">
                                     <div class="form-group">
                                         <label class="small font-weight-bold text-dark">Category*</label>
-                                        <input type="text" class="form-control form-control-sm" name="category" id="category" required>
+                                        <input type="text" class="form-control form-control-sm" name="category"
+                                            id="category" required>
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="small font-weight-bold text-dark">Size Category*</label>
+                                            <select class="form-control form-control-sm" name="sizecategory"
+                                                id="sizecategory" required>
+                                                <option value="">Select</option>
+                                                <?php if($resultsizecategories->num_rows > 0) {while ($rowsizes = $resultsizecategories-> fetch_assoc()) { ?>
+                                                <option value="<?php echo $rowsizes['idtbl_size_categories'] ?>">
+                                                    <?php echo $rowsizes['name'] ?></option>
+                                                <?php }} ?>
+                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small font-weight-bold text-dark">Sequence*</label>
+                                        <input type="number" class="form-control form-control-sm" name="sequence"
+                                            id="sequence" required>
                                     </div>
                                     <div class="form-group mt-2">
-                                        <button type="submit" id="submitBtn" class="btn btn-outline-primary btn-sm w-50 fa-pull-right" <?php if($addcheck==0){echo 'disabled';} ?>><i class="far fa-save"></i>&nbsp;Add</button>
+                                        <button type="submit" id="submitBtn"
+                                            class="btn btn-outline-primary btn-sm w-50 fa-pull-right"
+                                            <?php if($addcheck==0){echo 'disabled';} ?>><i
+                                                class="far fa-save"></i>&nbsp;Add</button>
                                     </div>
                                     <input type="hidden" name="recordOption" id="recordOption" value="1">
                                     <input type="hidden" name="recordID" id="recordID" value="">
@@ -45,6 +68,8 @@ include "include/topnavbar.php";
                                         <tr>
                                             <th>#</th>
                                             <th>Category</th>
+                                            <th>Size Category</th>
+                                            <th>Sequence</th>
                                             <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -53,14 +78,31 @@ include "include/topnavbar.php";
                                         <tr>
                                             <td><?php echo $row['idtbl_catalog_category'] ?></td>
                                             <td><?php echo $row['category'] ?></td>
+                                            <td><?php echo $row['name'] ?></td>
+                                            <td><?php echo $row['sequence'] ?></td>
                                             <td class="text-right">
-                                                <button class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>" id="<?php echo $row['idtbl_catalog_category'] ?>"><i data-feather="edit-2"></i></button>
+                                                <button
+                                                    class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
+                                                    id="<?php echo $row['idtbl_catalog_category'] ?>"><i
+                                                        data-feather="edit-2"></i></button>
                                                 <?php if($row['status']==1){ ?>
-                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=2" onclick="return confirm('Are you sure you want to deactive this?');" target="_self" class="btn btn-outline-success btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i data-feather="check"></i></a>
+                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=2"
+                                                    onclick="return confirm('Are you sure you want to deactive this?');"
+                                                    target="_self"
+                                                    class="btn btn-outline-success btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i
+                                                        data-feather="check"></i></a>
                                                 <?php }else{ ?>
-                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=1" onclick="return confirm('Are you sure you want to active this?');" target="_self" class="btn btn-outline-warning btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i data-feather="x-square"></i></a>
+                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=1"
+                                                    onclick="return confirm('Are you sure you want to active this?');"
+                                                    target="_self"
+                                                    class="btn btn-outline-warning btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i
+                                                        data-feather="x-square"></i></a>
                                                 <?php } ?>
-                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=3" onclick="return confirm('Are you sure you want to remove this?');" target="_self" class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>"><i data-feather="trash-2"></i></a>
+                                                <a href="process/statuscatalogcategory.php?record=<?php echo $row['idtbl_catalog_category'] ?>&type=3"
+                                                    onclick="return confirm('Are you sure you want to remove this?');"
+                                                    target="_self"
+                                                    class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>"><i
+                                                        data-feather="trash-2"></i></a>
                                             </td>
                                         </tr>
                                         <?php }} ?>
@@ -77,9 +119,9 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#dataTable').DataTable();
-        $('#dataTable tbody').on('click', '.btnEdit', function() {
+        $('#dataTable tbody').on('click', '.btnEdit', function () {
             var r = confirm("Are you sure, You want to Edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
@@ -89,10 +131,12 @@ include "include/topnavbar.php";
                         recordID: id
                     },
                     url: 'getprocess/getcatalogcategory.php',
-                    success: function(result) { //alert(result);
+                    success: function (result) { //alert(result);
                         var obj = JSON.parse(result);
                         $('#recordID').val(obj.id);
-                        $('#category').val(obj.category);                       
+                        $('#category').val(obj.category);
+                        $('#sizecategory').val(obj.sizecategory);
+                        $('#sequence').val(obj.sequence);
 
                         $('#recordOption').val('2');
                         $('#submitBtn').html('<i class="far fa-save"></i>&nbsp;Update');
@@ -101,6 +145,5 @@ include "include/topnavbar.php";
             }
         });
     });
-
 </script>
 <?php include "include/footer.php"; ?>
