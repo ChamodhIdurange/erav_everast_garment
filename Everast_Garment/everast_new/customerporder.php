@@ -1003,7 +1003,7 @@ include "include/topnavbar.php";
                 }
             });
         });
-        $('#dataTable tbody').on('click', '.btnaccept', function () {
+        $('#dataTable tbody').on('click', '.statuscusporder', function () {
             var r = confirm("Are you sure, Accept this order ? ");
             if (r == true) {
                 var id = $(this).attr('id');

@@ -85,6 +85,51 @@ if($conn->query($updatePoStatus)==true){
 
                 $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
                 $conn->query($updateInvoiceNo);
+
+                // Stock Update
+                $sqlgetupdatestock = "SELECT `tbl_product_idtbl_product`, `qty`, `freeproductid`, `freeqty` FROM `tbl_warehouse_details` WHERE `tbl_porder_idtbl_porder` = '$record'";
+                $resultgetupdatestock = $conn->query($sqlgetupdatestock);
+
+                if ($resultgetupdatestock->num_rows > 0) {
+                    while ($row = $resultgetupdatestock->fetch_assoc()) {
+                        $product = $row['tbl_product_idtbl_product'];
+                        $reducedqty = $row['qty'];
+                        $freeproductid = $row['freeproductid'];
+                        $freeqty = $row['freeqty'];
+
+                        $getstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$product' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
+                        $result = $conn->query($getstock);
+                        $stockdata = $result->fetch_assoc();
+
+                        $stockbatch = $stockdata['batchno'];
+                        $batchqty = $stockdata['qty'];
+
+                        while($batchqty < $reducedqty){
+                            $updatestock="UPDATE `tbl_stock` SET `qty`=0 WHERE `tbl_product_idtbl_product`='$product' AND `batchno` = '$stockbatch'";
+                            $conn->query($updatestock);
+                
+                            $reducedqty = $reducedqty - $batchqty;
+                
+                            $regetstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$product' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
+                            $reresult =$conn-> query($regetstock); 
+                            $restockdata = $reresult-> fetch_assoc();
+                
+                            $stockbatch = $restockdata['batchno'];
+                            $batchqty = $restockdata['qty'];
+                
+                            if($batchqty > $reducedqty){
+                                break;
+                            }
+                        }
+                        // echo $reducedqty;
+                
+                        $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$reducedqty') WHERE `tbl_product_idtbl_product`='$product' AND `batchno` = '$stockbatch'";
+                        $conn->query($updatestock);
+                    
+                        $updatestockfree="UPDATE `tbl_stock` SET `qty`=(`qty`-'$freeqty') WHERE `tbl_product_idtbl_product`='$freeproductid'";
+                        $conn->query($updatestockfree);
+                    }
+                }
             } 
 
             
