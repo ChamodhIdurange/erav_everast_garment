@@ -32,6 +32,6 @@ if ($result->num_rows > 0) {
 //     array_push($result, array( "id" => $row['idtbl_product_image'], "path" => $row['imagepath'], "catalog_id" => $row['tbl_catalog_idtbl_catalog'],  "category" => $row['category']));
 // }
 
-// print(json_encode($result));
 echo json_encode($data);
 mysqli_close($con);
+

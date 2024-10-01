@@ -35,12 +35,16 @@ include "include/topnavbar.php";
                                             <div class="input-group input-group-sm">
                                                 <select class="form-control form-control-sm" style="width: 100%;"
                                                     name="searchproduct" id="searchproduct">
-                                                    <option value="0">Select Account</option>
-                                                    <?php while ($rowproduct = $resultproduct->fetch_assoc()) { ?>
-                                                        <option value="<?php echo $rowproduct['idtbl_product']; ?>">
-                                                            <?php echo $rowproduct['product_name']; ?>
-                                                        </option>
-                                                    <?php } ?>
+                                                    <option value="0">Select Product</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="small font-weight-bold text-dark">Search Customer*</label>
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-control form-control-sm" style="width: 100%;"
+                                                    name="searchcustomer" id="searchcustomer">
+                                                    <option value="0">Select Customer</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -113,16 +117,112 @@ include "include/topnavbar.php";
 <script>
     $(document).ready(function () {
         // $("#searchproduct").select2();
+        // $("#searchproduct").select2();
+
+        $("#searchproduct").select2({
+            ajax: {
+                url: "getprocess/getproductforselect2.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
+        });
+
+        $("#searchcustomer").select2({
+            ajax: {
+                url: "getprocess/getcustomerlistforporder.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
+        });
 
         $('#searchproduct').change(function () {
             var productId = $(this).val();
+            var customerId = $('#searchcustomer').val();
             $.ajax({
                 type: "POST",
                 data: {
-                    productId: productId
+                    productId: productId,
+                    customerId: customerId
                 },
                 url: 'getprocess/getproductinvoices.php',
                 success: function (result) {//console.log(result)
+                    $('#targetviewdetail').html(result);
+                    $('#hideprintBtn').show();
+
+                    if ($.fn.DataTable.isDataTable('#reportTable')) {
+                        $('#reportTable').DataTable().destroy();
+                    }
+
+                    $('#reportTable').DataTable({
+                        "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        "buttons": [{
+                                extend: 'csv',
+                                className: 'btn btn-success btn-sm',
+                                title: 'Everest Sale Report Information',
+                                text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                            },
+                            {
+                                extend: 'pdf',
+                                className: 'btn btn-danger btn-sm',
+                                title: 'Everest Sale Report Information',
+                                text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                            },
+                            {
+                                extend: 'print',
+                                title: 'Everest Sale Report Information',
+                                className: 'btn btn-primary btn-sm',
+                                text: '<i class="fas fa-print mr-2"></i> Print'
+                            }
+                        ]
+                    });
+
+                // $('#reportTable').DataTable();
+
+
+                }
+            });
+        });
+        $('#searchcustomer').change(function () {
+            var customerId = $(this).val();
+            var productId = $('#searchproduct').val();
+            $.ajax({
+                type: "POST",
+                data: {
+                    productId: productId,
+                    customerId: customerId
+                },
+                url: 'getprocess/getproductinvoices.php',
+                success: function (result) {//console.log(result)
+                    $('#reportTable').empty();
+                    
                     $('#targetviewdetail').html(result);
                     $('#hideprintBtn').show();
 

@@ -41,30 +41,32 @@ include "include/topnavbar.php";
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col">
-                                    <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right" id="btnordercreate">
-                                        <i class="fas fa-plus"></i>&nbsp;Create Goods Received Note
-                                    </button>
-                                </div>
+                                <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
+                                    id="btnordercreate">
+                                    <i class="fas fa-plus"></i>&nbsp;Create Goods Received Note
+                                </button>
+                            </div>
                         </div>
                         <hr>
-                                <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Date</th>
-                                            <th>GRN</th>
-                                            <th>Invoice No</th>
-                                            <th>Dispatch No</th>
-                                            <th>Batch No</th>
-                                            <th class="text-right">Total</th>
-                                            <th class="text-right">VAT</th>
-                                            <th class="text-right">Nettotal</th>
-                                            <th class="text-center">Status</th>
-                                            <th class="text-center">Transfer Status</th>
-                                            <th class="text-right">Actions</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                        <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>GRN</th>
+                                    <th>Supplier</th>
+                                    <th>Invoice No</th>
+                                    <th>Dispatch No</th>
+                                    <th>Batch No</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="text-right">VAT</th>
+                                    <th class="text-right">Nettotal</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Transfer Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -205,7 +207,7 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         checkdayendprocess();
         $('.dpd1a').datepicker({
             uiLibrary: 'bootstrap4',
@@ -214,16 +216,16 @@ include "include/topnavbar.php";
             startDate: 'today',
             format: 'yyyy-mm-dd'
         });
-        $('#ponumber').change(function(){
+        $('#ponumber').change(function () {
             var ponumber = $(this).val();
 
             $.ajax({
                 type: "POST",
                 data: {
-                    ponumber : ponumber
+                    ponumber: ponumber
                 },
                 url: 'getprocess/getporderinfoforgrn.php',
-                success: function(result) {//alert(result);
+                success: function (result) { //alert(result);
                     $('#tbodygrncreate').html(result);
                     tabletotal();
                     orderoption();
@@ -231,12 +233,12 @@ include "include/topnavbar.php";
             });
         });
 
-        var addcheck='<?php echo $addcheck; ?>';
-        var editcheck='<?php echo $editcheck; ?>';
-        var statuscheck='<?php echo $statuscheck; ?>';
-        var deletecheck='<?php echo $deletecheck; ?>';
+        var addcheck = '<?php echo $addcheck; ?>';
+        var editcheck = '<?php echo $editcheck; ?>';
+        var statuscheck = '<?php echo $statuscheck; ?>';
+        var deletecheck = '<?php echo $deletecheck; ?>';
 
-        $('#dataTable').DataTable( {
+        $('#dataTable').DataTable({
             "destroy": true,
             "processing": true,
             "serverSide": true,
@@ -244,9 +246,10 @@ include "include/topnavbar.php";
                 url: "scripts/grnlist.php",
                 type: "POST", // you can use GET
             },
-            "order": [[ 0, "desc" ]],
-            "columns": [
-                {
+            "order": [
+                [0, "desc"]
+            ],
+            "columns": [{
                     "data": "idtbl_grn"
                 },
                 {
@@ -254,9 +257,12 @@ include "include/topnavbar.php";
                 },
                 {
                     "data": "idtbl_grn",
-                    "render": function(data, type, row) {
+                    "render": function (data, type, row) {
                         return 'GRN-' + data;
                     }
+                },
+                {
+                    "data": "suppliername"
                 },
                 {
                     "data": "invoicenum"
@@ -271,62 +277,67 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        return parseFloat(full['total']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    "render": function (data, type, full) {
+                        return parseFloat(full['total']).toFixed(2).replace(
+                            /\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        return parseFloat(full['vatamount']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    "render": function (data, type, full) {
+                        return parseFloat(full['vatamount']).toFixed(2).replace(
+                            /\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        return parseFloat(full['nettotal']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    "render": function (data, type, full) {
+                        return parseFloat(full['nettotal']).toFixed(2).replace(
+                            /\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
-                        if(full['confirm_status']==0){
-                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Not Approved';
+                        if (full['confirm_status'] == 0) {
+                            html +=
+                            '<i class="fas fa-times text-danger"></i>&nbsp;Not Approved';
+                        } else {
+                            html +=
+                                '<i class="fas fa-check text-success"></i>&nbsp;Approved GRN';
                         }
-                        else{
-                            html+='<i class="fas fa-check text-success"></i>&nbsp;Approved GRN';
-                        }
-                        return html;     
+                        return html;
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
-                        if(full['transferstatus']==0){
-                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Not Issued to the Stock';
+                        if (full['transferstatus'] == 0) {
+                            html +=
+                                '<i class="fas fa-times text-danger"></i>&nbsp;Not Issued to the Stock';
+                        } else {
+                            html +=
+                                '<i class="fas fa-check text-success"></i>&nbsp;Issued to the Stock';
                         }
-                        else{
-                            html+='<i class="fas fa-check text-success"></i>&nbsp;Issued to the Stock';
-                        }
-                        return html;     
+                        return html;
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        var button='';
+                    "render": function (data, type, full) {
+                        var button = '';
 
                         button += '<button class="btn btn-outline-dark btn-sm mr-1 btnView ';
                         if (editcheck == 0) {
@@ -337,39 +348,55 @@ include "include/topnavbar.php";
                             full['idtbl_grn'] + '"><i class="far fa-eye"></i></button>';
 
                         if (full['transferstatus'] == 1) {
-                            button += '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
+                            button +=
+                                '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
                         } else {
-                            button += '<a href="process/grnstocktransfer.php?record=' + full['idtbl_grn'] + '" data-toggle="tooltip" data-placement="bottom" title="Transfer to Stock" onclick="return stock_transfer()" target="_self" class="btn btn-outline-secondary btn-sm mr-1 ';
+                            button += '<a href="process/grnstocktransfer.php?record=' + full[
+                                    'idtbl_grn'] +
+                                '" data-toggle="tooltip" data-placement="bottom" title="Transfer to Stock" onclick="return stock_transfer()" target="_self" class="btn btn-outline-secondary btn-sm mr-1 ';
                             if (statuscheck == 0) {
                                 button += 'd-none';
                             }
                             button += '"><i class="fas fa-exchange-alt"></i></a>';
                         }
 
-                        if(full['confirm_status']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';}
-                        else{button+='<a href="process/statusgrn.php?record='+full['idtbl_grn']+'&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-times"></i></a>';}
-                        
+                        if (full['confirm_status'] == 1) {
+                            button += '<button class="btn btn-outline-success btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-check"></i></button>';
+                        } else {
+                            button += '<a href="process/statusgrn.php?record=' + full[
+                                    'idtbl_grn'] +
+                                '&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-times"></i></a>';
+                        }
+
                         return button;
                     }
                 }
             ]
-        } );
+        });
         $('#btnordercreate').click(function () {
             $('#modalcreateorder').modal('show');
             $('#modalcreateorder').on('shown.bs.modal', function () {
                 $('#orderdate').trigger('focus');
             });
         });
-        $('#btnSaveGrn').click(function(){
+        $('#btnSaveGrn').click(function () {
             if (!$("#grnFrom")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
                 $("#submitBtn").click();
             } else {
                 jsonObj = [];
-                $("#tableGrnList tbody tr").each(function() {
+                $("#tableGrnList tbody tr").each(function () {
                     item = {}
-                    $(this).find('td').each(function(col_idx) {
+                    $(this).find('td').each(function (col_idx) {
                         item["col_" + (col_idx + 1)] = $(this).text();
                     });
                     jsonObj.push(item);
@@ -402,7 +429,7 @@ include "include/topnavbar.php";
 
                     },
                     url: 'process/grnprocess.php',
-                    success: function(result) { //alert(result);
+                    success: function (result) { //alert(result);
                         action(result);
                         location.reload();
                     }
@@ -410,18 +437,18 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#dataTable tbody').on('click', '.btnView', function() {
-            var grnid=$(this).attr('id');
+        $('#dataTable tbody').on('click', '.btnView', function () {
+            var grnid = $(this).attr('id');
 
             $('#modalgrndetail').modal('show');
 
             $.ajax({
                 type: "POST",
                 data: {
-                    grnid:grnid
+                    grnid: grnid
                 },
                 url: 'getprocess/getgrndetail.php',
-                success: function(result) {//alert(result);
+                success: function (result) { //alert(result);
                     $('#viewgrndetail').html(result);
                 }
             });
@@ -429,8 +456,8 @@ include "include/topnavbar.php";
 
     });
 
-    function orderoption(){
-        $('#tableGrnList tbody').on('click', '.editnewqty', function(e) {
+    function orderoption() {
+        $('#tableGrnList tbody').on('click', '.editnewqty', function (e) {
             var row = $(this);
             // var rowid = row.closest("tr").find('td:eq(0)').text();
             // var selectvalueone = $('.optionpiorityone' + rowid).val();
@@ -532,7 +559,7 @@ include "include/topnavbar.php";
         }
     }
 
-    function addCommas(nStr){
+    function addCommas(nStr) {
         nStr += '';
         x = nStr.split('.');
         x1 = x[0];
@@ -545,19 +572,19 @@ include "include/topnavbar.php";
     }
     //Text remove
     function textremove(classname, row) {
-        $('#tableGrnList tbody').on('keyup', classname, function(e) {
-            if (e.keyCode === 13) { 
+        $('#tableGrnList tbody').on('keyup', classname, function (e) {
+            if (e.keyCode === 13) {
                 $this = $(this);
                 var val = $this.val();
                 var td = $this.closest('td');
                 td.empty().html(val).data('editing', false);
-                
+
                 var rowID = row.closest("td").parent()[0].rowIndex;
                 var unitprice = parseFloat(row.closest("tr").find('td:eq(2)').text());
 
                 var newqty = parseFloat(row.closest("tr").find('td:eq(6)').text());
 
-                var totnew = newqty*unitprice;
+                var totnew = newqty * unitprice;
 
                 var total = parseFloat(totnew).toFixed(2);
                 var showtotal = addCommas(total);
@@ -569,20 +596,21 @@ include "include/topnavbar.php";
             }
         });
     }
-    function checkdayendprocess(){
+
+    function checkdayendprocess() {
         $.ajax({
             type: "POST",
             data: {
-                
+
             },
             url: 'getprocess/getstatuslastdayendinfo.php',
-            success: function(result) { //alert(result);
-                if(result==1){
+            success: function (result) { //alert(result);
+                if (result == 1) {
                     $('#viewmessage').html("Can't create anything, because today transaction is end");
                     $('#warningDayEndModal').modal('show');
-                }
-                else if(result==0){
-                    $('#viewmessage').html("Can't create anythind, because yesterday day end process end not yet.");
+                } else if (result == 0) {
+                    $('#viewmessage').html(
+                        "Can't create anythind, because yesterday day end process end not yet.");
                     $('#warningDayEndModal').modal('show');
                 }
             }
@@ -592,6 +620,7 @@ include "include/topnavbar.php";
     function order_confirm() {
         return confirm("Are you sure you want to Confirm this GRN?");
     }
+
     function stock_transfer() {
         return confirm("Are you sure you want to Transfer to Stock?");
     }

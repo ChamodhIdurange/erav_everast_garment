@@ -211,7 +211,7 @@ include "include/topnavbar.php";
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Discount %</label>
                                     <input type="number" id="discountpresentage" name="discountpresentage"
-                                        class="form-control form-control-sm" value="25">
+                                        class="form-control form-control-sm" value="0">
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Common name*</label>

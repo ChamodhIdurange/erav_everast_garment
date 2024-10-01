@@ -53,6 +53,7 @@ include "include/topnavbar.php";
                                             <th>#</th>
                                             <th>Date</th>
                                             <th>Request</th>
+                                            <th>Supplier</th>
                                             <th class="text-right">Nettotal</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-right">Actions</th>
@@ -279,6 +280,9 @@ include "include/topnavbar.php";
                 },
                 {
                     "data": "name"
+                },
+                {
+                    "data": "suppliername"
                 },
                 {
                     "targets": -1,

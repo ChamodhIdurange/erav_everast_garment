@@ -38,6 +38,8 @@ if ($searchType == '1') {
 } elseif ($searchType == '4') {
     
 }
+$sql .= " ORDER BY `uc`.`name` ASC";
+
 
 $result = $conn->query($sql);
 

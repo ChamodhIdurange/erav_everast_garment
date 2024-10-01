@@ -14,9 +14,15 @@ $sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`
         LEFT JOIN `tbl_invoice_detail` AS `ua` ON `u`.`idtbl_invoice` = `ua`.`tbl_invoice_idtbl_invoice`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
         WHERE `u`.`status`=1 
-        AND `ua`.`tbl_product_idtbl_product`= '$productId'
-        GROUP BY `u`.`idtbl_invoice`";
+        AND `ua`.`tbl_product_idtbl_product`= '$productId'";
 
+if (isset($_POST['customerId']) && !empty($_POST['customerId'])) {
+    $customerId = $_POST['customerId'];
+
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer`= '$customerId'";
+}
+
+$sql .= " GROUP BY `u`.`idtbl_invoice`";
 $result = $conn->query($sql);
 
 if ($result->num_rows == 0) {
