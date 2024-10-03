@@ -9,7 +9,7 @@ $row=$result->fetch_assoc();
 $stockqty = $row['qty'];
 
 
-$sqlholdstock="SELECT SUM(`qty`) as `qty` FROM `tbl_customer_order_hold_stock` WHERE `tbl_product_idtbl_product`='$productID' AND `invoiceissue` = '0' GROUP BY `tbl_product_idtbl_product`";
+$sqlholdstock="SELECT SUM(`qty`) as `qty` FROM `tbl_customer_order_hold_stock` WHERE `tbl_product_idtbl_product`='$productID' AND `status` = '1' AND `invoiceissue` = '0' GROUP BY `tbl_product_idtbl_product`";
 $result=$conn->query($sqlholdstock);
 $row=$result->fetch_assoc();
 

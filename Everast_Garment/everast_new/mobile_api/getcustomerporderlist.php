@@ -5,6 +5,7 @@ require_once('dbConnect.php');
 $repid=$_POST['repid'];
 
 $sql="SELECT * FROM `tbl_porder` LEFT JOIN `tbl_porder_otherinfo` ON `tbl_porder_otherinfo`.`porderid`=`tbl_porder`.`idtbl_porder` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_porder_otherinfo`.`customerid` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_porder_otherinfo`.`areaid` WHERE `tbl_porder`.`status`=1 AND `tbl_porder_otherinfo`.`repid`='$repid'";
+
 $result = mysqli_query($con, $sql);
 $data = array();
 if ($result->num_rows > 0) {

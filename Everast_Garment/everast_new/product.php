@@ -1,8 +1,8 @@
 <?php 
 include "include/header.php";  
 
-$sql="SELECT * FROM `tbl_product` WHERE `status` IN (1,2)";
-$result =$conn-> query($sql); 
+// $sql="SELECT * FROM `tbl_product` WHERE `status` IN (1,2)";
+// $result =$conn-> query($sql); 
 
 $sqlcategory="SELECT `idtbl_product_category`, `category` FROM `tbl_product_category` WHERE `status`=1";
 $resultcategory=$conn->query($sqlcategory);
@@ -289,7 +289,7 @@ include "include/topnavbar.php";
                                                 <th class="text-right">Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <!-- <tbody>
                                             <?php if($result->num_rows > 0) {while ($row = $result-> fetch_assoc()) { ?>
                                             <tr>
                                                 <td><?php echo $row['idtbl_product'] ?></td>
@@ -325,7 +325,7 @@ include "include/topnavbar.php";
                                                 </td>
                                             </tr>
                                             <?php }} ?>
-                                        </tbody>
+                                        </tbody> -->
                                     </table>
                                 </div>
                             </div>
@@ -339,14 +339,86 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
+
     $(document).ready(function () {
+        var addcheck = '<?php echo $addcheck; ?>';
+        var editcheck = '<?php echo $editcheck; ?>';
+        var statuscheck = '<?php echo $statuscheck; ?>';
+        var deletecheck = '<?php echo $deletecheck; ?>';
+
         $('#dataTable').DataTable({
-            dom: 'Blfrtip',
-            "lengthMenu": [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ],
             "destroy": true,
+            "processing": true,
+            "serverSide": true,
+            ajax: {
+                url: "scripts/productlist.php",
+                type: "POST", // you can use GET
+            },
+            "order": [
+                [0, "desc"]
+            ],
+            "columns": [{
+                    "data": "idtbl_product"
+                },
+                {
+                    "data": "product_name"
+                },
+                {
+                    "data": "product_code"
+                },
+                {
+                    "data": "category"
+                },
+                {
+                    "data": "saleprice"
+                },
+                {
+                    "data": "retail"
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function (data, type, full) {
+                        var button = '';
+                        button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 ';
+                        if (editcheck == 0) {
+                            button += 'd-none';
+                        }
+                        button += '" id="' + full['idtbl_product'] +
+                            '"><i class="fas fa-pen"></i></button>';
+                        if (full['status'] == 1) {
+                            button += '<a href="process/statusproduct.php?record=' + full[
+                                    'idtbl_product'] +
+                                '&type=2" onclick="return deactive_confirm()" target="_self" class="btn btn-outline-success btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-check"></i></a>';
+                        } else {
+                            button += '<a href="process/statusproduct.php?record=' + full[
+                                    'idtbl_product'] +
+                                '&type=1" onclick="return active_confirm()" target="_self" class="btn btn-outline-warning btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-times"></i></a>';
+                        }
+                        button += '<a href="process/statusproduct.php?record=' + full[
+                                'idtbl_product'] +
+                            '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
+                        if (deletecheck == 0) {
+                            button += 'd-none';
+                        }
+                        button += '"><i class="far fa-trash-alt"></i></a>';
+
+                        return button;
+                    }
+                }
+            ],
+            drawCallback: function (settings) {
+                $('[data-toggle="tooltip"]').tooltip();
+            }
         });
         $('#dataTable tbody').on('click', '.btnEdit', function () {
             var r = confirm("Are you sure, You want to Edit this ? ");

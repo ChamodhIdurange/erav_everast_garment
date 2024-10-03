@@ -52,21 +52,22 @@ if($conn->query($updatePoStatus)==true){
         $productID=$rowtabledata['col_2'];
         $podetailId=$rowtabledata['col_3'];
         $qty=$rowtabledata['col_4'];
+        $status=$rowtabledata['col_8'];
 
         if($acceptanceType == 1){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 2){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 3){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
 
-            $getporderdata = "SELECT * FROM `tbl_customer_order_detail` WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $getporderdata = "SELECT * FROM `tbl_customer_order_detail` WHERE `idtbl_customer_order_detail` = '$podetailId' AND `status` = '1'";
             $result = $conn->query($getporderdata);
 
             if ($result->num_rows > 0) {
@@ -127,7 +128,7 @@ if($conn->query($updatePoStatus)==true){
 
             
         }
-
+        // echo $updatePoDetail;
         $conn->query($updatePoDetail);
         $conn->query($updateHoldStock);
 

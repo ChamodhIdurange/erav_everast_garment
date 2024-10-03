@@ -396,6 +396,7 @@ include "include/topnavbar.php";
                             <th class="d-none">PoDetailID</th>
                             <th class="text-center"> Qty</th>
                             <th class="text-right">Total</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -512,10 +513,38 @@ include "include/topnavbar.php";
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="printreportInvoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">View Invoice PDF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="embed-responsive embed-responsive-16by9" id="frame">
+                            <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include "include/footerscripts.php"; ?>
 <script>
     var prodCount = 0;
     $(document).ready(function () {
+        var addcheck
+        var editcheck
+        var statuscheck
+        var deletecheck
+
         $("#helpername").select2();
 
         $('body').tooltip({
@@ -650,6 +679,9 @@ include "include/topnavbar.php";
                         button += ' btn-sm btnPrint mr-1 " data-toggle="tooltip" data-placement="bottom" title="Print PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="fas fa-file-invoice-dollar"></i></button>';
+
+                        button += '<button class="btn btn-outline-secondary btn-sm btnInvoicePrint mr-1" data-placement="bottom" title="Invoice Print" id="' + full['idtbl_customer_order'] + '"><i class="fas fa-eye"></i></button>';
+                         
                         button +=
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
@@ -736,6 +768,33 @@ include "include/topnavbar.php";
                     }
                 }
             ]
+        });
+
+        $('#dataTable tbody').on('click', '.btnInvoicePrint', function() {
+            var id = $(this).attr('id');
+           // alert(id);
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreportInvoice iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/porderinvoicepdf.php?id=' + id;
+            //            alert(src);
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#printreportInvoice iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#printreportInvoice').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
         });
 
         $('#dataTable tbody').on('click', '.btnPrint', function() {
@@ -898,18 +957,31 @@ include "include/topnavbar.php";
                             objfirst[i].orderqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
-                            .unitprice + '</td></tr>');
+                            .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
+                            .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
+                            .status + '</td></tr>');
+
+                            var newRow = $('#tableorderview > tbody:last tr:last');
+
+                        if (objfirst[i].status == 3) {
+                            newRow.css('background-color', '#ffcccc');
+                            newRow.find('.btnDeleteOrderProduct').removeClass().addClass('btn btn-outline-success btn-sm'); 
+
+                        }
+
                     });
+                    
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Confirm');
                     $('#btnUpdate').prop('disabled', false);
                     $('#acceptanceType').val(1)
 
                     $('#modalorderview').modal('show');
+
+                    tabletotal1();
                 }
             });
         });
         $('#dataTable tbody').on('click', '.btnDeliver', function () {
-
             var id = $(this).attr('id');
 
             var confirmstatus = $(this).attr('name');
@@ -937,7 +1009,6 @@ include "include/topnavbar.php";
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
-
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
@@ -947,13 +1018,25 @@ include "include/topnavbar.php";
                             objfirst[i].dispatchqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
-                            .unitprice + '</td></tr>');
+                            .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
+                            .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
+                            .status + '</td></tr>');
+
+                            var newRow = $('#tableorderview > tbody:last tr:last');
+
+                        if (objfirst[i].status == 3) {
+                            newRow.css('background-color', '#ffcccc');
+                            newRow.find('.btnDeleteOrderProduct').removeClass().addClass('btn btn-outline-success btn-sm'); 
+
+                        }
+
                     });
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
                     $('#btnUpdate').prop('disabled', false);
                     $('#acceptanceType').val(3)
 
                     $('#modalorderview').modal('show');
+                    tabletotal1();
                 }
             });
         });
@@ -983,7 +1066,6 @@ include "include/topnavbar.php";
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
-
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
@@ -993,25 +1075,29 @@ include "include/topnavbar.php";
                             objfirst[i].confirmqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
-                            .unitprice + '</td></tr>');
+                            .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
+                            .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
+                            .status + '</td></tr>');
+
+                            var newRow = $('#tableorderview > tbody:last tr:last');
+
+                        if (objfirst[i].status == 3) {
+                            newRow.css('background-color', '#ffcccc');
+                            newRow.find('.btnDeleteOrderProduct').removeClass().addClass('btn btn-outline-success btn-sm'); 
+
+                        }
                     });
+
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Dispatch');
                     $('#btnUpdate').prop('disabled', false);
                     $('#acceptanceType').val(2)
 
                     $('#modalorderview').modal('show');
+                    tabletotal1();
                 }
             });
         });
-        $('#dataTable tbody').on('click', '.statuscusporder', function () {
-            var r = confirm("Are you sure, Accept this order ? ");
-            if (r == true) {
-                var id = $(this).attr('id');
-                var type = '5';
-                //alert(id);
-                statuschange(id, type);
-            }
-        });
+      
         $('#dataTable tbody').on('click', '.btncancel', function () {
             var r = confirm("Are you sure, Cancel this order ? ");
             if (r == true) {
@@ -1247,8 +1333,10 @@ include "include/topnavbar.php";
                             showqty = objfirst[i].confirmqty;
                         }else if(confirmstatus == 1 && dispatchstatus == 1 && deliverstatus == null){
                             showqty = objfirst[i].dispatchqty;
+                        }else{
+                            showqty = objfirst[i].qty;
                         }
-
+                        
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td class="d-none">' + objfirst[i].productid +
@@ -1258,8 +1346,19 @@ include "include/topnavbar.php";
                             showqty +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
-                            .unitprice + '</td></tr>');
+                            .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
+                            .podetailid + '" disabled><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
+                            .status + '</td></tr>');
+
+                        var newRow = $('#tableorderview > tbody:last tr:last');
+
+                        if (objfirst[i].status == 3) {
+                            newRow.css('background-color', '#ffcccc');
+                            newRow.find('.btnDeleteOrderProduct').removeClass().addClass('btn btn-outline-success btn-sm'); 
+
+                        }
                     });
+
                     $('#btnUpdate').prop('disabled', true);
                     
                     $('#modalorderview').modal('show');
@@ -1288,6 +1387,15 @@ include "include/topnavbar.php";
             $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val)
                 .appendTo($this);
             textremove('.optionnewqty', row);
+        });
+        
+        // chaolk
+        $('#tableorderview tbody').on('click', '.btnDeleteOrderProduct', function (e) {
+            var row = $(this).closest('tr'); 
+            row.css('background-color', '#ffcccc');
+
+            row.find('td:nth-child(8)').text('3');
+            tabletotal1();
         });
 
         //Text remove
@@ -1318,6 +1426,13 @@ include "include/topnavbar.php";
         function tabletotal1() {
             var sum = 0;
             $(".total").each(function () {
+
+                var row = $(this).closest('tr'); 
+                var status = row.find('td:nth-child(8)').text(); 
+
+                if(status==3){
+                    return;
+                }
                 var cleansum = $(this).text().split(",").join("")
                 sum += parseFloat(cleansum);
             });
@@ -1541,7 +1656,7 @@ include "include/topnavbar.php";
                     });
                     jsonObj.push(item);
                 });
-                console.log(jsonObj);
+                //console.log(jsonObj);
                 jsonObj = JSON.stringify(jsonObj);
 
                 var discountpresentage = $('#discountpresentage').val();
@@ -1635,7 +1750,7 @@ include "include/topnavbar.php";
                     total: cleartotal,
                 },
                 url: 'process/updatecustomerpoprocess.php',
-                success: function (result) { //alert(result);
+                success: function (result) { //console.log(result);
                     action(result);
                     $('#modalorderview').modal('hide');
 
@@ -1999,25 +2114,6 @@ include "include/topnavbar.php";
             todayHighlight: true,
             startDate: 'today',
             format: 'yyyy-mm-dd'
-        });
-    }
-
-    function statuschange(id, type) { //alert(id);
-        var cancelreason = '';
-
-        $.ajax({
-            type: "POST",
-            data: {
-                recordID: id,
-                type: type,
-                cancelreason: cancelreason
-            },
-            url: 'process/statuscusporder.php',
-            success: function (result) { //alert(result);
-                // action(result);
-                $('#dataTable').DataTable().ajax.reload(null, false);
-                // loaddatatable();
-            }
         });
     }
 </script>
