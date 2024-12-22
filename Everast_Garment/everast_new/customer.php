@@ -635,58 +635,18 @@ include "include/topnavbar.php";
                         //     button += '" id="' + full['idtbl_customer'] +
                         //         '"><i class="fas fa-shopping-cart"></i></button>';
                         // }
-                        button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 ';
-                        if (editcheck == 0) {
-                            button += 'd-none';
+                        if(editcheck=1){
+                            button+='<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="'+full['idtbl_customer']+'"><i class="fas fa-pen"></i></button>';
                         }
-                        button += '" id="' + full['idtbl_customer'] +
-                            '"><i class="fas fa-pen"></i></button>';
-                        if (full['status'] == 1) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=2" onclick="return deactive_confirm()" target="_self" class="btn btn-outline-success btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-check"></i></a>';
-                        } else if (full['status'] != 5) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=1" onclick="return active_confirm()" target="_self" class="btn btn-outline-warning btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-times"></i></a>';
+                        if(full['status']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['status']==2 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
                         }
-                        // if (full['status'] == 1) {
-                        //     button +=
-                        //         '<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';
-                        //     if (deletecheck == 0) {
-                        //         button += 'd-none';
-                        //     }
-                        //     button += '" id="' + full['idtbl_customer'] +
-                        //         '"><i class="fas fa-times-circle"></i></button>';
-                        //     button += '<a href="process/statuscustomer.php?record=' + full[
-                        //             'idtbl_customer'] +
-                        //         '&type=4" onclick="return emergancyactive_confirm()" target="_self" class="btn btn-outline-dark btn-sm mr-1 ';
-                        //     if (statuscheck == 0) {
-                        //         button += 'd-none';
-                        //     }
-                        //     button += '"><i class="far fa-calendar-check"></i></a>';
-                        // } else if (full['status'] == 5) {
-                        //     button +=
-                        //         '<button type="button" class="btn btn-outline-purple btn-sm mr-1 btncloseview" id="' +
-                        //         full['idtbl_customer'] +
-                        //         '"><i class="fas fa-file"></i></button>';
-                        // }
-                        if (full['status'] != 5) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
-                            if (deletecheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="far fa-trash-alt"></i></a>';
+                        if(deletecheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
                         }
 
                         return button;
@@ -694,8 +654,8 @@ include "include/topnavbar.php";
                 }
             ]
         });
-        $('#dataTable tbody').on('click', '.btnEdit', function () {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({

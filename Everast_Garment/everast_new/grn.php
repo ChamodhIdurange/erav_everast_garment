@@ -347,34 +347,30 @@ include "include/topnavbar.php";
                             '" data-toggle="tooltip" data-placement="bottom" title="View Order" id="' +
                             full['idtbl_grn'] + '"><i class="far fa-eye"></i></button>';
 
-                        if (full['transferstatus'] == 1) {
+                        if (full['transferstatus'] == 1 && statuscheck == 1) {
                             button +=
                                 '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
-                        } else {
-                            button += '<a href="process/grnstocktransfer.php?record=' + full[
+                        } else if (full['transferstatus'] == 0 && statuscheck == 1) {
+                            button+='<button type="button" data-url="process/grnstocktransfer.php?record=' + full[
                                     'idtbl_grn'] +
-                                '" data-toggle="tooltip" data-placement="bottom" title="Transfer to Stock" onclick="return stock_transfer()" target="_self" class="btn btn-outline-secondary btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-exchange-alt"></i></a>';
+                                '"  data-actiontype="7" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_grn']+'"><i class="fas fa-exchange-alt"></i></button>';
                         }
 
-                        if (full['confirm_status'] == 1) {
-                            button += '<button class="btn btn-outline-success btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-check"></i></button>';
-                        } else {
-                            button += '<a href="process/statusgrn.php?record=' + full[
-                                    'idtbl_grn'] +
-                                '&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-times"></i></a>';
-                        }
+                        // if (full['confirm_status'] == 1) {
+                        //     button += '<button class="btn btn-outline-success btn-sm mr-1 ';
+                        //     if (statuscheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '"><i class="fas fa-check"></i></button>';
+                        // } else {
+                        //     button += '<a href="process/statusgrn.php?record=' + full[
+                        //             'idtbl_grn'] +
+                        //         '&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';
+                        //     if (statuscheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '"><i class="fas fa-times"></i></a>';
+                        // }
 
                         return button;
                     }

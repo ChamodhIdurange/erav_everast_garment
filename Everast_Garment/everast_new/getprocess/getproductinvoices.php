@@ -49,6 +49,7 @@ $html = '<table class="table table-striped table-bordered table-sm small" id="ou
             <th class="text-center">Invoice</th>
             <th class="text-center">Quantity</th>
             <th class="text-center">Invoice Total</th>
+            <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>';
@@ -61,6 +62,7 @@ foreach($customerarray as $rowcustomerarray) {
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['invoiceno']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['qty']) . '</td>
         <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['nettotal'] ?? 0)) . '</td>
+        <td class="text-center"> <button class="btn btn-outline-dark btn-sm btnView mr-1" id="' . $rowcustomerarray['idtbl_invoice'] .'"><i class="fas fa-eye"></i></button> </td>
     </tr>';
 }
 

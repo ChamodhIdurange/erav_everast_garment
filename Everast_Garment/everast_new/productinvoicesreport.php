@@ -1,6 +1,6 @@
 <?php 
-include "include/header.php";  
-include "connection/db.php";  
+include "include/header.php";
+include "include/topnavbar.php";
 
 $sqlproduct="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
 $resultproduct =$conn-> query($sqlproduct);
@@ -70,18 +70,6 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                         <br>
-                        <!-- <div class="col-12" style="display: none" align="right" id="hideprintBtn">
-                            <button type="button"
-                                class="btn btn-outline-danger btn-sm ml-auto w-10 mt-2 px-5 align-right printBtn"
-                                id="printBtn">
-                                <i class="fas fa-file-pdf"></i>&nbsp;Print
-                            </button>
-                        </div> -->
-                        <div class="col-12" id="showpdfview" style="display: none;">
-                            <div class="embed-responsive embed-responsive-1by1" id="pdfframe">
-                                <iframe class="embed-responsive-item" frameborder="0"></iframe>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -171,7 +159,7 @@ include "include/topnavbar.php";
                     customerId: customerId
                 },
                 url: 'getprocess/getproductinvoices.php',
-                success: function (result) {//console.log(result)
+                success: function (result) { //console.log(result)
                     $('#targetviewdetail').html(result);
                     $('#hideprintBtn').show();
 
@@ -203,9 +191,7 @@ include "include/topnavbar.php";
                             }
                         ]
                     });
-
-                // $('#reportTable').DataTable();
-
+                    loadFunction();
 
                 }
             });
@@ -220,9 +206,9 @@ include "include/topnavbar.php";
                     customerId: customerId
                 },
                 url: 'getprocess/getproductinvoices.php',
-                success: function (result) {//console.log(result)
+                success: function (result) { //console.log(result)
                     $('#reportTable').empty();
-                    
+
                     $('#targetviewdetail').html(result);
                     $('#hideprintBtn').show();
 
@@ -254,46 +240,77 @@ include "include/topnavbar.php";
                             }
                         ]
                     });
-
-                // $('#reportTable').DataTable();
-
-
+                    loadFunction();
+                    // $('#reportTable').DataTable();
                 }
             });
         });
 
-        $('#printBtn').click(function () {
 
-            var searchType = encodeURIComponent($('#searchType').val());
-            var validfrom = encodeURIComponent($('#fromdate').val());
-            var validto = encodeURIComponent($('#todate').val());
-            var selectedAccount = encodeURIComponent(getElementValue('#selectedAccount'));
+        function loadFunction() {
+            $('#outstandingReportTable tbody').on('click', '.btnView', function () {
+                var id = $(this).attr('id');
+                $('#frame').html('');
+                $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+                $('#printreport iframe').contents().find('body').html(
+                    "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
+                    );
 
-            $('#frame').html('');
-            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
-            $('#printreport iframe').contents().find('body').html(
-                "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
-            );
+                var src = 'pdfprocess/invoicepdf.php?id=' + id;
+                //            alert(src);
+                var width = $(this).attr('data-width') ||
+                640; // larghezza dell'iframe se non impostato usa 640
+                var height = $(this).attr('data-height') ||
+                360; // altezza dell'iframe se non impostato usa 360
 
-            var params =
-                `?validfrom=${validfrom}&validto=${validto}&searchType=${searchType}&selectedAccount=${selectedAccount}`;
-            var src = 'pdfprocess/accountpdf.php' + params;
+                var allowfullscreen = $(this).attr(
+                'data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
 
-            var width = $(this).attr('data-width') || 640;
-            var height = $(this).attr('data-height') || 360;
-
-            $("#printreport iframe").attr({
-                'src': src,
-                'height': height,
-                'width': width,
-                'allowfullscreen': ''
+                // stampiamo i nostri dati nell'iframe
+                $("#printreport iframe").attr({
+                    'src': src,
+                    'height': height,
+                    'width': width,
+                    'allowfullscreen': ''
+                });
+                $('#printreport').modal({
+                    keyboard: false,
+                    backdrop: 'static'
+                });
             });
 
-            $('#printreport').modal({
-                keyboard: false,
-                backdrop: 'static'
-            });
-        });
+        }
+        // $('#printBtn').click(function () {
+        //     var searchType = encodeURIComponent($('#searchType').val());
+        //     var validfrom = encodeURIComponent($('#fromdate').val());
+        //     var validto = encodeURIComponent($('#todate').val());
+        //     var selectedAccount = encodeURIComponent(getElementValue('#selectedAccount'));
+
+        //     $('#frame').html('');
+        //     $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+        //     $('#printreport iframe').contents().find('body').html(
+        //         "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
+        //     );
+
+        //     var params =
+        //         `?validfrom=${validfrom}&validto=${validto}&searchType=${searchType}&selectedAccount=${selectedAccount}`;
+        //     var src = 'pdfprocess/accountpdf.php' + params;
+
+        //     var width = $(this).attr('data-width') || 640;
+        //     var height = $(this).attr('data-height') || 360;
+
+        //     $("#printreport iframe").attr({
+        //         'src': src,
+        //         'height': height,
+        //         'width': width,
+        //         'allowfullscreen': ''
+        //     });
+
+        //     $('#printreport').modal({
+        //         keyboard: false,
+        //         backdrop: 'static'
+        //     });
+        // });
 
 
 

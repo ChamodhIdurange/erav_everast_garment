@@ -334,13 +334,25 @@ include "include/topnavbar.php";
                             full['idtbl_porder'] + '"><i class="far fa-eye"></i></button>';
 
 
-                        if(full['completestatus']==1){button+='<button class="btn btn-outline-yellow btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"  data-toggle="tooltip" data-placement="bottom" title="Complete Order"><i class="fas fa-check-circle"></i></button>';}
-                        else{button+='<a href="process/statusporder.php?record='+full['idtbl_porder']+'&type=8"  data-toggle="tooltip" data-placement="bottom" title="Complete Order" onclick="return allcustomer_confirm()" target="_self" class="btn btn-outline-pink btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-times"></i></a>';}
+                        if(full['completestatus']==1 && statuscheck==1){
+                            button+='<button class="btn btn-outline-yellow btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"  data-toggle="tooltip" data-placement="bottom" title="Complete Order"><i class="fas fa-check-circle"></i></button>';                         
+                        }
+                        else if(full['completestatus']==0 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=8"  data-actiontype="5" title="Complete Order" class="btn btn-outline-pink btntableaction btn-sm mr-1" id="'+full['idtbl_porder']+'"><i class="fas fa-times"></i></button>';
+                        }
                         
-                        if(full['confirmstatus']==1){button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';}
-                        else{button+='<a href="process/statusporder.php?record='+full['idtbl_porder']+'&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm Order" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';if(statuscheck==0 | full['confirmstatus']==2){button+='d-none';}button+='"><i class="fas fa-times"></i></a>';}
+                        if(full['completestatus']==1 && statuscheck==1){
+                            button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';
+                        }
+                        else if(full['completestatus']==1 && statuscheck==0){
+           
+                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=1"  data-actiontype="6" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_porder']+'"><i class="fas fa-times"></i></button>';
+                        }
 
-                        button+='<a href="process/statusporder.php?record='+full['idtbl_porder']+'&type=2" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="far fa-trash-alt"></i></a>';
+                        if(deletecheck==1){
+                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=2"  data-actiontype="3" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_porder']+'"><i class="far fa-trash-alt"></i></button>';
+                        }
+                       
                         
                         return button;
                     }

@@ -18,7 +18,7 @@ if ($lastElement == 'useraccount.php') {
     $editcheck   = checkprivilege($menuprivilegearray, 3, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 3, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 3, 4);
-} else if ($lastElement == 'location.php') {
+} else if ($lastElement == 'locations.php') {
     $addcheck    = checkprivilege($menuprivilegearray, 4, 1);
     $editcheck   = checkprivilege($menuprivilegearray, 4, 2);
     $statuscheck = checkprivilege($menuprivilegearray, 4, 3);

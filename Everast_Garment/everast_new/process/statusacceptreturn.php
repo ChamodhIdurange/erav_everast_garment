@@ -34,7 +34,6 @@ if ($conn->query($sql) == true) {
         $sqlcreditdetail = "INSERT INTO `tbl_creditenote_detail`(`returntotal`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_return_idtbl_return`, `tbl_creditenote_idtbl_creditenote`) VALUES ('$returntotal', 1, '$updatedatetime', '$userID', '$record', '$noteId')";
         $conn->query($sqlcreditdetail);
 
-
         if ($resultsqlgetqty->num_rows > 0) {
             while ($row = $resultsqlgetqty->fetch_assoc()) {
                 $qty = $row['qty'];
@@ -58,16 +57,16 @@ if ($conn->query($sql) == true) {
         $sqlcreditdetail = "INSERT INTO `tbl_creditenote_detail`(`returntotal`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_return_idtbl_return`, `tbl_creditenote_idtbl_creditenote`) VALUES ('$returntotal', 1, '$updatedatetime', '$userID', '$record', '$noteId')";
         $conn->query($sqlcreditdetail);
 
-        header("Location:../supplierreturn.php?action=6");
+        header("Location:../customerreturn.php?action=6");
     } else if ($type == 3) {
-        header("Location:../damagereturns.php?action=6");
+        header("Location:../customerreturn.php?action=6");
     }
 } else {
     if ($type == 1) {
         header("Location:../customerreturn.php?action=5");
     } else if ($type == 2) {
-        header("Location:../supplierreturn.php?action=5");
+        header("Location:../customerreturn.php?action=5");
     } else if ($type == 3) {
-        header("Location:../damagereturns.php?action=5");
+        header("Location:../customerreturn.php?action=5");
     }
 }

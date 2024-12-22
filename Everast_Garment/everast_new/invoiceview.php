@@ -226,12 +226,7 @@ include "include/topnavbar.php";
                         var button = '';
                         button += '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' + full['idtbl_invoice'] + '"><i class="fas fa-eye"></i></button> ';
                         if (full['paymentcomplete'] == 0 && deletecheck != 0) {
-                            button += '<a href="process/invoicecancellprocess.php?record=' + full['idtbl_invoice'] +
-                                '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
-                            if (deletecheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="far fa-trash-alt"></i></a>';
+                            button+='<button type="button" data-url="process/invoicecancellprocess.php?record='+full['idtbl_invoice']+'&type=3"  data-actiontype="3" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="far fa-trash-alt"></i></button>';
                         }
                         
                         return button;

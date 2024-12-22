@@ -154,11 +154,11 @@ include "include/topnavbar.php";
                                                                                     class="btn btn-outline-primary btn-sm btnEditContact mr-1 "
                                                                                     id="<?php echo $row['idtbl_contact_details'] ?>"><i
                                                                                         class=" fas fa-edit"></i></button>
-                                                                                <a href="process/statuscontactdetails.php?record=<?php echo $row['idtbl_contact_details'] ?>&eledID=<?php echo $record ?>&type=<?php echo $persontype ?>"
-                                                                                    onclick="return confirm('Are you sure you want to remove this?');"
-                                                                                    target="_self"
-                                                                                    class="btn btn-outline-danger btn-sm"><i
-                                                                                        data-feather="trash-2"></i></a>
+                                                                                <button
+                                                                                    data-url="process/statuscontactdetails.php?record=<?php echo $row['idtbl_contact_details'] ?>&eledID=<?php echo $record ?>&type=<?php echo $persontype ?>"
+                                                                                    data-actiontype="3"
+                                                                                    class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                                                        data-feather="trash-2"></i></button>
                                                                             </td>
                                                                         </tr>
                                                                         <?php }} ?>
@@ -274,11 +274,12 @@ include "include/topnavbar.php";
                                                                                     id="<?php echo $row['idtbl_customer_location'] ?>"><i
                                                                                         class=" fas fa-edit"></i></button>
 
-                                                                                <a href="process/statuslocationdetails.php?record=<?php echo $row['idtbl_customer_location'] ?>&customerID=<?php echo $record ?>"
-                                                                                    onclick="return confirm('Are you sure you want to remove this?');"
-                                                                                    target="_self"
-                                                                                    class="btn btn-outline-danger btn-sm"><i
-                                                                                        data-feather="trash-2"></i></a>
+
+                                                                                        <button
+                                                                                    data-url="process/statuslocationdetails.php?record=<?php echo $row['idtbl_customer_location'] ?>&customerID=<?php echo $record ?>"
+                                                                                    data-actiontype="3"
+                                                                                    class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                                                        data-feather="trash-2"></i></button>
                                                                             </td>
                                                                         </tr>
                                                                         <?php }} ?>
@@ -361,8 +362,6 @@ include "include/topnavbar.php";
                                                                             <th>Payment</th>
                                                                             <th>Balance</th>
                                                                             <th>Date</th>
-
-
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -382,9 +381,6 @@ include "include/topnavbar.php";
                                                                             <td class="text-right">
                                                                                 <?php echo $row['updatedatetime'] ?>
                                                                             </td>
-
-
-
                                                                         </tr>
                                                                         <?php }} ?>
                                                                     </tbody>
@@ -402,7 +398,6 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
     </div>
@@ -720,7 +715,7 @@ include "include/topnavbar.php";
         var statuscheck
         var deletecheck
 
-        $('#btnImgView').click(function() {
+        $('#btnImgView').click(function () {
             var id = $('#hiddencustomerId').val();
             loadlistimages(id);
             $('#modalimageview').modal('show');
@@ -878,4 +873,3 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
-

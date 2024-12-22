@@ -1,7 +1,7 @@
 <?php
 include "include/header.php";
 
-$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1) and `u`.`returntype` = '1'";
+$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1)";
 $resultreturncustomer = $conn->query($sqlreturncustomer);
 
 
@@ -56,16 +56,15 @@ include "include/topnavbar.php";
                                                         id="<?php echo $row['idtbl_return']; ?>" name="<?php echo $row['acceptance_status']; ?>"><i
                                                             class="fas fa-eye"></i></button>
                                                 <?php if($row['acceptance_status'] == 0) { ?>
-                                                    <a href="process/statusacceptreturn.php?record=<?php echo $row['idtbl_return'] ?>&type=2"
-                                                        onclick="return confirm('Are you sure you want to accept this return?');"
-                                                        target="_self" class="btn btn-outline-danger btn-sm"><i
-                                                            data-feather="x-square"></i></a>
+                                                            <button
+                                                    data-url="process/statusacceptreturn.php?record=<?php echo $row['idtbl_return'] ?>&type=2"
+                                                    data-actiontype="8"
+                                                    class="btn btn-outline-warning btn-sm btntableaction"><i
+                                                        data-feather="x-square"></i></button>
                                                 <?php }else{ ?>
                                                     <button  class="btn btn-outline-success btn-sm"><i
                                                             data-feather="check"></i></button>
                                                 <?php }?>
-
-                                                
                                                 </td>
                                             </tr>
                                             <?php }

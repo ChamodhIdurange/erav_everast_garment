@@ -692,20 +692,20 @@ include "include/topnavbar.php";
                         //         full['idtbl_customer_order'] +
                         //         '"><i class="fas fa-pen"></i></button>';
                         // }
-                        if (full['status'] == 2) {
+                        if (full['status'] == 2 && statuscheck==1) {
                             button +=
                                 '<button class="btn btn-secondary btn-sm btnreactive mr-1" id="' +
                                 full['idtbl_customer_order'] +
                                 '"><i class="fas fa-check"></i></button>';
                         }
-                        if (full['status'] == 1 && full['confirm'] == null) {
+                        if (full['status'] == 1 && full['confirm'] == null && editcheck==1) {
                             button +=
                                 '<button class="btn btn-warning btn-sm btnConfirm mr-1" data-toggle="tooltip" data-placement="bottom" title="Confirm Order" name="' +
                                 full['confirm'] +
                                 '" id="' +
                                 full['idtbl_customer_order'] +
                                 '"><i class="fa fa-times"></i></button>';
-                        } else if (full['status'] == 1 && full['confirm'] == 1) {
+                        } else if (full['status'] == 1 && full['confirm'] == 1 && editcheck==1) {
                             button +=
                                 '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Confirmed"  id="' +
                                 full['idtbl_customer_order'] +
@@ -713,7 +713,7 @@ include "include/topnavbar.php";
                         }
 
                         if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == null) {
+                                'dispatchissue'] == null && editcheck==1) {
                             button +=
                                 '<button class="btn btn-warning btn-sm btnDispatch mr-1" data-toggle="tooltip" data-placement="bottom" title="Dispatch Order" name="' +
                                 full['confirm'] +
@@ -721,7 +721,7 @@ include "include/topnavbar.php";
                                 full['idtbl_customer_order'] +
                                 '"><i class="fa fa-paper-plane"></i></button>';
                         } else if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1) {
+                                'dispatchissue'] == 1 && editcheck==1) {
                             button +=
                                 '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Dispatched"  id="' +
                                 full['idtbl_customer_order'] +
@@ -729,7 +729,7 @@ include "include/topnavbar.php";
                         }
 
                         if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1 && full['delivered'] == null) {
+                                'dispatchissue'] == 1 && full['delivered'] == null && editcheck==1) {
                             button +=
                                 '<button class="btn btn-warning btn-sm btnDeliver mr-1" data-toggle="tooltip" data-placement="bottom" title="Deliver Order" name="' +
                                 full['confirm'] +
@@ -737,7 +737,7 @@ include "include/topnavbar.php";
                                 full['idtbl_customer_order'] +
                                 '"><i class="fa fa-truck"></i></button>';
                         } else if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1 && full['delivered'] == 1) {
+                                'dispatchissue'] == 1 && full['delivered'] == 1 && editcheck==1) {
                             button +=
                                 '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Delivered"  id="' +
                                 full['idtbl_customer_order'] +
