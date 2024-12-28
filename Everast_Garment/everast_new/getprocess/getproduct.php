@@ -3,7 +3,7 @@ require_once('../connection/db.php');
 
 $record=$_POST['recordID'];
 
-$sql="SELECT * FROM `tbl_product` WHERE `idtbl_product`='$record'";
+$sql="SELECT * FROM `tbl_product` LEFT JOIN `tbl_product_category` ON (`tbl_product_category`.`idtbl_product_category` = `tbl_product`.`tbl_product_category_idtbl_product_category`) WHERE `idtbl_product`='$record'";
 $result=$conn->query($sql);
 $row=$result->fetch_assoc();
 
@@ -30,6 +30,7 @@ $obj->commonname=$row['common_name'];
 $obj->size=$row['tbl_sizes_idtbl_sizes'];
 $obj->sizecategory=$row['tbl_size_categories_idtbl_size_categories'];
 $obj->uom=$row['uom'];
+$obj->category=$row['category'];
 
 echo json_encode($obj);
 ?>

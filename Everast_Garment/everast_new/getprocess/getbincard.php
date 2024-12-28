@@ -32,6 +32,18 @@ $sqlgrn = "SELECT * FROM (
         `stk`.`tbl_product_idtbl_product` = '$item'
     
     UNION
+
+    SELECT 
+        `adj`.`idtbl_stock_adjustment` AS `id`,
+        `adj`.`adjustqty` AS `quantity`,
+        `adj`.`insertdatetime` AS `date`,
+        'Adjustment' AS `source`
+    FROM 
+        `tbl_stock_adjustment` AS `adj` 
+    WHERE 
+        `adj`.`tbl_product_idtbl_product` = '$item'
+    
+    UNION
     
     SELECT 
         `po`.`idtbl_porder_detail` AS `id`,
@@ -85,6 +97,9 @@ $sumstockqty = 0;
 $sumgrnqty = 0;
 $poqty = 0;
 $sumrtnqty = 0;
+
+$sumadjustment=0;
+$sumadjustmentminus=0;
 ?>
 <style>
     .circle1 {
@@ -137,6 +152,16 @@ $sumrtnqty = 0;
         justify-content: center;
         margin-top: 4px;
     }
+    .circle6 {
+        width: 10px;
+        height: 10px;
+        background-color: #8c24e3;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 4px;
+    }
     .txt{
         margin-left: 4px;
         font-size: 12px;
@@ -176,6 +201,9 @@ $sumrtnqty = 0;
                                                 $sumgrn += $rowgrn['quantity'];
                                             } elseif ($rowgrn['source'] == 'Return') {
                                                 $sumrtn += $rowgrn['quantity'];
+                                            }elseif ($rowgrn['source'] == 'Adjustment') {
+                                                $sumadjustment += $rowgrn['quantity'];
+                                                $sumadjustmentminus += $rowgrn['quantity'];
                                             }
 
                                         ?>
@@ -188,6 +216,8 @@ $sumrtnqty = 0;
                                                         echo $rowgrn['quantity'] . "<span class='text-warning'><b> (+" . $sumgrnqty . ")</b></span>";
                                                     } elseif ($rowgrn['source'] == 'Return') {
                                                         echo $rowgrn['quantity'] . "<span class='text-danger'><b> (+" . $sumrtnqty . ")</b></span>";
+                                                    } elseif ($rowgrn['source'] == 'Adjustment') {
+                                                        echo $rowgrn['quantity'] . "<span class='text-danger'><b> (+" . $sumadjustment . ")</b></span>";
                                                     } else {
                                                         echo '';
                                                     } ?></td>
@@ -197,6 +227,8 @@ $sumrtnqty = 0;
                                                         echo $sumgrnqty + $rowgrn['quantity'];
                                                     } elseif ($rowgrn['source'] == 'Return') {
                                                         echo $sumrtnqty + $rowgrn['quantity'];
+                                                    } elseif ($rowgrn['source'] == 'Adjustment') {
+                                                        echo $sumadjustment + $rowgrn['quantity'];
                                                     } else {
                                                         echo '';
                                                     } ?></td>
@@ -205,6 +237,8 @@ $sumrtnqty = 0;
                                                     } elseif ($rowgrn['source'] == 'Stock') {
                                                         echo "<span class='text-primary'>-" . $sumpo . "</span>";
                                                         $sumpo = '';
+                                                    } elseif ($rowgrn['source'] == 'Adjustment') {
+                                                        echo "<span class='text-primary'>-" . $sumadjustmentminus . "</span>";
                                                     } ?></td>
 
 
@@ -219,6 +253,8 @@ $sumrtnqty = 0;
                                                         echo $sumgrn;
                                                     } elseif ($rowgrn['source'] == 'Return') {
                                                         echo $sumrtn;
+                                                    } elseif ($rowgrn['source'] == 'Adjustment') {
+                                                        echo $sumadjustmentminus;
                                                     }
                                                     $sumstockqty = $availstock;
                                                     $sumgrnqty = $sumgrn;
@@ -243,6 +279,9 @@ $sumrtnqty = 0;
                                 </div>
                                 <div class="container ml-1">
                                  <div class="d-flex"><div class="circle5"></div><div class="txt">Available Stock Qty</div></div>
+                                </div>
+                                <div class="container ml-1">
+                                 <div class="d-flex"><div class="circle6"></div><div class="txt">Adjustments</div></div>
                                 </div>
                             </div>
                         </div>

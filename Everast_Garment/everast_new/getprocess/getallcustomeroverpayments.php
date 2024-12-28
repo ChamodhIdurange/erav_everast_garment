@@ -25,7 +25,7 @@ if ($result->num_rows == 0) {
 $html = '<table class="table table-striped table-bordered table-sm small" id="reportTable">
     <thead>
         <tr>
-            <th>Invoice</th>
+            <th class="d-none">Invoice</th>
             <th class="text-right">Return Amount</th>
             <th class="text-right">Used Amount</th>
             <th class="text-right">Balance Amount</th>
@@ -41,18 +41,18 @@ while($row = $result->fetch_assoc()) {
     $notsettled = 'Not Settled';
     $totbalance += $row['baltotalamount'];
     $html .= '<tr>
-        <td>INV-' . $row['tbl_invoice_idtbl_invoice'] . '</td>
-        <td class="text-center">' . number_format($row['returnamount'], 2) . '</td>
-        <td class="text-center">' . number_format($row['payAmount'], 2) . '</td>
-        <td class="text-center">' . number_format($row['baltotalamount'], 2) . '</td>
-        <td class="text-center">' . ($row['settle'] != 1 ? $notsettled : $settled) . '</td>
+        <td class="d-none">INV-' . $row['tbl_invoice_idtbl_invoice'] . '</td>
+        <td class="text-right">' . number_format($row['returnamount'], 2) . '</td>
+        <td class="text-right">' . number_format($row['payAmount'], 2) . '</td>
+        <td class="text-right">' . number_format($row['baltotalamount'], 2) . '</td>
+        <td class="text-right">' . ($row['settle'] != 1 ? $notsettled : $settled) . '</td>
     </tr>';
 }
 
 $html .= '</tbody>
     <tfoot>
         <tr>
-            <td colspan="4" class="text-center"><strong>Total</strong></td>
+            <td colspan="3" class="text-center"><strong>Total</strong></td>
             <td class="text-center"><strong>' . number_format($totbalance, 2) . '</strong></td>
         </tr>
     </tfoot>

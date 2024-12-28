@@ -3,7 +3,7 @@ require_once('../connection/db.php');
 
 $record=$_POST['recordID'];
 
-$sql="SELECT `d`.`actualqty`, `d`.`idtbl_return_details`,`p`.`product_name`, `d`.`unitprice`, `d`.`qty`, `d`.`discount`, `d`.`total`, `r`.`tbl_invoice_idtbl_invoice` FROM `tbl_return` as `r` join `tbl_return_details` as `d` ON (`r`.`idtbl_return` = `d`.`tbl_return_idtbl_return`) JOIN `tbl_product` as `p` ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) WHERE `d`.`tbl_return_idtbl_return` = '$record'";
+$sql="SELECT `d`.`actualqty`, `d`.`idtbl_return_details`,`p`.`product_name`, `d`.`unitprice`, `d`.`qty`, `d`.`discount`, `d`.`total` FROM `tbl_return` as `r` join `tbl_return_details` as `d` ON (`r`.`idtbl_return` = `d`.`tbl_return_idtbl_return`) JOIN `tbl_product` as `p` ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) WHERE `d`.`tbl_return_idtbl_return` = '$record'";
 $result=$conn->query($sql);
 
 $sqlReturn = "SELECT `recieved_status`, `returntype` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
@@ -70,7 +70,6 @@ if($recievedStatus == 0){
         <thead>
             <tr>
                 <th>#</th>
-                <th>INV NO</th>
                 <th>Product</th>
                 <th class="text-right">Sale Price</th>
                 <th class="text-center">Qty</th>
@@ -85,7 +84,7 @@ if($recievedStatus == 0){
             <?php while($row=$result->fetch_assoc()){ ?>
             <tr>
                 <td><?php echo $row['idtbl_return_details'] ?></td>
-                <td>INV-<?php echo $row['tbl_invoice_idtbl_invoice'] ?></td>
+                <td class="d-none"></td>
                 <td><?php echo $row['product_name'] ?></td>
                 <td class="text-right">Rs.<?php echo number_format($row['unitprice'], 2) ?></td>
                 <td class="text-center"><?php echo $row['qty'] ?></td>

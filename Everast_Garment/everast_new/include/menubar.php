@@ -250,6 +250,12 @@ else if ($lastElement == 'productinvoicesreport.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 49, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 49, 4);
 }
+else if ($lastElement == 'stockadjustment.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 50, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 50, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 50, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 50, 4);
+}
 
 function checkprivilege($arraymenu, $menuID, $type)
 {
@@ -386,7 +392,13 @@ function checkprivilege($arraymenu, $menuID, $type)
                         <div class="nav-link-icon"><i data-feather="archive"></i></div>
                         Customer Porder
                     </a>
-                    <?php }
+                <?php }
+                    if (menucheck($menuprivilegearray, 50) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="stockadjustment.php">
+                        <div class="nav-link-icon"><i data-feather="git-merge"></i></div>
+                        Stock Adjustmen
+                    </a>
+                <?php }
                 if (menucheck($menuprivilegearray, 18) == 1 | menucheck($menuprivilegearray, 19) == 1 | menucheck($menuprivilegearray, 20) == 1 | menucheck($menuprivilegearray, 21) == 1 | menucheck($menuprivilegearray, 22) == 1) { ?>
                 <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseinvoice" aria-expanded="false" aria-controls="collapseinvoice">
                     <div class="nav-link-icon"><i data-feather="file"></i></div>

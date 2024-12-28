@@ -1,12 +1,9 @@
 <?php
 include "include/header.php";
 
-$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1)";
+$sqlreturncustomer = "SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`, `ua`.`name`, `u`.`acceptance_status` FROM `tbl_return` as `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`)  WHERE `u`.`acceptance_status` IN (0,1)";
 $resultreturncustomer = $conn->query($sqlreturncustomer);
 
-
-// $sqlreturncustomerdetails="SELECT `u`.`idtbl_return`, `u`.`returndate`, `u`.`total`,`ua`.`name` FROM `tbl_return` AS `u` LEFT JOIN `tbl_invoice` AS `ia` ON (`ia`.`idtbl_invoice` = `u`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `ia`.`tbl_customer_idtbl_customer`)  LEFT JOIN `tbl_supplier` AS `us` ON (`us`.`idtbl_supplier` = `u`.`tbl_supplier_idtbl_supplier`) WHERE `u`.`acceptance_status` = '0' and `u`.`returntype` = '3'";
-// $resultreturncustomerdetails =$conn-> query($sqlreturncustomerdetails);
 
 
 include "include/topnavbar.php";

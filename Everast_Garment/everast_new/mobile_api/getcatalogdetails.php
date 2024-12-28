@@ -3,8 +3,6 @@
 require_once('dbConnect.php');
 
 $id = $_POST['catalogcategoryid'];
-//$id = 28;
-
 
 $sql_product_details = "
 SELECT 
