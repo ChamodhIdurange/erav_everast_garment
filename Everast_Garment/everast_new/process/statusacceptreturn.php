@@ -21,7 +21,7 @@ $sqlgetqty = "SELECT `qty`, `tbl_product_idtbl_product` FROM `tbl_return_details
 $resultsqlgetqty = $conn->query($sqlgetqty);
 
 $sql = "UPDATE `tbl_return` SET `acceptance_status`='1',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_return`='$record'";
-$batchNo = "RTCH" . $currentDate . $record;
+$batchNo = "RTH" . $currentDate . $record;
 
 if ($conn->query($sql) == true) {
     if ($type == 1) {

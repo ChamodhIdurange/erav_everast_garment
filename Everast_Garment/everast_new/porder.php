@@ -7,6 +7,8 @@ $result =$conn-> query($sql);
 $sqlcommonnames="SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames =$conn-> query($sqlcommonnames); 
 
+$sqlsupplier="SELECT `idtbl_supplier`, `suppliername` FROM `tbl_supplier` WHERE `status`=1";
+$resultsupplier=$conn->query($sqlsupplier);
 
 include "include/topnavbar.php"; 
 ?>
@@ -14,6 +16,7 @@ include "include/topnavbar.php";
     .tableprint {
         table-layout: fixed;
     }
+
     .porder-modal {
         max-width: 1000px;
     }
@@ -40,11 +43,12 @@ include "include/topnavbar.php";
                         <div class="row">
                             <div class="col-12">
                                 <div class="row">
-                                <div class="col">
-                                    <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right" id="btnordercreate">
-                                        <i class="fas fa-plus"></i>&nbsp;Create Purchasing Order
-                                    </button>
-                                </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
+                                            id="btnordercreate">
+                                            <i class="fas fa-plus"></i>&nbsp;Create Purchasing Order
+                                        </button>
+                                    </div>
                                 </div>
                                 <hr>
                                 <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
@@ -95,26 +99,26 @@ include "include/topnavbar.php";
                                 </div>
                                 <div class="col-3">
                                     <label class="small font-weight-bold text-dark">Common name*</label>
-                                    <select class="form-control form-control-sm" name="productcommonname" id="productcommonname">
+                                    <select class="form-control form-control-sm" name="productcommonname"
+                                        id="productcommonname">
                                         <option value="">Select</option>
                                         <?php if($resultcommonnames->num_rows > 0) { while ($rowcommonname = $resultcommonnames->fetch_assoc()) { ?>
-                                            <option value="<?php echo $rowcommonname['common_name'] ?>">
-                                                <?php echo $rowcommonname['common_name'] ?>
-                                            </option>
+                                        <option value="<?php echo $rowcommonname['common_name'] ?>">
+                                            <?php echo $rowcommonname['common_name'] ?>
+                                        </option>
                                         <?php }} ?>
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label class="small font-weight-bold text-dark">Supplier</label>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" id="suppliername" name="suppliername"
-                                            class="form-control form-control-sm" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                <label class="d-none small font-weight-bold text-dark">Supplier Id</label>
-                                        <input type="hidden" id="supplierId" name="supplierId"
-                                            class="form-control form-control-sm" readonly>
+                                    <label class="small font-weight-bold text-dark">Supplier Id</label>
+                                    <select class="form-control form-control-sm" name="supplierId" id="supplierId"
+                                        required>
+                                        <option value="">Select</option>
+                                        <?php if($resultsupplier->num_rows > 0) {while ($rowcategory = $resultsupplier-> fetch_assoc()) { ?>
+                                        <option value="<?php echo $rowcategory['idtbl_supplier'] ?>">
+                                            <?php echo $rowcategory['suppliername'] ?></option>
+                                        <?php }} ?>
+                                    </select>
                                 </div>
                             </div>
                             <input type="hidden" name="unitprice" id="unitprice" value="">
@@ -124,21 +128,21 @@ include "include/topnavbar.php";
                 <div class="row mt-5">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                <table class="table table-striped table-bordered table-sm small" id="tableorder">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 100px;">Product</th>
-                                            <th class="d-none" style="width: 100px;">ProductID</th>
-                                            <th class="text-center" style="width: 50px;">Unit Price</th>
-                                            <th class="text-center" style="width: 50px;">Sale Price</th>
-                                            <th class="text-center" style="width: 50px;">Qty</th>
-                                            <th class="d-none" style="width: 100px;">HideTotal</th>
-                                            <th class="text-right" style="width: 100px;">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody"></tbody>
-                                </table>
-                            </div>
+                            <table class="table table-striped table-bordered table-sm small" id="tableorder">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 100px;">Product</th>
+                                        <th class="d-none" style="width: 100px;">ProductID</th>
+                                        <th class="text-center" style="width: 50px;">Unit Price</th>
+                                        <th class="text-center" style="width: 50px;">Sale Price</th>
+                                        <th class="text-center" style="width: 50px;">Qty</th>
+                                        <th class="d-none" style="width: 100px;">HideTotal</th>
+                                        <th class="text-right" style="width: 100px;">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody"></tbody>
+                            </table>
+                        </div>
                         <div class="row">
                             <div class="col-7 text-right">
                                 <h1 class="font-weight-600">Total</h1>
@@ -218,9 +222,15 @@ include "include/topnavbar.php";
                     <tbody></tbody>
                 </table>
                 <div class="row">
-                    <div class="col-12 text-right"><h1 class="font-weight-600" id="divtotalview">Rs. 0.00</h1></div>
-                    <div class="col-12"><h6 class="title-style"><span>Remark Information</span></h6></div>
-                    <div class="col-12"><div id="remarkview"></div></div>
+                    <div class="col-12 text-right">
+                        <h1 class="font-weight-600" id="divtotalview">Rs. 0.00</h1>
+                    </div>
+                    <div class="col-12">
+                        <h6 class="title-style"><span>Remark Information</span></h6>
+                    </div>
+                    <div class="col-12">
+                        <div id="remarkview"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,7 +250,8 @@ include "include/topnavbar.php";
                 <div id="viewdispatchprint"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger btn-sm fa-pull-right" id="btnorderprint"><i class="fas fa-print"></i>&nbsp;Print Order</button>
+                <button class="btn btn-danger btn-sm fa-pull-right" id="btnorderprint"><i
+                        class="fas fa-print"></i>&nbsp;Print Order</button>
             </div>
         </div>
     </div>
@@ -248,21 +259,21 @@ include "include/topnavbar.php";
 
 <?php include "include/footerscripts.php"; ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $('body').tooltip({
             selector: '[data-toggle="tooltip"]'
         });
         $('[data-toggle="tooltip"]').tooltip({
-            trigger : 'hover'
+            trigger: 'hover'
         });
 
-        var addcheck='<?php echo $addcheck; ?>';
-        var editcheck='<?php echo $editcheck; ?>';
-        var statuscheck='<?php echo $statuscheck; ?>';
-        var deletecheck='<?php echo $deletecheck; ?>';
+        var addcheck = '<?php echo $addcheck; ?>';
+        var editcheck = '<?php echo $editcheck; ?>';
+        var statuscheck = '<?php echo $statuscheck; ?>';
+        var deletecheck = '<?php echo $deletecheck; ?>';
 
-        $('#dataTable').DataTable( {
+        $('#dataTable').DataTable({
             "destroy": true,
             "processing": true,
             "serverSide": true,
@@ -270,9 +281,10 @@ include "include/topnavbar.php";
                 url: "scripts/porderlist.php",
                 type: "POST", // you can use GET
             },
-            "order": [[ 0, "desc" ]],
-            "columns": [
-                {
+            "order": [
+                [0, "desc"]
+            ],
+            "columns": [{
                     "data": "idtbl_porder"
                 },
                 {
@@ -288,8 +300,9 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        return parseFloat(full['nettotal']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    "render": function (data, type, full) {
+                        return parseFloat(full['nettotal']).toFixed(2).replace(
+                            /\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
 
@@ -297,28 +310,26 @@ include "include/topnavbar.php";
                     "targets": -1,
                     "className": 'text-center',
                     "data": null,
-                    "render": function(data, type, full) {
+                    "render": function (data, type, full) {
                         var html = '';
-                        if(full['confirmstatus']==1){
-                            html+='<i class="fas fa-check text-success"></i>&nbsp;Confirm';
+                        if (full['confirmstatus'] == 1) {
+                            html += '<i class="fas fa-check text-success"></i>&nbsp;Confirm';
+                        } else if (full['confirmstatus'] == 2) {
+                            html += '<i class="fas fa-times text-danger"></i>&nbsp;Cancelled';
+                        } else {
+                            html += '<i class="fas fa-times text-danger"></i>&nbsp;Not Confirm';
                         }
-                        else if(full['confirmstatus']==2){
-                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Cancelled';
-                        }
-                        else{
-                            html+='<i class="fas fa-times text-danger"></i>&nbsp;Not Confirm';
-                        }
-                        return html;     
+                        return html;
                     }
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
-                    "render": function(data, type, full) {
-                        var button='';
+                    "render": function (data, type, full) {
+                        var button = '';
                         button +=
-                        '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
+                            '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
                             full['idtbl_porder'] + '" ';
                         if (full['confirmstatus'] == 0 | full['confirmstatus'] == 2) {
                             button += 'disabled';
@@ -333,32 +344,54 @@ include "include/topnavbar.php";
                             '" data-toggle="tooltip" data-placement="bottom" title="View Order" id="' +
                             full['idtbl_porder'] + '"><i class="far fa-eye"></i></button>';
 
+                        if (full['confirmstatus'] == 1 && statuscheck == 1) {
+                            button += '<button class="btn btn-outline-success btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-check"></i></button>';
+                        } else if (full['confirmstatus'] == 0 && statuscheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusporder.php?record=' +
+                                full['idtbl_porder'] +
+                                '&type=1"  data-actiontype="5" title="Confirm Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="' +
+                                full['idtbl_porder'] +
+                                '"><i class="fas fa-times"></i></button>';
+                        }
 
-                        if(full['completestatus']==1 && statuscheck==1){
-                            button+='<button class="btn btn-outline-yellow btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"  data-toggle="tooltip" data-placement="bottom" title="Complete Order"><i class="fas fa-check-circle"></i></button>';                         
-                        }
-                        else if(full['completestatus']==0 && statuscheck==1){
-                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=8"  data-actiontype="5" title="Complete Order" class="btn btn-outline-pink btntableaction btn-sm mr-1" id="'+full['idtbl_porder']+'"><i class="fas fa-times"></i></button>';
-                        }
-                        
-                        if(full['completestatus']==1 && statuscheck==1){
-                            button+='<button class="btn btn-outline-success btn-sm mr-1 ';if(statuscheck==0){button+='d-none';}button+='"><i class="fas fa-check"></i></button>';
-                        }
-                        else if(full['completestatus']==1 && statuscheck==0){
-           
-                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=1"  data-actiontype="6" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_porder']+'"><i class="fas fa-times"></i></button>';
+                        if (full['confirmstatus'] == 1 && full['completestatus'] == 1 && statuscheck == 1) {
+                            button += '<button class="btn btn-outline-success btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button +=
+                                '"  data-toggle="tooltip" data-placement="bottom" title="Complete Order"><i class="fas fa-check-circle"></i></button>';
+                        } else if (full['confirmstatus'] == 1 && full['completestatus'] == 0 && statuscheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusporder.php?record=' +
+                                full['idtbl_porder'] +
+                                '&type=8"  data-actiontype="6" title="Complete Order" class="btn btn-outline-pink btntableaction btn-sm mr-1" id="' +
+                                full['idtbl_porder'] +
+                                '"><i class="fas fa-times"></i></button>';
                         }
 
-                        if(deletecheck==1){
-                            button+='<button type="button" data-url="process/statusporder.php?record='+full['idtbl_porder']+'&type=2"  data-actiontype="3" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_porder']+'"><i class="far fa-trash-alt"></i></button>';
+                      
+
+                        if (deletecheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusporder.php?record=' +
+                                full['idtbl_porder'] +
+                                '&type=2"  data-actiontype="3" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="' +
+                                full['idtbl_porder'] +
+                                '"><i class="far fa-trash-alt"></i></button>';
                         }
-                       
-                        
+
+
                         return button;
                     }
                 }
             ]
-        } );
+        });
         $('.dpd1a').datepicker({
             uiLibrary: 'bootstrap4',
             autoclose: 'true',
@@ -367,26 +400,7 @@ include "include/topnavbar.php";
             format: 'yyyy-mm-dd'
         });
 
-        $('#productcommonname').change(function() {
-                var commonName = $(this).val();
-                if (commonName) {
-                    $.ajax({
-                        url: 'getprocess/get_supplier.php',
-                        type: 'POST',
-                        data: { common_name: commonName },
-                        success: function(response) {
-                            var data = JSON.parse(response);
-                            $('#suppliername').val(data.suppliername);
-                            $('#supplierId').val(data.idtbl_supplier);
-                        }
-                    });
-                } else {
-                    $('#suppliername').val('');
-                    $('#supplierId').val('');
-                }
-            });
-
-            $('#dataTable tbody').on('click', '.btnView', function () {
+        $('#dataTable tbody').on('click', '.btnView', function () {
             var id = $(this).attr('id');
             $.ajax({
                 type: "POST",
@@ -417,7 +431,7 @@ include "include/topnavbar.php";
             });
         });
 
-            $('#dataTable tbody').on('click', '.btnprint', function () {
+        $('#dataTable tbody').on('click', '.btnprint', function () {
             var id = $(this).attr('id');
             $.ajax({
                 type: "POST",
@@ -436,7 +450,7 @@ include "include/topnavbar.php";
             $('#tableorderview > tbody').html('');
         });
 
-        document.getElementById('btnorderprint').addEventListener ("click", print);
+        document.getElementById('btnorderprint').addEventListener("click", print);
 
         // Create order part
         $('#productcommonname').change(function () {
@@ -461,9 +475,13 @@ include "include/topnavbar.php";
                             if (index !== 'vat') {
                                 tableBody.append('<tr>' +
                                     '<td>' + product.product_name + '</td>' +
-                                    '<td class="d-none">' + product.idtbl_product + '</td>' +
-                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="unitprice[]" value="' + addCommas(parseFloat(product.unitprice).toFixed(2)) + '"></td>' +
-                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="0"></td>' +
+                                    '<td class="d-none">' + product
+                                    .idtbl_product + '</td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="unitprice[]" value="' +
+                                    addCommas(parseFloat(product.unitprice)
+                                        .toFixed(2)) + '"></td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="' +
+                                    product.saleprice + '"></td>' +
                                     '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
                                     '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
                                     '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td>' +
@@ -471,8 +489,10 @@ include "include/topnavbar.php";
                             }
 
                             $('.input-integer').on('input', function () {
-                                var inputValue = $(this).val().replace(/\D/g, '');
-                                if (inputValue === '' || inputValue === '0') {
+                                var inputValue = $(this).val().replace(
+                                    /\D/g, '');
+                                if (inputValue === '' || inputValue ===
+                                    '0') {
                                     $(this).val('');
                                 } else {
                                     $(this).val(inputValue);
@@ -559,20 +579,20 @@ include "include/topnavbar.php";
 
             var orderDetails = [];
             $('#tableBody tr').each(function () {
-            var productId = $(this).find('td:eq(1)').text();
-            var unitprice = $(this).find('td:eq(2) input').val();
-            var saleprice = $(this).find('input[name^="saleprice"]').val();
-            var newQty = $(this).find('input[name^="new_quantity"]').val();
-            var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
+                var productId = $(this).find('td:eq(1)').text();
+                var unitprice = $(this).find('td:eq(2) input').val();
+                var saleprice = $(this).find('input[name^="saleprice"]').val();
+                var newQty = $(this).find('input[name^="new_quantity"]').val();
+                var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
 
 
-            orderDetails.push({
-                productId: productId,
-                unitPrice: unitprice,
-                saleprice: saleprice,
-                newQty: newQty
+                orderDetails.push({
+                    productId: productId,
+                    unitPrice: unitprice,
+                    saleprice: saleprice,
+                    newQty: newQty
+                });
             });
-        });
 
             // Send data to the server
             $.ajax({
@@ -589,9 +609,10 @@ include "include/topnavbar.php";
                     supplierId: supplierId,
                     orderDetails: orderDetails
                 },
-                success: function(result) {
+                success: function (result) {
                     $('#modalcreateorder').modal('hide');
-                    action(JSON.stringify(result)); // Convert the object to a JSON-formatted string
+                    action(JSON.stringify(
+                        result)); // Convert the object to a JSON-formatted string
                     // Optionally reload the page after a delay or user interaction
                     // setTimeout(function() { location.reload(); }, 2000); // Reload after 2 seconds
                     location.reload();
@@ -661,7 +682,7 @@ include "include/topnavbar.php";
         });
     }
 
-    function addCommas(nStr){
+    function addCommas(nStr) {
         nStr += '';
         x = nStr.split('.');
         x1 = x[0];
@@ -680,11 +701,12 @@ include "include/topnavbar.php";
     function delete_confirm() {
         return confirm("Are you sure you want to remove this?");
     }
+
     function allcustomer_confirm() {
         return confirm("Are you sure you want to complete this order?");
     }
 
-    function datepickercloneload(){
+    function datepickercloneload() {
         $('.dpd1a').datepicker({
             uiLibrary: 'bootstrap4',
             autoclose: 'true',
@@ -693,6 +715,5 @@ include "include/topnavbar.php";
             format: 'yyyy-mm-dd'
         });
     }
-
 </script>
 <?php include "include/footer.php"; ?>

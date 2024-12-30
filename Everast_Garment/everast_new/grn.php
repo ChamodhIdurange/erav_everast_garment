@@ -10,10 +10,17 @@ $rowGrnNum=$resultGrnNum->fetch_assoc();
 $numRowsGrnNum=mysqli_num_rows($resultGrnNum);
 $numRowsGrnNum=$rowGrnNum['idtbl_grn']+1;
 $grnid=$numRowsGrnNum;
-if($numRowsGrnNum>0){$GRNNum="GRN-".($numRowsGrnNum);}else{$GRNNum="GRN-1";}
 
+if($numRowsGrnNum>0){$GRNNum="GRN-".($numRowsGrnNum);}else{$GRNNum="GRN-1";}
+if($numRowsGrnNum>0){$grnno=$numRowsGrnNum;}else{$grnno=1;}
+
+$month = date('m');
+$year = substr(date('y'), -2);;
 $currentDate = date('mdY');
-$batchNo = "BTCH" . $currentDate . $grnid;
+
+// $batchNo = "BTCH" . $currentDate . $grnid;
+$batchNo = "BTH".$year.$month.sprintf('%04s', $grnno);
+
 
 $sqlorder="SELECT `idtbl_porder` FROM `tbl_porder` WHERE `status`=1 AND `confirmstatus`=1  AND `grnissuestatus` = 0";
 $resultorder =$conn-> query($sqlorder); 
@@ -308,7 +315,7 @@ include "include/topnavbar.php";
                         var html = '';
                         if (full['confirm_status'] == 0) {
                             html +=
-                            '<i class="fas fa-times text-danger"></i>&nbsp;Not Approved';
+                                '<i class="fas fa-times text-danger"></i>&nbsp;Not Approved';
                         } else {
                             html +=
                                 '<i class="fas fa-check text-success"></i>&nbsp;Approved GRN';
@@ -347,30 +354,38 @@ include "include/topnavbar.php";
                             '" data-toggle="tooltip" data-placement="bottom" title="View Order" id="' +
                             full['idtbl_grn'] + '"><i class="far fa-eye"></i></button>';
 
-                        if (full['transferstatus'] == 1 && statuscheck == 1) {
-                            button +=
-                                '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
-                        } else if (full['transferstatus'] == 0 && statuscheck == 1) {
-                            button+='<button type="button" data-url="process/grnstocktransfer.php?record=' + full[
+                        if (full['confirm_status'] == 1) {
+                            button += '<button class="btn btn-outline-success btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-check"></i></button>';
+                        } else {
+                            button += '<a href="process/statusgrn.php?record=' + full[
                                     'idtbl_grn'] +
-                                '"  data-actiontype="7" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="'+full['idtbl_grn']+'"><i class="fas fa-exchange-alt"></i></button>';
+                                '&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';
+                            if (statuscheck == 0) {
+                                button += 'd-none';
+                            }
+                            button += '"><i class="fas fa-times"></i></a>';
                         }
 
-                        // if (full['confirm_status'] == 1) {
-                        //     button += '<button class="btn btn-outline-success btn-sm mr-1 ';
-                        //     if (statuscheck == 0) {
-                        //         button += 'd-none';
-                        //     }
-                        //     button += '"><i class="fas fa-check"></i></button>';
-                        // } else {
-                        //     button += '<a href="process/statusgrn.php?record=' + full[
-                        //             'idtbl_grn'] +
-                        //         '&type=1" data-toggle="tooltip" data-placement="bottom" title="Confirm GRN" onclick="return order_confirm()" target="_self" class="btn btn-outline-orange btn-sm mr-1 ';
-                        //     if (statuscheck == 0) {
-                        //         button += 'd-none';
-                        //     }
-                        //     button += '"><i class="fas fa-times"></i></a>';
-                        // }
+                        if (full['confirm_status'] == 1 && full['transferstatus'] == 1 &&
+                            statuscheck == 1) {
+                            button +=
+                                '<button class="btn btn-outline-secondary btn-sm mr-1" disabled><i class="fas fa-exchange-alt"></i></button>';
+                        } else if (full['confirm_status'] == 1 && full['transferstatus'] == 0 &&
+                            statuscheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/grnstocktransfer.php?record=' +
+                                full[
+                                    'idtbl_grn'] +
+                                '"  data-actiontype="7" title="Complete Order" class="btn btn-outline-orange btn-sm mr-1 btntableaction" id="' +
+                                full['idtbl_grn'] +
+                                '"><i class="fas fa-exchange-alt"></i></button>';
+                        }
+
+
 
                         return button;
                     }

@@ -38,18 +38,18 @@ include "include/topnavbar.php";
                             <div class="col-12">
                                 <form action="process/productprocess.php" method="post" autocomplete="off"  enctype="multipart/form-data">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 d-none">
                                             <div class="form mb-1">
-
                                                 <label class="small font-weight-bold text-dark">Supplier Name*</label>
-                                                <select class="form-control form-control-sm" name="supplier"
-                                                    id="supplier" required>
+                                                    <input type="text" name="supplier" id="supplier" value="1" required >
+                                                <!-- <select class="form-control form-control-sm" name="supplier"
+                                                    id="supplier" value="2" required>
                                                     <option value="">Select</option>
                                                     <?php if($resultsupplier->num_rows > 0) {while ($rowcategory = $resultsupplier-> fetch_assoc()) { ?>
                                                     <option value="<?php echo $rowcategory['idtbl_supplier'] ?>">
                                                         <?php echo $rowcategory['suppliername'] ?></option>
                                                     <?php }} ?>
-                                                </select>
+                                                </select> -->
                                             </div>
                                         </div>
                                         <div class="col-md-4">

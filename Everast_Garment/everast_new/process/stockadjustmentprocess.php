@@ -12,6 +12,8 @@ $productID=$_POST['hiddenproductid'];
 $remarks=$_POST['remarks'];
 $adjustqty=$_POST['adjustqty'];
 $adjustmenttype=$_POST['adjustmenttype'];
+$productunitprice=$_POST['productunitprice'];
+$productsaleprice=$_POST['productsaleprice'];
 
 $sql = "SELECT MAX(idtbl_stock_adjustment) AS lastid FROM tbl_stock_adjustment";
 $result = $conn->query($sql);
@@ -24,10 +26,10 @@ if ($result->num_rows > 0) {
     $nextid = 1;
 }
 
-$batchNo = $year.$month.sprintf('%04s', $nextid);
+$batchNo = "ADJ".$year.$month.sprintf('%04s', $nextid);
 
 if($adjustmenttype == 1){
-    $insertstock="INSERT INTO `tbl_stock` (`batchqty`, `qty`, `update`, `status`, `batchno`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `insertdatetime`) VALUES ('$adjustqty', '$adjustqty', '$updatedatetime', '1', '$batchNo', '$updatedatetime', '$userID', '$productID', '$updatedatetime')";
+    $insertstock="INSERT INTO `tbl_stock` (`batchqty`, `qty`, `unitprice`, `saleprice`, `update`, `status`, `batchno`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `insertdatetime`) VALUES ('$adjustqty', '$adjustqty', '$productunitprice', '$productsaleprice', '$updatedatetime', '1', '$batchNo', '$updatedatetime', '$userID', '$productID', '$updatedatetime')";
     if($conn->query($insertstock)==true){        
 
         $insertadjustment="INSERT INTO `tbl_stock_adjustment` (`adjustmenttype`, `adjustqty`, `remarks`, `status`, `batchnumbers`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`) VALUES ('$adjustmenttype', '$adjustqty', '$remarks', '1', '$batchNo', '$updatedatetime', '$userID', '$productID')";
@@ -51,12 +53,12 @@ if($adjustmenttype == 1){
     $usedBatches = [$stockbatch];
 
     while($batchqty < $adjustqty){
-        $updatestock="UPDATE `tbl_stock` SET `qty`=0 WHERE `tbl_product_idtbl_product`='$product' AND `batchno` = '$stockbatch'";
+        $updatestock="UPDATE `tbl_stock` SET `qty`=0 WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
         $conn->query($updatestock);
             
         $adjustqty = $adjustqty - $batchqty;
             
-        $regetstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$product' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
+        $regetstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$productID' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
         $reresult =$conn-> query($regetstock); 
         $restockdata = $reresult-> fetch_assoc();
             
@@ -69,9 +71,8 @@ if($adjustmenttype == 1){
             break;
         }
     }
-                    // echo $adjustqty;
             
-    $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$adjustqty') WHERE `tbl_product_idtbl_product`='$product' AND `batchno` = '$stockbatch'";
+    $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$adjustqty') WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
     $conn->query($updatestock);
 
     $batchNumbersString = implode(", ", $usedBatches);

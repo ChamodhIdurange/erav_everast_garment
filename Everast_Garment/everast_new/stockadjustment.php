@@ -79,8 +79,7 @@ include "include/topnavbar.php";
                                                 <div class="input-group input-group-sm" required>
                                                     <select class="form-control form-control-sm" style="width: 100%;"
                                                         name="adjustmenttype" id="adjustmenttype">
-                                                        <option value="">Select</option>
-                                                        <option value="1">(+) Add Stock</option>
+                                                        <option value="1" selected>(+) Add Stock</option>
                                                         <option value="2">(-) Deduct Stock</option>
                                                     </select>
                                                 </div>
@@ -90,6 +89,18 @@ include "include/topnavbar.php";
                                             <label class="small font-weight-bold text-dark">Adjust Qty*</label>
                                             <input type="number" class="form-control form-control-sm" name="adjustqty"
                                                 id="adjustqty" required>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="divunitprice">
+                                        <div class="col">
+                                            <label class="small font-weight-bold text-dark">Unit Price*</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                name="productunitprice" id="productunitprice">
+                                        </div>
+                                        <div class="col">
+                                            <label class="small font-weight-bold text-dark">Retail Price*</label>
+                                            <input type="number" class="form-control form-control-sm"
+                                                name="productsaleprice" id="productsaleprice">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -117,6 +128,9 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function () {
+        $('#divunitprice').removeClass('d-none');
+        $('#productunitprice').attr('required', true);
+        $('#productsaleprice').attr('required', true);
 
         $("#searchproduct").select2({
             ajax: {
@@ -139,7 +153,20 @@ include "include/topnavbar.php";
             }
         });
 
+        $('#adjustmenttype').change(function () {
+            var val = $(this).val()
 
+            if (val == 1) {
+                $('#divunitprice').removeClass('d-none');
+                $('#productunitprice').attr('required', true);
+                $('#productsaleprice').attr('required', true);
+
+            } else {
+                $('#divunitprice').addClass('d-none');
+                $('#productunitprice').attr('required', false);
+                $('#productsaleprice').attr('required', false);
+            }
+        })
         $('#searchproduct').change(function () {
             var productId = $(this).val();
             var productText = $(this).find(":selected").text();
@@ -169,20 +196,25 @@ include "include/topnavbar.php";
                     recordID: productId
                 },
                 url: 'getprocess/getstockadjustmentdata.php',
-                success: function (result) { console.log(result);
+                success: function (result) {
+                    console.log(result);
                     var obj = JSON.parse(result);
 
                     $('#dataTable > tbody:last').append(
-                        '<tr class="pointer"><td>' + productText  + '</td><td>' + obj.totqty  +
-                        '</td><td class="text-right">' + parseFloat(obj.avgunitprice).toFixed(2)  +
-                        '</td><td class="text-right">' + parseFloat(obj.avgsaleprice).toFixed(2)   +
-                        '</td><td class="text-right">' + parseFloat(obj.lastunitprice).toFixed(2)   +
-                        '</td><td>' + obj.lastdate  + '</td></tr>'
-                        
-                        
+                        '<tr class="pointer"><td>' + productText + '</td><td>' + obj
+                        .totqty +
+                        '</td><td class="text-right">' + parseFloat(obj.avgunitprice)
+                        .toFixed(2) +
+                        '</td><td class="text-right">' + parseFloat(obj.avgsaleprice)
+                        .toFixed(2) +
+                        '</td><td class="text-right">' + parseFloat(obj.lastunitprice)
+                        .toFixed(2) +
+                        '</td><td>' + obj.lastdate + '</td></tr>'
+
+
                     );
 
-                $('#dataTable').DataTable();
+                    $('#dataTable').DataTable();
 
                 }
             });
@@ -190,3 +222,4 @@ include "include/topnavbar.php";
     });
 </script>
 <?php include "include/footer.php"; ?>
+

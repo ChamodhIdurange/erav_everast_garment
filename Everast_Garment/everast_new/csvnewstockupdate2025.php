@@ -19,7 +19,7 @@ $total = 0;
 
 
 
-$batchNo = $year.$month.sprintf('%04s', '01');
+$batchNo = "BTH".$year.$month.sprintf('%04s', '0000');
 
 while (($line = fgetcsv($file2)) !== FALSE) {
     $x++;
@@ -36,7 +36,7 @@ while (($line = fgetcsv($file2)) !== FALSE) {
     $sqlupdate = "UPDATE `tbl_product` SET `saleprice` = '$retailPrice', `retail` = '$wholePrice', `unitprice` = '$unitPrice' WHERE `idtbl_product` = '$productId'";
     $conn->query($sqlupdate);
 
-    $insertstock="INSERT INTO `tbl_stock` (`batchqty`, `qty`, `update`, `status`, `batchno`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`) VALUES ('$qty', '$qty', '$updatedatetime', '1', '$batchNo', '$updatedatetime', '$userID', '$productId')";
+    $insertstock="INSERT INTO `tbl_stock` (`batchqty`, `qty`, `unitprice`, `saleprice`, `update`, `status`, `batchno`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`) VALUES ('$qty', '$qty', '$unitPrice', '$retailPrice', '$updatedatetime', '1', '$batchNo', '$updatedatetime', '$userID', '$productId')";
     $conn->query($insertstock);
 }
 

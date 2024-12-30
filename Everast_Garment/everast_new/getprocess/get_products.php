@@ -8,7 +8,7 @@ if (empty($commonName)) {
     exit();
 }
 
-$query = "SELECT `product_name`, `idtbl_product`, `unitprice` FROM `tbl_product` WHERE `common_name` = '$commonName' AND `status` = '1'";
+$query = "SELECT `product_name`, `idtbl_product`, `unitprice`, `saleprice` FROM `tbl_product` WHERE `common_name` = '$commonName' AND `status` = '1'";
 $result = mysqli_query($conn, $query);
 
 $sqlvat = "SELECT `idtbl_vat_info`, `vat` FROM `tbl_vat_info` ORDER BY `idtbl_vat_info` DESC LIMIT 1";
