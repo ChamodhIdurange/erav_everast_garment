@@ -60,7 +60,7 @@ include "include/topnavbar.php";
                             <div class="page-header-content py-3">
                                 <h1 class="page-header-title">
                                     <div class="page-header-icon"><i data-feather="archive"></i></div>
-                                    <span>Customer POrder</span>
+                                    <span>Customer Confirmed POrder</span>
                                 </h1>
                             </div>
                         </div>
@@ -565,7 +565,7 @@ include "include/topnavbar.php";
             "processing": true,
             "serverSide": true,
             ajax: {
-                url: "scripts/customerporderlist.php",
+                url: "scripts/customerconfirmedporderlist.php",
                 type: "POST", // you can use GET
             },
             "order": [
@@ -2118,6 +2118,5 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
-
 
 

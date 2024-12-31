@@ -45,7 +45,7 @@ $pono = $rowinvoiceinfo['cuspono'];
 // $resultpoID = $conn->query($sqlpoID);
 // $rowpoID = $resultpoID->fetch_assoc();
 
-$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_invoice_detail`.`qty`, `tbl_invoice_detail`.`saleprice` FROM `tbl_invoice_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_invoice_detail`.`tbl_product_idtbl_product` WHERE `tbl_invoice_detail`.`tbl_invoice_idtbl_invoice`='$recordID' AND `tbl_invoice_detail`.`status`=1";
+$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_invoice_detail`.`qty`, `tbl_invoice_detail`.`saleprice` FROM `tbl_invoice_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_invoice_detail`.`tbl_product_idtbl_product` WHERE `tbl_invoice_detail`.`tbl_invoice_idtbl_invoice`='$recordID' AND `tbl_invoice_detail`.`status`=1";
 $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
 $sqlinvoiceoutstanding = "SELECT `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`total`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_invoice`.`ref_id` WHERE `tbl_invoice`.`tbl_customer_idtbl_customer`='$customerID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_invoice`.`payment_created` IN (0,1) AND `tbl_invoice`.`idtbl_invoice` != '$recordID' Group BY `tbl_invoice`.`idtbl_invoice`";
@@ -145,7 +145,8 @@ $html = '
                 $html .= '
                     <tr>
                         <td style="width:2cm;">' . $rowinvoicedetail['idtbl_product'] . '</td>
-                        <td style="width:8.5cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:3.5cm;">' . $rowinvoicedetail['product_code'] . '</td>
+                        <td style="width:5.0cm;">' . $rowinvoicedetail['product_name'] . '</td>
                         <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">0.00</td>

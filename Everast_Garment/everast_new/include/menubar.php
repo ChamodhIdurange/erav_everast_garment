@@ -256,6 +256,24 @@ else if ($lastElement == 'stockadjustment.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 50, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 50, 4);
 }
+else if ($lastElement == 'customerconfirmedpo.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 51, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 51, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 51, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 51, 4);
+}
+else if ($lastElement == 'customerdispatchedpo.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 52, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 52, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 52, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 52, 4);
+}
+else if ($lastElement == 'customerdeliveredpo.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 53, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 53, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 53, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 53, 4);
+}
 
 function checkprivilege($arraymenu, $menuID, $type)
 {
@@ -288,281 +306,317 @@ function checkprivilege($arraymenu, $menuID, $type)
             <a class="nav-link p-0 px-3 py-2" href="locations.php">
                 <div class="nav-link-icon"><i data-feather="map-pin"></i></div>
                 <?php if (menucheck($menuprivilegearray, 4) == 1) { ?>
-                    Locations
+                Locations
             </a>
             <?php }
                 if (menucheck($menuprivilegearray, 7) == 1 | menucheck($menuprivilegearray, 8) == 1 | menucheck($menuprivilegearray, 27) == 1 | menucheck($menuprivilegearray, 28) == 1 | menucheck($menuprivilegearray, 29) == 1 | menucheck($menuprivilegearray, 30) == 1 | menucheck($menuprivilegearray, 47) == 1) { ?>
-                <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsemasterdata" aria-expanded="false" aria-controls="collapsemasterdata">
-                    <div class="nav-link-icon"><i class="fa fa-users" aria-hidden="true"></i></div>
-                    Master Data
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse <?php if ($lastElement == "supplier.php" | $lastElement == "customer.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "company.php" | $lastElement == "companybranch.php" | $lastElement == "salesmanager.php") {echo 'show';} ?>" id="collapsemasterdata" data-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 7) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="customer.php">Customer</a>
-                        <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsemasterdata" aria-expanded="false" aria-controls="collapsemasterdata">
+                <div class="nav-link-icon"><i class="fa fa-users" aria-hidden="true"></i></div>
+                Master Data
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "supplier.php" | $lastElement == "customer.php" | $lastElement == "employee.php" | $lastElement == "area.php" | $lastElement == "company.php" | $lastElement == "companybranch.php" | $lastElement == "salesmanager.php") {echo 'show';} ?>"
+                id="collapsemasterdata" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 7) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="customer.php">Customer</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 8) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="supplier.php">Supplier</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="supplier.php">Supplier</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 27) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="employee.php">Employee</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="employee.php">Employee</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 47) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="salesmanager.php">Sales Manager</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="salesmanager.php">Sales Manager</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 28) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="area.php">Area</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="area.php">Area</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 29) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="company.php">Company</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="company.php">Company</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 30) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="companybranch.php">Company Branch</a>
-                        <?php } ?>
-                    </nav>
-                </div>
+                    <a class="nav-link p-0 px-3 py-1" href="companybranch.php">Company Branch</a>
+                    <?php } ?>
+                </nav>
+            </div>
             <?php }
                 if (menucheck($menuprivilegearray, 9) == 1 | menucheck($menuprivilegearray, 10) == 1 | menucheck($menuprivilegearray, 11) == 1 | menucheck($menuprivilegearray, 12) == 1 | menucheck($menuprivilegearray, 13) == 1 | menucheck($menuprivilegearray, 14) == 1) { ?>
-                <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseproductdata" aria-expanded="false" aria-controls="collapseproductdata">
-                    <div class="nav-link-icon"><i data-feather="shopping-cart" aria-hidden="true"></i></div>
-                    Product Data
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse <?php if ($lastElement == "product.php" | $lastElement == "productcategory.php" | $lastElement == "groupcategory.php" | $lastElement == "subproductcategory.php" | $lastElement == "sizecategories.php" | $lastElement == "sizematrix.php") {echo 'show';} ?>" id="collapseproductdata" data-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 9) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="product.php">Product</a>
-                        <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseproductdata" aria-expanded="false" aria-controls="collapseproductdata">
+                <div class="nav-link-icon"><i data-feather="shopping-cart" aria-hidden="true"></i></div>
+                Product Data
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "product.php" | $lastElement == "productcategory.php" | $lastElement == "groupcategory.php" | $lastElement == "subproductcategory.php" | $lastElement == "sizecategories.php" | $lastElement == "sizematrix.php") {echo 'show';} ?>"
+                id="collapseproductdata" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 9) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="product.php">Product</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 10) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="productcategory.php">Category</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="productcategory.php">Category</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 11) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="groupcategory.php">Group Category</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="groupcategory.php">Group Category</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 12) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="subproductcategory.php">Sub Category</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="subproductcategory.php">Sub Category</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 13) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="sizecategories.php">Size Categories</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="sizecategories.php">Size Categories</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 14) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="sizematrix.php">Size Matrix</a>
-                        <?php } ?>
-                    </nav>
-                </div>
+                    <a class="nav-link p-0 px-3 py-1" href="sizematrix.php">Size Matrix</a>
+                    <?php } ?>
+                </nav>
+            </div>
             <?php }
                 if (menucheck($menuprivilegearray, 5) == 1 | menucheck($menuprivilegearray, 6) == 1) { ?>
-                <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseproductcatalog" aria-expanded="false" aria-controls="collapseproductcatalog">
-                    <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
-                    Product Catalog
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse <?php if ($lastElement == "productcatalog.php" | $lastElement == "catalogcategoies.php") {echo 'show';} ?>" id="collapseproductcatalog" data-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 6) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="catalogcategoies.php">Categories</a>
-                        <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseproductcatalog" aria-expanded="false" aria-controls="collapseproductcatalog">
+                <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
+                Product Catalog
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "productcatalog.php" | $lastElement == "catalogcategoies.php") {echo 'show';} ?>"
+                id="collapseproductcatalog" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 6) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="catalogcategoies.php">Categories</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 5) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="productcatalog.php">Catalog Display</a>
-                        <?php } ?>
-                    </nav>
-                </div>
-                <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="productcatalog.php">Catalog Display</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                 if (menucheck($menuprivilegearray, 15) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="porder.php">
-                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
-                        Purchsing Order
-                    </a>
-                <?php }
-                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="grn.php">
-                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
-                        Good Receive
-                    </a>
-                <?php }
+            <a class="nav-link p-0 px-3 py-2" href="porder.php">
+                <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                Purchsing Order
+            </a>
+            <?php }
+                if (menucheck($menuprivilegearray, 16) == 1) { ?>
+            <a class="nav-link p-0 px-3 py-2" href="grn.php">
+                <div class="nav-link-icon"><i data-feather="truck"></i></div>
+                Good Receive
+            </a>
+            <?php }
                     if (menucheck($menuprivilegearray, 40) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">
-                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
-                        Vat Info
-                    </a>
-                <?php }
-                    if (menucheck($menuprivilegearray, 17) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="customerporder.php">
-                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
-                        Customer Porder
-                    </a>
-                <?php }
+            <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">
+                <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                Vat Info
+            </a>
+            <?php }
+                if (menucheck($menuprivilegearray, 17) == 1 | menucheck($menuprivilegearray, 51) == 1 | menucheck($menuprivilegearray, 52) == 1 | menucheck($menuprivilegearray, 53) == 1) { ?>
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsecustomerpo" aria-expanded="false" aria-controls="collapsecustomerpo">
+                <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
+                Customer PO Details
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "customerporder.php" | $lastElement == "customerconfirmedpo.php" | $lastElement == "customerdispatchedpo.php" | $lastElement == "customerdeliveredpo.php") {echo 'show';} ?>"
+                id="collapsecustomerpo" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 17) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="customerporder.php">New Po</a>
+                    <?php } if (menucheck($menuprivilegearray, 51) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="customerconfirmedpo.php">Confirmed PO</a>
+                    <?php } if (menucheck($menuprivilegearray, 52) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="customerdispatchedpo.php">Dispatched PO</a>
+                    <?php } if (menucheck($menuprivilegearray, 53) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="customerdeliveredpo.php">Delivered PO</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                     if (menucheck($menuprivilegearray, 50) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2" href="stockadjustment.php">
-                        <div class="nav-link-icon"><i data-feather="git-merge"></i></div>
-                        Stock Adjustmen
-                    </a>
-                <?php }
+            <a class="nav-link p-0 px-3 py-2" href="stockadjustment.php">
+                <div class="nav-link-icon"><i data-feather="git-merge"></i></div>
+                Stock Adjustmen
+            </a>
+            <?php }
                 if (menucheck($menuprivilegearray, 18) == 1 | menucheck($menuprivilegearray, 19) == 1 | menucheck($menuprivilegearray, 20) == 1 | menucheck($menuprivilegearray, 21) == 1 | menucheck($menuprivilegearray, 22) == 1) { ?>
-                <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseinvoice" aria-expanded="false" aria-controls="collapseinvoice">
-                    <div class="nav-link-icon"><i data-feather="file"></i></div>
-                    Invoice
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse <?php if ($lastElement == "invoiceview.php" | $lastElement == "invoicepayment.php" | $lastElement == "invoicerecovery.php" | $lastElement == "paymentreceipt.php" | $lastElement == "cancelledinvoice.php") {echo 'show';} ?>" id="collapseinvoice" data-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 18) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="invoiceview.php">Invoice View</a>
-                        <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseinvoice" aria-expanded="false" aria-controls="collapseinvoice">
+                <div class="nav-link-icon"><i data-feather="file"></i></div>
+                Invoice
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "invoiceview.php" | $lastElement == "invoicepayment.php" | $lastElement == "invoicerecovery.php" | $lastElement == "paymentreceipt.php" | $lastElement == "cancelledinvoice.php") {echo 'show';} ?>"
+                id="collapseinvoice" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 18) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="invoiceview.php">Invoice View</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 19) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="invoicepayment.php">Invoice Payment</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="invoicepayment.php">Invoice Payment</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 20) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="invoicerecovery.php">Invoice Recovery</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="invoicerecovery.php">Invoice Recovery</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 21) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="paymentreceipt.php">Payment Receipt</a>
-                        <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="paymentreceipt.php">Payment Receipt</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 22) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="cancelledinvoice.php">Cancelled Invoice</a>
-                        <?php } ?>
-                    </nav>
-                </div>
-                <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="cancelledinvoice.php">Cancelled Invoice</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                 if (menucheck($menuprivilegearray, 23) == 1 | menucheck($menuprivilegearray, 24) == 1 | menucheck($menuprivilegearray, 25) == 1 | menucheck($menuprivilegearray, 26) == 1) { ?>
-                <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseproductreturn" aria-expanded="false" aria-controls="collapseproductreturn">
-                    <div class="nav-link-icon"><i data-feather="corner-down-left"></i></div>
-                    Product Return
-                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                </a>
-                <div class="collapse <?php if ($lastElement == "productreturn.php" | $lastElement == "customerreturn.php" | $lastElement == "supplierreturn.php" | $lastElement == "damagereturns.php") {echo 'show';} ?>" id="collapseproductreturn" data-parent="#accordionSidenav">
-                    <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                        <?php if (menucheck($menuprivilegearray, 23) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="productreturn.php">New Return</a>
-                        <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseproductreturn" aria-expanded="false" aria-controls="collapseproductreturn">
+                <div class="nav-link-icon"><i data-feather="corner-down-left"></i></div>
+                Product Return
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "productreturn.php" | $lastElement == "customerreturn.php" | $lastElement == "supplierreturn.php" | $lastElement == "damagereturns.php") {echo 'show';} ?>"
+                id="collapseproductreturn" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 23) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="productreturn.php">New Return</a>
+                    <?php }
                         if (menucheck($menuprivilegearray, 24) == 1) { ?>
-                            <a class="nav-link p-0 px-3 py-1" href="customerreturn.php">All Returns</a>
-                        <?php //}
+                    <a class="nav-link p-0 px-3 py-1" href="customerreturn.php">All Returns</a>
+                    <?php //}
                         // if (menucheck($menuprivilegearray, 25) == 1) { ?>
-                        <!-- //     <a class="nav-link p-0 px-3 py-1" href="supplierreturn.php">Supplier Return</a> -->
-                        <?php //}
+                    <!-- //     <a class="nav-link p-0 px-3 py-1" href="supplierreturn.php">Supplier Return</a> -->
+                    <?php //}
                         // if (menucheck($menuprivilegearray, 26) == 1) { ?>
-                        <!-- //     <a class="nav-link p-0 px-3 py-1" href="damagereturns.php">Damage Return</a> -->
-                        <?php } ?>
-                    </nav>
-                </div>
-                <?php }
+                    <!-- //     <a class="nav-link p-0 px-3 py-1" href="damagereturns.php">Damage Return</a> -->
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                 if (menucheck($menuprivilegearray, 43) == 1 | menucheck($menuprivilegearray, 44) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseaccount" aria-expanded="false" aria-controls="collapseaccount">
-                        <div class="nav-link-icon"><i class="fas fa-university"></i></div>
-                        Account
-                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse <?php if ($lastElement == "account.php" | $lastElement == "accounttype.php") {echo 'show';} ?>" id="collapseaccount" data-parent="#accordionSidenav">
-                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="account.php">Account</a>
-                            <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseaccount" aria-expanded="false" aria-controls="collapseaccount">
+                <div class="nav-link-icon"><i class="fas fa-university"></i></div>
+                Account
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "account.php" | $lastElement == "accounttype.php") {echo 'show';} ?>"
+                id="collapseaccount" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="account.php">Account</a>
+                    <?php }
                             if (menucheck($menuprivilegearray, 44) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="accounttype.php">Account Type</a>
-                            <?php } ?>
-                        </nav>
-                    </div>
-                    <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="accounttype.php">Account Type</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                     if (menucheck($menuprivilegearray, 45) == 1 | menucheck($menuprivilegearray, 46) == 1) { ?>
-                        <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsebank" aria-expanded="false" aria-controls="collapsebank">
-                            <div class="nav-link-icon"><i data-feather="dollar-sign"></i></div>
-                            Bank
-                            <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse <?php if ($lastElement == "bank-info.php" | $lastElement == "branch-info.php") {echo 'show';} ?>" id="collapsebank" data-parent="#accordionSidenav">
-                            <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                                <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
-                                    <a class="nav-link p-0 px-3 py-1" href="bank-info.php">Bank</a>
-                                <?php }
-                                if (menucheck($menuprivilegearray, 44) == 1) { ?>
-                                    <a class="nav-link p-0 px-3 py-1" href="branch-info.php">Bank Branch</a>
-                                <?php } ?>
-                            </nav>
-                        </div>
-                        <?php }
-                if (menucheck($menuprivilegearray, 41) == 1 | menucheck($menuprivilegearray, 42) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsepettycash" aria-expanded="false" aria-controls="collapsepettycash">
-                        <div class="nav-link-icon"><i class="fas fa-university"></i></div>
-                        Petty Cash
-                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse <?php if ($lastElement == "accountpettycashreimburse.php" | $lastElement == "accountpettycashexpenses.php") {echo 'show';} ?>" id="collapsepettycash" data-parent="#accordionSidenav">
-                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <?php if (menucheck($menuprivilegearray, 41) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="accountpettycashreimburse.php">Petty Cash Reimburse</a>
-                            <?php }
-                            if (menucheck($menuprivilegearray, 42) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="accountpettycashexpenses.php">Petty Cash Expenses</a>
-                            <?php } ?>
-                        </nav>
-                    </div>
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsebank" aria-expanded="false" aria-controls="collapsebank">
+                <div class="nav-link-icon"><i data-feather="dollar-sign"></i></div>
+                Bank
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "bank-info.php" | $lastElement == "branch-info.php") {echo 'show';} ?>"
+                id="collapsebank" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 43) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="bank-info.php">Bank</a>
                     <?php }
-                if (menucheck($menuprivilegearray, 31) == 1 | menucheck($menuprivilegearray, 32) == 1 | menucheck($menuprivilegearray, 33) == 1 | menucheck($menuprivilegearray, 34) == 1 | menucheck($menuprivilegearray, 35) == 1 | menucheck($menuprivilegearray, 36) == 1 | menucheck($menuprivilegearray, 37) == 1 | menucheck($menuprivilegearray, 38) == 1 | menucheck($menuprivilegearray, 39) == 1 | menucheck($menuprivilegearray, 48) == 1 | menucheck($menuprivilegearray, 49) == 1 ) { ?> 
-                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapsereport" aria-expanded="false" aria-controls="collapsereport">
-                        <div class="nav-link-icon"><i data-feather="file"></i></div>
-                        Reports
-                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "accountreport.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php" | $lastElement == "overpaymentreport.php" | $lastElement == "productinvoicesreport.php") {echo 'show';} ?>" id="collapsereport" data-parent="#accordionSidenav">
-                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <?php if (menucheck($menuprivilegearray, 31) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="stock.php">Stock</a>
-                            <?php }
+                                if (menucheck($menuprivilegearray, 44) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="branch-info.php">Bank Branch</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
+                if (menucheck($menuprivilegearray, 41) == 1 | menucheck($menuprivilegearray, 42) == 1) { ?>
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsepettycash" aria-expanded="false" aria-controls="collapsepettycash">
+                <div class="nav-link-icon"><i class="fas fa-university"></i></div>
+                Petty Cash
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "accountpettycashreimburse.php" | $lastElement == "accountpettycashexpenses.php") {echo 'show';} ?>"
+                id="collapsepettycash" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 41) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="accountpettycashreimburse.php">Petty Cash Reimburse</a>
+                    <?php }
+                            if (menucheck($menuprivilegearray, 42) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="accountpettycashexpenses.php">Petty Cash Expenses</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
+                if (menucheck($menuprivilegearray, 31) == 1 | menucheck($menuprivilegearray, 32) == 1 | menucheck($menuprivilegearray, 33) == 1 | menucheck($menuprivilegearray, 34) == 1 | menucheck($menuprivilegearray, 35) == 1 | menucheck($menuprivilegearray, 36) == 1 | menucheck($menuprivilegearray, 37) == 1 | menucheck($menuprivilegearray, 38) == 1 | menucheck($menuprivilegearray, 39) == 1 | menucheck($menuprivilegearray, 48) == 1 | menucheck($menuprivilegearray, 49) == 1 ) { ?>
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsereport" aria-expanded="false" aria-controls="collapsereport">
+                <div class="nav-link-icon"><i data-feather="file"></i></div>
+                Reports
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "accountreport.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php" | $lastElement == "overpaymentreport.php" | $lastElement == "productinvoicesreport.php") {echo 'show';} ?>"
+                id="collapsereport" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 31) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="stock.php">Stock</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 32) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="bincard.php">Bin Card</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="bincard.php">Bin Card</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 33) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Outstanding Reports</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Outstanding Reports</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 34) == 1) { ?>
-                                <!-- <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a> -->
-                            <?php }
+                    <!-- <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a> -->
+                    <?php }
                                     if (menucheck($menuprivilegearray, 35) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="dailycash.php">Daily Cash & Cheque</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="dailycash.php">Daily Cash & Cheque</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 36) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="salereportcustomer.php">Sale Reports</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="salereportcustomer.php">Sale Reports</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 37) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="accountreport.php">Account Reports</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="accountreport.php">Account Reports</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 38) == 1) { ?>
-                                <!-- <a class="nav-link p-0 px-3 py-1" href="bufferstockmaintainreport.php">Buffer Maintainance</a> -->
-                            <?php }
+                    <!-- <a class="nav-link p-0 px-3 py-1" href="bufferstockmaintainreport.php">Buffer Maintainance</a> -->
+                    <?php }
                                     if (menucheck($menuprivilegearray, 39) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="ouritemrange.php">Our Item Range</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="ouritemrange.php">Our Item Range</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 48) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="overpaymentreport.php">Customer Overpayment</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="overpaymentreport.php">Customer Overpayment</a>
+                    <?php }
                                     if (menucheck($menuprivilegearray, 49) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="productinvoicesreport.php">Product Invoices</a>
-                            <?php } ?>
-                        </nav>
-                    </div>
-                <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="productinvoicesreport.php">Product Invoices</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php }
                 if (menucheck($menuprivilegearray, 1) == 1 | menucheck($menuprivilegearray, 2) == 1 | menucheck($menuprivilegearray, 3) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#collapseUser" aria-expanded="false" aria-controls="collapseUser">
-                        <div class="nav-link-icon"><i data-feather="user"></i></div>
-                        User Account
-                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                    </a>
-                    <div class="collapse <?php if ($lastElement == "useraccount.php" | $lastElement == "usertype.php" | $lastElement == "userprivilege.php") {echo 'show';} ?>" id="collapseUser" data-parent="#accordionSidenav">
-                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
-                            <?php if (menucheck($menuprivilegearray, 1) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="useraccount.php">User Account</a>
-                            <?php }
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapseUser" aria-expanded="false" aria-controls="collapseUser">
+                <div class="nav-link-icon"><i data-feather="user"></i></div>
+                User Account
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+            </a>
+            <div class="collapse <?php if ($lastElement == "useraccount.php" | $lastElement == "usertype.php" | $lastElement == "userprivilege.php") {echo 'show';} ?>"
+                id="collapseUser" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 1) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="useraccount.php">User Account</a>
+                    <?php }
                             if (menucheck($menuprivilegearray, 2) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="usertype.php">Type</a>
-                            <?php }
+                    <a class="nav-link p-0 px-3 py-1" href="usertype.php">Type</a>
+                    <?php }
                             if (menucheck($menuprivilegearray, 3) == 1) { ?>
-                                <a class="nav-link p-0 px-3 py-1" href="userprivilege.php">Privilege</a>
-                            <?php } ?>
-                        </nav>
-                    </div>
-                <?php } ?>
+                    <a class="nav-link p-0 px-3 py-1" href="userprivilege.php">Privilege</a>
+                    <?php } ?>
+                </nav>
+            </div>
+            <?php } ?>
         </div>
     </div>
     <div class="sidenav-footer bg-laugfs">
