@@ -64,6 +64,7 @@ require('ssp.customized.class.php' );
 
 $joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`)";
 
+$extraWhere = "`u`.`status` = 1 AND (`u`.`confirm` IS NULL OR `u`.`confirm` = 0) AND (`u`.`dispatchissue` IS NULL OR `u`.`dispatchissue` = 0) AND (`u`.`delivered` IS NULL OR `u`.`delivered` = 0)";
 echo json_encode(
-	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery)
+	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
 );

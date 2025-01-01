@@ -579,6 +579,28 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="printreportInvoiceoriginal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">View Original Invoice PDF</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div class="embed-responsive embed-responsive-16by9" id="frame">
+                            <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php include "include/footerscripts.php"; ?>
 <script>
@@ -589,7 +611,6 @@ include "include/topnavbar.php";
         var statuscheck
         var deletecheck
 
-        $("#helpername").select2();
         $("#editcustomer").select2({
             ajax: {
                 url: "getprocess/getcustomerlistforreturn.php",
@@ -611,7 +632,8 @@ include "include/topnavbar.php";
             },
             dropdownParent: $("#modaleditpo")
         });
-        
+
+        $("#helpername").select2();
         $('body').tooltip({
             selector: '[data-toggle="tooltip"]'
         });
@@ -734,9 +756,15 @@ include "include/topnavbar.php";
                     "render": function (data, type, full) {
                         var button = '';
                         
+                        button += '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
+                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                            '"><i class="fas fa-eye"></i></button>';
+
                         button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="fas fa-pen"></i></button>';
+
+                      
 
                         button +=
                             '<button class="btn btn-outline-';
@@ -867,6 +895,33 @@ include "include/topnavbar.php";
             });
         });
 
+        $('#dataTable tbody').on('click', '.btnOriginal', function() {
+            var id = $(this).attr('id');
+           // alert(id);
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreportInvoiceoriginal iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/porderoriginalpdf.php?id=' + id;
+            //            alert(src);
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#printreportInvoiceoriginal iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#printreportInvoiceoriginal').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
+        });
+
         $('#dataTable tbody').on('click', '.btnPrint', function() {
             var id = $(this).attr('id');
             $('#frame').html('');
@@ -982,6 +1037,8 @@ include "include/topnavbar.php";
 
             $('#hiddencustomerpoid').val(id);
             $('#modaleditpo').modal('show');
+
+            
         });
 
         $('#tableorder tbody').on('click', '.btndt', function () {
@@ -1431,8 +1488,6 @@ include "include/topnavbar.php";
                             objfirst[i].productname +
                             '</td><td>' +
                             objfirst[i].productcode +
-                            '</td><td>' +
-                            objfirst[i].productcode +
                             '</td><td class="d-none">' + objfirst[i].productid +
                             '</td><td class="d-none">' + objfirst[i]
                             .podetailid +
@@ -1502,15 +1557,15 @@ include "include/topnavbar.php";
                     td.empty().html(val).data('editing', false);
 
                     var rowID = row.closest("td").parent()[0].rowIndex;
-                    var unitprice = parseFloat(row.closest("tr").find('td:eq(5)').text());
-                    var newqty = parseFloat(row.closest("tr").find('td:eq(3)').text());
+                    var unitprice = parseFloat(row.closest("tr").find('td:eq(6)').text());
+                    var newqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
                     var totnew = newqty * unitprice;
 
                     var showtotnew = addCommas(parseFloat(totnew).toFixed(2));
                     // var total = parseFloat(totrefill+totnew).toFixed(2);
                     // var showtotal = addCommas(total);
 
-                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(4)').text(showtotnew);
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(5)').text(showtotnew);
 
                     tabletotal1();
                 }
@@ -1874,7 +1929,7 @@ include "include/topnavbar.php";
                     $('#modalorderview').modal('hide');
 
                     $('#dataTable').DataTable().ajax.reload();
-                    // location.reload();
+                    //location.reload();
                 }
             });
 
