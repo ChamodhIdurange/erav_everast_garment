@@ -3,7 +3,7 @@ require_once('../connection/db.php');
 
 $orderID=$_POST['orderID'];
 
-$sqlorderdetail="SELECT `u`.*, `ua`.`product_name` AS `issueproduct` FROM `tbl_customer_order_detail` AS `u` LEFT JOIN `tbl_product` AS `ua` ON `ua`.`idtbl_product`=`u`.`tbl_product_idtbl_product` WHERE `u`.`tbl_customer_order_idtbl_customer_order`='$orderID'";
+$sqlorderdetail="SELECT `u`.*, `ua`.`product_code`, `ua`.`product_name` AS `issueproduct` FROM `tbl_customer_order_detail` AS `u` LEFT JOIN `tbl_product` AS `ua` ON `ua`.`idtbl_product`=`u`.`tbl_product_idtbl_product` WHERE `u`.`tbl_customer_order_idtbl_customer_order`='$orderID'";
 $resultorderdetail=$conn->query($sqlorderdetail);
 
 $sqlorder="SELECT `p`.`total`, `p`.`confirm`, `p`.`dispatchissue`, `p`.`delivered`, `p`.`discount`, `p`.`podiscount`, `p`.`nettotal`, `p`.`remark`, `c`.`name`, `c`.`phone` FROM `tbl_customer_order` as `p`  JOIN `tbl_customer` AS `c` ON (`c`.`idtbl_customer` = `p`.`tbl_customer_idtbl_customer`) WHERE `p`.`idtbl_customer_order`='$orderID'";
@@ -17,6 +17,7 @@ while($roworderdetail=$resultorderdetail->fetch_assoc()){
 
     $objdetail=new stdClass();
     $objdetail->productname=$roworderdetail['issueproduct'];
+    $objdetail->productcode=$roworderdetail['product_code'];
     $objdetail->productid=$roworderdetail['tbl_product_idtbl_product'];
     $objdetail->unitprice=$roworderdetail['saleprice'];
     $objdetail->orderqty=$roworderdetail['orderqty'];

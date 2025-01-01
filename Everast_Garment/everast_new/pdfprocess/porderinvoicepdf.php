@@ -26,26 +26,29 @@ $totalpayment = 0;
 $net_total = 0;
 $newtemp = 0;
 
-$sqlinvoiceinfo = "SELECT `tbl_customer_order`.`discount`, `tbl_customer_order`.`idtbl_customer_order`, `tbl_customer_order`.`cuspono`, `tbl_customer_order`.`date`, `tbl_customer_order`.`total`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone`, `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone`, `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_customer_order`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_customer_order` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_customer_order`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_customer_order`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_customer_order`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_customer_order`.`tbl_user_idtbl_user`WHERE `tbl_customer_order`.`status`=1 AND `tbl_customer_order`.`idtbl_customer_order`='$recordID'";
+$sqlinvoiceinfo = "SELECT `tbl_customer_order`.`discount`, `tbl_customer_order`.`idtbl_customer_order`, `tbl_customer_order`.`cuspono`, `tbl_customer_order`.`date`, `tbl_customer_order`.`total`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone` AS 'customerphone' , `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone` AS 'salesrepphone', `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_customer_order`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_customer_order` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_customer_order`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_customer_order`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_customer_order`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_customer_order`.`tbl_user_idtbl_user`WHERE `tbl_customer_order`.`status`=1 AND `tbl_customer_order`.`idtbl_customer_order`='$recordID'";
 
 $resultinvoiceinfo = $conn->query($sqlinvoiceinfo);
 $rowinvoiceinfo = $resultinvoiceinfo->fetch_assoc();
 
 $customerID = $rowinvoiceinfo['tbl_customer_idtbl_customer'];
-$customerPhone = $rowinvoiceinfo['phone'];
+$customerPhone = $rowinvoiceinfo['customerphone'];
+$salesrepPhone = $rowinvoiceinfo['salesrepphone'];
 $customername = $rowinvoiceinfo['name'];
 $location = $rowinvoiceinfo['locationname'];
 $customeraddress = $rowinvoiceinfo['address'];
 // $invoID = $rowinvoiceinfo['idtbl_invoice'];
 $cuspono = $rowinvoiceinfo['cuspono']; 
 $pono = $rowinvoiceinfo['cuspono']; 
+$porderDate = $rowinvoiceinfo['date']; 
+$cusPorderId = $rowinvoiceinfo['idtbl_customer_order']; 
 
 
 // $sqlpoID = "SELECT `idtbl_porder_invoice` FROM `tbl_porder_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$invoID'";
 // $resultpoID = $conn->query($sqlpoID);
 // $rowpoID = $resultpoID->fetch_assoc();
 
-$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
+$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
 $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
 
@@ -113,12 +116,12 @@ $html = '
                 <td width="3cm">&nbsp;</td>
                 <td>
                     <table width="100%" height="100%" border="0">
-                        <tr><td width="53%" height="0.5cm"> </td><td align="left">' . $today . ' </td></tr>
+                        <tr><td width="53%" height="0.5cm"> </td><td align="left">' . $porderDate . ' </td></tr>
+                        <tr><td height="0.5cm"></td> <td align="left">' . $cusPorderId . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $cuspono . '</td></tr>
-                        <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['saleref'] . '</td></tr>
-                        <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['discount'] . '</td></tr>
+                        <tr><td height="0.5cm"></td> <td align="left">' . $salesrepPhone. '</td></tr>
                     </table>
                 </td>
             </tr>
@@ -141,7 +144,8 @@ $html = '
                 $html .= '
                     <tr>
                         <td style="width:2cm;">' . $rowinvoicedetail['idtbl_product'] . '</td>
-                        <td style="width:8.5cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:5.0cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:3.5cm;">' . $rowinvoicedetail['product_code'] . '</td>
                         <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">0.00</td>

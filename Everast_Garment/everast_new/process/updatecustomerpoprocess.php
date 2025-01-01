@@ -49,10 +49,10 @@ if($acceptanceType == 1){
 if($conn->query($updatePoStatus)==true){
 
     foreach($tableData as $rowtabledata){
-        $productID=$rowtabledata['col_2'];
-        $podetailId=$rowtabledata['col_3'];
-        $qty=$rowtabledata['col_4'];
-        $status=$rowtabledata['col_8'];
+        $productID=$rowtabledata['col_3'];
+        $podetailId=$rowtabledata['col_4'];
+        $qty=$rowtabledata['col_5'];
+        $status=$rowtabledata['col_9'];
 
         if($acceptanceType == 1){
             $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
