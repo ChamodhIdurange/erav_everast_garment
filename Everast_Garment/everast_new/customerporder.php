@@ -298,8 +298,8 @@ include "include/topnavbar.php";
                                 <th class="d-none">Free Product</th>
                                 <th class="d-none">Freeproductid</th>
                                 <th class="text-center d-none">Free Qty</th>
-                                <th class="text-center">Total Qty</th>
                                 <th class="text-right">Sale Price</th>
+                                <th class="text-right">Line Discount</th>
                                 <th class="d-none">HideTotal</th>
                                 <th class="text-right">Total</th>
                             </tr>
@@ -1761,10 +1761,14 @@ include "include/topnavbar.php";
             var freeproductid = $('#freeproductid').val();
 
             var newtotal = parseFloat(saleprice * newqty);
+            var linediscount = (newtotal * discount)/100;
+
             var totalqty = parseFloat(freeqty + newqty);
 
-            var total = parseFloat(newtotal);
+            var fulltotwihoutdiscount = parseFloat(newtotal);
+            var total = parseFloat(newtotal - linediscount);
             var showtotal = addCommas(parseFloat(total).toFixed(2));
+            var showlinediscount = addCommas(parseFloat(linediscount).toFixed(2));
 
             $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td>' +
                 product +
@@ -1774,9 +1778,11 @@ include "include/topnavbar.php";
                 '</td><td class="text-center">' + newqty + '</td><td class="d-none">' +
                 freeproductname + '</td><td class="d-none">' + freeproductid +
                 '</td><td class="text-center d-none">' + freeqty +
-                '</td><td class="text-center">' + totalqty +
-                '</td><td class="text-right">' + addCommas(saleprice) +
-                '</td><td class="total d-none">' + total +
+                '</td><td class="text-right">' + addCommas(parseFloat(saleprice).toFixed(2)) +
+                '</td><td class="text-right">' + showlinediscount +
+                '</td><td class="linediscount d-none">' + linediscount +
+                '</td><td class="d-none">' + total +
+                '</td><td class="total d-none">' + fulltotwihoutdiscount +
                 '</td><td class="text-right">' + showtotal +
                 '</td><td><button type="button" class="btn btn-danger btn-sm btndlt"><i class="fas fa-trash-alt"></i></td></tr>'
             );
@@ -1939,9 +1945,10 @@ include "include/topnavbar.php";
 
             var r = confirm("Are you sure, You want to remove this product ? ");
             if (r == true) {
-                $(this).closest('tr').remove();
+                var row = $(this).closest('tr');
+                row.remove();
 
-                calculateTotals();
+                calculateTotals(row);
                 $('#product').focus();
             }
         });
@@ -1964,63 +1971,42 @@ include "include/topnavbar.php";
         //     }
         // });
 
-        $("#discountpresentage").keyup(function () {
+        $("#discountpo").keyup(function () {
             if ($(this).val() != '') {
                 var discount = parseFloat($(this).val());
             } else {
                 var discount = 0;
             }
 
+    
             var sum = 0;
+            var disvalue = 0;
             $(".total").each(function () {
                 sum += parseFloat($(this).text());
             });
+            $(".linediscount").each(function () {
+                disvalue += parseFloat($(this).text());
+            });
 
-            var disvalue = (sum * discount) / 100;
-            var nettotal = sum - disvalue;
+            var totVal = $('#hidetotalorder').val();
+            var netTotal = sum - disvalue;
 
-            var showsum = addCommas(parseFloat(sum).toFixed(2));
-            var showdis = addCommas(parseFloat(disvalue).toFixed(2));
-            var shownettotal = addCommas(parseFloat(nettotal).toFixed(2));
+            var totpodiscount = (netTotal * discount) / 100;
+            netTotal = netTotal - totpodiscount;
 
-            $('#divsubtotal').html('Rs. ' + showsum);
-            $('#hidetotalorder').val(sum);
-            $('#divdiscount').html('Rs. ' + showdis);
-            $('#hidediscount').val(disvalue);
-            $('#divtotal').html('Rs. ' + shownettotal);
-            $('#hidenettotalorder').val(nettotal);
+            var showpodiscount = addCommas(parseFloat(totpodiscount).toFixed(2));
+            var shownettotal = addCommas(parseFloat(netTotal).toFixed(2));
+
+            $('#divtotal').html('Rs.' + shownettotal);
+            $('#hidenettotalorder').val(netTotal);
+
+            $('#divdiscountPO').html('Rs. ' + showpodiscount);
+            $('#hidediscountPO').val(totpodiscount);
+
         });
 
     });
 
-    function calculateTotals() {
-        var sum = 0;
-        $(".total").each(function () {
-            sum += parseFloat($(this).text());
-        });
-
-        var discount = parseFloat($('#discountpresentage').val());
-        var discountpo = parseFloat($('#discountpo').val());
-
-        var disvalue = (sum * discount) / 100;
-        var nettotal = sum - disvalue;
-        var disvaluepo = (nettotal * discountpo) / 100;
-        var nettotal = nettotal - disvaluepo;
-
-        var showsum = addCommas(parseFloat(sum).toFixed(2));
-        var showdis = addCommas(parseFloat(disvalue).toFixed(2));
-        var showdispo = addCommas(parseFloat(disvaluepo).toFixed(2));
-        var shownettotal = addCommas(parseFloat(nettotal).toFixed(2));
-
-        $('#divsubtotal').html('Rs. ' + showsum);
-        $('#hidetotalorder').val(sum);
-        $('#divdiscount').html('Rs. ' + showdis);
-        $('#divdiscountPO').html('Rs. ' + showdispo);
-        $('#hidediscount').val(disvalue);
-        $('#hidediscountPO').val(disvaluepo);
-        $('#divtotal').html('Rs. ' + shownettotal);
-        $('#hidenettotalorder').val(nettotal);
-    }
 
     function updateTable(records) {
         var count = 0;
@@ -2236,16 +2222,18 @@ include "include/topnavbar.php";
         $('#hidetotalorderdispatch').val(sum);
     }
 
-    function calculateTotals() {
+    function calculateTotals(row) {
         var sum = 0;
+        var disvalue = 0;
         $(".total").each(function () {
             sum += parseFloat($(this).text());
         });
+        $(".linediscount").each(function () {
+            disvalue += parseFloat($(this).text());
+        });
 
-        var discount = parseFloat($('#discountpresentage').val());
         var discountpo = parseFloat($('#discountpo').val());
 
-        var disvalue = (sum * discount) / 100;
         var nettotal = sum - disvalue;
         var disvaluepo = (nettotal * discountpo) / 100;
         var nettotal = nettotal - disvaluepo;
@@ -2258,19 +2246,12 @@ include "include/topnavbar.php";
         $('#divsubtotal').html('Rs. ' + showsum);
         $('#hidetotalorder').val(sum);
         $('#divdiscount').html('Rs. ' + showdis);
-        $('#divdiscountPO').html('Rs. ' + showdispo);
         $('#hidediscount').val(disvalue);
+        
         $('#hidediscountPO').val(disvaluepo);
         $('#divtotal').html('Rs. ' + shownettotal);
+        $('#divdiscountPO').html('Rs. ' + showdispo);
         $('#hidenettotalorder').val(nettotal);
-    }
-
-    function calculateTotalsedt(totalprice) {
-
-        var totalpriceshow = addCommas(parseFloat(totalprice).toFixed(2));
-        $('#divsubtotal').html('Rs. ' + totalpriceshow);
-        $('#hidetotalorder').val(totalprice);
-
     }
 
     function order_confirm() {

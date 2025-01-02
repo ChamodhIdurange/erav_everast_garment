@@ -55,12 +55,12 @@ if ($recordOption == 1) {
     $month = date('n');
 
 
-    $insretorder = "INSERT INTO `tbl_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer')";
+    $insretorder = "INSERT INTO `tbl_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `podiscountpercentage`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscountamount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer')";
 
     if ($conn->query($insretorder) == true) {
         $orderID = $conn->insert_id;
 
-        $insretoriginalorder = "INSERT INTO `tbl_original_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`, `tbl_customer_order_idtblcustomer_order`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer', '$orderID')";
+        $insretoriginalorder = "INSERT INTO `tbl_original_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `podiscountpercentage`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`, `tbl_customer_order_idtblcustomer_order`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscountamount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer', '$orderID')";
         $conn->query($insretoriginalorder);
         $originalOrderID = $conn->insert_id;
 
@@ -72,13 +72,17 @@ if ($recordOption == 1) {
             $newqty = $rowtabledata->col_6;
             $freeprodcutid = $rowtabledata->col_8;
             $freeqty = $rowtabledata->col_9;
-            $totqty = $rowtabledata->col_10;
-            $total = $rowtabledata->col_12;
+            $totqty = $newqty + $freeqty;
+            $linediscount = $rowtabledata->col_12;
+            $total = $rowtabledata->col_13;
+            $fulltotwithoutdiscount = $rowtabledata->col_14;
 
-            $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$orderID','$product')";
+            $linediscountpercentage = ($linediscount * 100) / $fulltotwithoutdiscount;
+
+            $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '$linediscountpercentage', '$linediscount', '1','$updatedatetime','$userID','$orderID','$product')";
             $conn->query($insertorderdetail);
 
-            $insertoriginalorderdetail = "INSERT INTO `tbl_original_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_original_customer_order_idtbl_original_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$originalOrderID','$productID')";
+            $insertoriginalorderdetail = "INSERT INTO `tbl_original_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_original_customer_order_idtbl_original_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '$linediscountpercentage', '$linediscount', '1','$updatedatetime','$userID','$originalOrderID','$productID')";
             $conn->query($insertoriginalorderdetail);
 
             $insertholdstock = "INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$newqty', '0', '1', '$updatedatetime', '$userID', '$product','$orderID')";

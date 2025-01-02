@@ -12,8 +12,7 @@ $roworder=$resultorder->fetch_assoc();
 
 $detailarray=array();
 while($roworderdetail=$resultorderdetail->fetch_assoc()){
-    $totnew=$roworderdetail['qty']*$roworderdetail['saleprice'];
-    $total=number_format(($totnew), 2);
+
 
     $objdetail=new stdClass();
     $objdetail->productname=$roworderdetail['issueproduct'];
@@ -23,11 +22,12 @@ while($roworderdetail=$resultorderdetail->fetch_assoc()){
     $objdetail->orderqty=$roworderdetail['orderqty'];
     $objdetail->confirmqty=$roworderdetail['confirmqty'];
     $objdetail->dispatchqty=$roworderdetail['dispatchqty'];
+    $objdetail->discount=$roworderdetail['discount'];
     $objdetail->qty=$roworderdetail['qty'];
     $objdetail->podetailid=$roworderdetail['idtbl_customer_order_detail'];
     $objdetail->status=$roworderdetail['status'];
 
-    $objdetail->total=$total;
+    $objdetail->total=number_format(($roworderdetail['total']), 2);
 
     array_push($detailarray, $objdetail);
 }
