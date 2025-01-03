@@ -48,7 +48,7 @@ $cusPorderId = $rowinvoiceinfo['idtbl_customer_order'];
 // $resultpoID = $conn->query($sqlpoID);
 // $rowpoID = $resultpoID->fetch_assoc();
 
-$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
+$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice`, `tbl_customer_order_detail`.`discount` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
 $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
 
@@ -109,7 +109,7 @@ $html = '
                 <td class="leftboxtop" width="10cm">
                     <table border="0" width="100%" style="margin-top:-43; padding-left:0.3cm;">
                         <tr>
-                            <td>Customer ID : ' . $customerID . '<br>' . $customername . '<br>' . $customeraddress . '<br>Tel : ' . $customerPhone . '</td>
+                            <td>Customer ID : ' . $customerID . '<br><span  style="font-size: 1.2em; font-weight: bold;">' . $customername . '</span><br>' . $customeraddress . '<br>Tel : ' . $customerPhone . '</td>
                         </tr>
                     </table>
                 </td>
@@ -148,8 +148,8 @@ $html = '
                         <td style="width:3.5cm;">' . $rowinvoicedetail['product_code'] . '</td>
                         <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
-                        <td style="width:1.3cm;" align="right">0.00</td>
-                        <td style="width:2.6cm;" align="right">' . number_format(($rowinvoicedetail['saleprice'] * $rowinvoicedetail['qty']), 2) . '</td>
+                        <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>
+                        <td style="width:2.6cm;" align="right">' . number_format((($rowinvoicedetail['saleprice'] * $rowinvoicedetail['qty'])-$rowinvoicedetail['discount']), 2) . '</td>
                     </tr>
                 ';
                 $temptotal = $rowinvoicedetail['qty'] * $rowinvoicedetail['saleprice'];

@@ -9,6 +9,9 @@ $poID=$_POST['poID'];
 $total=$_POST['total'];
 $nettotal=$_POST['nettotal'];
 $discount=$_POST['discount'];
+$podiscountPrecentage=$_POST['podiscountPrecentage'];
+$podiscountAmount=$_POST['podiscountAmount'];
+
 $acceptanceType=$_POST['acceptanceType'];
 $tableData=$_POST['tableData'];
 $updatedatetime=date('Y-m-d h:i:s');
@@ -17,9 +20,9 @@ $locationId=null;
 $customerId=null;
 
 if($acceptanceType == 1){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
 }else if($acceptanceType == 2){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
 
     $insertDispatch="INSERT INTO `tbl_cutomer_order_dispatch`(`dispatchdate`, `vehicleno`, `drivername`, `trackingno`, `trackingwebsite`, `currier`, `status`, `insertdatetime`, `tbl_user_idtbl_user`) VALUES('$updatedatetime', '-', '-', '-', '-', '-', '1', '$updatedatetime', '$userID')";
     $conn->query($insertDispatch);
@@ -28,7 +31,7 @@ if($acceptanceType == 1){
     $insertDispatchInfo="INSERT INTO `tbl_cutomer_order_dispatch_has_tbl_customer_order`(`tbl_cutomer_order_dispatch_idtbl_cutomer_order_dispatch`, `tbl_customer_order_idtbl_customer_order`) VALUES('$dispatchId', '$poID')";
     $conn->query($insertDispatchInfo);
 }else if($acceptanceType == 3){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
 
     $getporderdata = "SELECT * FROM `tbl_customer_order` WHERE `idtbl_customer_order` = '$poID'";
     $result = $conn->query($getporderdata);
@@ -52,18 +55,23 @@ if($conn->query($updatePoStatus)==true){
         $productID=$rowtabledata['col_3'];
         $podetailId=$rowtabledata['col_4'];
         $qty=$rowtabledata['col_5'];
-        $status=$rowtabledata['col_9'];
+        $linediscountprecentage=$rowtabledata['col_6'];
+        $linediscountamount=$rowtabledata['col_7'];
+        $status=$rowtabledata['col_11'];
+        $fullTotal=$rowtabledata['col_12'];
+
+        $netTotal = $fullTotal - $linediscountamount;
 
         if($acceptanceType == 1){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 2){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 3){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
 

@@ -100,7 +100,7 @@ include "include/topnavbar.php";
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">Retail Price*</label>
                                             <input type="number" class="form-control form-control-sm"
-                                                name="productsaleprice" id="productsaleprice">
+                                                name="productsaleprice" id="productsaleprice" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -186,6 +186,7 @@ include "include/topnavbar.php";
                     $('#itemcode').val(obj.productcode);
                     $('#itemcategory').val(obj.category);
                     $('#commonname').val(obj.commonname);
+                    $('#productsaleprice').val(obj.saleprice);
 
                 }
             });
@@ -222,4 +223,5 @@ include "include/topnavbar.php";
     });
 </script>
 <?php include "include/footer.php"; ?>
+
 

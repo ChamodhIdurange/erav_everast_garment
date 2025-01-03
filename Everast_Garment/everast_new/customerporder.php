@@ -398,14 +398,21 @@ include "include/topnavbar.php";
                             <th>Product Code</th>
                             <th class="d-none">ProductID</th>
                             <th class="d-none">PoDetailID</th>
-                            <th class="text-center"> Qty</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Discount (%)</th>
+                            <th class="text-right"> Discount</th>
                             <th class="text-right">Total</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>PO Discount (%)</label>
+                        <input class="form-control form-control-sm" type="number" id="editpodiscount" name = "editpodiscount" required>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-9 text-right">
                         <h5 class="font-weight-600">Subtotal</h5>
@@ -955,82 +962,7 @@ include "include/topnavbar.php";
         });
 
 
-        $('#dataTable tbody').on('click', '.btneditorder', function () {
-            recordID = $('#recordOption').val();
-            // alert(recordID);
-            var id = $(this).attr('id');
-            // alert(id);
-            // $('#editorderid').val(id);
-            $('#modalcreateorder').modal('show');
-            $.ajax({
-                type: "POST",
-                data: {
-                    recordID: id
-                },
-                url: 'getprocess/geteditporoder.php',
-                success: function (result) { //alert(result);
-                    // console.log(result);
-                    var obj = JSON.parse(result);
-                    console.log(obj);
-                    $('#formsubmit').attr("disabled", true);
-                    $('#recordID').val(obj.id);
-                    $('#orderdate').val(obj.orderdate);
-                    $('#repname').val(obj.idtbl_employee);
-                    category(obj.idtbl_employee, obj.idtbl_area);
-                    $('#discountpresentage').val(obj.discount);
-                    $('#discountpo').val(obj.podiscount);
-                    if (obj.idtbl_employee == 7) {
-                        $("#directcustomerdiv").attr("hidden", false);
-                        $("#directcustomer").attr("required", true);
-                        $("#customeraddress").attr("readonly", false);
-                        $("#customercontact").attr("readonly", false);
-                        $("#customerdiv").attr("hidden", true);
-                        $("#customer").attr("required", false);
-                        $('#directcustomer').val(obj.name2);
-                        $('#customercontact').val(obj.phone);
-                        $('#customeraddress').val(obj.address);
-                        $('#repname').val(obj.idtbl_employee);
-                    } else {
-                        $("#directcustomer").attr("required", false);
-                        $("#directcustomerdiv").attr("hidden", true);
 
-                        $("#customeraddress").attr("readonly", true);
-                        $("#customercontact").attr("readonly", true);
-
-                        $("#customer").attr("required", true);
-                        $("#customerdiv").attr("hidden", false);
-                        selectcustomer(obj.idtbl_employee, obj.idtbl_area, obj.name);
-
-                    };
-                    $('#productcommonname').val(obj.address);
-                    $('#location').val(obj.idtbl_locations);
-                    $('#customer').val(obj.name);
-
-                    $('#remark').val(obj.remark);
-
-                  
-                    $('#recordOption').val('2');
-                    $('#btncreateorder').html('<i class="far fa-save"></i>&nbsp;Update');
-
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            recordID: id
-                        },
-                        url: 'getprocess/geteditporodertable.php',
-                        success: function (data) {
-                            records = JSON.parse(data);
-                            console.log(records);
-                            updateTable(records);
-                        }
-                    });
-
-
-                }
-            });
-
-
-        });
         $('#dataTable tbody').on('click', '.btnEdit', function () {
             recordID = $('#recordOption').val();
             var id = $(this).attr('id');
@@ -1041,19 +973,6 @@ include "include/topnavbar.php";
             
         });
 
-        $('#tableorder tbody').on('click', '.btndt', function () {
-            var row = $(this).closest('tr');
-            var qty = parseFloat(row.find('.chngeqty').text());
-            var freeqty = parseFloat(row.find('.chngeqtyfree').text());
-            var saleprice = parseFloat(row.find('.saleprice').text());
-            var totalqty = qty + freeqty;
-            var totalprice = saleprice * totalqty;
-            row.find('.totalqty').text(totalqty);
-            row.find('.total1').text(totalprice);
-            row.find('.totalsumshow').text(addCommas(totalprice));
-
-            calculateTotaleditable();
-        });
 
         $('#dataTable tbody').on('click', '.btnConfirm', function () {
             var id = $(this).attr('id');
@@ -1077,8 +996,9 @@ include "include/topnavbar.php";
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
+                    $('#editpodiscount').val(obj.podiscountpercentage);
 
-                    var objfirst = obj.tablelist;
+                    var objfirst = obj.tablelist;   
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
 
@@ -1091,11 +1011,16 @@ include "include/topnavbar.php";
                             .podetailid +
                             '</td><td class="text-center editnewqty">' +
                             objfirst[i].orderqty +
+                            '</td><td class="text-center editlinediscountpernetage">' +
+                            objfirst[i].discountpresent +
+                            '</td><td class="text-center editlinediscount">' +
+                            objfirst[i].discount +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
                             .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
-                            .status + '</td></tr>');
+                            .status + '</td><td class="d-none totwithoutdiscount">' + objfirst[i]
+                            .totwithoutdiscount + '</td></tr>');
 
                             var newRow = $('#tableorderview > tbody:last tr:last');
 
@@ -1140,6 +1065,7 @@ include "include/topnavbar.php";
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
+                    $('#editpodiscount').val(obj.podiscountpercentage);
 
                     var objfirst = obj.tablelist;
                     $.each(objfirst, function (i, item) {
@@ -1154,11 +1080,16 @@ include "include/topnavbar.php";
                             .podetailid +
                             '</td><td class="text-center editnewqty">' +
                             objfirst[i].dispatchqty +
+                            '</td><td class="text-center editlinediscountpernetage">' +
+                            objfirst[i].discountpresent +
+                            '</td><td class="text-center editlinediscount">' +
+                            objfirst[i].discount +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
                             .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
-                            .status + '</td></tr>');
+                            .status + '</td><td class="d-none totwithoutdiscount">' + objfirst[i]
+                            .totwithoutdiscount + '</td></tr>');
 
                             var newRow = $('#tableorderview > tbody:last tr:last');
 
@@ -1199,6 +1130,7 @@ include "include/topnavbar.php";
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
+                    $('#editpodiscount').val(obj.podiscountpercentage);
 
                     var objfirst = obj.tablelist;
                     $.each(objfirst, function (i, item) {
@@ -1213,11 +1145,16 @@ include "include/topnavbar.php";
                             .podetailid +
                             '</td><td class="text-center editnewqty">' +
                             objfirst[i].confirmqty +
+                            '</td><td class="text-center editlinediscountpernetage">' +
+                            objfirst[i].discountpresent +
+                            '</td><td class="text-center editlinediscount">' +
+                            objfirst[i].discount +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
                             .podetailid + '"><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
-                            .status + '</td></tr>');
+                            .status + '</td><td class="d-none totwithoutdiscount">' + objfirst[i]
+                            .totwithoutdiscount + '</td></tr>');
 
                             var newRow = $('#tableorderview > tbody:last tr:last');
 
@@ -1465,6 +1402,7 @@ include "include/topnavbar.php";
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
+                    $('#editpodiscount').val(obj.podiscountpercentage);
 
                     var confirmstatus = obj.confirm;
                     var dispatchstatus = obj.dispatchissue;
@@ -1493,11 +1431,16 @@ include "include/topnavbar.php";
                             .podetailid +
                             '</td><td class="text-center editnewqty">' +
                             showqty +
+                            '</td><td class="text-center editlinediscountpernetage">' +
+                            objfirst[i].discountpresent +
+                            '</td><td class="text-center editlinediscount">' +
+                            objfirst[i].discount +
                             '</td><td class="text-right total">' + objfirst[i]
                             .total + '</td><td class="d-none">' + objfirst[i]
                             .unitprice + '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' + objfirst[i]
                             .podetailid + '" disabled><i class="fas fa-trash"></i></button></td><td class="d-none">' + objfirst[i]
-                            .status + '</td></tr>');
+                            .status + '</td><td class="d-none totwithoutdiscount">' + objfirst[i]
+                            .totwithoutdiscount + '</td></tr>');
 
                         var newRow = $('#tableorderview > tbody:last tr:last');
 
@@ -1509,14 +1452,41 @@ include "include/topnavbar.php";
                     });
 
                     $('#btnUpdate').prop('disabled', true);
-                    
                     $('#modalorderview').modal('show');
                 }
             });
         });
 
+        $('#editpodiscount').keyup(function(){
+            var discountprecentage = $(this).val();
+            
+            if(discountprecentage == null){
+                discountprecentage = 0;
+            }
+            var linediscount = $("#divdiscountview").text();
+            var cleanlinediscount = linediscount.split(",").join("");
+            var cleanlinediscount = parseFloat(cleanlinediscount, 10);
+            
+            var subtotal = $("#divsubtotalview").text();
+            var cleansubtotal = subtotal.split(",").join("");
+            var cleansubtotal = parseFloat(cleansubtotal, 10);
 
-        $('#tableorderview tbody').on('click', '.editnewqty', function (e) {
+
+            var poDiscountAmount = (cleansubtotal - cleanlinediscount) * discountprecentage/100;
+
+            var netTotal = cleansubtotal - (cleanlinediscount + poDiscountAmount);
+
+            // alert(netTotal)
+            var shownet = addCommas(parseFloat(netTotal).toFixed(2));
+            var showPoDiscount = addCommas(parseFloat(poDiscountAmount).toFixed(2));
+
+            $('#divdiscountPOview').html(showPoDiscount);
+            $('#divtotalview').html(shownet);
+
+
+        })
+
+        $('#tableorderview tbody').on('click', '.editnewqty, .editlinediscountpernetage', function (e) {
             var row = $(this);
             // var rowid = row.closest("tr").find('td:eq(0)').text();
             // var selectvalueone = $('.optionpiorityone' + rowid).val();
@@ -1535,21 +1505,13 @@ include "include/topnavbar.php";
 
             $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val)
                 .appendTo($this);
-            textremove('.optionnewqty', row);
-        });
-        
-        // chaolk
-        $('#tableorderview tbody').on('click', '.btnDeleteOrderProduct', function (e) {
-            var row = $(this).closest('tr'); 
-            row.css('background-color', '#ffcccc');
-
-            row.find('td:nth-child(8)').text('3');
-            tabletotal1();
+            textremoveQtyandPrecentage('.optionnewqty', row);
         });
 
-        //Text remove
-        function textremove(classname, row) {
-            $('#tableorderview tbody').on('keyup', classname, function (e) {
+
+        function textremoveQtyandPrecentage(classname, row) {
+            // $('#tableorderview tbody').on('keyup', classname, function (e) {
+            $(classname).keyup(function(e) {
                 if (e.keyCode === 13) {
                     $this = $(this);
                     var val = $this.val();
@@ -1557,27 +1519,131 @@ include "include/topnavbar.php";
                     td.empty().html(val).data('editing', false);
 
                     var rowID = row.closest("td").parent()[0].rowIndex;
-                    var unitprice = parseFloat(row.closest("tr").find('td:eq(6)').text());
+                    var unitprice = parseFloat(row.closest("tr").find('td:eq(8)').text());
                     var newqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
-                    var totnew = newqty * unitprice;
+                    var discountprecent = parseFloat(row.closest("tr").find('td:eq(5)').text());
+                    var discountamount = parseFloat(row.closest("tr").find('td:eq(6)').text());
+
+                    var totwithoutdiscount = newqty * unitprice;
+                    var totnew = totwithoutdiscount;
+                    var newdiscount = (totnew * discountprecent) / 100;
+
+                    totnew = totnew - newdiscount;
+
 
                     var showtotnew = addCommas(parseFloat(totnew).toFixed(2));
-                    // var total = parseFloat(totrefill+totnew).toFixed(2);
-                    // var showtotal = addCommas(total);
 
-                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(5)').text(showtotnew);
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(7)').text(showtotnew);
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(6)').text(newdiscount);
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(11)').text(totwithoutdiscount);
 
                     tabletotal1();
                 }
             });
         }
 
+        $('#tableorderview tbody').on('click', '.editlinediscount', function (e) {
+            var row = $(this);
+
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            $this = $(this);
+            if ($this.data('editing')) return;
+
+            var val = $this.text();
+
+            $this.empty();
+            $this.data('editing', true);
+
+            $('<input type="Text" class="form-control form-control-sm optionnewlinediscount">').val(val)
+                .appendTo($this);
+
+            textremoveDiscountAmount('.optionnewlinediscount', row);
+        });
+
+        function textremoveDiscountAmount(classname, row) {
+            // $('#tableorderview tbody').on('keyup', classname, function (e) {
+            $(classname).keyup(function(e) {
+                if (e.keyCode === 13) {
+                    $this = $(this);
+                    var val = $this.val();
+                    var td = $this.closest('td');
+                    td.empty().html(val).data('editing', false);
+
+
+                    var rowID = row.closest("td").parent()[0].rowIndex;
+                    var unitprice = parseFloat(row.closest("tr").find('td:eq(8)').text());
+                    var newqty = parseFloat(row.closest("tr").find('td:eq(4)').text());
+                
+                    var totwithoutdiscount = newqty * unitprice;
+                    var discountPrecentage = (val * 100) / totwithoutdiscount;
+                    discountPrecentage = parseFloat(discountPrecentage).toFixed(2);
+                    
+                    $('#tableorderview').find('tr').eq(rowID).find('td:eq(5)').text(discountPrecentage);
+
+                    var totnew = totwithoutdiscount;
+                    var newdiscount = val;
+
+                    totnew = totnew - newdiscount;
+
+
+                    var showtotnew = addCommas(parseFloat(totnew).toFixed(2));
+
+                    row.closest("tr").find('td:eq(7)').text(showtotnew);
+                    row.closest("tr").find('td:eq(6)').text(newdiscount);
+                    row.closest("tr").find('td:eq(11)').text(totwithoutdiscount);
+
+                    tabletotal1();
+                }
+            });
+        }
+
+        // function TextInputRemove(rowdata){
+        //     $(".editfieldpay").keyup(function(event) {
+        //         if (event.keyCode === 13) {            
+        //             $this = $(this);
+        //             var val = $this.val();
+        //             var td = $this.closest('td');
+        //             td.empty().html(parseFloat(val).toFixed(2)).data('editing', false);
+
+        //             var deferred = $.Deferred();
+
+        //             setTimeout(function() {
+        //                 // completes status
+        //                 deferred.resolve();
+        //             }, 1000);
+
+        //             // returns complete status
+                    
+        //             var qty = parseFloat(rowdata.closest("tr").find('.qty').text()).toFixed(2);
+        //             var rowtotal = parseFloat(val).toFixed(2)*qty;
+        //             rowdata.closest("tr").find('.total').text(addCommas(parseFloat(rowtotal).toFixed(2)));
+                    
+        //             TotalCalculation('1');
+
+        //             return deferred.promise();
+        //         }
+        //     });
+        // }
+
+
+        $('#tableorderview tbody').on('click', '.btnDeleteOrderProduct', function (e) {
+            var row = $(this).closest('tr'); 
+            row.css('background-color', '#ffcccc');
+
+            row.find('td:nth-child(11)').text('3');
+            tabletotal1();
+            alert('asd')
+        });
+
+
         function tabletotal1() {
             var sum = 0;
-            $(".total").each(function () {
-
+            var totallinediscount = 0;
+            $(".totwithoutdiscount").each(function () {
                 var row = $(this).closest('tr'); 
-                var status = row.find('td:nth-child(8)').text(); 
+                var status = row.find('td:nth-child(11)').text(); 
 
                 if(status==3){
                     return;
@@ -1585,17 +1651,36 @@ include "include/topnavbar.php";
                 var cleansum = $(this).text().split(",").join("")
                 sum += parseFloat(cleansum);
             });
+            
+            $(".editlinediscount").each(function () {
+                var row = $(this).closest('tr'); 
+                var status = row.find('td:nth-child(11)').text(); 
+
+                if(status==3){
+                    return;
+                }
+                var cleantotallinediscount = $(this).text().split(",").join("")
+                totallinediscount += parseFloat(cleantotallinediscount);
+            });
 
             var showsum = addCommas(parseFloat(sum).toFixed(2));
+            var showlinediscount = addCommas(parseFloat(totallinediscount).toFixed(2));
 
-            var discount = $("#divdiscountview").text();
-            var cleandiscount = discount.split(",").join("")
-            var netTot = sum - cleandiscount;
-            // alert(netTot)
+            
+            var podiscountPercent = $('#editpodiscount').val();
+            var poDiscount = ((sum-totallinediscount) * podiscountPercent) / 100;
+
+            var showPoDiscount = addCommas(parseFloat(poDiscount).toFixed(2));
+
+            var fulldiscount = totallinediscount + poDiscount;
+            var netTot = sum - fulldiscount;
+
             var shownet = addCommas(parseFloat(netTot).toFixed(2));
 
             $('#divsubtotalview').html(showsum);
             $('#divtotalview').html(shownet);
+            $('#divdiscountview').html(showlinediscount);
+            $('#divdiscountPOview').html(showPoDiscount);
         }
 
         $("#createorderform").keypress(function (e) {
@@ -1905,6 +1990,7 @@ include "include/topnavbar.php";
             // console.log(jsonObj);
 
             var poID = $('#hiddenpoid').val();
+            var podiscountprecentage = $('#editpodiscount').val();
             var acceptanceType = $('#acceptanceType').val();
 
 
@@ -1912,12 +1998,13 @@ include "include/topnavbar.php";
             var cleandiscount = discount.split(",").join("")
 
             var nettotal = $('#divtotalview').text();
-
             var clearnettotal = nettotal.split(",").join("")
 
             var total = $('#divsubtotalview').text();
             var cleartotal = total.split(",").join("")
-
+         
+            var podiscountAmount = $('#divdiscountPOview').text();
+            var clearPodiscountAmount = podiscountAmount.split(",").join("")
 
             $.ajax({
                 type: "POST",
@@ -1928,6 +2015,8 @@ include "include/topnavbar.php";
                     discount: cleandiscount,
                     nettotal: clearnettotal,
                     total: cleartotal,
+                    podiscountPrecentage: podiscountprecentage,
+                    podiscountAmount: clearPodiscountAmount,
                 },
                 url: 'process/updatecustomerpoprocess.php',
                 success: function (result) { //console.log(result);
@@ -2006,77 +2095,6 @@ include "include/topnavbar.php";
         });
 
     });
-
-
-    function updateTable(records) {
-        var count = 0;
-        $('#tableorder > tbody').empty(); // Clear existing rows
-
-        records.forEach(function (obj) {
-            count++;
-            var freeqty = parseFloat(obj.freeqty);
-            var qty = parseFloat(obj.qty);
-            var totalqty = freeqty + qty;
-            //  alert(obj.idtbl_porder_detail);
-            //  alert(obj.saleprice);
-            var totalprice = totalqty * obj.saleprice;
-            // alert(totalprice);
-            $('#tableorder > tbody:last').append('<tr class="pointer">' +
-                '<td>' + count + '</td>' +
-                '<td>' + obj.product_name + '</td>' +
-                '<td class="d-none productIds">' + obj.tbl_product_idtbl_product + '</td>' +
-                '<td class="d-none">' + obj.unitprice + '</td>' +
-                '<td class="d-none">' + obj.saleprice + '</td>' +
-                '<td class="text-center chngeqty" contenteditable="true">' + obj.qty + '</td>' +
-                '<td></td>' +
-                '<td class="d-none">' + obj.freeproductid + '</td>' +
-                '<td class="text-center chngeqtyfree d-none">' + obj.freeqty + '</td>' +
-                '<td class="text-center totalqty">' + totalqty + '</td>' +
-                '<td class="text-right">' + addCommas(obj.saleprice) + '</td>' +
-                '<td class="d-none total1">' + totalprice + '</td>' +
-                '<td class="text-right totalsumshow">' + addCommas(totalprice) + '</td>' +
-                '<td><button type="button" class="btn btn-danger btn-sm btndlt"><i class="fas fa-trash-alt"></i></td>' +
-                '<td><button type="button" class="btn btn-primary btn-sm btndt" id="' + obj
-                .idtbl_porder_detail +
-                '"><i class="fas fa-pen"></i></td><td class="total d-none totalsum saleprice">' + obj
-                .saleprice + '</td><td class=" d-none">' + obj.idtbl_porder_detail + '</td></tr>');
-        });
-        calculateTotaleditable();
-
-
-    }
-
-    function calculateTotaleditable() {
-        var sum = 0;
-        $(".total1").each(function () {
-            sum += parseFloat($(this).text());
-        });
-        // alert(sum);
-
-
-        // console.log(sum);
-        var discount = parseFloat($('#discountpresentage').val());
-        var discountpo = parseFloat($('#discountpo').val());
-
-        var disvalue = (sum * discount) / 100;
-        var nettotal = sum - disvalue;
-        var disvaluepo = (nettotal * discountpo) / 100;
-        var nettotal = nettotal - disvaluepo;
-
-        var showsum = addCommas(parseFloat(sum).toFixed(2));
-        var showdis = addCommas(parseFloat(disvalue).toFixed(2));
-        var showdispo = addCommas(parseFloat(disvaluepo).toFixed(2));
-        var shownettotal = addCommas(parseFloat(nettotal).toFixed(2));
-
-        $('#divsubtotal').html('Rs. ' + showsum);
-        $('#hidetotalorder').val(sum);
-        $('#divdiscount').html('Rs. ' + showdis);
-        $('#divdiscountPO').html('Rs. ' + showdispo);
-        $('#hidediscount').val(disvalue);
-        $('#hidediscountPO').val(disvaluepo);
-        $('#divtotal').html('Rs. ' + shownettotal);
-        $('#hidenettotalorder').val(nettotal);
-    }
 
     function action(data) { //alert(data);
         var obj = JSON.parse(data);
