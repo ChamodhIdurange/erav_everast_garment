@@ -19,6 +19,8 @@ $areaId=null;
 $locationId=null;
 $customerId=null;
 
+$fullDiscount = $discount + $podiscountAmount;
+
 if($acceptanceType == 1){
     $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
 }else if($acceptanceType == 2){
@@ -42,7 +44,7 @@ if($acceptanceType == 1){
         $locationId = $row['tbl_locations_idtbl_locations'];
         $customerId = $row['tbl_customer_idtbl_customer'];
 
-        $insertInvoice="INSERT INTO `tbl_invoice`(`invoiceno`, `date`, `total`, `discount`, `vatamount`, `nettotal`, `paymentcomplete`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_customer_idtbl_customer`, `tbl_locations_idtbl_locations`, `tbl_customer_order_idtbl_customer_order`) VALUES('-', '$updatedatetime', '$total', '$discount', '0', '$nettotal', '0', '1', '$updatedatetime', '$userID', '$areaId', '$customerId', '$locationId', '$poID')";
+        $insertInvoice="INSERT INTO `tbl_invoice`(`invoiceno`, `date`, `total`, `discount`, `vatamount`, `nettotal`, `paymentcomplete`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_customer_idtbl_customer`, `tbl_locations_idtbl_locations`, `tbl_customer_order_idtbl_customer_order`) VALUES('-', '$updatedatetime', '$total', '$fullDiscount', '0', '$nettotal', '0', '1', '$updatedatetime', '$userID', '$areaId', '$customerId', '$locationId', '$poID')";
         $conn->query($insertInvoice);
 
         $invoiceId = $conn->insert_id;

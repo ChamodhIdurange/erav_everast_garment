@@ -110,14 +110,14 @@ $html = '
                 <td class="leftboxtop" width="10cm">
                     <table border="0" width="100%" style="margin-top:-43; padding-left:0.3cm;">
                         <tr>
-                            <td>Customer ID : ' . $customerID . '<br>' . $customername . '<br>' . $customeraddress . '<br>Tel : ' . $customerPhone . '</td>
+                            <td>Customer ID : ' . $customerID . '<br><span  style="font-size: 1.2em; font-weight: bold;">' . $customername . '</span><br>' . $customeraddress . '<br>Tel : ' . $customerPhone . '</td>
                         </tr>
                     </table>
                 </td>
                 <td width="3cm">&nbsp;</td>
                 <td>
                     <table width="100%" height="100%" border="0">
-                        <tr><td width="53%" height="0.5cm"> </td><td align="left">' . $today . ' </td></tr>
+                        <tr><td width="53%" height="0.5cm"> </td><td align="left">' .  $rowinvoiceinfo['date'] . ' </td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $invoiceno . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
@@ -144,10 +144,9 @@ $html = '
                 $count1++;
                 $html .= '
                     <tr>
-                        <td style="width:2cm;">' . $rowinvoicedetail['idtbl_product'] . '</td>
-                        <td style="width:3.5cm;">' . $rowinvoicedetail['product_code'] . '</td>
-                        <td style="width:5.0cm;">' . $rowinvoicedetail['product_name'] . '</td>
-                        <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
+                        <td style="width:2.2cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
+                        <td style="width:8.5cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:1.3cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">0.00</td>
                         <td style="width:2.6cm;" align="right">' . number_format(($rowinvoicedetail['saleprice'] * $rowinvoicedetail['qty']), 2) . '</td>
