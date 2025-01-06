@@ -53,6 +53,15 @@ $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
 
 
+$getinvoicedata = "SELECT * FROM `tbl_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$recordID'";
+$resultinvoice = $conn->query($getinvoicedata);
+
+if ($resultinvoice->num_rows > 0) {
+    $rowinvoice = $resultinvoice->fetch_assoc();
+    $invoiceNo = $rowinvoice['invoiceno'];
+}
+
+
 $html = '
     <!DOCTYPE html>
     <html lang="en">
@@ -117,7 +126,7 @@ $html = '
                 <td>
                     <table width="100%" height="100%" border="0">
                         <tr><td width="53%" height="0.5cm"> </td><td align="left">' . $porderDate . ' </td></tr>
-                        <tr><td height="0.5cm"></td> <td align="left">' . $cuspono . '</td></tr>
+                        <tr><td height="0.5cm"></td> <td align="left">' . $invoiceNo . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $cuspono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['saleref'] . '</td></tr>
@@ -143,8 +152,8 @@ $html = '
                 $count1++;
                 $html .= '
                     <tr>
-                        <td style="width:2.2cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
-                        <td style="width:8.5cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:2.4cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
+                        <td style="width:8.3cm;">' . $rowinvoicedetail['product_name'] . '</td>
                         <td style="width:1.3cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>

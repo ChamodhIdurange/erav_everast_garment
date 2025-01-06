@@ -23,17 +23,6 @@ $fullDiscount = $discount + $podiscountAmount;
 
 if($acceptanceType == 1){
     $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
-}else if($acceptanceType == 2){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
-
-    $insertDispatch="INSERT INTO `tbl_cutomer_order_dispatch`(`dispatchdate`, `vehicleno`, `drivername`, `trackingno`, `trackingwebsite`, `currier`, `status`, `insertdatetime`, `tbl_user_idtbl_user`) VALUES('$updatedatetime', '-', '-', '-', '-', '-', '1', '$updatedatetime', '$userID')";
-    $conn->query($insertDispatch);
-    $dispatchId = $conn->insert_id;
-            
-    $insertDispatchInfo="INSERT INTO `tbl_cutomer_order_dispatch_has_tbl_customer_order`(`tbl_cutomer_order_dispatch_idtbl_cutomer_order_dispatch`, `tbl_customer_order_idtbl_customer_order`) VALUES('$dispatchId', '$poID')";
-    $conn->query($insertDispatchInfo);
-}else if($acceptanceType == 3){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
 
     $getporderdata = "SELECT * FROM `tbl_customer_order` WHERE `idtbl_customer_order` = '$poID'";
     $result = $conn->query($getporderdata);
@@ -46,9 +35,34 @@ if($acceptanceType == 1){
 
         $insertInvoice="INSERT INTO `tbl_invoice`(`invoiceno`, `date`, `total`, `discount`, `vatamount`, `nettotal`, `paymentcomplete`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_customer_idtbl_customer`, `tbl_locations_idtbl_locations`, `tbl_customer_order_idtbl_customer_order`) VALUES('-', '$updatedatetime', '$total', '$fullDiscount', '0', '$nettotal', '0', '1', '$updatedatetime', '$userID', '$areaId', '$customerId', '$locationId', '$poID')";
         $conn->query($insertInvoice);
-
         $invoiceId = $conn->insert_id;
+
+        $dateformat = date('y/m/');
+        $invoiceNo = 'IV/'. $dateformat . $invoiceId;
+
+        $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
+        $conn->query($updateInvoiceNo);
     } 
+}else if($acceptanceType == 2){
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+
+    $insertDispatch="INSERT INTO `tbl_cutomer_order_dispatch`(`dispatchdate`, `vehicleno`, `drivername`, `trackingno`, `trackingwebsite`, `currier`, `status`, `insertdatetime`, `tbl_user_idtbl_user`) VALUES('$updatedatetime', '-', '-', '-', '-', '-', '1', '$updatedatetime', '$userID')";
+    $conn->query($insertDispatch);
+    $dispatchId = $conn->insert_id;
+            
+    $insertDispatchInfo="INSERT INTO `tbl_cutomer_order_dispatch_has_tbl_customer_order`(`tbl_cutomer_order_dispatch_idtbl_cutomer_order_dispatch`, `tbl_customer_order_idtbl_customer_order`) VALUES('$dispatchId', '$poID')";
+    $conn->query($insertDispatchInfo);
+}else if($acceptanceType == 3){
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+
+    $getinvoicedata = "SELECT * FROM `tbl_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$poID'";
+    $resultinvoice = $conn->query($getinvoicedata);
+
+    if ($resultinvoice->num_rows > 0) {
+        $rowinvoice = $resultinvoice->fetch_assoc();
+        $invoiceId = $rowinvoice['idtbl_invoice'];
+        $invoiceNo = $rowinvoice['invoiceno'];
+    }
 }
 
 if($conn->query($updatePoStatus)==true){
@@ -66,14 +80,20 @@ if($conn->query($updatePoStatus)==true){
 
         if($acceptanceType == 1){
             $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
-
+            $conn->query($updatePoDetail);
+            
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 2){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $conn->query($updatePoDetail);
 
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
         }else if($acceptanceType == 3){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime'";
+            $conn->query($updateinvoicehead);
+
+            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+            $conn->query($updatePoDetail);
 
             $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
 
@@ -89,13 +109,6 @@ if($conn->query($updatePoStatus)==true){
 
                 $insertInvoideDetail="INSERT INTO `tbl_invoice_detail`(`qty`, `unitprice`, `saleprice`, `discount`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_invoice_idtbl_invoice`) VALUES('$qty', '$unitprice', '$saleprice', '$discount', '$total', '1', '$updatedatetime', '$userID', '$productID', '$invoiceId')";
                 $conn->query($insertInvoideDetail);
-
-                $month = date('m');
-
-                $invoiceNo = 'IV/'.$month.'/'.$invoiceId;
-
-                $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
-                $conn->query($updateInvoiceNo);
 
                 // Stock Update
                 $productID = $row['tbl_product_idtbl_product'];
@@ -138,8 +151,7 @@ if($conn->query($updatePoStatus)==true){
 
             
         }
-        // echo $updatePoDetail;
-        $conn->query($updatePoDetail);
+        
         $conn->query($updateHoldStock);
 
     }

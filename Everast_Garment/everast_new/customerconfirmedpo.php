@@ -63,7 +63,7 @@ include "include/topnavbar.php";
                             <div class="page-header-content py-3">
                                 <h1 class="page-header-title">
                                     <div class="page-header-icon"><i data-feather="archive"></i></div>
-                                    <span>Customer Confirmed POrder</span>
+                                    <span>Customer POrder</span>
                                 </h1>
                             </div>
                         </div>
@@ -411,6 +411,10 @@ include "include/topnavbar.php";
                     <div class="col-md-3">
                         <label>PO Discount (%)</label>
                         <input class="form-control form-control-sm" type="number" id="editpodiscount" name = "editpodiscount" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label>PO Discount</label>
+                        <input class="form-control form-control-sm" type="number" id="editpodiscountamount" name = "editpodiscountamount" value="0" required>
                     </div>
                 </div>
                 <div class="row">
@@ -1471,14 +1475,43 @@ include "include/topnavbar.php";
             var cleansubtotal = subtotal.split(",").join("");
             var cleansubtotal = parseFloat(cleansubtotal, 10);
 
-
             var poDiscountAmount = (cleansubtotal - cleanlinediscount) * discountprecentage/100;
+            $('#editpodiscountamount').val(poDiscountAmount)
 
             var netTotal = cleansubtotal - (cleanlinediscount + poDiscountAmount);
 
             // alert(netTotal)
             var shownet = addCommas(parseFloat(netTotal).toFixed(2));
             var showPoDiscount = addCommas(parseFloat(poDiscountAmount).toFixed(2));
+
+            $('#divdiscountPOview').html(showPoDiscount);
+            $('#divtotalview').html(shownet);
+
+
+        })
+        $('#editpodiscountamount').keyup(function(){
+            var discountAmount = $(this).val();
+            
+            if(discountAmount == null){
+                discountprecentage = 0;
+            }
+            var linediscount = $("#divdiscountview").text();
+            var cleanlinediscount = linediscount.split(",").join("");
+            var cleanlinediscount = parseFloat(cleanlinediscount, 10);
+            
+            var subtotal = $("#divsubtotalview").text();
+            var cleansubtotal = subtotal.split(",").join("");
+            var cleansubtotal = parseFloat(cleansubtotal, 10);
+
+            var poDiscountPercentage = (discountAmount * 100)/ (cleansubtotal - cleanlinediscount) ;
+
+            $('#editpodiscount').val(parseFloat(poDiscountPercentage).toFixed(2))
+
+            var netTotal = cleansubtotal - (cleanlinediscount + discountAmount);
+
+            // alert(netTotal)
+            var shownet = addCommas(parseFloat(netTotal).toFixed(2));
+            var showPoDiscount = addCommas(parseFloat(discountAmount).toFixed(2));
 
             $('#divdiscountPOview').html(showPoDiscount);
             $('#divtotalview').html(shownet);
