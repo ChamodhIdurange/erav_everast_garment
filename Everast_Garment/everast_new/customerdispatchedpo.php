@@ -663,7 +663,7 @@ include "include/topnavbar.php";
             "processing": true,
             "serverSide": true,
             ajax: {
-                url: "scripts/customerporderlist.php",
+                url: "scripts/customerdispatchedporderlist.php",
                 type: "POST", // you can use GET
             },
             "order": [

@@ -139,7 +139,7 @@ $html = '
 
     <main>
         <div class="">
-            <table width="100%" style="padding-left:1cm; padding-right:1cm; padding-top:0.2cm;">
+            <table width="100%" style="padding-left:0.6cm; padding-right:1cm; padding-top:0.2cm;">
             ';
             $rowCount = mysqli_num_rows($resultinvoicedetail);
             $count = 0;
@@ -153,7 +153,7 @@ $html = '
                 $html .= '
                     <tr>
                         <td style="width:2.4cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
-                        <td style="width:8.3cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:8.7cm;">' . $rowinvoicedetail['product_name'] . '</td>
                         <td style="width:1.3cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>
