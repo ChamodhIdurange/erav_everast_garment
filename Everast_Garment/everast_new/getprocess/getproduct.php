@@ -30,7 +30,7 @@ $obj->commonname=$row['common_name'];
 $obj->size=$row['tbl_sizes_idtbl_sizes'];
 $obj->sizecategory=$row['tbl_size_categories_idtbl_size_categories'];
 $obj->uom=$row['uom'];
-$obj->category=$row['category'];
+$obj->categoryname=$row['category'];
 
 echo json_encode($obj);
 ?>

@@ -184,7 +184,7 @@ include "include/topnavbar.php";
                     var obj = JSON.parse(result);
 
                     $('#itemcode').val(obj.productcode);
-                    $('#itemcategory').val(obj.category);
+                    $('#itemcategory').val(obj.categoryname);
                     $('#commonname').val(obj.commonname);
                     $('#productsaleprice').val(obj.saleprice);
 

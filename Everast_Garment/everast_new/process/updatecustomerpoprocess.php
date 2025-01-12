@@ -73,30 +73,75 @@ if($conn->query($updatePoStatus)==true){
         $qty=$rowtabledata['col_5'];
         $linediscountprecentage=$rowtabledata['col_6'];
         $linediscountamount=$rowtabledata['col_7'];
+        $saleprice=$rowtabledata['col_9'];
         $status=$rowtabledata['col_11'];
         $fullTotal=$rowtabledata['col_12'];
+        $newstatus=$rowtabledata['col_13'];
 
         $netTotal = $fullTotal - $linediscountamount;
 
         if($acceptanceType == 1){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
-            $conn->query($updatePoDetail);
-            
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
-        }else if($acceptanceType == 2){
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
-            $conn->query($updatePoDetail);
+            if($newstatus == 0){
+                $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status', `saleprice` = '$saleprice' WHERE `idtbl_customer_order_detail` = '$podetailId'";
+                $conn->query($updatePoDetail);
+                
+                $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            }else{
+                $getproductData = "SELECT `unitprice` FROM `tbl_product` WHERE `idtbl_product` = '$productID'";
+                $resultproduct = $conn->query($getproductData);
+                $productdata = $resultproduct->fetch_assoc();
 
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+                $unitprice = $productdata['unitprice'];
+
+                $insertPoDetail="INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$qty', '$netTotal', '$qty', '$qty', '$qty', '$unitprice','$saleprice', '$linediscountprecentage', '$linediscountamount', '1','$updatedatetime','$userID','$poID','$productID')";
+                $conn->query($insertPoDetail);
+    
+                $updateHoldStock="INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$qty', '0', '1', '$updatedatetime', '$userID', '$productID','$poID')";
+            }
+            
+        }else if($acceptanceType == 2){
+            if($newstatus == 0){
+                $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `dispatchqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status', `saleprice` = '$saleprice'  WHERE `idtbl_customer_order_detail` = '$podetailId'";
+                $conn->query($updatePoDetail);
+    
+                $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            }else{
+                $getproductData = "SELECT `unitprice` FROM `tbl_product` WHERE `idtbl_product` = '$productID'";
+                $resultproduct = $conn->query($getproductData);
+                $productdata = $resultproduct->fetch_assoc();
+
+                $unitprice = $productdata['unitprice'];
+
+                $insertPoDetail="INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$qty', '$netTotal', '$qty', '$qty', '$qty', '$unitprice','$saleprice', '$linediscountprecentage', '$linediscountamount', '1','$updatedatetime','$userID','$poID','$productID')";
+                $conn->query($insertPoDetail);
+    
+                $updateHoldStock="INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$qty', '0', '1', '$updatedatetime', '$userID', '$productID','$poID')";
+            }
+            
         }else if($acceptanceType == 3){
             $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime'";
             $conn->query($updateinvoicehead);
 
-            $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status' WHERE `idtbl_customer_order_detail` = '$podetailId'";
-            $conn->query($updatePoDetail);
+            if($newstatus == 0){
+                $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status', `saleprice` = '$saleprice'  WHERE `idtbl_customer_order_detail` = '$podetailId'";
+                $conn->query($updatePoDetail);
+    
+                $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            }else{
+                $getproductData = "SELECT `unitprice` FROM `tbl_product` WHERE `idtbl_product` = '$productID'";
+                $resultproduct = $conn->query($getproductData);
+                $productdata = $resultproduct->fetch_assoc();
 
-            $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='$status', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+                $unitprice = $productdata['unitprice'];
 
+                $insertPoDetail="INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$qty', '$netTotal', '$qty', '$qty', '$qty', '$unitprice','$saleprice', '$linediscountprecentage', '$linediscountamount', '1','$updatedatetime','$userID','$poID','$productID')";
+                $conn->query($insertPoDetail);
+    
+                $updateHoldStock="INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$qty', '0', '1', '$updatedatetime', '$userID', '$productID','$poID')";
+            }
+            
+
+           
             $getporderdata = "SELECT * FROM `tbl_customer_order_detail` WHERE `idtbl_customer_order_detail` = '$podetailId' AND `status` = '1'";
             $result = $conn->query($getporderdata);
 
