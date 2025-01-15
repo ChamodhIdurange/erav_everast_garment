@@ -216,18 +216,14 @@ include "include/topnavbar.php";
                                     <input type="number" id="discountpresentage" name="discountpresentage"
                                         class="form-control form-control-sm" value="0">
                                 </div>
-                                <div class="form-group mb-2 col-3">
-                                    <label class="small font-weight-bold text-dark">Common name*</label>
-                                    <select class="form-control form-control-sm" name="productcommonname"
-                                        id="productcommonname">
-                                        <option value="">Select</option>
-                                        <?php if ($resultcommonnames->num_rows > 0) {
-                                            while ($rowcommonname = $resultcommonnames->fetch_assoc()) { ?>
-                                        <option value="<?php echo $rowcommonname['common_name'] ?>">
-                                            <?php echo $rowcommonname['common_name'] ?></option>
-                                        <?php }
-                                        } ?>
-                                    </select>
+                                <div class="mb-2 col-3">
+                                    <div class="form-group mb-1">
+                                        <label class="small font-weight-bold text-dark">Common name*</label>
+                                        <select class="form-control form-control-sm select2" style="width: 100%;" name="productcommonname"
+                                            id="productcommonname">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form-group mb-2 col-3">
                                     <label class="small font-weight-bold text-dark">Product*</label>
@@ -690,6 +686,28 @@ include "include/topnavbar.php";
         var statuscheck
         var deletecheck
 
+        $("#productcommonname").select2({
+            ajax: {
+                url: "getprocess/getcommonnamesselect2.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#modalcreateorder")
+        });
+
         $("#editcustomer").select2({
             ajax: {
                 url: "getprocess/getcustomerlistforreturn.php",
@@ -867,10 +885,10 @@ include "include/topnavbar.php";
                         button +=
                             '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                            '"  data-podate="' + full['date'] +
+                            '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
+                            '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
                             '"><i class="fas fa-pen"></i></button>';
-
-
-
                         button +=
                             '<button class="btn btn-outline-';
                         if (full['is_printed'] == 0) {
@@ -1205,13 +1223,18 @@ include "include/topnavbar.php";
 
 
         $('#dataTable tbody').on('click', '.btnEdit', function () {
-            recordID = $('#recordOption').val();
             var id = $(this).attr('id');
+            var customerid = $(this).data('customerid');
+            var customername = $(this).data('customername');
+            var podate = $(this).data('podate');
 
             $('#hiddencustomerpoid').val(id);
             $('#modaleditpo').modal('show');
 
+            $('#editorderdate').val(podate);
 
+            $('#editcustomer').append(new Option(customername, customerid, true, true)).trigger('change');
+            $('#editcustomer').val(customerid);
         });
 
 
@@ -1753,7 +1776,7 @@ include "include/topnavbar.php";
             var cleansubtotal = subtotal.split(",").join("");
             var cleansubtotal = parseFloat(cleansubtotal, 10);
 
-            var poDiscountAmount = (cleansubtotal - cleanlinediscount) * discountprecentage / 100;
+            var poDiscountAmount = (cleansubtotal - cleanlinediscount) * (discountprecentage / 100);
             $('#editpodiscountamount').val(poDiscountAmount)
 
             var netTotal = cleansubtotal - (cleanlinediscount + poDiscountAmount);
@@ -1773,6 +1796,8 @@ include "include/topnavbar.php";
             if (discountAmount == null) {
                 discountprecentage = 0;
             }
+            var discountAmount = parseFloat(discountAmount);
+
             var linediscount = $("#divdiscountview").text();
             var cleanlinediscount = linediscount.split(",").join("");
             var cleanlinediscount = parseFloat(cleanlinediscount, 10);
@@ -1784,17 +1809,13 @@ include "include/topnavbar.php";
             var poDiscountPercentage = (discountAmount * 100) / (cleansubtotal - cleanlinediscount);
 
             $('#editpodiscount').val(parseFloat(poDiscountPercentage).toFixed(2))
-
             var netTotal = cleansubtotal - (cleanlinediscount + discountAmount);
 
-            // alert(netTotal)
             var shownet = addCommas(parseFloat(netTotal).toFixed(2));
-            var showPoDiscount = addCommas(parseFloat(discountAmount).toFixed(2));
+            var showPoDiscount = addCommas(discountAmount);
 
             $('#divdiscountPOview').html(showPoDiscount);
             $('#divtotalview').html(shownet);
-
-
         })
 
         $('#tableorderview tbody').on('click', '.editnewqty, .editlinediscountpernetage', function (e) {

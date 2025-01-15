@@ -98,16 +98,13 @@ include "include/topnavbar.php";
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                    <label class="small font-weight-bold text-dark">Common name*</label>
-                                    <select class="form-control form-control-sm" name="productcommonname"
-                                        id="productcommonname">
-                                        <option value="">Select</option>
-                                        <?php if($resultcommonnames->num_rows > 0) { while ($rowcommonname = $resultcommonnames->fetch_assoc()) { ?>
-                                        <option value="<?php echo $rowcommonname['common_name'] ?>">
-                                            <?php echo $rowcommonname['common_name'] ?>
-                                        </option>
-                                        <?php }} ?>
-                                    </select>
+                                     <div class="form-group mb-1">
+                                        <label class="small font-weight-bold text-dark">Common name*</label>
+                                        <select class="form-control form-control-sm select2" style="width: 100%;" name="productcommonname"
+                                            id="productcommonname">
+                                            <option value="">Select</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-3">
                                     <label class="small font-weight-bold text-dark">Supplier Id</label>
@@ -267,6 +264,29 @@ include "include/topnavbar.php";
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
         });
+
+        $("#productcommonname").select2({
+            ajax: {
+                url: "getprocess/getcommonnamesselect2.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#modalcreateorder")
+        });
+
 
         var addcheck = '<?php echo $addcheck; ?>';
         var editcheck = '<?php echo $editcheck; ?>';
@@ -466,7 +486,7 @@ include "include/topnavbar.php";
                     dataType: 'json',
                     success: function (data) {
                         var tableBody = $('#tableBody');
-                        tableBody.empty();
+                        // tableBody.empty();
 
                         // Set VAT value in the hidden field
                         $('#hidevatper').val(data.vat);
