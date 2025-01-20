@@ -30,11 +30,15 @@ if ($conn->query($insertOrderQuery) === TRUE) {
         $productId = $detail['productId'];
         $unitPrice = $detail['unitPrice'];
         $saleprice = $detail['saleprice'];
+        $retail = $detail['retailprice'];
+
         $newQty = str_replace(',', '', $detail['newQty']);
 
         $newPrice = !empty($newQty) ? $unitPrice : null;
         $newsalePrice = !empty($newQty) ? $saleprice : null;
 
+        $sqlupdateproduct = "UPDATE `tbl_product` SET `unitprice`='$unitPrice', `saleprice`='$saleprice', `retail`='$retail' WHERE `idtbl_product` = '$productId'";
+        $conn->query($sqlupdateproduct) ;
 
         if ($newPrice !== null) {
             $totalPrice = $newQty * $unitPrice;

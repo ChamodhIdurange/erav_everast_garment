@@ -157,6 +157,25 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
+<!-- Modal Payment Receipt -->
+<div class="modal fade" id="modalpayments" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="embed-responsive embed-responsive-16by9" id="frame">
+                    <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function() {
@@ -216,7 +235,6 @@ include "include/topnavbar.php";
                         }
                     }
                 },
-                
                 {
                     "targets": -1,
                     "className": 'text-right',
@@ -228,10 +246,38 @@ include "include/topnavbar.php";
                             button+='<button type="button" data-url="process/invoicecancellprocess.php?record='+full['idtbl_invoice']+'&type=3"  data-actiontype="3" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="far fa-trash-alt"></i></button>';
                         }
                         
+                        button+='<button type="button" data-actiontype="3" title="Complete Order" class="btn btn-outline-secondary btn-sm mr-1 btnViewPayments" id="'+full['tbl_invoice_payment_idtbl_invoice_payment']+'"><i class="fa fa-credit-card"></i></button>';
                         return button;
                     }
                 }
             ]
+        });
+
+        $('#dataTable tbody').on('click', '.btnViewPayments', function() {
+            var id = $(this).attr('id');
+
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#modalpayments iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
+
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#modalpayments iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#modalpayments').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
         });
 
         $('#dataTable tbody').on('click', '.btnView', function() {

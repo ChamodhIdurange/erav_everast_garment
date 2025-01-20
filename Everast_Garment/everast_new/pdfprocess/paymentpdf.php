@@ -22,18 +22,19 @@ $resultpaymentmethodcash=$conn->query($sqlpaymentmethodscash);
 $rowcash=$resultpaymentmethodcash->fetch_assoc();
 $cashamount = $rowcash['payamount'];
 
-$sqlpaymentmethodscheque="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '2'";
-$resultpaymentmethodcheque=$conn->query($sqlpaymentmethodscheque);
-$rowcheque=$resultpaymentmethodcheque->fetch_assoc();
-$chequeamount = $rowcheque['payamount'];
+// $sqlpaymentmethodscheque="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '2'";
+// $resultpaymentmethodcheque=$conn->query($sqlpaymentmethodscheque);
+// $rowcheque=$resultpaymentmethodcheque->fetch_assoc();
+// $chequeamount = $rowcheque['payamount'];
 
 $sqlpayment="SELECT * FROM `tbl_invoice_payment` WHERE `idtbl_invoice_payment`='$paymentinoiceID' AND `status`=1";
 $resultpayment=$conn->query($sqlpayment);
 $rowpayment=$resultpayment->fetch_assoc();
 
-$sqlpaymentbank="SELECT * FROM `tbl_invoice_payment_detail` WHERE `status`=1 AND `tbl_invoice_payment_idtbl_invoice_payment`='$paymentinoiceID'";
+$sqlpaymentbank="SELECT * FROM `tbl_invoice_payment_detail` WHERE `tbl_invoice_payment_idtbl_invoice_payment`='$paymentinoiceID'";
 $resultpaymentbank=$conn->query($sqlpaymentbank);
 
+// echo $sqlpaymentbank;
 $html = '
     <!DOCTYPE html>
     <html lang="en">
@@ -126,14 +127,14 @@ $html = '
                                 <td>'.$i.'</td>
                                 <td>INV-'.$rowpaymentdetails['tbl_invoice_idtbl_invoice'].'</td>
                                 <td style="text-align: right">';
-                                    $invoiceID=$rowpaymentdetails['tbl_invoice_idtbl_invoice']; $sqlinvoice="SELECT `total` FROM `tbl_invoice` WHERE `idtbl_invoice`='$invoiceID' AND `status`=1"; 
+                                    $invoiceID=$rowpaymentdetails['tbl_invoice_idtbl_invoice']; $sqlinvoice="SELECT `nettotal`, `total`, `discount` FROM `tbl_invoice` WHERE `idtbl_invoice`='$invoiceID' AND `status`=1"; 
                                     $resultinvoice=$conn->query($sqlinvoice); 
                                     $rowinvoice=$resultinvoice->fetch_assoc();
 
-                                    $html.=number_format($rowinvoice['total'], 2);
+                                    $html.=number_format($rowinvoice['nettotal'], 2);
                                 $html.='</td>
-                                <td style="text-align: right">'.number_format($rowpaymentdetails['discount'],2).'</td>
-                                <td style="text-align: right">';$paymentdone = $rowinvoice['total'] - $rowpaymentdetails['discount']; $html.=number_format($paymentdone,2).'</td>
+                                <td style="text-align: right">'.number_format($rowinvoice['discount'],2).'</td>
+                                <td style="text-align: right">';$paymentdone = $rowinvoice['total'] - $rowinvoice['discount']; $html.=number_format($paymentdone,2).'</td>
                             </tr>';
                             $i++;}
                         $html.='</tbody>

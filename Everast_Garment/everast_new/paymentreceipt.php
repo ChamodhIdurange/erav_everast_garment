@@ -150,6 +150,7 @@ include "include/topnavbar.php";
             $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
             $('#modalpaymentreceipt iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
+            // alert(id)
             var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
             //            alert(src);
             var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640

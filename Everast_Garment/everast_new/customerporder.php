@@ -1777,7 +1777,7 @@ include "include/topnavbar.php";
             var cleansubtotal = parseFloat(cleansubtotal, 10);
 
             var poDiscountAmount = (cleansubtotal - cleanlinediscount) * (discountprecentage / 100);
-            $('#editpodiscountamount').val(poDiscountAmount)
+            $('#editpodiscountamount').val(parseFloat(poDiscountAmount).toFixed(2))
 
             var netTotal = cleansubtotal - (cleanlinediscount + poDiscountAmount);
 

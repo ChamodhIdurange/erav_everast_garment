@@ -119,7 +119,7 @@ if($conn->query($updatePoStatus)==true){
             }
             
         }else if($acceptanceType == 3){
-            $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime'";
+            $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime' WHERE `idtbl_invoice`='$invoiceId'";
             $conn->query($updateinvoicehead);
 
             if($newstatus == 0){
@@ -149,10 +149,10 @@ if($conn->query($updatePoStatus)==true){
                 $row = $result->fetch_assoc();
                 $unitprice = $row['unitprice'];
                 $saleprice = $row['saleprice'];
-                $total = $row['total'];
+                $lineTot = $row['total'];
                 $discount = $row['discount'];
 
-                $insertInvoideDetail="INSERT INTO `tbl_invoice_detail`(`qty`, `unitprice`, `saleprice`, `discount`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_invoice_idtbl_invoice`) VALUES('$qty', '$unitprice', '$saleprice', '$discount', '$total', '1', '$updatedatetime', '$userID', '$productID', '$invoiceId')";
+                $insertInvoideDetail="INSERT INTO `tbl_invoice_detail`(`qty`, `unitprice`, `saleprice`, `discount`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_invoice_idtbl_invoice`) VALUES('$qty', '$unitprice', '$saleprice', '$discount', '$lineTot', '1', '$updatedatetime', '$userID', '$productID', '$invoiceId')";
                 $conn->query($insertInvoideDetail);
 
                 // Stock Update
