@@ -10,7 +10,6 @@ $currentDate = date('mdY');
 $userID = $_SESSION['userid'];
 $record = $_GET['record'];
 // $type=$_GET['type'];
-$updateqty = 0;
 $sqlReturn = "SELECT `returntype`, `total` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
 $resultReturn = $conn->query($sqlReturn);
 $rowReturn = $resultReturn->fetch_assoc();
@@ -42,12 +41,8 @@ if ($conn->query($sql) == true) {
                 $insertstock="INSERT INTO `tbl_stock` (`batchqty`, `qty`, `update`, `status`, `batchno`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `insertdatetime`) VALUES ('$qty', '$qty', '$updatedatetime', '1', '$batchNo', '$updatedatetime', '$userID', '$tbl_product_idtbl_product', '$updatedatetime')";
                 $conn->query($insertstock);
             }
-            $sqlupdate = "UPDATE `tbl_stock` SET `qty`='$updateqty' WHERE `tbl_product_idtbl_product`='$tbl_product_idtbl_product'";
-             $conn->query($sqlupdate);
         }
-        if ($conn->query($sqlupdate) == true) {
-            header("Location:../customerreturn.php?action=6");
-        }
+        header("Location:../customerreturn.php?action=6");
     } else if ($type == 2) {
         $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$returntotal', 0, '$returntotal', 0, 1, '$updatedatetime', '$userID')";
         $conn->query($sqlcredit);

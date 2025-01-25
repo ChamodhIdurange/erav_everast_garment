@@ -284,7 +284,7 @@ include "include/topnavbar.php";
     $(document).ready(function() {
         $("#customer").select2({
             ajax: {
-                url: 'getprocess/getcustomerlist.php',
+                url: 'getprocess/getcustomerlistforreturn.php',
                 type: "post",
                 dataType: 'json',
                 delay: 250,
