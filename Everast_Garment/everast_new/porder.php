@@ -98,10 +98,10 @@ include "include/topnavbar.php";
                                     </div>
                                 </div>
                                 <div class="col-3">
-                                     <div class="form-group mb-1">
+                                    <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Common name*</label>
-                                        <select class="form-control form-control-sm select2" style="width: 100%;" name="productcommonname"
-                                            id="productcommonname">
+                                        <select class="form-control form-control-sm select2" style="width: 100%;"
+                                            name="productcommonname" id="productcommonname">
                                             <option value="">Select</option>
                                         </select>
                                     </div>
@@ -197,38 +197,101 @@ include "include/topnavbar.php";
     </div>
 </div>
 <!-- Modal order view -->
-<div class="modal fade" id="modalorderview" data-backdrop="static" data-keyboard="false" tabindex="-1"
+<div class="modal fade" id="modalorderedit" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header p-2">
-                <h6 class="modal-title" id="viewmodaltitle"></h6>
+                <h6 class="modal-title" id="viewmodaltitleedit"></h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-bordered table-sm small" id="tableorderview">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th class="d-none">ProductID</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-right">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="row">
+                    <div class="col-4">
+                        <form id="editorderform" autocomplete="off">
+                            <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Common Name</label>
+                                <select class="form-control form-control-sm" style="width: 100%;" name="editcommonname"
+                                    id="editcommonname" required>
+                                    <option value="">Select</option>
+                                    <?php if($resultsupplier->num_rows > 0) {while ($rowcategory = $resultsupplier-> fetch_assoc()) { ?>
+                                    <option value="<?php echo $rowcategory['idtbl_supplier'] ?>">
+                                        <?php echo $rowcategory['suppliername'] ?></option>
+                                    <?php }} ?>
+                                </select>
+                            </div>
+                            <!-- <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Product</label>
+                                <select class="form-control form-control-sm" name="editcommonname" id="editcommonname"
+                                    required>
+                                    <option value="">Select</option>
+                                    <?php if($resultsupplier->num_rows > 0) {while ($rowcategory = $resultsupplier-> fetch_assoc()) { ?>
+                                    <option value="<?php echo $rowcategory['idtbl_supplier'] ?>">
+                                        <?php echo $rowcategory['suppliername'] ?></option>
+                                    <?php }} ?>
+                                </select>
+                            </div>
+                            <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Unit Price</label>
+                                <input type="number" id="editunitprice" name="editunitprice"
+                                    class="form-control form-control-sm" required>
+                            </div>
+                            <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Sale Price</label>
+                                <input type="number" id="editsaleprice" name="editsaleprice"
+                                    class="form-control form-control-sm" required>
+                            </div>
+                            <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Retail Price</label>
+                                <input type="number" id="editretailprice" name="editretailprice"
+                                    class="form-control form-control-sm" required>
+                            </div>
+                            <div class="form-row mb-1">
+                                <label class="small font-weight-bold text-dark">Qty</label>
+                                <input type="number" id="editqty" name="editqty" class="form-control form-control-sm"
+                                 required>
+                            </div> -->
+                        </form>
+                    </div>
+                    <div class="col-8">
+                        <table class="table table-striped table-bordered table-sm small" id="tableorderedit">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Product</th>
+                                    <th class="d-none" style="width: 100px;">ProductID</th>
+                                    <th class="text-center" style="width: 50px;">Unit Price</th>
+                                    <th class="text-center" style="width: 50px;">Sale Price</th>
+                                    <th class="text-center" style="width: 50px;">Retail Price</th>
+                                    <th class="text-center" style="width: 50px;">Qty</th>
+                                    <th class="d-none" style="width: 100px;">HideTotal</th>
+                                    <th class="text-right" style="width: 100px;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBodyEdit"></tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12 text-right">
-                        <h1 class="font-weight-600" id="divtotalview">Rs. 0.00</h1>
+                        <h1 class="font-weight-600" id="divtotaledit">Rs. 0.00</h1>
+                        <input type="hidden" id="hidenettotaledit" name="hidenettotaledit">
                     </div>
+                   
                     <div class="col-12">
                         <h6 class="title-style"><span>Remark Information</span></h6>
                     </div>
                     <div class="col-12">
-                        <div id="remarkview"></div>
+                        <div id="remarkedit"></div>
                     </div>
+                    <div class="col-12 text-right mt-2">
+                        <input type="hidden" id="hiddednpoid" name="hiddednpoid">
+                            <button type="button" id="btneditorder"
+                                class="btn btn-outline-primary btn-sm fa-pull-right"
+                                <?php if($addcheck==0){echo 'disabled';} ?>><i class="fas fa-save"></i>&nbsp;Edit
+                                Order</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -286,6 +349,27 @@ include "include/topnavbar.php";
                 cache: true
             },
             dropdownParent: $("#modalcreateorder")
+        });
+        $("#editcommonname").select2({
+            ajax: {
+                url: "getprocess/getcommonnamesselect2.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#modalorderedit")
         });
 
 
@@ -352,10 +436,19 @@ include "include/topnavbar.php";
                         button +=
                             '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
                             full['idtbl_porder'] + '" ';
-                        if (full['confirmstatus'] == 0 | full['confirmstatus'] == 2) {
+
+                        if (full['confirmstatus'] == 0 || full['confirmstatus'] == 2) {
                             button += 'disabled';
                         }
                         button += '><i class="fas fa-file-invoice-dollar"></i></button>';
+
+                        button +=
+                            '<button class="btn btn-outline-secondary btn-sm mr-1 btnedit" data-toggle="tooltip" data-placement="bottom" title="Edit Order" id="' +
+                            full['idtbl_porder'] + '" ';
+                        if (full['confirmstatus'] == 1) {
+                            button += 'disabled';
+                        }
+                        button += '><i class="fa fa-pen"></i></button>';
 
                         button += '<button class="btn btn-outline-dark btn-sm mr-1 btnView ';
                         if (editcheck == 0) {
@@ -380,14 +473,16 @@ include "include/topnavbar.php";
                                 '"><i class="fas fa-times"></i></button>';
                         }
 
-                        if (full['confirmstatus'] == 1 && full['completestatus'] == 1 && statuscheck == 1) {
+                        if (full['confirmstatus'] == 1 && full['completestatus'] == 1 &&
+                            statuscheck == 1) {
                             button += '<button class="btn btn-outline-success btn-sm mr-1 ';
                             if (statuscheck == 0) {
                                 button += 'd-none';
                             }
                             button +=
                                 '"  data-toggle="tooltip" data-placement="bottom" title="Complete Order"><i class="fas fa-check-circle"></i></button>';
-                        } else if (full['confirmstatus'] == 1 && full['completestatus'] == 0 && statuscheck == 1) {
+                        } else if (full['confirmstatus'] == 1 && full['completestatus'] == 0 &&
+                            statuscheck == 1) {
                             button +=
                                 '<button type="button" data-url="process/statusporder.php?record=' +
                                 full['idtbl_porder'] +
@@ -395,9 +490,6 @@ include "include/topnavbar.php";
                                 full['idtbl_porder'] +
                                 '"><i class="fas fa-times"></i></button>';
                         }
-
-                      
-
                         if (deletecheck == 1) {
                             button +=
                                 '<button type="button" data-url="process/statusporder.php?record=' +
@@ -406,8 +498,6 @@ include "include/topnavbar.php";
                                 full['idtbl_porder'] +
                                 '"><i class="far fa-trash-alt"></i></button>';
                         }
-
-
                         return button;
                     }
                 }
@@ -448,6 +538,64 @@ include "include/topnavbar.php";
                             objfirst[i].total + '</td></tr>');
                     });
                     $('#modalorderview').modal('show');
+                }
+            });
+        });
+        $('#dataTable tbody').on('click', '.btnedit', function () {
+            var id = $(this).attr('id');
+            $('#hiddednpoid').val(id)
+            $.ajax({
+                type: "POST",
+                data: {
+                    orderID: id
+                },
+                url: 'getprocess/getorderlistaccoorderid.php',
+                success: function (result) { //alert(result);
+                    var obj = JSON.parse(result);
+
+                    $('#divtotaledit').html(obj.nettotalshow);
+                    $('#remarkedit').html(obj.remark);
+                    $('#viewmodaltitleedit').html('Order No: PO-' + id);
+                    $('#tableorderedit  > tbody').empty()
+                    var tableBody = $('#tableorderedit');
+
+                    var objfirst = obj.tablelist;
+                    $.each(objfirst, function (index, product) {
+                        tableBody.append('<tr>' +
+                            '<td>' + product.product_name + '</td>' +
+                            '<td class="d-none">' + product
+                            .idtbl_product + '</td>' +
+                            '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="unitprice[]" value="' +
+                            addCommas(parseFloat(product.unitprice)
+                                .toFixed(2)) + '"></td>' +
+                            '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="' +
+                            product.saleprice + '"></td>' +
+                            '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="retailprice[]" value="' +
+                            product.retail + '"></td>' +
+                            '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="'+product.qty+'"></td>' +
+                            '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="'+product.qty+'"></td>' +
+                            '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="'+product.total+'" readonly></td><td class="text-right d-none option-column">1</td><td class="text-right d-none podetailid-column">'+product.podetailId+'</td>' +
+                            '</tr>');
+                            
+                        $('.input-integer').on('input', function () {
+                            var inputValue = $(this).val().replace(
+                                /\D/g, '');
+                            if (inputValue === '' || inputValue ===
+                                '0') {
+                                $(this).val('');
+                            } else {
+                                $(this).val(inputValue);
+                            }
+                        });
+
+                        $('.input-integer').on('blur', function () {
+                            var inputValue = $(this).val().trim();
+                            if (inputValue === '') {
+                                $(this).val('0');
+                            }
+                        });
+                    });
+                    $('#modalorderedit').modal('show');
                 }
             });
         });
@@ -538,6 +686,65 @@ include "include/topnavbar.php";
                 $('#tableBody').empty();
             }
         });
+        $('#editcommonname').change(function () {
+            var commonName = $(this).val();
+            if (commonName) {
+                $.ajax({
+                    url: 'getprocess/get_products.php',
+                    type: 'GET',
+                    data: {
+                        common_name: commonName
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        var tableBody = $('#tableorderedit');
+
+                        $.each(data, function (index, product) {
+                            if (index !== 'vat') {
+                                tableBody.append('<tr>' +
+                                    '<td>' + product.product_name + '</td>' +
+                                    '<td class="d-none">' + product
+                                    .idtbl_product + '</td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="unitprice[]" value="' +
+                                    addCommas(parseFloat(product.unitprice)
+                                        .toFixed(2)) + '"></td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="saleprice[]" value="' +
+                                    product.saleprice + '"></td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="retailprice[]" value="' +
+                                    product.retail + '"></td>' +
+                                    '<td class="text-center"><input type="text" class="input-integer form-control form-control-sm custom-width" name="new_quantity[]" value="0"></td>' +
+                                    '<td class="d-none hide-total-column"><input type="number" class="form-control form-control-sm custom-width" name="hidetotal_quantity[]" value="0"></td>' +
+                                    '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td><td class="text-right d-none option-column">0</td><td class="text-right d-none podetailid-column">0</td>' +
+                                    '</tr>');
+                            }
+
+                            $('.input-integer').on('input', function () {
+                                var inputValue = $(this).val().replace(
+                                    /\D/g, '');
+                                if (inputValue === '' || inputValue ===
+                                    '0') {
+                                    $(this).val('');
+                                } else {
+                                    $(this).val(inputValue);
+                                }
+                            });
+
+                            $('.input-integer').on('blur', function () {
+                                var inputValue = $(this).val().trim();
+                                if (inputValue === '') {
+                                    $(this).val('0');
+                                }
+                            });
+                        });
+                    },
+                    error: function (error) {
+                        console.log('Error fetching products:', error);
+                    }
+                });
+            } else {
+                $('#tableBody').empty();
+            }
+        });
 
         $('#btnordercreate').click(function () {
             $('#modalcreateorder').modal('show');
@@ -551,9 +758,28 @@ include "include/topnavbar.php";
             updateTotalForRow(row);
             updateGrandTotal();
         });
-
+        $('#tableBodyEdit').on('input', 'input[name^="new_quantity"]', function () {
+            var row = $(this).closest('tr');
+            updateTotalForRowEdit(row);
+            updateGrandTotalEdit();
+        });
 
         function updateTotalForRow(row) {
+            var newQuantity = parseFloat(row.find('input[name^="new_quantity"]').val()) || 0;
+            var unitPrice = parseFloat(row.find('td:eq(2) input').val().replace(/,/g, '')) || 0;
+
+            var newTotal = newQuantity * unitPrice;
+
+            var totalColumn = row.find('td:eq(7)');
+            var formattedTotal = newTotal.toFixed(2);
+            totalColumn.find('input[name^="total_quantity"]').val(formattedTotal);
+
+            var hideTotalColumn = row.find('.hide-total-column');
+            var formattedHideTotal = newTotal.toFixed(5);
+            hideTotalColumn.find('input[name^="hidetotal_quantity"]').val(formattedHideTotal);
+        }
+
+        function updateTotalForRowEdit(row) {
             var newQuantity = parseFloat(row.find('input[name^="new_quantity"]').val()) || 0;
             var unitPrice = parseFloat(row.find('td:eq(2) input').val().replace(/,/g, '')) || 0;
 
@@ -590,6 +816,20 @@ include "include/topnavbar.php";
 
         }
 
+        function updateGrandTotalEdit() {
+            var grandTotal = 0;
+
+            $('#tableBodyEdit').find('input[name^="total_quantity"]').each(function () {
+                var total = parseFloat($(this).val().replace(/,/g, '')) || 0;
+                grandTotal += total;
+            });
+
+            var netTotal = grandTotal;
+
+            $('#divtotaledit').text('Rs. ' + addCommas(netTotal.toFixed(2)));
+            $('#hidenettotaledit').val(netTotal.toFixed(2));
+        }
+
         $('#btncreateorder').click(function () {
             // Collect data from the form and table
             var orderDate = $('#orderdate').val();
@@ -609,8 +849,10 @@ include "include/topnavbar.php";
             $('#tableBody tr').each(function () {
                 var productId = $(this).find('td:eq(1)').text();
                 var unitprice = $(this).find('td:eq(2) input').val().replace(/,/g, '');
-                var saleprice = $(this).find('input[name^="saleprice"]').val().replace(/,/g, '');
-                var retailprice = $(this).find('input[name^="retailprice"]').val().replace(/,/g, '');
+                var saleprice = $(this).find('input[name^="saleprice"]').val().replace(/,/g,
+                    '');
+                var retailprice = $(this).find('input[name^="retailprice"]').val().replace(/,/g,
+                    '');
                 var newQty = $(this).find('input[name^="new_quantity"]').val();
                 var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
 
@@ -645,6 +887,54 @@ include "include/topnavbar.php";
                         result)); // Convert the object to a JSON-formatted string
                     // Optionally reload the page after a delay or user interaction
                     // setTimeout(function() { location.reload(); }, 2000); // Reload after 2 seconds
+                    location.reload();
+
+                }
+            });
+        });
+        $('#btneditorder').click(function () {
+            var nettotal = $('#hidenettotaledit').val();
+            var porderId = $('#hiddednpoid').val();
+
+
+            var orderDetails = [];
+            $('#tableBodyEdit tr').each(function () {
+                var productId = $(this).find('td:eq(1)').text();
+                var unitprice = $(this).find('td:eq(2) input').val().replace(/,/g, '');
+                var saleprice = $(this).find('input[name^="saleprice"]').val().replace(/,/g,'');
+                var retailprice = $(this).find('input[name^="retailprice"]').val().replace(/,/g,'');
+                var newQty = $(this).find('input[name^="new_quantity"]').val();
+                var unittotal = $(this).find('input[name^="hidetotal_quantity"]').val();
+                var recordOption = $(this).find('td:eq(8)').text();
+                var detailsId = $(this).find('td:eq(9)').text();
+
+
+                orderDetails.push({
+                    productId: productId,
+                    unitPrice: unitprice,
+                    saleprice: saleprice,
+                    retailprice: retailprice,
+                    newQty: newQty,
+                    unittotal: unittotal,
+                    detailsId: detailsId,
+                    recordOption: recordOption
+                });
+            });
+
+            // Send data to the server
+            $.ajax({
+                url: 'process/updateporderprocess.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    porderId: porderId,
+                    nettotal: nettotal,
+                    orderDetails: orderDetails
+                },
+                success: function (result) {console.log(result)
+                    $('#modalcreateorder').modal('hide');
+                    action(JSON.stringify(
+                        result));
                     location.reload();
 
                 }
