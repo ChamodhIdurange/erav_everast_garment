@@ -15,9 +15,9 @@ $resultReturn = $conn->query($sqlReturn);
 $rowReturn = $resultReturn->fetch_assoc();
 $type =  $rowReturn['returntype'];
 $returntotal =  $rowReturn['total'];
-
+);
 $sqlgetqty = "SELECT `qty`, `tbl_product_idtbl_product` FROM `tbl_return_details` WHERE `tbl_return_idtbl_return` = '$record'";
-$resultsqlgetqty = $conn->query($sqlgetqty);
+$resultsqlgetqty = $conn->query($sqlgetqty
 
 $sql = "UPDATE `tbl_return` SET `acceptance_status`='1',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_return`='$record'";
 $batchNo = "RTH" . $currentDate . $record;

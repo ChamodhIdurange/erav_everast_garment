@@ -118,7 +118,7 @@ $html = '
                 <td width="3cm">&nbsp;</td>
                 <td>
                     <table width="100%" height="100%" border="0">
-                        <tr><td width="53%" height="0.5cm"> </td><td align="left">' .  $rowinvoiceinfo['date'] . ' </td></tr>
+                        <tr><td width="55%" height="0.5cm"> </td><td align="left">' .  $rowinvoiceinfo['date'] . ' </td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $invoiceno . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
@@ -186,7 +186,7 @@ $html = '
                                     <td align="right" style="padding-top:0.2cm;">' . number_format($discount, 2) . '</td>
                                 </tr>
                                 <tr>
-                                    <td align="right" style="padding-top:0.2cm;">' . number_format($net_total, 2) . '</td>
+                                    <td align="right" style="padding-top:0.2cm;font-weight: bold;">' . number_format($net_total, 2) . '</td>
                                 </tr>
                             </table>
                         </div>

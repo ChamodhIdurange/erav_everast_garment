@@ -183,7 +183,7 @@ $html = '
 
     <main>
         <div class="" style="margin-top:15px;">
-            <table width="100%" style="padding-left:1cm; padding-right:1cm; padding-top:0.2cm;" id="detailtable">
+            <table width="100%" style="padding-left:1cm; padding-right:1cm; padding-top:0.4cm;" id="detailtable">
             <thead>
                 <tr>
                     <th style="width:2cm;" id="detailth">#</th>
@@ -264,7 +264,7 @@ $html = '
                                             </tr>
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Total:</td>
-                                                <td align="right" style="padding-top:0.2cm;">' . number_format($net_total, 2) . '</td>
+                                                <td align="right" style="padding-top:0.2cm;font-weight: bold;">' . number_format($net_total, 2) . '</td>
                                             </tr>
                                         </table>
                                     </td>

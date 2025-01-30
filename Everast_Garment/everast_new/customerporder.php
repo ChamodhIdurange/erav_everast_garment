@@ -10,7 +10,7 @@ $resultproduct = $conn->query($sqlproduct);
 $sqlbank = "SELECT `idtbl_bank`, `bankname` FROM `tbl_bank` WHERE `status`=1 AND `idtbl_bank`>1";
 $resultbank = $conn->query($sqlbank);
 
-$sqlreplist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
+$sqlreplist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=8 AND `status`=1";
 $resultreplist = $conn->query($sqlreplist);
 
 $sqlsalemanagerlist = "SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
@@ -507,7 +507,8 @@ include "include/topnavbar.php";
                         <h6 class="title-style"><span>Remark Information</span></h6>
                     </div>
                     <div class="col-12">
-                        <div id="remarkview"></div>
+                        <textarea class="form-control form-control-sm" type="text" id="remarkview" name="remarkview"></textarea>
+
                     </div>
                 </div>
                 <button class="btn btn-primary btn-sm fa-pull-right" id="btnUpdate"><i
@@ -1256,7 +1257,7 @@ include "include/topnavbar.php";
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
                     $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').html(obj.remark);
+                    $('#remarkview').val(obj.remark);
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
@@ -1335,7 +1336,7 @@ include "include/topnavbar.php";
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
                     $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').html(obj.remark);
+                    $('#remarkview').val(obj.remark);
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
@@ -1410,7 +1411,7 @@ include "include/topnavbar.php";
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
                     $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').html(obj.remark);
+                    $('#remarkview').val(obj.remark);
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
@@ -1692,7 +1693,7 @@ include "include/topnavbar.php";
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
                     $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').html(obj.remark);
+                    $('#remarkview').val(obj.remark);
                     $('#dcusname').html(obj.cusname);
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
@@ -2358,7 +2359,7 @@ include "include/topnavbar.php";
             var poID = $('#hiddenpoid').val();
             var podiscountprecentage = $('#editpodiscount').val();
             var acceptanceType = $('#acceptanceType').val();
-
+            var remarkVal = $('#remarkview').val()
 
             var discount = $('#divdiscountview').text();
             var cleandiscount = discount.split(",").join("")
@@ -2383,6 +2384,7 @@ include "include/topnavbar.php";
                     total: cleartotal,
                     podiscountPrecentage: podiscountprecentage,
                     podiscountAmount: clearPodiscountAmount,
+                    remarkVal: remarkVal
                 },
                 url: 'process/updatecustomerpoprocess.php',
                 success: function (result) { //console.log(result);

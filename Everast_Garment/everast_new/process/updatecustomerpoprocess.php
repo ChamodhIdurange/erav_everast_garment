@@ -11,6 +11,7 @@ $nettotal=$_POST['nettotal'];
 $discount=$_POST['discount'];
 $podiscountPrecentage=$_POST['podiscountPrecentage'];
 $podiscountAmount=$_POST['podiscountAmount'];
+$remarkVal=$_POST['remarkVal'];
 
 $acceptanceType=$_POST['acceptanceType'];
 $tableData=$_POST['tableData'];
@@ -22,7 +23,7 @@ $customerId=null;
 $fullDiscount = $discount + $podiscountAmount;
 
 if($acceptanceType == 1){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `confirm`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID', `remark`='$remarkVal' WHERE `idtbl_customer_order`='$poID'";
 
     $getporderdata = "SELECT * FROM `tbl_customer_order` WHERE `idtbl_customer_order` = '$poID'";
     $result = $conn->query($getporderdata);
@@ -44,7 +45,7 @@ if($acceptanceType == 1){
         $conn->query($updateInvoiceNo);
     } 
 }else if($acceptanceType == 2){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `dispatchissue`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID', `remark`='$remarkVal'  WHERE `idtbl_customer_order`='$poID'";
 
     $insertDispatch="INSERT INTO `tbl_cutomer_order_dispatch`(`dispatchdate`, `vehicleno`, `drivername`, `trackingno`, `trackingwebsite`, `currier`, `status`, `insertdatetime`, `tbl_user_idtbl_user`) VALUES('$updatedatetime', '-', '-', '-', '-', '-', '1', '$updatedatetime', '$userID')";
     $conn->query($insertDispatch);
@@ -53,7 +54,7 @@ if($acceptanceType == 1){
     $insertDispatchInfo="INSERT INTO `tbl_cutomer_order_dispatch_has_tbl_customer_order`(`tbl_cutomer_order_dispatch_idtbl_cutomer_order_dispatch`, `tbl_customer_order_idtbl_customer_order`) VALUES('$dispatchId', '$poID')";
     $conn->query($insertDispatchInfo);
 }else if($acceptanceType == 3){
-    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoStatus="UPDATE  `tbl_customer_order` SET `delivered`='1', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `ship`='1', `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `delivereduser`='$userID', `shipuser`='$userID', `remark`='$remarkVal'  WHERE `idtbl_customer_order`='$poID'";
 
     $getinvoicedata = "SELECT * FROM `tbl_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$poID'";
     $resultinvoice = $conn->query($getinvoicedata);
