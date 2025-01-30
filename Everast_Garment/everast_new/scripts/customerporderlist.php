@@ -40,6 +40,7 @@ $columns = array(
 	array( 'db' => '`u`.`delivered`',   'dt' => 'delivered', 'field' => 'delivered' ),
 	array( 'db' => '`u`.`is_printed`',   'dt' => 'is_printed', 'field' => 'is_printed' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
+	array( 'db' => '`u`.`remark`',   'dt' => 'remark', 'field' => 'remark' ),
 	array( 'db' => '`ub`.`area`', 'dt' => 'area', 'field' => 'area' ),
     array( 'db' => '`uc`.`name`', 'dt' => 'cusname', 'field' => 'cusname', 'as' => 'cusname' ),
     array( 'db' => '`uc`.`address`', 'dt' => 'cusaddress', 'field' => 'cusaddress', 'as' => 'cusaddress' ),

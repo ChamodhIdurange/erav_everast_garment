@@ -139,8 +139,7 @@ $html = '
 
     <main>
         <div class="">
-            <table width="100%" style="padding-left:0.3cm; padding-right:1cm; padding-top:0.2cm;">
-            ';
+            <table width="100%" style="padding-left:0.3cm; padding-right:1cm; padding-top:0.2cm;">';
             $rowCount = mysqli_num_rows($resultinvoicedetail);
             $count = 0;
             $count1 = 0;

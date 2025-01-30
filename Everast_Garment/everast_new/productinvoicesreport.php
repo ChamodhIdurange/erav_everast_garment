@@ -130,7 +130,7 @@ include "include/topnavbar.php";
 
         $("#searchcustomer").select2({
             ajax: {
-                url: "getprocess/getcustomerlistforporder.php",
+                url: "getprocess/getcustomerlistforreturn.php",
                 // url: "getprocess/getproductaccosupplier.php",
                 type: "post",
                 dataType: 'json',
@@ -148,7 +148,7 @@ include "include/topnavbar.php";
                 cache: true
             }
         });
-
+ 
         $('#searchproduct').change(function () {
             var productId = $(this).val();
             var customerId = $('#searchcustomer').val();

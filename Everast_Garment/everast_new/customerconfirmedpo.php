@@ -96,7 +96,7 @@ include "include/topnavbar.php";
                                                 <th>Date</th>
                                                 <th>Order No</th>
                                                 <th>Rep Name</th>
-                                                <th>Area</th>
+                                                <th>Remarks</th>
                                                 <th>Customer</th>
                                                 <th class="text-right">Subtotal</th>
                                                 <th class="text-right">Discount</th>
@@ -795,7 +795,13 @@ include "include/topnavbar.php";
                     "data": "repname"
                 },
                 {
-                    "data": "area"
+                    "data": "remark",
+                    "render": function (data, type, full) {
+                        if (data.length > 30) {
+                            return data.substring(0, 30) + "..."; 
+                        }
+                        return data; 
+                    }
                 },
                 {
                     "data": "cusname"
@@ -2353,8 +2359,8 @@ include "include/topnavbar.php";
                 });
                 jsonObj.push(item);
             });
+            jsonObj = JSON.stringify(jsonObj);
 
-            // console.log(jsonObj);
 
             var poID = $('#hiddenpoid').val();
             var podiscountprecentage = $('#editpodiscount').val();

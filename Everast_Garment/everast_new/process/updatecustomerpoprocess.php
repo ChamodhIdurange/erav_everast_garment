@@ -15,6 +15,8 @@ $remarkVal=$_POST['remarkVal'];
 
 $acceptanceType=$_POST['acceptanceType'];
 $tableData=$_POST['tableData'];
+$tableData = json_decode($tableData);
+
 $updatedatetime=date('Y-m-d h:i:s');
 $areaId=null;
 $locationId=null;
@@ -69,15 +71,15 @@ if($acceptanceType == 1){
 if($conn->query($updatePoStatus)==true){
 
     foreach($tableData as $rowtabledata){
-        $productID=$rowtabledata['col_3'];
-        $podetailId=$rowtabledata['col_4'];
-        $qty=$rowtabledata['col_5'];
-        $linediscountprecentage=$rowtabledata['col_6'];
-        $linediscountamount=$rowtabledata['col_7'];
-        $saleprice=$rowtabledata['col_9'];
-        $status=$rowtabledata['col_11'];
-        $fullTotal=$rowtabledata['col_12'];
-        $newstatus=$rowtabledata['col_13'];
+        $productID=$rowtabledata->col_3;
+        $podetailId=$rowtabledata->col_4;
+        $qty=$rowtabledata->col_5;
+        $linediscountprecentage=$rowtabledata->col_6;
+        $linediscountamount=$rowtabledata->col_7;
+        $saleprice=$rowtabledata->col_9;
+        $status=$rowtabledata->col_11;
+        $fullTotal=$rowtabledata->col_12; 
+        $newstatus=$rowtabledata->col_13; 
 
         $netTotal = $fullTotal - $linediscountamount;
 
@@ -186,8 +188,6 @@ if($conn->query($updatePoStatus)==true){
                         break;
                     }
                 }
-                // echo $reducedqty;
-        
                 $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$reducedqty') WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
                 $conn->query($updatestock);
             

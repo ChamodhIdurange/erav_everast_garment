@@ -172,7 +172,7 @@ $html = '
             if ($resultinvoicedetail->num_rows == $count) {
                 $html .= '
                     <footer>
-                        <div style="margin-right: -1.7cm; padding-right: 2.5cm;">
+                        <div style="margin-top: -0.2cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
                                 $discount = $rowinvoiceinfo["discount"];

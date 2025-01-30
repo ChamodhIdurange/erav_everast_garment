@@ -11,7 +11,7 @@ date_default_timezone_set(TIMEZONE);
 $IP = "localhost";
 $user = "root";
 $pass = "";
-$db = "erav_everast";
+$db = "erav_everast_V2";
 $con = mysqli_connect($IP, $user, $pass, $db);
 
 // Check connection
