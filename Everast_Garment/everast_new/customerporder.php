@@ -1116,9 +1116,6 @@ include "include/topnavbar.php";
                 }
             });
         }
-
-
-
         $('#dataTable tbody').on('click', '.btnInvoicePrint', function () {
             var id = $(this).attr('id');
             // alert(id);

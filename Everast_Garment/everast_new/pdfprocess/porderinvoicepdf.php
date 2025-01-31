@@ -87,7 +87,7 @@ $html = '
                 bottom: 0cm; 
                 left: 0cm; 
                 right: 0.3cm;
-                bottom: 7cm;
+                bottom: 7.1cm;
             }
             .leftboxtop{
                 width:10.5cm;
@@ -104,6 +104,9 @@ $html = '
             }
             .divclass{
                 border-right:1px solid black;
+            }
+            .listView tr {
+                line-height: 1;
             }
         </style>
     </head>
@@ -139,7 +142,7 @@ $html = '
 
     <main>
         <div class="">
-            <table width="100%" style="padding-left:0.3cm; padding-right:1cm; padding-top:0.2cm;">';
+            <table class="listView" width="100%" style="padding-left:0.3cm; padding-right:1cm; padding-top:0.2cm;">';
             $rowCount = mysqli_num_rows($resultinvoicedetail);
             $count = 0;
             $count1 = 0;
@@ -151,8 +154,8 @@ $html = '
                 $count1++;
                 $html .= '
                     <tr>
-                        <td style="width:2.4cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
-                        <td style="width:8.8cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:2.3cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
+                        <td style="width:8.85cm;">' . $rowinvoicedetail['product_name'] . '</td>
                         <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>
@@ -161,12 +164,15 @@ $html = '
                 ';
                 $temptotal = $rowinvoicedetail['qty'] * $rowinvoicedetail['saleprice'];
                 $newtemp += $temptotal;
-                if ($count1 % 28 == 0) {
+                if ($count1 % 25 == 0) {
                     $html .= '
                         <tr>
                             <td colspan="5">This page Total Showing here. See the Next page Thank You</td>
                             <td style="width:2.6cm;" align="right">' . number_format($newtemp, 2) . '</td>
                         </tr>
+                        </table>
+                        <div style="page-break-before: always;"></div>
+                        <table class="listView" width="100%" style="padding-left:0.3cm; padding-right:1cm; padding-top:0.2cm;">
                     ';
                     $newtemp = 0;
                 }
@@ -175,10 +181,10 @@ $html = '
             </table> 
             ';
 
-            if ($resultinvoicedetail->num_rows == $count) {
+            if ($resultinvoicedetail->num_rows == $count1) {
                 $html .= '
                     <footer>
-                        <div style="margin-right: -1.7cm; padding-right: 2.5cm;">
+                        <div style="margin-top: -0.4cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
                                 $fulldiscount = $rowinvoiceinfo["discount"] + $rowinvoiceinfo["podiscount"];

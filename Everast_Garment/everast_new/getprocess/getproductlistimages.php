@@ -111,9 +111,6 @@ $result = $conn->query($sql);
             <?php }
                 }
             } ?>
-
-
-
         </tbody>
     </table>
 
@@ -130,7 +127,6 @@ $result = $conn->query($sql);
     <?php while ($row = $result->fetch_assoc()) { ?>
         <div class="card mb-3" style="width: 18rem; margin-right: 10px; margin-top:10px">
             <img src="<?php echo $row['imagepath'] ?>" class="card-img-top" width="200" height="200">
-
             <div class="card-body d-flex flex-column">
 
                 <div class="mt-auto">
@@ -166,7 +162,7 @@ $result = $conn->query($sql);
                     id: id
                 },
                 url: 'process/imageuploadcatalog.php',
-                success: function(result) {
+                success: function(result) {console.log(result)
                     loadlistimages(); 
                 }
             });

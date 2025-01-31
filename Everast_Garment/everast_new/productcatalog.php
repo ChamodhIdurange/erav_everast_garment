@@ -165,7 +165,6 @@ include "include/topnavbar.php";
                                         <tr>
                                             <td><?php echo $row['idtbl_catalog'] ?></td>
                                             <td><?php echo $row['category'] ?></td>
-
                                             <td class="text-right">
                                                 <button class="btn btn-outline-secondary btn-sm btnlistview"
                                                     id="<?php echo $row['idtbl_catalog'] ?>" data-toggle="tooltip"

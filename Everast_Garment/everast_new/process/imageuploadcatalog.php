@@ -12,22 +12,11 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $filePath = "../" . $row['imagepath']; // Add "../" to match the full path
 
-    // Check if the file exists
-    if (file_exists($filePath)) {
-        // Attempt to delete the file
-        if (unlink($filePath)) {
-            // If file is deleted successfully, delete the database record
-            $deleteQuery = "DELETE FROM tbl_product_image WHERE idtbl_product_image = $id";
-            if ($conn->query($deleteQuery) === TRUE) {
-                echo "File deleted successfully";
-            } else {
-                $errors[] = "Error deleting record from database: " . $conn->error;
-            }
-        } else {
-            $errors[] = "Failed to delete the file.";
-        }
+    $deleteQuery = "DELETE FROM tbl_product_image WHERE idtbl_product_image = $id";
+    if ($conn->query($deleteQuery) === TRUE) {
+        echo "File deleted successfully";
     } else {
-        $errors[] = "File does not exist.";
+        $errors[] = "Error deleting record from database: " . $conn->error;
     }
 } else {
     $errors[] = "File not found in database.";

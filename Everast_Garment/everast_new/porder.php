@@ -20,6 +20,18 @@ include "include/topnavbar.php";
     .porder-modal {
         max-width: 1000px;
     }
+    .table-responsive {
+    position: relative;
+    max-height: 300px;
+    overflow-y: auto;
+    }
+    .table thead {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 100;
+    }
+
 </style>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
@@ -124,7 +136,7 @@ include "include/topnavbar.php";
                 </div>
                 <div class="row mt-5">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <div class="createtbl-responsive" style="max-height: 300px; overflow-y: auto;">
                             <table class="table table-striped table-bordered table-sm small" id="tableorder">
                                 <thead>
                                     <tr>
