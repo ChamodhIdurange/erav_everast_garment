@@ -120,7 +120,7 @@ $html = '
                 </td>
                 <td width="3cm">&nbsp;</td>
                 <td>
-                    <table width="100%" height="100%" border="0">
+                    <table height="100%" border="0">
                         <tr><td width="55%" height="0.5cm"> </td><td align="left">' .  $rowinvoiceinfo['date'] . ' </td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $invoiceno . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
@@ -178,7 +178,7 @@ $html = '
             if ($resultinvoicedetail->num_rows == $count) {
                 $html .= '
                     <footer>
-                        <div style="margin-top: -0.2cm;margin-right: -1.7cm; padding-right: 2.5cm;">
+                        <div style="margin-top: -0.1cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
                                 $discount = $rowinvoiceinfo["discount"];

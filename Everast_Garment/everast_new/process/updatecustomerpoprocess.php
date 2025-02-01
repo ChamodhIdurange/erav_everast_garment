@@ -144,7 +144,6 @@ if($conn->query($updatePoValues)==true){
     
                 $updateHoldStock="INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$qty', '0', '1', '$updatedatetime', '$userID', '$productID','$poID')";
             }
-            
         }else if($acceptanceType == 3){
             if($newstatus == 0){
                 if($isChangeStatus == 1){
@@ -182,51 +181,49 @@ if($conn->query($updatePoValues)==true){
                 $lineTot = $row['total'];
                 $discount = $row['discount'];
 
-                $insertInvoideDetail="INSERT INTO `tbl_invoice_detail`(`qty`, `unitprice`, `saleprice`, `discount`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_invoice_idtbl_invoice`) VALUES('$qty', '$unitprice', '$saleprice', '$discount', '$lineTot', '1', '$updatedatetime', '$userID', '$productID', '$invoiceId')";
-                $conn->query($insertInvoideDetail);
+                if($isChangeStatus == 1){
+                    $insertInvoideDetail="INSERT INTO `tbl_invoice_detail`(`qty`, `unitprice`, `saleprice`, `discount`, `total`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_invoice_idtbl_invoice`) VALUES('$qty', '$unitprice', '$saleprice', '$discount', '$lineTot', '1', '$updatedatetime', '$userID', '$productID', '$invoiceId')";
+                    $conn->query($insertInvoideDetail);
 
-                // Stock Update
-                $productID = $row['tbl_product_idtbl_product'];
-                $reducedqty = $qty;
-                $freeproductid = 0;
-                $freeqty = 0;
+                    // Stock Update
+                    $productID = $row['tbl_product_idtbl_product'];
+                    $reducedqty = $qty;
+                    $freeproductid = 0;
+                    $freeqty = 0;
 
-                $getstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$productID' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
-                $result = $conn->query($getstock);
-                $stockdata = $result->fetch_assoc();
+                    $getstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$productID' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
+                    $result = $conn->query($getstock);
+                    $stockdata = $result->fetch_assoc();
 
-                $stockbatch = $stockdata['batchno'];
-                $batchqty = $stockdata['qty'];
+                    $stockbatch = $stockdata['batchno'];
+                    $batchqty = $stockdata['qty'];
 
-                while($batchqty < $reducedqty){
-                    $updatestock="UPDATE `tbl_stock` SET `qty`=0 WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
-                    $conn->query($updatestock);
-        
-                    $reducedqty = $reducedqty - $batchqty;
-        
-                    $regetstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$productID' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
-                    $reresult =$conn-> query($regetstock); 
-                    $restockdata = $reresult-> fetch_assoc();
-        
-                    $stockbatch = $restockdata['batchno'];
-                    $batchqty = $restockdata['qty'];
-        
-                    if($batchqty > $reducedqty){
-                        break;
+                    while($batchqty < $reducedqty){
+                        $updatestock="UPDATE `tbl_stock` SET `qty`=0 WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
+                        $conn->query($updatestock);
+            
+                        $reducedqty = $reducedqty - $batchqty;
+            
+                        $regetstock = "SELECT * FROM `tbl_stock` WHERE `qty` > 0 AND `tbl_product_idtbl_product` = '$productID' ORDER BY SUBSTRING(batchno, 4) ASC LIMIT 1";
+                        $reresult =$conn-> query($regetstock); 
+                        $restockdata = $reresult-> fetch_assoc();
+            
+                        $stockbatch = $restockdata['batchno'];
+                        $batchqty = $restockdata['qty'];
+            
+                        if($batchqty > $reducedqty){
+                            break;
+                        }
                     }
+                    $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$reducedqty') WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
+                    $conn->query($updatestock);
+                
+                    $updatestockfree="UPDATE `tbl_stock` SET `qty`=(`qty`-'$freeqty') WHERE `tbl_product_idtbl_product`='$freeproductid'";
+                    $conn->query($updatestockfree);
                 }
-                $updatestock="UPDATE `tbl_stock` SET `qty`=(`qty`-'$reducedqty') WHERE `tbl_product_idtbl_product`='$productID' AND `batchno` = '$stockbatch'";
-                $conn->query($updatestock);
-            
-                $updatestockfree="UPDATE `tbl_stock` SET `qty`=(`qty`-'$freeqty') WHERE `tbl_product_idtbl_product`='$freeproductid'";
-                $conn->query($updatestockfree);
             } 
-
-            
         }
-        
         $conn->query($updateHoldStock);
-
     }
         
     $actionObj=new stdClass();

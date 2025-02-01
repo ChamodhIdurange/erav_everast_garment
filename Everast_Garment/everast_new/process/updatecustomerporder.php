@@ -14,8 +14,10 @@ $porderId = $_POST['porderId'];
 
 
 $sql = "UPDATE `tbl_customer_order` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate' WHERE `idtbl_customer_order`='$porderId'";
+$conn->query($sql);
 
-if ($conn->query($sql) == true) {
+$updateInvoice = "UPDATE `tbl_invoice` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate' WHERE `tbl_customer_order_idtbl_customer_order`='$porderId'";
+if ($conn->query($updateInvoice) == true) {
     $actionObj = new stdClass();
     $actionObj->icon = 'fas fa-check-circle';
     $actionObj->title = '';
