@@ -55,12 +55,12 @@ if (mysqli_num_rows($result) > 0) {
         $refName = "";
         $phone = "";
         $emp_id = "";
-        $userType = "";
+        $userType = "13";
         if ($rowRefDta) {
             $refName = $rowRefDta['salesmanagername'];
             $phone = $rowRefDta['contactone'];
             $emp_id = $rowRefDta['idtbl_sales_manager'];
-            $userType = null;
+            $userType = 13;
             $useraccountid = $rowRefDta['tbl_user_idtbl_user'];
 
             $code = "200";

@@ -26,7 +26,7 @@ $totalpayment = 0;
 $net_total = 0;
 $newtemp = 0;
 
-$sqlinvoiceinfo = "SELECT `tbl_customer_order`.`discount`, `tbl_customer_order`.`podiscount`, `tbl_customer_order`.`idtbl_customer_order`, `tbl_customer_order`.`cuspono`, `tbl_customer_order`.`date`, `tbl_customer_order`.`total`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone` AS 'customerphone' , `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone` AS 'salesrepphone', `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_customer_order`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_customer_order` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_customer_order`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_customer_order`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_customer_order`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_customer_order`.`tbl_user_idtbl_user`WHERE `tbl_customer_order`.`status`=1 AND `tbl_customer_order`.`idtbl_customer_order`='$recordID'";
+$sqlinvoiceinfo = "SELECT `tbl_customer_order`.`confirm`, `tbl_customer_order`.`dispatchissue`, `tbl_customer_order`.`delivered`, `tbl_customer_order`.`discount`, `tbl_customer_order`.`podiscount`, `tbl_customer_order`.`idtbl_customer_order`, `tbl_customer_order`.`cuspono`, `tbl_customer_order`.`date`, `tbl_customer_order`.`total`, `tbl_locations`.`idtbl_locations`, `tbl_locations`.`locationname`, `tbl_customer`.`name`, `tbl_customer`.`address`, `tbl_customer`.`phone` AS 'customerphone' , `tbl_employee`.`name` AS `saleref`, `tbl_employee`.`phone` AS 'salesrepphone', `tbl_area`.`area`, `tbl_user`.`name` as `username`, `tbl_customer_order`.`tbl_customer_idtbl_customer`, `tbl_customer_order`.`cuspono` FROM `tbl_customer_order` LEFT JOIN `tbl_locations` ON `tbl_locations`.`idtbl_locations`=`tbl_customer_order`.`tbl_locations_idtbl_locations` LEFT JOIN `tbl_customer` ON `tbl_customer`.`idtbl_customer`=`tbl_customer_order`.`tbl_customer_idtbl_customer` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee`=`tbl_customer_order`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` ON `tbl_area`.`idtbl_area`=`tbl_customer_order`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` ON `tbl_user`.`idtbl_user`=`tbl_customer_order`.`tbl_user_idtbl_user` WHERE `tbl_customer_order`.`status`=1 AND `tbl_customer_order`.`idtbl_customer_order`='$recordID'";
 
 $resultinvoiceinfo = $conn->query($sqlinvoiceinfo);
 $rowinvoiceinfo = $resultinvoiceinfo->fetch_assoc();
@@ -43,15 +43,25 @@ $pono = $rowinvoiceinfo['cuspono'];
 $porderDate = $rowinvoiceinfo['date']; 
 $cusPorderId = $rowinvoiceinfo['idtbl_customer_order']; 
 
+$confirm = $rowinvoiceinfo['confirm']; 
+$dispatchissue = $rowinvoiceinfo['dispatchissue']; 
+$delivered = $rowinvoiceinfo['delivered']; 
+$qtyflag=0;
 
 // $sqlpoID = "SELECT `idtbl_porder_invoice` FROM `tbl_porder_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$invoID'";
 // $resultpoID = $conn->query($sqlpoID);
 // $rowpoID = $resultpoID->fetch_assoc();
 
-$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice`, `tbl_customer_order_detail`.`discount` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
+$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`orderqty`, `tbl_customer_order_detail`.`confirmqty`, `tbl_customer_order_detail`.`dispatchqty`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice`, `tbl_customer_order_detail`.`discount` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
 $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
-
+if($confirm == 1 && ($dispatchissue == null || $dispatchissue == 0) && ($delivered == null || $delivered == 0)){
+    $qtyflag = 1;
+}else if($confirm == 1 && $dispatchissue == 1  && ($delivered == null || $delivered == 0)){
+    $qtyflag = 2;
+}else if($confirm == 1 && $dispatchissue == 1 && $delivered == 1){
+    $qtyflag = 3;
+}
 
 $getinvoicedata = "SELECT * FROM `tbl_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$recordID'";
 $resultinvoice = $conn->query($getinvoicedata);
@@ -148,21 +158,33 @@ $html = '
             $count1 = 0;
 
             while ($rowinvoicedetail = $resultinvoicedetail->fetch_assoc()) {
-                $totnew = $rowinvoicedetail['qty'] * $rowinvoicedetail['saleprice'];
-                $fulltot += $totnew;
+              
                 $count = $count + 1;
                 $count1++;
+                $qtyValue = 0;
+                if ($qtyflag == 0) {
+                    $qtyValue = $rowinvoicedetail['orderqty'];
+                } else if ($qtyflag == 1) {
+                    $qtyValue = $rowinvoicedetail['confirmqty'];
+                } else if ($qtyflag == 2) {
+                    $qtyValue = $rowinvoicedetail['dispatchqty'];
+                } else if ($qtyflag == 3) {
+                    $qtyValue = $rowinvoicedetail['qty'];
+                }
+                $totnew = $qtyValue * $rowinvoicedetail['saleprice'];
+                $fulltot += $totnew;
+
                 $html .= '
                     <tr>
                         <td style="width:2.3cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
                         <td style="width:8.86cm;">' . $rowinvoicedetail['product_name'] . '</td>
-                        <td style="width:1.4cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
+                        <td style="width:1.4cm;" align="center">' . $qtyValue . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>
-                        <td style="width:2.6cm;" align="right">' . number_format((($rowinvoicedetail['saleprice'] * $rowinvoicedetail['qty'])-$rowinvoicedetail['discount']), 2) . '</td>
+                        <td style="width:2.6cm;" align="right">' . number_format((($rowinvoicedetail['saleprice'] * $qtyValue)-$rowinvoicedetail['discount']), 2) . '</td>
                     </tr>
                 ';
-                $temptotal = $rowinvoicedetail['qty'] * $rowinvoicedetail['saleprice'];
+                $temptotal = $qtyValue * $rowinvoicedetail['saleprice'];
                 $newtemp += $temptotal;
                 if ($count1 % 25 == 0) {
                     $html .= '
@@ -178,13 +200,12 @@ $html = '
                 }
             }
             $html .= '
-            </table> 
-            ';
-
+            </table>';
+            
             if ($resultinvoicedetail->num_rows == $count1) {
                 $html .= '
                     <footer>
-                        <div style="margin-top: -0.3cm;margin-right: -1.7cm; padding-right: 2.5cm;">
+                        <div style="margin-top: -0.1cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
                                 $fulldiscount = $rowinvoiceinfo["discount"] + $rowinvoiceinfo["podiscount"];

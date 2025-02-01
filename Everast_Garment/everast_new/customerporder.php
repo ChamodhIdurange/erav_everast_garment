@@ -10,7 +10,7 @@ $resultproduct = $conn->query($sqlproduct);
 $sqlbank = "SELECT `idtbl_bank`, `bankname` FROM `tbl_bank` WHERE `status`=1 AND `idtbl_bank`>1";
 $resultbank = $conn->query($sqlbank);
 
-$sqlreplist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=8 AND `status`=1";
+$sqlreplist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
 $resultreplist = $conn->query($sqlreplist);
 
 $sqlsalemanagerlist = "SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
@@ -189,10 +189,10 @@ include "include/topnavbar.php";
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="directcustomerdiv" hidden>
-                                    <label class="small font-weight-bold text-dark">Customers*</label>
+                                    <!-- <label class="small font-weight-bold text-dark">Customers*</label>
                                     <input type="text" placeholder="Enter customer name"
                                         class="form-control form-control-sm" name="directcustomer" id="directcustomer"
-                                        required></input>
+                                        required></input> -->
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="customerdiv">
@@ -803,7 +803,13 @@ include "include/topnavbar.php";
                     "data": "repname"
                 },
                 {
-                    "data": "remark"
+                    "data": "remark",
+                    "render": function (data, type, full) {
+                        if (data.length > 30) {
+                            return data.substring(0, 30) + "..."; 
+                        }
+                        return data; 
+                    }
                 },
                 {
                     "data": "cusname"
@@ -1595,26 +1601,26 @@ include "include/topnavbar.php";
             var areaID = $('#area').val();
             var repId = $(this).val();
 
-            if (repId == 7) {
-                $("#directcustomerdiv").attr("hidden", false);
-                $("#directcustomer").attr("required", true);
+            // if (repId == 7) {
+            //     $("#directcustomerdiv").attr("hidden", false);
+            //     $("#directcustomer").attr("required", true);
 
-                $("#customeraddress").attr("readonly", false);
-                $("#customercontact").attr("readonly", false);
+            //     $("#customeraddress").attr("readonly", false);
+            //     $("#customercontact").attr("readonly", false);
 
 
-                $("#customerdiv").attr("hidden", true);
-                $("#customer").attr("required", false);
-            } else {
-                $("#directcustomer").attr("required", false);
-                $("#directcustomerdiv").attr("hidden", true);
+            //     $("#customerdiv").attr("hidden", true);
+            //     $("#customer").attr("required", false);
+            // } else {
+            //     $("#directcustomer").attr("required", false);
+            //     $("#directcustomerdiv").attr("hidden", true);
 
-                $("#customeraddress").attr("readonly", true);
-                $("#customercontact").attr("readonly", true);
+            //     $("#customeraddress").attr("readonly", true);
+            //     $("#customercontact").attr("readonly", true);
 
-                $("#customer").attr("required", true);
-                $("#customerdiv").attr("hidden", false);
-            }
+            //     $("#customer").attr("required", true);
+            //     $("#customerdiv").attr("hidden", false);
+            // }
             category(repId, '');
         })
         // Prodcut part
@@ -2304,7 +2310,8 @@ include "include/topnavbar.php";
                 var area = $('#area').val();
                 var location = $('#location').val();
                 var customer = $('#customer').val();
-                var directcustomer = $('#directcustomer').val();
+                // var directcustomer = $('#directcustomer').val();
+                var directcustomer = 1;
                 var total = $('#hidetotalorder').val();
                 var discount = $('#hidediscount').val();
                 var podiscount = $('#discountpo').val();

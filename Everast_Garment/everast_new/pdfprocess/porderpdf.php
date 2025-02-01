@@ -20,6 +20,7 @@ $recordID = $_GET['id'];
 $empty = 'null';
 $fulltot = 0;
 $discount = 0;
+$fulldiscount = 0;
 $totaloutstanding = 0;
 $fulloutstanding = 0;
 $totalpayment = 0;
@@ -29,7 +30,7 @@ $newtemp = 0;
 $sqlpoprinted="UPDATE `tbl_customer_order` SET `is_printed`='1' WHERE `idtbl_customer_order`='$recordID'";
 $conn->query($sqlpoprinted);
 
-$sqlporderinfo = "SELECT `o`.`remark`, `o`.`idtbl_customer_order`, `o`.`date`, `o`.`total`, `l`.`idtbl_locations`, `l`.`locationname`, `c`.`name`, `c`.`address`, `c`.`phone`, `e`.`name` AS `saleref`, `e`.`phone`, `a`.`area`, `u`.`name` as `username`, `o`.`tbl_customer_idtbl_customer`, `o`.`cuspono` FROM `tbl_customer_order` AS `o` LEFT JOIN `tbl_customer_order_detail` AS `od` ON `o`.`idtbl_customer_order`=`od`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_customer` AS `c` ON (`c`.`idtbl_customer` = `o`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_locations` AS `l` ON (`l`.`idtbl_locations` = `o`.`tbl_locations_idtbl_locations`) LEFT JOIN `tbl_employee` AS `e` ON `e`.`idtbl_employee`=`o`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` AS `a` ON `a`.`idtbl_area`=`o`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` AS `u` ON `u`.`idtbl_user`=`o`.`tbl_user_idtbl_user` WHERE `o`.`status`=1 AND `o`.`idtbl_customer_order`='$recordID'";
+$sqlporderinfo = "SELECT `o`.`discount`, `o`.`podiscount`, `o`.`confirm`, `o`.`dispatchissue`, `o`.`delivered`,`o`.`remark`, `o`.`idtbl_customer_order`, `o`.`date`, `o`.`total`, `l`.`idtbl_locations`, `l`.`locationname`, `c`.`name`, `c`.`address`, `c`.`phone`, `e`.`name` AS `saleref`, `e`.`phone`, `a`.`area`, `u`.`name` as `username`, `o`.`tbl_customer_idtbl_customer`, `o`.`cuspono` FROM `tbl_customer_order` AS `o` LEFT JOIN `tbl_customer_order_detail` AS `od` ON `o`.`idtbl_customer_order`=`od`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_customer` AS `c` ON (`c`.`idtbl_customer` = `o`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_locations` AS `l` ON (`l`.`idtbl_locations` = `o`.`tbl_locations_idtbl_locations`) LEFT JOIN `tbl_employee` AS `e` ON `e`.`idtbl_employee`=`o`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` AS `a` ON `a`.`idtbl_area`=`o`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` AS `u` ON `u`.`idtbl_user`=`o`.`tbl_user_idtbl_user` WHERE `o`.`status`=1 AND `o`.`idtbl_customer_order`='$recordID'";
 $resultporderinfo = $conn->query($sqlporderinfo);
 $rowporderinfo = $resultporderinfo->fetch_assoc();
 
@@ -42,8 +43,21 @@ $customeraddress = $rowporderinfo['address'];
 $poderId = $rowporderinfo['idtbl_customer_order'];
 $remark = $rowporderinfo['remark'];
 
+$confirm = $rowporderinfo['confirm']; 
+$dispatchissue = $rowporderinfo['dispatchissue']; 
+$delivered = $rowporderinfo['delivered']; 
+$qtyflag=0;
 
-$sqlporderdetail = "SELECT `p`.`product_name`, `p`.`product_code`, `p`.`idtbl_product`, `d`.`qty`, `d`.`saleprice` FROM `tbl_customer_order_detail` AS `d` LEFT JOIN `tbl_product` AS `p` ON `p`.`idtbl_product`=`d`.`tbl_product_idtbl_product` WHERE `d`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `d`.`status`=1";
+
+if($confirm == 1 && ($dispatchissue == null || $dispatchissue == 0) && ($delivered == null || $delivered == 0)){
+    $qtyflag = 1;
+}else if($confirm == 1 && $dispatchissue == 1  && ($delivered == null || $delivered == 0)){
+    $qtyflag = 2;
+}else if($confirm == 1 && $dispatchissue == 1 && $delivered == 1){
+    $qtyflag = 3;
+}
+
+$sqlporderdetail = "SELECT `p`.`product_name`, `p`.`product_code`, `p`.`idtbl_product`, `d`.`orderqty`, `d`.`confirmqty`, `d`.`discount`, `d`.`dispatchqty`, `d`.`qty`, `d`.`saleprice` FROM `tbl_customer_order_detail` AS `d` LEFT JOIN `tbl_product` AS `p` ON `p`.`idtbl_product`=`d`.`tbl_product_idtbl_product` WHERE `d`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `d`.`status`=1";
 $resultporderdetail = $conn->query($sqlporderdetail);
 
 $html = '
@@ -200,21 +214,34 @@ $html = '
             $count1 = 0;
 
             while ($rowporderdetail = $resultporderdetail->fetch_assoc()) {
-                $totnew = $rowporderdetail['qty'] * $rowporderdetail['saleprice'];
-                $fulltot += $totnew;
+                
                 $count = $count + 1;
                 $count1++;
+
+                $qtyValue = 0;
+                if ($qtyflag == 0) {
+                    $qtyValue = $rowporderdetail['orderqty'];
+                } else if ($qtyflag == 1) {
+                    $qtyValue = $rowporderdetail['confirmqty'];
+                } else if ($qtyflag == 2) {
+                    $qtyValue = $rowporderdetail['dispatchqty'];
+                } else if ($qtyflag == 3) {
+                    $qtyValue = $rowporderdetail['qty'];
+                }
+                $totnew = $qtyValue * $rowporderdetail['saleprice'];
+                $fulltot += $totnew;
+
                 $html .= '
                     <tr>
                         <td style="width:2cm;" id="detailtd">' . $rowporderdetail['idtbl_product'] . '</td>
                         <td style="width:1.5cm;" id="detailtd">' . $rowporderdetail['product_code'] . '</td>
                         <td style="width:7.5cm;" id="detailtd">' . $rowporderdetail['product_name'] . '</td>
-                        <td style="width:1.5cm;" id="detailtd" align="right">' . $rowporderdetail['qty'] . '</td>
+                        <td style="width:1.5cm;" id="detailtd" align="right">' . $qtyValue . '</td>
                         <td style="width:2.5cm;" id="detailtd" align="right">' . number_format($rowporderdetail['saleprice'], 2) . '</td>
-                        <td style="width:2.6cm;" id="detailtd" align="right">' . number_format(($rowporderdetail['saleprice'] * $rowporderdetail['qty']), 2) . '</td>
+                        <td style="width:2.6cm;" id="detailtd" align="right">' . number_format((($rowporderdetail['saleprice'] * $qtyValue)-$rowporderdetail['discount']), 2) . '</td>
                     </tr>
                 ';
-                $temptotal = $rowporderdetail['qty'] * $rowporderdetail['saleprice'];
+                $temptotal = $qtyValue * $rowporderdetail['saleprice'];
                 $newtemp += $temptotal;
                 if ($count1 % 28 == 0) {
                     $html .= '
@@ -250,8 +277,8 @@ $html = '
                                     <td width="8cm">
                                         <table border="0" id="tablefooter" style="margin-right:35px"> 
                                         ';
-                                            $discount = $fulltot - $rowporderinfo["total"];
-                                            $net_total = $fulltot - $discount;
+                                            $fulldiscount = $rowporderinfo["discount"] + $rowporderinfo["podiscount"];
+                                            $net_total = $fulltot - $fulldiscount;
 
                                             $html .= '
                                             <tr>
@@ -260,7 +287,7 @@ $html = '
                                             </tr>
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Discount:</td>
-                                                <td align="right" style="padding-top:0.2cm;">' . number_format($discount, 2) . '</td>
+                                                <td align="right" style="padding-top:0.2cm;">' . number_format($fulldiscount, 2) . '</td>
                                             </tr>
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Total:</td>

@@ -39,15 +39,18 @@ if($acceptanceType == 1){
         $locationId = $row['tbl_locations_idtbl_locations'];
         $customerId = $row['tbl_customer_idtbl_customer'];
 
-        $insertInvoice="INSERT INTO `tbl_invoice`(`invoiceno`, `date`, `total`, `discount`, `vatamount`, `nettotal`, `paymentcomplete`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_customer_idtbl_customer`, `tbl_locations_idtbl_locations`, `tbl_customer_order_idtbl_customer_order`) VALUES('-', '$updatedatetime', '$total', '$fullDiscount', '0', '$nettotal', '0', '1', '$updatedatetime', '$userID', '$areaId', '$customerId', '$locationId', '$poID')";
-        $conn->query($insertInvoice);
-        $invoiceId = $conn->insert_id;
+        if($isChangeStatus == 1){
+            $insertInvoice="INSERT INTO `tbl_invoice` (`invoiceno`, `date`, `total`, `discount`, `vatamount`, `nettotal`, `paymentcomplete`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_customer_idtbl_customer`, `tbl_locations_idtbl_locations`, `tbl_customer_order_idtbl_customer_order`) VALUES('-', '$updatedatetime', '$total', '$fullDiscount', '0', '$nettotal', '0', '1', '$updatedatetime', '$userID', '$areaId', '$customerId', '$locationId', '$poID')";
+            $conn->query($insertInvoice);
+            $invoiceId = $conn->insert_id;
 
-        $dateformat = date('y/m/');
-        $invoiceNo = 'IV/'. $dateformat . $invoiceId;
+            $dateformat = date('y/m/');
+            $invoiceNo = 'IV/'. $dateformat . $invoiceId;
 
-        $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
-        $conn->query($updateInvoiceNo);
+            $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
+            $conn->query($updateInvoiceNo);
+        }
+        
     } 
 }else if($acceptanceType == 2){
     $updatePoValues="UPDATE  `tbl_customer_order` SET `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage',  `discount`='$discount',`nettotal`='$nettotal', `total`='$total', `dispatchuser`='$userID', `remark`='$remarkVal'  WHERE `idtbl_customer_order`='$poID'";

@@ -189,10 +189,10 @@ include "include/topnavbar.php";
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="directcustomerdiv" hidden>
-                                    <label class="small font-weight-bold text-dark">Customers*</label>
+                                    <!-- <label class="small font-weight-bold text-dark">Customers*</label>
                                     <input type="text" placeholder="Enter customer name"
                                         class="form-control form-control-sm" name="directcustomer" id="directcustomer"
-                                        required></input>
+                                        required></input> -->
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="customerdiv">
@@ -443,7 +443,7 @@ include "include/topnavbar.php";
                 <div class="row mt-3">
                     <div class="col">
                         <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct"><i
-                        class="fa fa-save" disabled></i>&nbsp;Add New Product</button>
+                        class="fa fa-save"></i>&nbsp;Add New Product</button>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -803,7 +803,13 @@ include "include/topnavbar.php";
                     "data": "repname"
                 },
                 {
-                    "data": "remark"
+                    "data": "remark",
+                    "render": function (data, type, full) {
+                        if (data.length > 30) {
+                            return data.substring(0, 30) + "..."; 
+                        }
+                        return data; 
+                    }
                 },
                 {
                     "data": "cusname"
@@ -1023,7 +1029,7 @@ include "include/topnavbar.php";
                     $('#modaleditproductcode').val(obj.productcode);
                     $('#modaleditsaleprice').val(obj.saleprice);
                     $('#modaleditproductunitprice').val(obj.unitprice);
-                    $('#modaleditqty').val(0);                    
+                    $('#modaleditqty').val(0);
                 }
             });
         })
@@ -1595,26 +1601,26 @@ include "include/topnavbar.php";
             var areaID = $('#area').val();
             var repId = $(this).val();
 
-            if (repId == 7) {
-                $("#directcustomerdiv").attr("hidden", false);
-                $("#directcustomer").attr("required", true);
+            // if (repId == 7) {
+            //     $("#directcustomerdiv").attr("hidden", false);
+            //     $("#directcustomer").attr("required", true);
 
-                $("#customeraddress").attr("readonly", false);
-                $("#customercontact").attr("readonly", false);
+            //     $("#customeraddress").attr("readonly", false);
+            //     $("#customercontact").attr("readonly", false);
 
 
-                $("#customerdiv").attr("hidden", true);
-                $("#customer").attr("required", false);
-            } else {
-                $("#directcustomer").attr("required", false);
-                $("#directcustomerdiv").attr("hidden", true);
+            //     $("#customerdiv").attr("hidden", true);
+            //     $("#customer").attr("required", false);
+            // } else {
+            //     $("#directcustomer").attr("required", false);
+            //     $("#directcustomerdiv").attr("hidden", true);
 
-                $("#customeraddress").attr("readonly", true);
-                $("#customercontact").attr("readonly", true);
+            //     $("#customeraddress").attr("readonly", true);
+            //     $("#customercontact").attr("readonly", true);
 
-                $("#customer").attr("required", true);
-                $("#customerdiv").attr("hidden", false);
-            }
+            //     $("#customer").attr("required", true);
+            //     $("#customerdiv").attr("hidden", false);
+            // }
             category(repId, '');
         })
         // Prodcut part
@@ -2304,7 +2310,8 @@ include "include/topnavbar.php";
                 var area = $('#area').val();
                 var location = $('#location').val();
                 var customer = $('#customer').val();
-                var directcustomer = $('#directcustomer').val();
+                // var directcustomer = $('#directcustomer').val();
+                var directcustomer = 1;
                 var total = $('#hidetotalorder').val();
                 var discount = $('#hidediscount').val();
                 var podiscount = $('#discountpo').val();

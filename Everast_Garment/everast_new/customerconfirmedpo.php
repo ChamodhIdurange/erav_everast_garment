@@ -189,10 +189,10 @@ include "include/topnavbar.php";
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="directcustomerdiv" hidden>
-                                    <label class="small font-weight-bold text-dark">Customers*</label>
+                                    <!-- <label class="small font-weight-bold text-dark">Customers*</label>
                                     <input type="text" placeholder="Enter customer name"
                                         class="form-control form-control-sm" name="directcustomer" id="directcustomer"
-                                        required></input>
+                                        required></input> -->
                                 </div>
 
                                 <div class="form-group mb-2 col-6" id="customerdiv">
@@ -382,7 +382,7 @@ include "include/topnavbar.php";
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                         <label>Customer name: <span id="dcusname"></span></label>
+                        <label>Customer name: <span id="dcusname"></span></label>
                     </div>
                     <div class="col-md-6">
                         <label>Customer Contact: <span id="dcuscontact">sss</span></label>
@@ -1601,26 +1601,26 @@ include "include/topnavbar.php";
             var areaID = $('#area').val();
             var repId = $(this).val();
 
-            if (repId == 7) {
-                $("#directcustomerdiv").attr("hidden", false);
-                $("#directcustomer").attr("required", true);
+            // if (repId == 7) {
+            //     $("#directcustomerdiv").attr("hidden", false);
+            //     $("#directcustomer").attr("required", true);
 
-                $("#customeraddress").attr("readonly", false);
-                $("#customercontact").attr("readonly", false);
+            //     $("#customeraddress").attr("readonly", false);
+            //     $("#customercontact").attr("readonly", false);
 
 
-                $("#customerdiv").attr("hidden", true);
-                $("#customer").attr("required", false);
-            } else {
-                $("#directcustomer").attr("required", false);
-                $("#directcustomerdiv").attr("hidden", true);
+            //     $("#customerdiv").attr("hidden", true);
+            //     $("#customer").attr("required", false);
+            // } else {
+            //     $("#directcustomer").attr("required", false);
+            //     $("#directcustomerdiv").attr("hidden", true);
 
-                $("#customeraddress").attr("readonly", true);
-                $("#customercontact").attr("readonly", true);
+            //     $("#customeraddress").attr("readonly", true);
+            //     $("#customercontact").attr("readonly", true);
 
-                $("#customer").attr("required", true);
-                $("#customerdiv").attr("hidden", false);
-            }
+            //     $("#customer").attr("required", true);
+            //     $("#customerdiv").attr("hidden", false);
+            // }
             category(repId, '');
         })
         // Prodcut part
@@ -2310,7 +2310,8 @@ include "include/topnavbar.php";
                 var area = $('#area').val();
                 var location = $('#location').val();
                 var customer = $('#customer').val();
-                var directcustomer = $('#directcustomer').val();
+                // var directcustomer = $('#directcustomer').val();
+                var directcustomer = 1;
                 var total = $('#hidetotalorder').val();
                 var discount = $('#hidediscount').val();
                 var podiscount = $('#discountpo').val();

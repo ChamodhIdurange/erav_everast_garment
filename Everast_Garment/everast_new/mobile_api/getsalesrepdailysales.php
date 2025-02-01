@@ -3,30 +3,29 @@ require_once('../connection/db.php');
 $array = array();
 
 $empId = $_POST['empId'];
-$today = date('Y-m-d'); // Get today's date in YYYY-MM-DD format
+$today = date('Y-m-d');
 
-$sqlfulltot = "SELECT SUM(`u`.`total`) AS 'fulltotal'
+$sqlfulltot = "SELECT SUM(`u`.`nettotal`) AS 'fulltotal'
                FROM `tbl_customer_order` AS `u`
                LEFT JOIN `tbl_employee` AS `ue` 
                ON `u`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
                WHERE `ue`.`idtbl_employee` = '$empId'
+               AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
                GROUP BY `ue`.`idtbl_employee`";
-
 $resultfulltot = $conn->query($sqlfulltot);
-$fulltotal = 0; 
+$fulltotal = 0;
 
 if ($row = $resultfulltot->fetch_assoc()) {
     $fulltotal = $row['fulltotal'];
 }
 
-$sqldailytot = "SELECT SUM(`u`.`total`) AS 'dailytotal'
+$sqldailytot = "SELECT SUM(`u`.`nettotal`) AS 'dailytotal'
                 FROM `tbl_customer_order` AS `u`
                 LEFT JOIN `tbl_employee` AS `ue` 
                 ON `u`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
                 WHERE `ue`.`idtbl_employee` = '$empId'
                 AND `u`.`date` = '$today'
                 GROUP BY `ue`.`idtbl_employee`";
-
 $resultdailytot = $conn->query($sqldailytot);
 $dailytotal = 0; 
 
@@ -70,7 +69,6 @@ $response = array(
     "outstandingtotal" => $balance,
     "date"       => $today
 );
-
 print(json_encode($response));
 
 ?>
