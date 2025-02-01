@@ -155,8 +155,8 @@ $html = '
                 $html .= '
                     <tr>
                         <td style="width:2.3cm;">' . $count .' ' . $rowinvoicedetail['product_code'] . '</td>
-                        <td style="width:8.85cm;">' . $rowinvoicedetail['product_name'] . '</td>
-                        <td style="width:1.5cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
+                        <td style="width:8.86cm;">' . $rowinvoicedetail['product_name'] . '</td>
+                        <td style="width:1.4cm;" align="center">' . $rowinvoicedetail['qty'] . '</td>
                         <td style="width:2.5cm;" align="right">' . number_format($rowinvoicedetail['saleprice'], 2) . '</td>
                         <td style="width:1.3cm;" align="right">' . number_format($rowinvoicedetail['discount'], 2) . '</td>
                         <td style="width:2.6cm;" align="right">' . number_format((($rowinvoicedetail['saleprice'] * $rowinvoicedetail['qty'])-$rowinvoicedetail['discount']), 2) . '</td>
@@ -184,7 +184,7 @@ $html = '
             if ($resultinvoicedetail->num_rows == $count1) {
                 $html .= '
                     <footer>
-                        <div style="margin-top: -0.4cm;margin-right: -1.7cm; padding-right: 2.5cm;">
+                        <div style="margin-top: -0.3cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
                                 $fulldiscount = $rowinvoiceinfo["discount"] + $rowinvoiceinfo["podiscount"];

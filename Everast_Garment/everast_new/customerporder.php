@@ -382,10 +382,10 @@ include "include/topnavbar.php";
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Customer name : <span id="dcusname"></span></label>
+                        <label>Customer name: <span id="dcusname"></span></label>
                     </div>
                     <div class="col-md-6">
-                        <label>Customer Contact : <span id="dcuscontact">sss</span></label>
+                        <label>Customer Contact: <span id="dcuscontact">sss</span></label>
                     </div>
                 </div>
                 <div class="row">
@@ -444,6 +444,14 @@ include "include/topnavbar.php";
                     <div class="col">
                         <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct"><i
                         class="fa fa-save"></i>&nbsp;Add New Product</button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col">
+                        <div class="form-check">
+                            <input class="form-check-input" id="statusValue" type="checkbox">
+                            <label class="form-check-label" for="statusValue">Change Status</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-3" id="errordivaddnew">
@@ -1015,6 +1023,7 @@ include "include/topnavbar.php";
                     $('#modaleditproductcode').val(obj.productcode);
                     $('#modaleditsaleprice').val(obj.saleprice);
                     $('#modaleditproductunitprice').val(obj.unitprice);
+                    $('#modaleditqty').val(0);
                 }
             });
         })
@@ -2366,6 +2375,7 @@ include "include/topnavbar.php";
 
             var total = $('#divsubtotalview').text();
             var cleartotal = total.split(",").join("")
+            var statusValue = $('#statusValue').is(':checked') ? 1 : 0;
 
             var podiscountAmount = $('#divdiscountPOview').text();
             var clearPodiscountAmount = podiscountAmount.split(",").join("")
@@ -2381,10 +2391,11 @@ include "include/topnavbar.php";
                     total: cleartotal,
                     podiscountPrecentage: podiscountprecentage,
                     podiscountAmount: clearPodiscountAmount,
-                    remarkVal: remarkVal
+                    remarkVal: remarkVal,
+                    isChangeStatus: statusValue
                 },
                 url: 'process/updatecustomerpoprocess.php',
-                success: function (result) { //console.log(result);
+                success: function (result) { console.log(result);
                     action(result);
                     $('#modalorderview').modal('hide');
 

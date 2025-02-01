@@ -12,7 +12,7 @@ $roworder=$resultorder->fetch_assoc();
 
 $detailarray=array();
 while($roworderdetail=$resultorderdetail->fetch_assoc()){
-    $totwithoutdiscount = $roworderdetail['saleprice'] * $roworderdetail['qty'];
+    $totwithoutdiscount = $roworderdetail['total'] + $roworderdetail['discount'];
 
     $objdetail=new stdClass();
     $objdetail->productname=$roworderdetail['issueproduct'];
