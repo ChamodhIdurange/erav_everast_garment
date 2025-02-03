@@ -120,12 +120,12 @@ $html = '
                 </td>
                 <td width="3cm">&nbsp;</td>
                 <td>
-                    <table height="100%" border="0">
+                    <table width="100%" height="100%" border="0">
                         <tr><td width="55%" height="0.5cm"> </td><td align="left">' .  $rowinvoiceinfo['date'] . ' </td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $invoiceno . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $pono . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">'.$location.'</td></tr>
-                        <tr><td width="100%" height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['saleref'] . '</td></tr>
+                        <tr><td height="0.5cm"></td> <td align="left">' . $rowinvoiceinfo['saleref'] . '</td></tr>
                         <tr><td height="0.5cm"></td> <td align="left">' . $salesrepphone . '</td></tr>
                     </table>
                 </td>

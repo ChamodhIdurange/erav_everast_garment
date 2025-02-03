@@ -442,7 +442,7 @@ include "include/topnavbar.php";
                 </div>
                 <div class="row mt-3">
                     <div class="col">
-                        <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct"><i
+                        <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct" disabled><i
                         class="fa fa-save"></i>&nbsp;Add New Product</button>
                     </div>
                 </div>
@@ -1063,75 +1063,6 @@ include "include/topnavbar.php";
         })
 
         function addNewCheckStock() {
-            var productID = $('#modaleditproduct').val();
-            var newqty = parseFloat($('#modaleditqty').val());
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    productID: productID
-                },
-                url: 'getprocess/checkavailablestock.php',
-                success: function (result) { //alert(result)
-                    var obj = JSON.parse(result);
-                    if (obj.availableqty < newqty) {
-                        var productname = $("#product option:selected").text();
-
-                        $('#errordivaddnew').empty().html(
-                            "  <div class='alert alert-danger alert-dismissible fade show' role='alert'><h5 id = 'errormessageaddnew'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>"
-                        )
-                        $('#errormessageaddnew').html(
-                            "There is not enough stock available for product '" + productname)
-                    }else{
-
-                        var productID = $('#modaleditproduct').val();
-                        var product = $("#modaleditproduct option:selected").text();
-                        var saleprice = $('#modaleditsaleprice').val();
-                        var qty = $('#modaleditqty').val();
-                        var productCode = $('#modaleditproductcode').val();
-                        var discountAmount = $('#modaleditdiscountamount').val();
-                        var discountPercentage = $('#modaleditdiscountpercentage').val();
-                        var netTotal = $('#modaleditnettotal').val();
-
-                        var totAmount = saleprice * qty;
-                        $('#tableorderview > tbody:last').append('<tr><td>' +
-                            product +
-                            '</td><td>' +
-                            productCode +
-                            '</td><td class="d-none">' + productID +
-                            '</td><td class="d-none">' + 0 +
-                            '</td><td class="text-center editnewqty">' +
-                            qty +
-                            '</td><td class="text-center editlinediscountpernetage">' +
-                            discountPercentage +
-                            '</td><td class="text-center editlinediscount">' +
-                            discountAmount +
-                            '</td><td class="text-right total">' + netTotal +
-                            '</td><td class="text-right colunitprice">' +
-                            saleprice +
-                            '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteNewProduct mr-1" data-placement="bottom" title="Invoice Print" id="' +
-                            0 +
-                            '"><i class="fas fa-trash"></i></button></td><td class="d-none">' +
-                            1 +
-                            '</td><td class="d-none totwithoutdiscount">' +
-                            totAmount +
-                            '</td><td class="d-none">1</td></tr>');
-
-                        $('#modaleditproduct').val('')
-                        $('#modaleditproduct').trigger('change');
-
-                        $('#modaleditsaleprice').val(0)
-                        $('#modaleditqty').val(0)
-                        $('#modaleditdiscountamount').val(0)
-                        $('#modaleditdiscountpercentage').val(0)
-                        $('#modaleditnettotal').val(0)
-                        
-                        tabletotal1();
-                    }
-                }
-            });
-        }
-        function qtyChangeCheckStock() {
             var productID = $('#modaleditproduct').val();
             var newqty = parseFloat($('#modaleditqty').val());
 
@@ -1926,14 +1857,16 @@ include "include/topnavbar.php";
             return new Promise((resolve, reject) => {
                 var productID = parseFloat(row.closest("tr").find('td:eq(2)').text());
                 var newqty = parseFloat(row.closest("tr").find('td:eq(4) input').val());
+                var customerOrderId = $('#hiddenpoid').val();
 
                 $.ajax({
                     type: "POST",
                     data: {
-                        productID: productID
+                        productID: productID,
+                        customerOrderId: customerOrderId
                     },
-                    url: 'getprocess/checkavailablestock.php',
-                    success: function (result) {
+                    url: 'getprocess/checkavailablestockinlineedit.php',
+                    success: function (result) {// alert(result)
                         var obj = JSON.parse(result);
 
                         if (obj.availableqty < newqty) {

@@ -5,7 +5,7 @@ require_once('connection/db.php');//die('bc');
 $userID=$_SESSION['userid'];
 
 $updatedatetime=date('Y-m-d h:i:s');
-$filename = "process/stockupdate2025.csv";
+$filename = "process/stockupdate2025V2.csv";
 
 $file1 = fopen($filename, 'r');
 $file2 = fopen($filename, 'r');
@@ -15,10 +15,6 @@ $month = date('m');
 $year = substr(date('y'), -2);;
 
 $total = 0;
-
-
-
-
 $batchNo = "BTH".$year.$month.sprintf('%04s', '0000');
 
 while (($line = fgetcsv($file2)) !== FALSE) {
@@ -26,12 +22,16 @@ while (($line = fgetcsv($file2)) !== FALSE) {
     $productId = $line[0];
     $retailPrice = $line[4];
     $wholePrice = $line[5];
-    $unitPrice = $line[7];
-    $qty = $line[8];
+    $qty = $line[7];
 
     if($x == 1){
         continue;
     }
+    $sqlproduct="SELECT `unitprice` FROM `tbl_product` WHERE `idtbl_product`='$productId'";
+    $result=$conn->query($sqlproduct);
+    $row=$result->fetch_assoc();
+    $unitPrice = $row['unitprice'];
+
 
     $sqlupdate = "UPDATE `tbl_product` SET `saleprice` = '$retailPrice', `retail` = '$wholePrice', `unitprice` = '$unitPrice' WHERE `idtbl_product` = '$productId'";
     $conn->query($sqlupdate);
@@ -45,3 +45,4 @@ while (($line = fgetcsv($file2)) !== FALSE) {
 print_r($x);
 
 ?>
+
