@@ -208,12 +208,13 @@ $html = '
                         <div style="margin-top: -0.1cm;margin-right: -1.7cm; padding-right: 2.5cm;">
                             <table width="100%" height="100%" style="border-collapse: collapse;" border="0">
                             ';
-                                $fulldiscount = $rowinvoiceinfo["discount"] + $rowinvoiceinfo["podiscount"];
-                                $net_total = $fulltot - $fulldiscount; 
+                                // $fulldiscount = $rowinvoiceinfo["discount"] + $rowinvoiceinfo["podiscount"];
+                                $fulldiscount = $rowinvoiceinfo["podiscount"];
+                                $net_total = $fulltot - ($fulldiscount + $rowinvoiceinfo["discount"]);
 
                                 $html .= '
                                 <tr>
-                                    <td align="right">' . number_format($fulltot, 2) . '</td>
+                                    <td align="right">' . number_format($fulltot-$rowinvoiceinfo["discount"], 2) . '</td>
                                 </tr>
                                 <tr>
                                     <td align="right" style="padding-top:0.2cm;">' . number_format($fulldiscount, 2) . '</td>

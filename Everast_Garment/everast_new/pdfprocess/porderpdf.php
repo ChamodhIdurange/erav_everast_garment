@@ -280,13 +280,14 @@ $html = '
                                     <td width="8cm">
                                         <table border="0" id="tablefooter" style="margin-right:35px"> 
                                         ';
-                                            $fulldiscount = $rowporderinfo["discount"] + $rowporderinfo["podiscount"];
-                                            $net_total = $fulltot - $fulldiscount;
+                                            // $fulldiscount = $rowporderinfo["discount"] + $rowporderinfo["podiscount"];
+                                            $fulldiscount = $rowporderinfo["podiscount"];
+                                            $net_total = $fulltot - ($fulldiscount + $rowporderinfo["discount"]) ;
 
                                             $html .= '
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Net Total:</td>
-                                                <td align="right">' . number_format($fulltot, 2) . '</td>
+                                                <td align="right">' . number_format($fulltot - $rowporderinfo["discount"] , 2) . '</td>
                                             </tr>
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Discount:</td>
