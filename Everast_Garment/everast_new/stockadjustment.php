@@ -94,7 +94,7 @@ include "include/topnavbar.php";
                                     <div class="row" id="divunitprice">
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">Unit Price*</label>
-                                            <input type="number" class="form-control form-control-sm"
+                                            <input type="text" class="input-integer form-control form-control-sm"
                                                 name="productunitprice" id="productunitprice">
                                         </div>
                                         <div class="col">
@@ -220,6 +220,26 @@ include "include/topnavbar.php";
                 }
             });
         })
+
+        $('.input-integer').on('input', function () {
+            var inputValue = $(this).val().replace(/[^0-9.]/g, ''); 
+            inputValue = inputValue.replace(/(\..*)\./g, '$1'); 
+
+            if (inputValue === '' || inputValue === '0') {
+                $(this).val('');
+            } else {
+                $(this).val(inputValue);
+            }
+        });
+
+        $('.input-integer').on('blur', function () {
+            var inputValue = $(this).val().trim();
+            if (inputValue === '' || isNaN(inputValue)) {
+                $(this).val('0');
+            } else {
+                $(this).val(parseFloat(inputValue));
+            }
+        });
     });
 </script>
 <?php include "include/footer.php"; ?>

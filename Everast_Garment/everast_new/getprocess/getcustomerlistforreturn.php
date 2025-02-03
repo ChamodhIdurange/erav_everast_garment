@@ -25,7 +25,5 @@ while($row=$result->fetch_assoc()){
     array_push($arraylist, $obj);
 }
 
-
-
 echo json_encode($arraylist);
 ?>

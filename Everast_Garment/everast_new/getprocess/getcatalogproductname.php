@@ -14,7 +14,7 @@ else{
     $searchTerm=$_POST["searchTerm"];
     
     if(!empty($searchTerm)){
-        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 AND `product_name` LIKE '%$searchTerm%'";
+        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 AND `product_name` LIKE '%$searchTerm%' ORDER BY `product_name` ASC LIMIT 5";
         $resultagent=$conn->query($sqlagent);
     }
     else{

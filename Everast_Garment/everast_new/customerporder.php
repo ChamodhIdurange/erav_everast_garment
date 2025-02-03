@@ -389,7 +389,7 @@ include "include/topnavbar.php";
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-6">
                         <div class="form-group mb-1">
                             <label class="small font-weight-bold text-dark">Product*</label>
                             <select class="form-control form-control-sm select2" style="width: 100%;"
@@ -398,14 +398,14 @@ include "include/topnavbar.php";
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-3">
                         <div class="form-group mb-1">
                             <label class="small font-weight-bold text-dark">Sale price*</label>
                             <input type="text" class="form-control form-control-sm" id="modaleditsaleprice" name="modaleditsaleprice"
                                 required>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col-3">
                         <div class="form-group mb-1">
                             <label class="small font-weight-bold text-dark">Qty*</label>
                             <input type="text" class="form-control form-control-sm" id="modaleditqty" name="modaleditqty"
@@ -487,6 +487,12 @@ include "include/topnavbar.php";
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-9 text-right">
+                        <h5 class="font-weight-600">Item Count</h5>
+                    </div>
+                    <div class="col-3 text-right">
+                        <h5 class="font-weight-600" id="divitemcountview">0</h5>
+                    </div>
                     <div class="col-9 text-right">
                         <h5 class="font-weight-600">Subtotal</h5>
                     </div>
@@ -638,7 +644,6 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
-
 <!-- Modal -->
 <div class="modal fade" id="printreportInvoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     aria-hidden="true">
@@ -726,7 +731,7 @@ include "include/topnavbar.php";
                 delay: 250,
                 data: function (params) {
                     return {
-                        searchTerm: params.term, // search term
+                        searchTerm: params.term, 
                     };
                 },
                 processResults: function (response) { //console.log(response)
@@ -738,31 +743,32 @@ include "include/topnavbar.php";
             },
             dropdownParent: $("#modaleditpo")
         });
-
-        $("#helpername").select2();
-        $('body').tooltip({
-            selector: '[data-toggle="tooltip"]'
-        });
         $("#modaleditproduct").select2({
-            dropdownParent: $('#modalorderview'),
             ajax: {
-                url: "getprocess/getcatalogproductname.php",
+                url: "getprocess/getproductsforcustomerpo.php",
                 type: "post",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
                     return {
-                        searchTerm: params.term // search term
+                        searchTerm: params.term
                     };
                 },
-                processResults: function (response) {
+                processResults: function (response) { // console.log(response)
                     return {
                         results: response
                     };
                 },
                 cache: true
-            }
+            },
+            dropdownParent: $('#modalorderview')
         });
+
+        $("#helpername").select2();
+        $('body').tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+        
 
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
@@ -792,12 +798,7 @@ include "include/topnavbar.php";
                     "data": "date"
                 },
                 {
-                    "targets": -1,
-                    "className": '',
-                    "data": null,
-                    "render": function (data, type, full) {
-                        return 'PO0' + full['idtbl_customer_order'];
-                    }
+                    "data": "cuspono"
                 },
                 {
                     "data": "repname"
@@ -1264,7 +1265,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
-
+                    var count=0;
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1274,11 +1275,9 @@ include "include/topnavbar.php";
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
                     $('#editpodiscount').val(obj.podiscountpercentage);
-
+                    
                     var objfirst = obj.tablelist;
                     $.each(objfirst, function (i, item) {
-                        //alert(objfirst[i].id);
-
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td>' +
@@ -1314,10 +1313,11 @@ include "include/topnavbar.php";
                             newRow.css('background-color', '#ffcccc');
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
-
+                        }else{
+                            count++;
                         }
-
                     });
+                    $('#divitemcountview').html(count);
 
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Confirm');
                     $('#btnUpdate').prop('disabled', false);
@@ -1343,6 +1343,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    var count=0;
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
@@ -1357,7 +1358,6 @@ include "include/topnavbar.php";
                     var objfirst = obj.tablelist;
                     $.each(objfirst, function (i, item) {
                         //alert(objfirst[i].id);
-
                         $('#tableorderview > tbody:last').append('<tr><td>' +
                             objfirst[i].productname +
                             '</td><td>' +
@@ -1394,9 +1394,13 @@ include "include/topnavbar.php";
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
 
+                        }else{
+                            count++;
                         }
-
                     });
+                    
+                    $('#divitemcountview').html(count);
+
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
                     $('#btnUpdate').prop('disabled', false);
                     $('#acceptanceType').val(3)
@@ -1418,7 +1422,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
-
+                    var count=0;
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1469,8 +1473,11 @@ include "include/topnavbar.php";
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
 
+                        }else{
+                            count++;
                         }
                     });
+                    $('#divitemcountview').html(count);
 
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Dispatch');
                     $('#btnUpdate').prop('disabled', false);
@@ -1700,6 +1707,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    var count=0;
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
@@ -1765,9 +1773,11 @@ include "include/topnavbar.php";
                             newRow.css('background-color', '#ffcccc');
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
-
+                        }else{
+                            count++;
                         }
                     });
+                    $('#divitemcountview').html(count);
 
                     $('#btnUpdate').prop('disabled', true);
                     $('#modalorderview').modal('show');
@@ -2063,6 +2073,7 @@ include "include/topnavbar.php";
         function tabletotal1() {
             var sum = 0;
             var totallinediscount = 0;
+            var count = 0;
             $(".totwithoutdiscount").each(function () {
                 var row = $(this).closest('tr');
                 var status = row.find('td:nth-child(11)').text();
@@ -2072,6 +2083,12 @@ include "include/topnavbar.php";
                 }
                 var cleansum = $(this).text().split(",").join("")
                 sum += parseFloat(cleansum);
+            });
+
+            $(".totwithoutdiscount").each(function () {
+                if (status != 3) {
+                    count++;
+                }
             });
 
             $(".editlinediscount").each(function () {
@@ -2099,6 +2116,7 @@ include "include/topnavbar.php";
 
             var shownet = addCommas(parseFloat(netTot).toFixed(2));
 
+            $('#divitemcountview').html(count);
             $('#divsubtotalview').html(showsum);
             $('#divtotalview').html(shownet);
             $('#divdiscountview').html(showlinediscount);
@@ -2362,7 +2380,7 @@ include "include/topnavbar.php";
                 var location = $('#location').val();
                 var customer = $('#customer').val();
                 // var directcustomer = $('#directcustomer').val();
-                var directcustomer = 1;
+                var directcustomer = '';
                 var total = $('#hidetotalorder').val();
                 var discount = $('#hidediscount').val();
                 var podiscount = $('#discountpo').val();

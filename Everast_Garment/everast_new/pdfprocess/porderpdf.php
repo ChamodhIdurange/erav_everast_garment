@@ -79,14 +79,19 @@ $html = '
                 padding-left: 1cm;
                 padding-right: 1cm;
                 padding-top: 0.2cm;
+                border: 1px solid black;
             }
-            #detailth, #detailtd {
-                border: 1px solid #ddd;
+            #detailtable th, #detailtable td { 
+                border: 1px solid black;
                 padding: 5px;
             }
             #detailth {
                 background-color: #f2f2f2;
                 text-align: left;
+                border: 1px solid black; 
+            }
+            #detailtd {
+                border: 1px solid black; 
             }
             .page-total {
                 background-color: #f9f9f9;
@@ -97,7 +102,6 @@ $html = '
                 width: 100%;
             }
 
-            /* Style for the customer details section */
             .leftboxtop {
                 padding-left: 0.3cm;
             }
@@ -117,6 +121,7 @@ $html = '
             td {
                 padding: 5px;
                 vertical-align: top;
+                font-size: 12px;
             }
             .tdheader {
                 padding: 5px;
@@ -200,7 +205,6 @@ $html = '
             <table width="100%" style="padding-left:1cm; padding-right:1cm; padding-top:0.4cm;" id="detailtable">
             <thead>
                 <tr>
-                    <th style="width:2cm;" id="detailth">#</th>
                     <th style="width:1.5cm;" id="detailth">Code</th>
                     <th style="width:7.5cm;" id="detailth">Product Name</th>
                     <th style="width:1.5cm;" id="detailth" align="right">Quantity</th>
@@ -233,9 +237,8 @@ $html = '
 
                 $html .= '
                     <tr>
-                        <td style="width:2cm;" id="detailtd">' . $rowporderdetail['idtbl_product'] . '</td>
                         <td style="width:1.5cm;" id="detailtd">' . $rowporderdetail['product_code'] . '</td>
-                        <td style="width:7.5cm;" id="detailtd">' . $rowporderdetail['product_name'] . '</td>
+                        <td style="width:9.5cm;" id="detailtd">' . $rowporderdetail['product_name'] . '</td>
                         <td style="width:1.5cm;" id="detailtd" align="right">' . $qtyValue . '</td>
                         <td style="width:2.5cm;" id="detailtd" align="right">' . number_format($rowporderdetail['saleprice'], 2) . '</td>
                         <td style="width:2.6cm;" id="detailtd" align="right">' . number_format((($rowporderdetail['saleprice'] * $qtyValue)-$rowporderdetail['discount']), 2) . '</td>

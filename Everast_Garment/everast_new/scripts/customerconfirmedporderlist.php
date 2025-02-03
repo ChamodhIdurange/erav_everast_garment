@@ -45,7 +45,8 @@ $columns = array(
     array( 'db' => '`uc`.`name`', 'dt' => 'cusname', 'field' => 'cusname', 'as' => 'cusname' ),
 	array( 'db' => '`uc`.`address`', 'dt' => 'cusaddress', 'field' => 'cusaddress', 'as' => 'cusaddress' ),
 	array( 'db' => '`u`.`tbl_customer_idtbl_customer`',   'dt' => 'tbl_customer_idtbl_customer', 'field' => 'tbl_customer_idtbl_customer' ),
-    array( 'db' => '`ud`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' )
+    array( 'db' => '`ud`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' ),
+	array( 'db' => '`u`.`cuspono`',   'dt' => 'cuspono', 'field' => 'cuspono' )
 );
 
 // SQL server connection information

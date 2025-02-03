@@ -589,23 +589,6 @@ include "include/topnavbar.php";
                             '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="'+product.total+'" readonly></td><td class="text-right d-none option-column">1</td><td class="text-right d-none podetailid-column">'+product.podetailId+'</td>' +
                             '</tr>');
                             
-                        $('.input-integer').on('input', function () {
-                            var inputValue = $(this).val().replace(
-                                /\D/g, '');
-                            if (inputValue === '' || inputValue ===
-                                '0') {
-                                $(this).val('');
-                            } else {
-                                $(this).val(inputValue);
-                            }
-                        });
-
-                        $('.input-integer').on('blur', function () {
-                            var inputValue = $(this).val().trim();
-                            if (inputValue === '') {
-                                $(this).val('0');
-                            }
-                        });
                     });
                     $('#modalorderedit').modal('show');
                 }
@@ -670,24 +653,6 @@ include "include/topnavbar.php";
                                     '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td>' +
                                     '</tr>');
                             }
-
-                            $('.input-integer').on('input', function () {
-                                var inputValue = $(this).val().replace(
-                                    /\D/g, '');
-                                if (inputValue === '' || inputValue ===
-                                    '0') {
-                                    $(this).val('');
-                                } else {
-                                    $(this).val(inputValue);
-                                }
-                            });
-
-                            $('.input-integer').on('blur', function () {
-                                var inputValue = $(this).val().trim();
-                                if (inputValue === '') {
-                                    $(this).val('0');
-                                }
-                            });
                         });
                     },
                     error: function (error) {
@@ -729,24 +694,6 @@ include "include/topnavbar.php";
                                     '<td class="text-right total-column"><input type="number" class="input-integer-decimal form-control form-control-sm custom-width" name="total_quantity[]" value="0" readonly></td><td class="text-right d-none option-column">0</td><td class="text-right d-none podetailid-column">0</td>' +
                                     '</tr>');
                             }
-
-                            $('.input-integer').on('input', function () {
-                                var inputValue = $(this).val().replace(
-                                    /\D/g, '');
-                                if (inputValue === '' || inputValue ===
-                                    '0') {
-                                    $(this).val('');
-                                } else {
-                                    $(this).val(inputValue);
-                                }
-                            });
-
-                            $('.input-integer').on('blur', function () {
-                                var inputValue = $(this).val().trim();
-                                if (inputValue === '') {
-                                    $(this).val('0');
-                                }
-                            });
                         });
                     },
                     error: function (error) {
@@ -774,6 +721,26 @@ include "include/topnavbar.php";
             var row = $(this).closest('tr');
             updateTotalForRowEdit(row);
             updateGrandTotalEdit();
+        });
+
+        $('.input-integer').on('input', function () {
+            var inputValue = $(this).val().replace(/[^0-9.]/g, ''); 
+            inputValue = inputValue.replace(/(\..*)\./g, '$1'); 
+
+            if (inputValue === '' || inputValue === '0') {
+                $(this).val('');
+            } else {
+                $(this).val(inputValue);
+            }
+        });
+
+        $('.input-integer').on('blur', function () {
+            var inputValue = $(this).val().trim();
+            if (inputValue === '' || isNaN(inputValue)) {
+                $(this).val('0');
+            } else {
+                $(this).val(parseFloat(inputValue));
+            }
         });
 
         function updateTotalForRow(row) {
