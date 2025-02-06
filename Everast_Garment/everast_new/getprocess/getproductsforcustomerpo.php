@@ -9,7 +9,7 @@ if(!isset($_POST['searchTerm'])){
     $sql="SELECT `product_name`, `idtbl_product`, `product_code` FROM `tbl_product` WHERE `status`=1 ORDER BY `idtbl_product` ASC LIMIT 5";
 }else{
     $search = $_POST['searchTerm'];   
-    $sql="SELECT `product_name`, `idtbl_product`, `product_code` FROM `tbl_product` WHERE `status`=1 AND (`product_name` LIKE '%$search%' OR `product_code` LIKE '%$search%') ORDER BY `product_name` ASC LIMIT 5";
+    $sql="SELECT `product_name`, `idtbl_product`, `product_code` FROM `tbl_product` WHERE `status`=1 AND (`product_name` LIKE '%$search%' OR `product_code` LIKE '%$search%') ORDER BY `product_name` ASC LIMIT 10";
 }
 $result=$conn->query($sql);
 $arraylist=array();

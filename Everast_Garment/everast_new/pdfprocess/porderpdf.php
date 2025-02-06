@@ -214,6 +214,7 @@ $html = '
             </thead>
             ';
             $rowCount = mysqli_num_rows($resultporderdetail);
+            $itemCount = 0;
             $count = 0;
             $count1 = 0;
 
@@ -221,6 +222,7 @@ $html = '
                 
                 $count = $count + 1;
                 $count1++;
+                $itemCount++;
 
                 $qtyValue = 0;
                 if ($qtyflag == 0) {
@@ -285,6 +287,10 @@ $html = '
                                             $net_total = $fulltot - ($fulldiscount + $rowporderinfo["discount"]) ;
 
                                             $html .= '
+                                            <tr>
+                                                <td align="right" style="font-weight: bold;">Item Count:</td>
+                                                <td align="right">' . $itemCount . '</td>
+                                            </tr>
                                             <tr>
                                                 <td align="right" style="font-weight: bold;">Net Total:</td>
                                                 <td align="right">' . number_format($fulltot - $rowporderinfo["discount"] , 2) . '</td>

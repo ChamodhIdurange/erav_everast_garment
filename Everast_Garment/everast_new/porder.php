@@ -7,8 +7,6 @@ $result =$conn-> query($sql);
 $sqlcommonnames="SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames =$conn-> query($sqlcommonnames); 
 
-$sqlsupplier="SELECT `idtbl_supplier`, `suppliername` FROM `tbl_supplier` WHERE `status`=1";
-$resultsupplier=$conn->query($sqlsupplier);
 
 include "include/topnavbar.php"; 
 ?>
@@ -120,13 +118,9 @@ include "include/topnavbar.php";
                                 </div>
                                 <div class="col-3">
                                     <label class="small font-weight-bold text-dark">Supplier Id</label>
-                                    <select class="form-control form-control-sm" name="supplierId" id="supplierId"
+                                    <select class="form-control form-control-sm select2" style="width: 100%;"  name="supplierId" id="supplierId"
                                         required>
                                         <option value="">Select</option>
-                                        <?php if($resultsupplier->num_rows > 0) {while ($rowcategory = $resultsupplier-> fetch_assoc()) { ?>
-                                        <option value="<?php echo $rowcategory['idtbl_supplier'] ?>">
-                                            <?php echo $rowcategory['suppliername'] ?></option>
-                                        <?php }} ?>
                                     </select>
                                 </div>
                             </div>
@@ -339,6 +333,28 @@ include "include/topnavbar.php";
         });
         $('[data-toggle="tooltip"]').tooltip({
             trigger: 'hover'
+        });
+
+        $("#supplierId").select2({
+            ajax: {
+                url: "getprocess/getsuppliersforselect2.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, // search term
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            },
+            dropdownParent: $("#modalcreateorder")
         });
 
         $("#productcommonname").select2({
