@@ -1265,7 +1265,6 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
-                    var count=0;
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1313,11 +1312,8 @@ include "include/topnavbar.php";
                             newRow.css('background-color', '#ffcccc');
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
-                        }else{
-                            count++;
                         }
                     });
-                    $('#divitemcountview').html(count);
 
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Confirm');
                     $('#btnUpdate').prop('disabled', false);
@@ -1343,7 +1339,6 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
-                    var count=0;
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
@@ -1394,13 +1389,9 @@ include "include/topnavbar.php";
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
 
-                        }else{
-                            count++;
                         }
                     });
                     
-                    $('#divitemcountview').html(count);
-
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
                     $('#btnUpdate').prop('disabled', false);
                     $('#acceptanceType').val(3)
@@ -1422,7 +1413,6 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
-                    var count=0;
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1473,11 +1463,8 @@ include "include/topnavbar.php";
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
 
-                        }else{
-                            count++;
                         }
                     });
-                    $('#divitemcountview').html(count);
 
                     $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Dispatch');
                     $('#btnUpdate').prop('disabled', false);
@@ -2086,6 +2073,8 @@ include "include/topnavbar.php";
             });
 
             $(".totwithoutdiscount").each(function () {
+                var row = $(this).closest('tr');
+                var status = row.find('td:nth-child(11)').text();
                 if (status != 3) {
                     count++;
                 }

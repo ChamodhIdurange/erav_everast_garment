@@ -15,16 +15,6 @@ while ($rowproduct = $resultproduct->fetch_assoc()) {
     array_push($productarray, $obj);
 }
 
-$productcatarray = array();
-$sqlproductcat = "SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1";
-$resultproductcat = $conn->query($sqlproductcat);
-while ($productcat = $resultproductcat->fetch_assoc()) {
-    $obj = new stdClass();
-    $obj->productcatalogID = $productcat['idtbl_catalog_category'];
-    $obj->productcatalogcat = $productcat['category'];
-
-    array_push($productcatarray, $obj);
-}
 include "include/topnavbar.php";
 ?>
 <div id="layoutSidenav">
@@ -51,15 +41,10 @@ include "include/topnavbar.php";
                                 <form method="post" id="createorderform" autocomplete="off"
                                     enctype="multipart/form-data">
                                     <div class="form-group mb-1">
-                                        <label class="small font-weight-bold text-dark">Product Catalog
-                                            Category*</label>
-                                        <select class="form-control form-control-sm" name="catalogcat" id="catalogcat"
-                                            required>
+                                        <label class="small font-weight-bold text-dark">Catalog Category*</label>
+                                        <select class="form-control form-control-sm select2" style="width: 100%;"
+                                            name="catalogcat" id="catalogcat" required>
                                             <option value="">Select</option>
-                                            <?php foreach ($productcatarray as $rowproductcatlist) { ?>
-                                            <option value="<?php echo $rowproductcatlist->productcatalogID ?>">
-                                                <?php echo $rowproductcatlist->productcatalogcat ?></option>
-                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group mb-1">
@@ -234,7 +219,6 @@ include "include/topnavbar.php";
     var prodCount = 0;
     $(document).ready(function () {
         $('#dataTable').DataTable();
-
         $("#product").select2({
             // dropdownParent: $('#addNewInquiryModal'),
             // placeholder: 'Select supplier',
@@ -249,6 +233,25 @@ include "include/topnavbar.php";
                     };
                 },
                 processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
+        });
+        $("#catalogcat").select2({
+            ajax: {
+                url: "getprocess/getproductcatalogforselect2.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, 
+                    };
+                },
+                processResults: function (response) { //console.log(response)
                     return {
                         results: response
                     };

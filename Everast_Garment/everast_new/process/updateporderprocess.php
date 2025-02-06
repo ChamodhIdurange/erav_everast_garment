@@ -16,6 +16,7 @@ $updatedatetime = date('Y-m-d h:i:s');
 
 // Insert order
 $insertOrderQuery = "UPDATE `tbl_porder` SET `total`='$nettotal', `nettotal`='$nettotal' WHERE `idtbl_porder`='$porderId'";
+// echo $insertOrderQuery;
 
 if ($conn->query($insertOrderQuery) === TRUE) {
     $orderID = $conn->insert_id;
@@ -33,10 +34,9 @@ if ($conn->query($insertOrderQuery) === TRUE) {
         $newPrice = !empty($newQty) ? $unitPrice : null;
         $newsalePrice = !empty($newQty) ? $saleprice : null;
 
-        if($recordOption == 0){
-            $sqlupdateproduct = "UPDATE `tbl_product` SET `unitprice`='$unitPrice', `saleprice`='$saleprice', `retail`='$retail' WHERE `idtbl_product` = '$productId'";
-            $conn->query($sqlupdateproduct);
-        }
+        $sqlupdateproduct = "UPDATE `tbl_product` SET `unitprice`='$unitPrice', `saleprice`='$saleprice', `retail`='$retail' WHERE `idtbl_product` = '$productId'";
+        
+        $conn->query($sqlupdateproduct) ;
 
         if ($newPrice !== null) {
             $totalPrice = $newQty * $unitPrice;
@@ -64,6 +64,7 @@ if ($conn->query($insertOrderQuery) === TRUE) {
     }
 
     echo json_encode([
+        'query' => $sqlupdateproduct,
         'icon' => 'fas fa-check-circle',
         'title' => '',
         'message' => 'Add Successfully',

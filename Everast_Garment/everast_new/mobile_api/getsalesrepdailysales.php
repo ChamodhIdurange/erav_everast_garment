@@ -5,32 +5,20 @@ $array = array();
 $empId = $_POST['empId'];
 $today = date('Y-m-d');
 
-$sqlfulltot = "SELECT SUM(`u`.`nettotal`) AS 'fulltotal'
-               FROM `tbl_customer_order` AS `u`
-               LEFT JOIN `tbl_employee` AS `ue` 
-               ON `u`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
-               WHERE `ue`.`idtbl_employee` = '$empId'
-               AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
-               GROUP BY `ue`.`idtbl_employee`";
-$resultfulltot = $conn->query($sqlfulltot);
-$fulltotal = 0;
+$getdailytot = "SELECT SUM(`u`.`nettotal`) AS 'dailyTot'
+                FROM `tbl_invoice` AS `u`
+                LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
+                WHERE `u`.`status`='1' 
+                AND `u`.`paymentcomplete`='0'
+                AND DATE(`u`.`date`) = CURDATE() 
+                AND `ud`.`tbl_employee_idtbl_employee`='$empId'
+                GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 
-if ($row = $resultfulltot->fetch_assoc()) {
-    $fulltotal = $row['fulltotal'];
-}
-
-$sqldailytot = "SELECT SUM(`u`.`nettotal`) AS 'dailytotal'
-                FROM `tbl_customer_order` AS `u`
-                LEFT JOIN `tbl_employee` AS `ue` 
-                ON `u`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
-                WHERE `ue`.`idtbl_employee` = '$empId'
-                AND `u`.`date` = '$today'
-                GROUP BY `ue`.`idtbl_employee`";
-$resultdailytot = $conn->query($sqldailytot);
+$resultgetdailytot = $conn->query($getdailytot);
 $dailytotal = 0; 
 
-if ($row = $resultdailytot->fetch_assoc()) {
-    $dailytotal = $row['dailytotal'];
+if ($row = $resultgetdailytot->fetch_assoc()) {
+    $dailytotal = $row['dailyTot'];
 }
 
 $sqlgetalltot = "SELECT SUM(`u`.`nettotal`) AS 'fullalltot'
@@ -38,6 +26,7 @@ $sqlgetalltot = "SELECT SUM(`u`.`nettotal`) AS 'fullalltot'
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
         WHERE `u`.`status`='1' 
         AND `u`.`paymentcomplete`='0'
+        AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 
@@ -53,6 +42,7 @@ $sqlpayedamount = "SELECT COALESCE(SUM(`ue`.`payamount`), 0) AS 'totpayedamount'
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ue` ON `ue`.`tbl_invoice_idtbl_invoice` = `u`.`idtbl_invoice`
         WHERE `u`.`status`='1' 
         AND `u`.`paymentcomplete`='0'
+        AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 
@@ -64,7 +54,7 @@ if ($row = $resultpayedamount->fetch_assoc()) {
 }
 $balance = $fullalltot - $fullpayedamount;
 $response = array(
-    "fulltotal"  => $fulltotal,
+    "fulltotal"  => $fullalltot,
     "dailytotal" => $dailytotal,
     "outstandingtotal" => $balance,
     "date"       => $today

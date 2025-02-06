@@ -8,7 +8,7 @@ $resultorder=$conn->query($sqlorder);
 $roworder=$resultorder->fetch_assoc();
 
 $detailarray=array();
-    $sqlorderdetail="SELECT  `tbl_porder_detail`.`idtbl_porder_detail`, `tbl_porder_detail`.`total`, `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_porder_detail`.`unitprice`, `tbl_porder_detail`.`saleprice`, `tbl_product`.`retail`,`tbl_porder_detail`.`qty` FROM `tbl_porder_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_porder_detail`.`tbl_product_idtbl_product` WHERE `tbl_porder_detail`.`status`=1 AND `tbl_porder_detail`.`tbl_porder_idtbl_porder`='$orderID'";
+    $sqlorderdetail="SELECT  `tbl_product`.`idtbl_product`, `tbl_porder_detail`.`idtbl_porder_detail`, `tbl_porder_detail`.`total`, `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_porder_detail`.`unitprice`, `tbl_porder_detail`.`saleprice`, `tbl_product`.`retail`,`tbl_porder_detail`.`qty` FROM `tbl_porder_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_porder_detail`.`tbl_product_idtbl_product` WHERE `tbl_porder_detail`.`status`=1 AND `tbl_porder_detail`.`tbl_porder_idtbl_porder`='$orderID'";
     $resultorderdetail=$conn->query($sqlorderdetail);
 
     while($roworderdetail=$resultorderdetail->fetch_assoc()){
@@ -23,6 +23,7 @@ $detailarray=array();
         $objdetail->qty=$roworderdetail['qty'];
         $objdetail->total=$roworderdetail['total'];;
         $objdetail->podetailId=$roworderdetail['idtbl_porder_detail'];;
+        $objdetail->idtbl_product=$roworderdetail['idtbl_product'];;
     
         array_push($detailarray, $objdetail);
     }
