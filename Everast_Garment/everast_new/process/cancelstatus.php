@@ -12,7 +12,12 @@ $updatedatetime=date('Y-m-d h:i:s');
 
 $updatePo="UPDATE  `tbl_customer_order` SET `status`='4',`cancelreason`='$cancelreason' WHERE `idtbl_customer_order`='$recordID'";
 if($conn->query($updatePo)==true){
+    $updateInvoice="UPDATE  `tbl_invoice` SET `status`='3' WHERE `tbl_customer_order_idtbl_customer_order`='$recordID'";
+    $conn->query($updateInvoice);
+
     header("Location:../customerporder.php?action=3");
 }else{
     header("Location:../customerporder.php?action=5");
 }
+
+

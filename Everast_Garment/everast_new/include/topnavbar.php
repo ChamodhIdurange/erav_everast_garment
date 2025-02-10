@@ -23,7 +23,7 @@ $rowusertype = $resultusertype->fetch_assoc();
 
     <ul class="navbar-nav align-items-center ml-auto">
     <div style="margin-right: 20px;">
-             <?php if ($sessionusertype == 1 || $sessionusertype == 2) {
+             <?php 
                 if ($resultnotficationre->num_rows > 0) {
                     $notficationresre = $resultnotficationre->fetch_assoc();
                     $notifys = $notficationresre['count'];
@@ -33,8 +33,7 @@ $rowusertype = $resultusertype->fetch_assoc();
                         <div class="badge">+ <?php echo $notifys ?></div>
                     <?php } ?>
                     <a href="#" data-toggle="tooltip" data-placement="bottom" title="Return" ><i data-feather="corner-down-left" style="margin-top: 5px;"></i></a>
-            <?php }
-            } ?> 
+            <?php } ?> 
            
         </div>
         <div style="margin-right: 20px;">

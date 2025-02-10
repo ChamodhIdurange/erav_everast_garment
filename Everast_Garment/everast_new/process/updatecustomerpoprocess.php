@@ -4,6 +4,7 @@ if(!isset($_SESSION['userid'])){header ("Location:index.php");}
 require_once('../connection/db.php');
 
 $userID=$_SESSION['userid'];
+$today = date('Y-m-d'); 
 
 $poID=$_POST['poID'];
 $total=$_POST['total'];
@@ -26,7 +27,7 @@ $customerId=null;
 $fullDiscount = $discount + $podiscountAmount;
 
 if($acceptanceType == 1){
-    $updatePoValues="UPDATE  `tbl_customer_order` SET `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID', `remark`='$remarkVal' WHERE `idtbl_customer_order`='$poID'";
+    $updatePoValues="UPDATE  `tbl_customer_order` SET `date`='$today', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID', `remark`='$remarkVal' WHERE `idtbl_customer_order`='$poID'";
 
     $updatePoStatus = "UPDATE  `tbl_customer_order` SET `confirm`='1' WHERE `idtbl_customer_order`='$poID'";
 

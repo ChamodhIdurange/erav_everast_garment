@@ -8,6 +8,10 @@ $resultcustomer = $conn->query($sqlcustomer);
 $sqlproduct = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
 $resultproduct = $conn->query($sqlproduct);
 
+
+$sqlhelperlist = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
+$resulthelperlist = $conn->query($sqlhelperlist);
+
 include "include/topnavbar.php";
 ?>
 <div id="layoutSidenav">
@@ -74,6 +78,18 @@ include "include/topnavbar.php";
                                                 <option value="">Select</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-3" id="fieldcustomerinvoice">
+                                    <label class="small font-weight-bold text-dark">Rep Name*</label>
+                                        <select class="form-control form-control-sm" name="repname" id="repname" required>
+                                            <option value="">Select</option>
+                                            <?php if ($resulthelperlist->num_rows > 0) {
+                                                while ($rowemplist = $resulthelperlist->fetch_assoc()) { ?>
+                                            <option value="<?php echo $rowemplist['idtbl_employee'] ?>">
+                                                <?php echo $rowemplist['name'] ?></option>
+                                            <?php }
+                                            } ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div id="addproductdiv" class="mt-2">
@@ -389,6 +405,7 @@ include "include/topnavbar.php";
             var remarks = $('#remarks').val();
             var discountamount = $('#hidedis').val();
             var netamount = $('#hidenetamount').val();
+            var repId = $('#repname').val();
             var invoicestatus = $('input[name="invoicestatus"]:checked').val();
 
             $.ajax({
@@ -402,7 +419,8 @@ include "include/topnavbar.php";
                     customerinvoice: customerinvoice,
                     discountamount: discountamount,
                     netamount: netamount,
-                    invoicestatus: invoicestatus
+                    invoicestatus: invoicestatus,
+                    repId: repId
                 },
                 url: 'process/returnprocess.php',
                 success: function (result) {//alert(result)
