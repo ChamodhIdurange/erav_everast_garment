@@ -11,12 +11,13 @@ $updatedatetime = date('Y-m-d h:i:s');
 $customerid = $_POST['customerid'];
 $orderdate = $_POST['orderdate'];
 $porderId = $_POST['porderId'];
+$salesrepId = $_POST['salesrepId'];
 
 
-$sql = "UPDATE `tbl_customer_order` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate' WHERE `idtbl_customer_order`='$porderId'";
+$sql = "UPDATE `tbl_customer_order` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate', `tbl_employee_idtbl_employee`='$salesrepId' WHERE `idtbl_customer_order`='$porderId'";
 $conn->query($sql);
 
-$updateInvoice = "UPDATE `tbl_invoice` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate' WHERE `tbl_customer_order_idtbl_customer_order`='$porderId'";
+$updateInvoice = "UPDATE `tbl_invoice` SET `tbl_customer_idtbl_customer`='$customerid', `date`='$orderdate', `tbl_employee_idtbl_employee`='$salesrepId'  WHERE `tbl_customer_order_idtbl_customer_order`='$porderId'";
 if ($conn->query($updateInvoice) == true) {
     $actionObj = new stdClass();
     $actionObj->icon = 'fas fa-check-circle';

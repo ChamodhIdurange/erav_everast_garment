@@ -5,12 +5,10 @@ $array = array();
 $empId = $_POST['empId'];
 $today = date('Y-m-d');
 
-$getdailytot = "SELECT SUM(`u`.`nettotal`) AS 'dailyTot'
-                FROM `tbl_invoice` AS `u`
-                LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
-                WHERE `u`.`status`='1' 
-                AND `u`.`paymentcomplete`='0'
-                AND DATE(`u`.`date`) = CURDATE() 
+$getdailytot = "SELECT SUM(`ud`.`nettotal`) AS 'dailyTot'
+                FROM `tbl_customer_order` AS `ud`
+                WHERE `ud`.`status`='1' 
+                AND DATE(`ud`.`date`) = CURDATE() 
                 AND `ud`.`tbl_employee_idtbl_employee`='$empId'
                 GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 
@@ -21,12 +19,11 @@ if ($row = $resultgetdailytot->fetch_assoc()) {
     $dailytotal = $row['dailyTot'];
 }
 
-$sqlgetalltot = "SELECT SUM(`u`.`nettotal`) AS 'fullalltot'
-        FROM `tbl_invoice` AS `u`
+$sqlgetalltot = "SELECT SUM(`ud`.`nettotal`) AS 'fullalltot'
+        FROM `tbl_customer_order` AS `ud`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
-        WHERE `u`.`status`='1' 
-        AND `u`.`paymentcomplete`='0'
-        AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
+        WHERE `ud`.`status`='1' 
+        AND MONTH(`ud`.`date`) = MONTH(CURDATE()) 
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 

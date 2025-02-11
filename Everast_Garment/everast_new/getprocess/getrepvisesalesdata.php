@@ -9,7 +9,7 @@ $today = date("Y-m-d");
 $sqlstock =    "SELECT 
                     e.name,
                     
-                    COALESCE(SUM(CASE WHEN co.delivered IS NULL THEN co.nettotal ELSE 0 END), 0) AS pendingTotal,
+                    COALESCE(SUM(CASE WHEN co.confirm = '1' THEN co.nettotal ELSE 0 END), 0) AS pendingTotal,
                     COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) AS deliveredTotal,
 
                     COALESCE((SELECT SUM(r.total) 
@@ -38,7 +38,7 @@ $sqlstock =    "SELECT
                 LEFT JOIN tbl_employee AS e ON e.idtbl_employee = co.tbl_employee_idtbl_employee
                 WHERE co.status = '1'  
                 AND co.confirm = '1'
-                AND co.date BETWEEN '2025-02-01' AND '2025-03-06'
+                AND co.date BETWEEN '$fromdate' AND '$todate'
                 GROUP BY co.tbl_employee_idtbl_employee";
 $resultstock = $conn->query($sqlstock);
 

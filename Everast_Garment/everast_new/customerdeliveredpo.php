@@ -562,6 +562,17 @@ include "include/topnavbar.php";
                                 <option value="0">All</option>
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <label class="small font-weight-bold text-dark">Sales Rep*</label>
+                            <select class="form-control form-control-sm" name="editsalesrep" id="editsalesrep" required>
+                                <option value="">Select</option>
+                                <?php if ($resultreplist->num_rows > 0) {
+                                     while ($rowreplist = $resultreplist->fetch_assoc()) { ?>
+                                <option value="<?php echo $rowreplist['idtbl_employee'] ?>">
+                                    <?php echo $rowreplist['name'] ?></option>
+                                <?php } } ?>
+                            </select>
+                        </div>
                     </div>
                     <button class="btn btn-primary btn-sm fa-pull-right mt-3" id="btncuspoupdate"><i
                             class="fa fa-save"></i>&nbsp;Update</button>
@@ -820,7 +831,7 @@ include "include/topnavbar.php";
                     "className": 'text-right',
                     "data": null,
                     "render": function (data, type, full) {
-                        return parseFloat(full['total']).toFixed(2);
+                        return parseFloat(full['total']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
                 {
@@ -836,7 +847,7 @@ include "include/topnavbar.php";
                     "className": 'text-right',
                     "data": null,
                     "render": function (data, type, full) {
-                        return parseFloat(full['nettotal']).toFixed(2);
+                        return parseFloat(full['nettotal']).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
                 },
                 {
@@ -904,6 +915,7 @@ include "include/topnavbar.php";
                             '"  data-podate="' + full['date'] +
                             '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
                             '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
+                            '" data-repid="' + full['tbl_employee_idtbl_employee'] +
                             '"><i class="fas fa-pen"></i></button>';
                         button +=
                             '<button class="btn btn-outline-';
@@ -1241,11 +1253,14 @@ include "include/topnavbar.php";
             var customerid = $(this).data('customerid');
             var customername = $(this).data('customername');
             var podate = $(this).data('podate');
+            var repid = $(this).data('repid');
+            $('#editsalesrep').val(repid);
 
             $('#hiddencustomerpoid').val(id);
             $('#modaleditpo').modal('show');
 
             $('#editorderdate').val(podate);
+            $('#editsalesrep').val(repid);
 
             $('#editcustomer').append(new Option(customername, customerid, true, true)).trigger('change');
             $('#editcustomer').val(customerid);
@@ -2189,6 +2204,7 @@ include "include/topnavbar.php";
             } else {
                 var orderdate = $('#editorderdate').val();
                 var customerid = $('#editcustomer').val();
+                var salesrepId = $('#editsalesrep').val();
                 var porderId = $('#hiddencustomerpoid').val();
 
                 $.ajax({
@@ -2196,6 +2212,7 @@ include "include/topnavbar.php";
                     data: {
                         orderdate: orderdate,
                         customerid: customerid,
+                        salesrepId: salesrepId,
                         porderId: porderId
                     },
                     url: 'process/updatecustomerporder.php',
