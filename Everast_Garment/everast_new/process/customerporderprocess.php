@@ -65,7 +65,7 @@ if ($recordOption == 1) {
         $originalOrderID = $conn->insert_id;
 
         foreach ($tableData as $rowtabledata) {
-            $productID = $rowtabledata->col_1;
+            $productCount = $rowtabledata->col_1;
             $product = $rowtabledata->col_3;
             $unitprice = $rowtabledata->col_4;
             $saleprice = $rowtabledata->col_5;
@@ -82,7 +82,7 @@ if ($recordOption == 1) {
             $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '$linediscountpercentage', '$linediscount', '1','$updatedatetime','$userID','$orderID','$product')";
             $conn->query($insertorderdetail);
 
-            $insertoriginalorderdetail = "INSERT INTO `tbl_original_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_original_customer_order_idtbl_original_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '$linediscountpercentage', '$linediscount', '1','$updatedatetime','$userID','$originalOrderID','$productID')";
+            $insertoriginalorderdetail = "INSERT INTO `tbl_original_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_original_customer_order_idtbl_original_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '$linediscountpercentage', '$linediscount', '1','$updatedatetime','$userID','$originalOrderID','$product')";
             $conn->query($insertoriginalorderdetail);
 
             $insertholdstock = "INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$newqty', '0', '1', '$updatedatetime', '$userID', '$product','$orderID')";

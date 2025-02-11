@@ -2260,6 +2260,13 @@ include "include/topnavbar.php";
                 }
             });
         }
+        function checkIndividualStockBeforeDeliver(productID, newqty) {
+            return $.ajax({
+                type: "POST",
+                data: { productID: productID },
+                url: 'getprocess/checkavailablestock.php'
+            });
+        }
 
         function checkTarget() {
             var productID = $('#product').val();
@@ -2417,58 +2424,102 @@ include "include/topnavbar.php";
 
         $('#btnUpdate').click(function () {
             jsonObj = [];
+            $('#btnUpdate').prop('disabled', true);
+            let requests = [];
+            let stockCheckPassed = true; 
+
             $("#tableorderview tbody tr").each(function () {
                 item = {}
+                let tableproductId = null;
+                let tableQty = null;
+                let tableProductName = null;
+
                 $(this).find('td').each(function (col_idx) {
                     item["col_" + (col_idx + 1)] = $(this).text();
+
+                    if (col_idx === 2) { 
+                        tableproductId = $(this).text().trim(); 
+                    }
+                    if (col_idx === 4) { 
+                        tableQty = parseInt($(this).text().trim()) || 0;
+                    }
+                    if (col_idx === 0) { 
+                        tableProductName = $(this).text().trim();
+                    }
                 });
                 jsonObj.push(item);
-            });
-            jsonObj = JSON.stringify(jsonObj);
 
+                if (tableproductId && tableQty) {
+                    let request = checkIndividualStockBeforeDeliver(tableproductId, tableQty)
+                        .then(result => {
+                            let obj = JSON.parse(result);
+                            if (obj.availableqty < tableQty) {
+                                stockCheckPassed = false;
 
-            var poID = $('#hiddenpoid').val();
-            var podiscountprecentage = $('#editpodiscount').val();
-            var acceptanceType = $('#acceptanceType').val();
-            var remarkVal = $('#remarkview').val()
-
-            var discount = $('#divdiscountview').text();
-            var cleandiscount = discount.split(",").join("")
-
-            var nettotal = $('#divtotalview').text();
-            var clearnettotal = nettotal.split(",").join("")
-
-            var total = $('#divsubtotalview').text();
-            var cleartotal = total.split(",").join("")
-            var statusValue = $('#statusValue').is(':checked') ? 1 : 0;
-
-            var podiscountAmount = $('#divdiscountPOview').text();
-            var clearPodiscountAmount = podiscountAmount.split(",").join("")
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    poID: poID,
-                    tableData: jsonObj,
-                    acceptanceType: acceptanceType,
-                    discount: cleandiscount,
-                    nettotal: clearnettotal,
-                    total: cleartotal,
-                    podiscountPrecentage: podiscountprecentage,
-                    podiscountAmount: clearPodiscountAmount,
-                    remarkVal: remarkVal,
-                    isChangeStatus: statusValue
-                },
-                url: 'process/updatecustomerpoprocess.php',
-                success: function (result) { console.log(result);
-                    action(result);
-                    $('#modalorderview').modal('hide');
-
-                    $('#dataTable').DataTable().ajax.reload();
-                    location.reload();
+                                $('#errordivaddnew').empty().html(
+                                    `<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                                        <h5>There is not enough stock available for product '${tableProductName}'</h5>
+                                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                                            <span aria-hidden='true'>&times;</span>
+                                        </button>
+                                    </div>`
+                                );
+                            }
+                        });
+                    requests.push(request);
                 }
             });
 
+            $.when.apply($, requests).done(function () {
+                if (stockCheckPassed) {
+                    jsonObj = JSON.stringify(jsonObj);
+                    var poID = $('#hiddenpoid').val();
+                    var podiscountprecentage = $('#editpodiscount').val();
+                    var acceptanceType = $('#acceptanceType').val();
+                    var remarkVal = $('#remarkview').val()
+
+                    var discount = $('#divdiscountview').text();
+                    var cleandiscount = discount.split(",").join("")
+
+                    var nettotal = $('#divtotalview').text();
+                    var clearnettotal = nettotal.split(",").join("")
+
+                    var total = $('#divsubtotalview').text();
+                    var cleartotal = total.split(",").join("")
+                    var statusValue = $('#statusValue').is(':checked') ? 1 : 0;
+
+                    var podiscountAmount = $('#divdiscountPOview').text();
+                    var clearPodiscountAmount = podiscountAmount.split(",").join("")
+
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            poID: poID,
+                            tableData: jsonObj,
+                            acceptanceType: acceptanceType,
+                            discount: cleandiscount,
+                            nettotal: clearnettotal,
+                            total: cleartotal,
+                            podiscountPrecentage: podiscountprecentage,
+                            podiscountAmount: clearPodiscountAmount,
+                            remarkVal: remarkVal,
+                            isChangeStatus: statusValue
+                        },
+                        url: 'process/updatecustomerpoprocess.php',
+                        success: function (result) { console.log(result);
+                            action(result);
+                            $('#modalorderview').modal('hide');
+
+                            $('#dataTable').DataTable().ajax.reload();
+                            location.reload();
+                        }
+                    });
+                } else {
+                    console.log("Stock check failed. Something went wrong");
+                }
+            }).fail(function () {
+                console.log("Error in stock check requests.");
+            });
         });
 
         $('#tableorder').on('click', '.btndlt', function () {

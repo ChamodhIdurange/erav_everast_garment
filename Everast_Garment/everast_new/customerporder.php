@@ -2417,6 +2417,8 @@ include "include/topnavbar.php";
 
         $('#btnUpdate').click(function () {
             jsonObj = [];
+            $('#btnUpdate').prop('disabled', true);
+            
             $("#tableorderview tbody tr").each(function () {
                 item = {}
                 $(this).find('td').each(function (col_idx) {

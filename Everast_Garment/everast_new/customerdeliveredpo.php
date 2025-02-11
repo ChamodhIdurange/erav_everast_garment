@@ -442,7 +442,7 @@ include "include/topnavbar.php";
                 </div>
                 <div class="row mt-3">
                     <div class="col">
-                        <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct" disabled><i
+                        <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct"><i
                         class="fa fa-save"></i>&nbsp;Add New Product</button>
                     </div>
                 </div>
@@ -2417,6 +2417,8 @@ include "include/topnavbar.php";
 
         $('#btnUpdate').click(function () {
             jsonObj = [];
+            $('#btnUpdate').prop('disabled', true);
+            
             $("#tableorderview tbody tr").each(function () {
                 item = {}
                 $(this).find('td').each(function (col_idx) {

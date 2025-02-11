@@ -5,7 +5,7 @@ require_once('../connection/db.php');
 $fromdate = $_POST['fromdate'];
 $today = date("Y-m-d");
 
-$sqlstock = "SELECT `p`.`retail`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, SUM(`s`.`qty`) AS `qty`, `m`.`name` 
+$sqlstock = "SELECT `p`.`product_code`, `p`.`retail`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, COALESCE(SUM(`s`.`qty`), 0)AS `qty`, `m`.`name`, (SELECT COALESCE(SUM(`h`.`qty`), 0) FROM `tbl_customer_order_hold_stock` AS `h` WHERE `h`.`status`='1' AND `h`.`tbl_product_idtbl_product`=`p`.`idtbl_product`) AS 'holdqty' 
              FROM `tbl_stock` as `s` 
              LEFT JOIN `tbl_product` as `p` ON (`p`.`idtbl_product`=`s`.`tbl_product_idtbl_product`) 
              LEFT JOIN `tbl_sizes` AS `m` ON (`m`.`idtbl_sizes` = `p`.`tbl_sizes_idtbl_sizes`) 
@@ -23,12 +23,11 @@ if ($resultstock->num_rows > 0) {
             <thead>
                 <tr>
                     <th>Product</th>
-                    <th>Color</th>
-                    <th>Category</th>
-                    <th>Group Category</th>
+                    <th>Code</th>
                     <th>Size</th>
                     <th>Retail price</th>
                     <th class="text-center">Available Stock</th>
+                    <th class="text-center">Hold Stock</th>
                     <th>Total price</th>
                 </tr>
             </thead>
@@ -37,12 +36,11 @@ if ($resultstock->num_rows > 0) {
         $total = $rowstock['retail'] * $rowstock['qty'];
         echo '<tr>
                 <td>' . $rowstock['product_name'] . '</td>
-                <td>' . $rowstock['subcat'] . '</td>
-                <td>' . $rowstock['maincat'] . '</td>
-                <td>' . $rowstock['groupcat'] . '</td>
+                <td>' . $rowstock['product_code'] . '</td>
                 <td>' . $rowstock['name'] . '</td>
                 <td class="text-right">Rs.' . number_format($rowstock['retail'], 2, '.', ',') . '</td>
                 <td class="text-center">' . $rowstock['qty'] . '</td>
+                <td class="text-center">' . $rowstock['holdqty'] . '</td>
                 <td class="text-right">Rs.' . number_format($total, 2, '.', ',') . '</td>
             </tr>';
     }

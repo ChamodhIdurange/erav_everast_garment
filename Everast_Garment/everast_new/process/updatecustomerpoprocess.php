@@ -99,6 +99,7 @@ if($conn->query($updatePoValues)==true){
 
         if($acceptanceType == 1){
             if($newstatus == 0){
+                // This is to check whether poder status should be changed or now
                 if($isChangeStatus == 1){
                     $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `confirmqty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status', `saleprice` = '$saleprice' WHERE `idtbl_customer_order_detail` = '$podetailId'";
                 }else{

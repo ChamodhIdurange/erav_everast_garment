@@ -56,11 +56,10 @@ $sql_details = array(
 require('ssp.customized.class.php');
 
 $joinQuery = "FROM `tbl_product` AS `u` LEFT JOIN `tbl_product_category` AS `ua` ON (`u`.`tbl_product_category_idtbl_product_category` = `ua`.`idtbl_product_category`)";
-
-
+$extraWhere = "`u`.`status` IN (1,0)";
 
 echo json_encode(
-	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery)
+	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
 );
 
 
