@@ -9,21 +9,21 @@ $today = date("Y-m-d");
 $sqlstock =    "SELECT 
                     e.name,
                     
-                    COALESCE(SUM(CASE WHEN co.confirm = '1' THEN co.nettotal ELSE 0 END), 0) AS pendingTotal,
+                    COALESCE(SUM(co.nettotal ), 0) AS pendingTotal,
                     COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) AS deliveredTotal,
 
                     COALESCE((SELECT SUM(r.total) 
                             FROM tbl_return r 
                             WHERE r.status = '1' 
                                 AND r.acceptance_status = '0' 
-                                AND r.returndate BETWEEN '2025-02-01' AND '2025-03-06' 
+                                AND r.returndate BETWEEN '$fromdate' AND '$todate' 
                                 AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0) AS pendingReturns,
 
                     COALESCE((SELECT SUM(r.total) 
                             FROM tbl_return r 
                             WHERE r.status = '1' 
                                 AND r.acceptance_status = '1' 
-                                AND r.returndate BETWEEN '2025-02-01' AND '2025-03-06' 
+                                AND r.returndate BETWEEN '$fromdate' AND '$todate' 
                                 AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0) AS acceptedReturns,
 
                     (COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) + 
@@ -31,13 +31,12 @@ $sqlstock =    "SELECT
                             FROM tbl_return r 
                             WHERE r.status = '1' 
                                 AND r.acceptance_status = '1' 
-                                AND r.returndate BETWEEN '2025-02-01' AND '2025-03-06' 
+                                AND r.returndate BETWEEN '$fromdate' AND '$todate' 
                                 AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0)) AS fullnettotal
 
                 FROM tbl_customer_order AS co
                 LEFT JOIN tbl_employee AS e ON e.idtbl_employee = co.tbl_employee_idtbl_employee
                 WHERE co.status = '1'  
-                AND co.confirm = '1'
                 AND co.date BETWEEN '$fromdate' AND '$todate'
                 GROUP BY co.tbl_employee_idtbl_employee";
 $resultstock = $conn->query($sqlstock);

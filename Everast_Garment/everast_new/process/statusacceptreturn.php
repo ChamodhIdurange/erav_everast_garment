@@ -10,11 +10,12 @@ $currentDate = date('mdY');
 $userID = $_SESSION['userid'];
 $record = $_GET['record'];
 // $type=$_GET['type'];
-$sqlReturn = "SELECT `returntype`, `total` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
+$sqlReturn = "SELECT `returntype`, `total`, `tbl_customer_idtbl_customer` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
 $resultReturn = $conn->query($sqlReturn);
 $rowReturn = $resultReturn->fetch_assoc();
 $type =  $rowReturn['returntype'];
 $returntotal =  $rowReturn['total'];
+$customerId =  $rowReturn['tbl_customer_idtbl_customer'];
 
 $sqlgetqty = "SELECT `qty`, `tbl_product_idtbl_product` FROM `tbl_return_details` WHERE `tbl_return_idtbl_return` = '$record'";
 $resultsqlgetqty = $conn->query($sqlgetqty);
@@ -25,7 +26,7 @@ $batchNo = "RTH" . $currentDate . $record;
 if ($conn->query($sql) == true) {
     if ($type == 1) {
 
-        $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$returntotal', 0, '$returntotal', 0, 1, '$updatedatetime', '$userID')";
+        $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `settle`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_customer_idtbl_customer`) VALUES ('$returntotal', 0, '$returntotal', 0, 0, 1, '$updatedatetime', '$userID', '$customerId')";
         $conn->query($sqlcredit);
         $noteId = mysqli_insert_id($conn);
 
@@ -44,7 +45,7 @@ if ($conn->query($sql) == true) {
         }
         header("Location:../customerreturn.php?action=6");
     } else if ($type == 2) {
-        $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$returntotal', 0, '$returntotal', 0, 1, '$updatedatetime', '$userID')";
+        $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `settle`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_customer_idtbl_customer`) VALUES ('$returntotal', 0, '$returntotal', 0, 0, 1, '$updatedatetime', '$userID', '$customerId')";
         $conn->query($sqlcredit);
         $noteId = mysqli_insert_id($conn);
 

@@ -41,7 +41,6 @@ $columns = array(
 	array( 'db' => '`ub`.`cuspono`',   'dt' => 'cuspono', 'field' => 'cuspono' ),
 	array( 'db' => '`uc`.`name`', 'dt' => 'salepep', 'field' => 'salepep', 'as' => 'salepep' ),
 	array( 'db' => '`ud`.`area`',   'dt' => 'area', 'field' => 'area' ),
-	array( 'db' => '`up`.`tbl_invoice_payment_idtbl_invoice_payment`',   'dt' => 'tbl_invoice_payment_idtbl_invoice_payment', 'field' => 'tbl_invoice_payment_idtbl_invoice_payment'),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
@@ -62,7 +61,7 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_invoice` AS `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_customer_order` AS `ub` ON (`ub`.`idtbl_customer_order` = `u`.`tbl_customer_order_idtbl_customer_order`) LEFT JOIN `tbl_employee` AS `uc` ON (`uc`.`idtbl_employee` = `ub`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_area` AS `ud` ON (`ud`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `up` ON (`up`.`tbl_invoice_idtbl_invoice` = `u`.`idtbl_invoice`)";
+$joinQuery = "FROM `tbl_invoice` AS `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_customer_order` AS `ub` ON (`ub`.`idtbl_customer_order` = `u`.`tbl_customer_order_idtbl_customer_order`) LEFT JOIN `tbl_employee` AS `uc` ON (`uc`.`idtbl_employee` = `ub`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_area` AS `ud` ON (`ud`.`idtbl_area` = `u`.`tbl_area_idtbl_area`)";
 
 $extraWhere = "`u`.`status` IN (1, 2)";
 

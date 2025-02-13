@@ -574,7 +574,7 @@ include "include/topnavbar.php";
                             </select>
                         </div>
                     </div>
-                    <button class="btn btn-primary btn-sm fa-pull-right mt-3" id="btncuspoupdate"><i
+                    <button ctype="button" class="btn btn-primary btn-sm fa-pull-right mt-3" id="btncuspoupdate"><i
                             class="fa fa-save"></i>&nbsp;Update</button>
                     <input type="submit" class="d-none" id="hiddeneditsubmit">
                 </form>
@@ -2216,7 +2216,7 @@ include "include/topnavbar.php";
                         porderId: porderId
                     },
                     url: 'process/updatecustomerporder.php',
-                    success: function (result) { // alert(result)
+                    success: function (result) { //console.log(result)
                         var obj = JSON.parse(result);
                         action(obj);
                         setTimeout(function () {

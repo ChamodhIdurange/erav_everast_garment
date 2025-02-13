@@ -19,11 +19,20 @@ if ($row = $resultgetdailytot->fetch_assoc()) {
     $dailytotal = $row['dailyTot'];
 }
 
+
+// $sqlgetalltot = "SELECT SUM(`ud`.`nettotal`) AS 'fullalltot'
+//         FROM `tbl_customer_order` AS `ud`
+//         WHERE `ud`.`status`='1' 
+//         AND MONTH(`ud`.`date`) = MONTH(CURDATE()) 
+//         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
+//         GROUP BY `ud`.`tbl_employee_idtbl_employee`";
+
 $sqlgetalltot = "SELECT SUM(`ud`.`nettotal`) AS 'fullalltot'
-        FROM `tbl_customer_order` AS `ud`
+        FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
-        WHERE `ud`.`status`='1' 
-        AND MONTH(`ud`.`date`) = MONTH(CURDATE()) 
+        WHERE `u`.`status`='1' 
+        AND `u`.`paymentcomplete`='0'
+        AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         GROUP BY `ud`.`tbl_employee_idtbl_employee`";
 

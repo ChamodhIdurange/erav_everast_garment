@@ -163,25 +163,29 @@ $(document).ready(function() {
                         "buttons": [{
                                 extend: 'csv',
                                 className: 'btn btn-success btn-sm',
-                                title: 'Stock Report',
+                                title: 'Rep vise Report',
                                 text: '<i class="fas fa-file-csv mr-2"></i> CSV'
                             },
                             {
                                 extend: 'pdf',
                                 className: 'btn btn-danger btn-sm',
-                                title: 'Stock Report',
+                                title: 'Rep vise Report',
                                 text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
                             },
                             {
                                 extend: 'print',
                                 className: 'btn btn-primary btn-sm',
-                                title: 'Stock Report',
+                                title: 'Rep vise Report',
                                 text: '<i class="fas fa-print mr-2"></i> Print'
                             }
                         ],
                         "paging": true,
                         "searching": true,
                         "ordering": true,
+                        "lengthMenu": [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, 'All']
+                        ],
                     });
                     $('#hideprintBtn').show();
                 }

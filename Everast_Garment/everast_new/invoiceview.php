@@ -246,7 +246,7 @@ include "include/topnavbar.php";
                             button+='<button type="button" data-url="process/invoicecancellprocess.php?record='+full['idtbl_invoice']+'&type=3"  data-actiontype="3" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="far fa-trash-alt"></i></button>';
                         }
                         
-                        button+='<button type="button" data-actiontype="3" title="Complete Order" class="btn btn-outline-secondary btn-sm mr-1 btnViewPayments" id="'+full['tbl_invoice_payment_idtbl_invoice_payment']+'"><i class="fa fa-credit-card"></i></button>';
+                        button+='<button type="button" data-actiontype="3" title="View Payment History" class="btn btn-outline-secondary btn-sm mr-1 btnViewPayments" id="'+full['idtbl_invoice']+'"><i class="fa fa-credit-card"></i></button>';
                         return button;
                     }
                 }
@@ -260,7 +260,7 @@ include "include/topnavbar.php";
             $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
             $('#modalpayments iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
-            var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
+            var src = 'pdfprocess/paymentpdf.php?invoiceId=' + id;
 
             var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
             var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360

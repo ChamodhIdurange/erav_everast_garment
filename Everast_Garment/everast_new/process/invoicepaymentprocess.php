@@ -9,6 +9,7 @@ $tblPayData=$_POST['tblPayData'];
 $totAmount=$_POST['totAmount'];
 $payAmount=$_POST['payAmount'];
 $balAmount=$_POST['balAmount'];
+$paymentdate=$_POST['paymentdate'];
 
 $today=date('Y-m-d');
 $updatedatetime=date('Y-m-d h:i:s');
@@ -16,7 +17,7 @@ $updatedatetime=date('Y-m-d h:i:s');
 // mysqli_autocommit($conn, false);
 // mysqli_begin_transaction($conn);
 
-$insertpayment="INSERT INTO `tbl_invoice_payment`(`date`, `payment`, `balance`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$today','$payAmount','$balAmount','1','$updatedatetime','$userID')";
+$insertpayment="INSERT INTO `tbl_invoice_payment`(`date`, `payment`, `balance`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$paymentdate','$payAmount','$balAmount','1','$updatedatetime','$userID')";
 if($conn->query($insertpayment)==true){
     $paymentID=$conn->insert_id;
 
