@@ -6,8 +6,9 @@ $empId = $_POST['empId'];
 $today = date('Y-m-d');
 
 $getdailytot = "SELECT SUM(`ud`.`nettotal`) AS 'dailyTot'
-                FROM `tbl_customer_order` AS `ud`
-                WHERE `ud`.`status`='1' 
+                FROM `tbl_original_customer_order` AS `ud`
+                LEFT JOIN `tbl_customer_order` AS `u` ON `u`.`idtbl_customer_order` = `ud`.`tbl_customer_order_idtblcustomer_order`
+                WHERE `u`.`status`='1' 
                 AND DATE(`ud`.`date`) = CURDATE() 
                 AND `ud`.`tbl_employee_idtbl_employee`='$empId'
                 GROUP BY `ud`.`tbl_employee_idtbl_employee`";
