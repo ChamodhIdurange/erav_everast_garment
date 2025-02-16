@@ -7,8 +7,7 @@ if(!isset($_POST['searchTerm'])){
 
 }else{
     $search = $_POST['searchTerm'];   
-    $sql="SELECT `idtbl_supplier`, `suppliername` FROM `tbl_supplier` AND `suppliername` LIKE '%$search%'";
-
+    $sql="SELECT `idtbl_supplier`, `suppliername` FROM `tbl_supplier` WHERE `suppliername` LIKE '%$search%' LIMIT 7";
 }
 $result=$conn->query($sql);
 

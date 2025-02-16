@@ -14,7 +14,7 @@ include "include/topnavbar.php";
                     <div class="page-header-content py-3">
                         <h1 class="page-header-title">
                             <div class="page-header-icon"><i data-feather="file"></i></div>
-                            <span>Cancelled Recovery</span>
+                            <span>Cancelled Invoice</span>
                         </h1>
                     </div>
                 </div>
@@ -31,8 +31,8 @@ include "include/topnavbar.php";
                                             <th>Date</th>
                                             <th>Purchase Order</th>
                                             <th>Customer</th>
-                                            <th>Area</th>
                                             <th>Sale Rep</th>
+                                            <th>Cancel Reason</th>
                                             <th class="text-right">Total</th>
                                             <th>Payment</th>
                                             <th class="text-right">Actions</th>
@@ -126,10 +126,10 @@ include "include/topnavbar.php";
                     "data": "name"
                 },
                 {
-                    "data": "area"
+                    "data": "salepep"
                 },
                 {
-                    "data": "salepep"
+                    "data": "cancelreason"
                 },
                 {
                     "targets": -1,
@@ -207,3 +207,4 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
+

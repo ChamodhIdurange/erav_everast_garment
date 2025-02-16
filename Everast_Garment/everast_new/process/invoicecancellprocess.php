@@ -14,7 +14,7 @@ else if($type==2){$value=2;}
 else if($type==3){$value=3;}
 $batchNo = "RMV" . $currentDate . $record;
 
-$sql="UPDATE `tbl_invoice` SET `status`='$value',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_invoice`='$record'";
+$sql="UPDATE `tbl_invoice` SET `status`='$value',`tbl_user_idtbl_user`='$userID', `cancelreason` = 'Cancelled directly from Invoice Page' WHERE `idtbl_invoice`='$record'";
 if($conn->query($sql)==true){
 
     $sqlgetqty = "SELECT `qty`, `tbl_product_idtbl_product` FROM `tbl_invoice_detail` WHERE `tbl_invoice_idtbl_invoice` = '$record'";

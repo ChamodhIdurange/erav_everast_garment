@@ -280,6 +280,13 @@ else if ($lastElement == 'rptrepvisesales.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 57, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 57, 4);
 }
+else if ($lastElement == 'cancelledcustomerpo.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 58, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 58, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 58, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 58, 4);
+}
+
 
 function checkprivilege($arraymenu, $menuID, $type)
 {
@@ -417,14 +424,14 @@ function checkprivilege($arraymenu, $menuID, $type)
                 Vat Info
             </a>
             <?php }
-                if (menucheck($menuprivilegearray, 17) == 1 | menucheck($menuprivilegearray, 51) == 1 | menucheck($menuprivilegearray, 52) == 1 | menucheck($menuprivilegearray, 53) == 1) { ?>
+                if (menucheck($menuprivilegearray, 17) == 1 | menucheck($menuprivilegearray, 51) == 1 | menucheck($menuprivilegearray, 52) == 1 | menucheck($menuprivilegearray, 53) == 1 | menucheck($menuprivilegearray, 58) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
                 data-target="#collapsecustomerpo" aria-expanded="false" aria-controls="collapsecustomerpo">
                 <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
                 Customer PO Details
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
-            <div class="collapse <?php if ($lastElement == "customerporder.php" | $lastElement == "customerconfirmedpo.php" | $lastElement == "customerdispatchedpo.php" | $lastElement == "customerdeliveredpo.php") {echo 'show';} ?>"
+            <div class="collapse <?php if ($lastElement == "customerporder.php" | $lastElement == "customerconfirmedpo.php" | $lastElement == "customerdispatchedpo.php" | $lastElement == "customerdeliveredpo.php" | $lastElement == "cancelledcustomerpo.php") {echo 'show';} ?>"
                 id="collapsecustomerpo" data-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                     <?php if (menucheck($menuprivilegearray, 17) == 1) { ?>
@@ -435,6 +442,8 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <a class="nav-link p-0 px-3 py-1" href="customerdispatchedpo.php">Dispatched PO</a>
                     <?php } if (menucheck($menuprivilegearray, 53) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-1" href="customerdeliveredpo.php">Delivered PO</a>
+                    <?php } if (menucheck($menuprivilegearray, 58) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="cancelledcustomerpo.php">Cancelled PO</a>
                     <?php } ?>
                 </nav>
             </div>
