@@ -4,6 +4,9 @@ require_once('../connection/db.php');
 
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
+// $customerlist = $_POST['customerlist'];
+// $customerlist = implode(", ", $customerlist);
+
 $today = date("Y-m-d");
 
 $sqloutstanding =    "SELECT 
@@ -26,6 +29,7 @@ $sqloutstanding =    "SELECT
                 WHERE co.status = '1'  
                 AND co.date BETWEEN '$fromdate' AND '$todate'
                 AND co.delivered = '1'
+                AND i.paymentcomplete = '0'
                 ORDER BY `c`.`idtbl_customer` DESC";
 $resultstock = $conn->query($sqloutstanding);
 
@@ -38,78 +42,94 @@ if ($resultstock->num_rows > 0) {
     $netBalance = 0;
   
     echo '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">Customer Invoice Report</h2>
-          </div>';
-    while ($row = $resultstock->fetch_assoc()) {
-        $c++;
-        $customerId = $row['idtbl_customer'];
-        // $oldCustomerId = $row['idtbl_customer'];
-
-      
-
-        if($c!=1 && $oldCustomerId != $customerId) {
-            echo  '</tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-center"></td>
-                        <td class="text-right"><strong>' . number_format($netInvoiceAmount, 2) . '</strong></td>
-                        <td class="text-right"><strong>' . number_format($netDeductions, 2) . '</strong></td>
-                        <td class="text-right"><strong>' . number_format($netBalance, 2) . '</strong></td>
-                    </tr>
-                </tfoot>
-            </table>';
-
-            $netInvoiceAmount = 0;
-            $netDeductions= 0;
-            $netBalance = 0;
-            $c=1;
-        }
-
-        $netInvoiceAmount += $row['nettotal'];
-        $netDeductions += $row['payedamount'];
-        $netBalance += $row['nettotal'] - $row['payedamount'];
-
-        if($oldCustomerId != $customerId ) {
-            $oldCustomerId = $customerId;
-
-            echo '<h3>'. $row['customername'] .'</h3><br><span>'. $row['address'] .'</spam>
-                <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th class="text-center">No</th>
-                            <th class="text-center">Invoice</th>
-                            <th class="text-center">Date</th>
-                            <th class="text-center">Rep Name</th>
-                            <th class="text-center">Invoice Amount</th>
-                            <th class="text-center">Deductions</th>
-                            <th class="text-center">Balance</th>
-                        </tr>
-                    </thead>
-                <tbody>';
-        }
-        echo '
-                <tr>
-                    <td class="text-center">' . $c . '</td>
-                    <td class="text-center">' . $row['invoiceno'] . '</td>
-                    <td class="text-center">' . $row['date'] . '</td>
-                    <td class="text-center">' . $row['empname'] . '</td>
-                    <td class="text-right">' . number_format($row['nettotal'], 2, '.', ',')  . '</td>
-                    <td class="text-right">' . number_format($row['payedamount'], 2, '.', ',')  . '</td>
-                    <td class="text-right">' . number_format($row['nettotal'] - $row['payedamount'], 2, '.', ',')  . '</td>
-                </tr>';
+            <div style="text-align: left;">
+                <h4 style="margin: 0;">EVEREST HARDWARE CO. (PVT) LTD</h4>
+                <p style="margin: 5px 0; font-size: 14px;">
+                    #363/10/01, Malwatte, Kal-Eliya (Mirigama) <br>
+                    033 4 950 951 | <a href="mailto:everest.hardware@yahoo.com">everest.hardware@yahoo.com</a>
+                </p>
+            </div>
+            <div>
+                <h2 style="margin: 0;">Customer Outstanding Report</h2>
+            </div>
+        </div>';
+        while ($row = $resultstock->fetch_assoc()) {
+            $customerId = $row['idtbl_customer'];
         
-    }
-    echo  '</tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="text-center"></td>
-                        <td class="text-right"><strong>' . number_format($netInvoiceAmount, 2) . '</strong></td>
-                        <td class="text-right"><strong>' . number_format($netDeductions, 2) . '</strong></td>
-                        <td class="text-right"><strong>' . number_format($netBalance, 2) . '</strong></td>
-                    </tr>
-                </tfoot>
-            </table>';
+            if ($c != 1 && $oldCustomerId != $customerId) {
+                echo '
+                        </tbody>
+                            <tfoot>
+                                <tr style="background-color: #f1f1f1; font-weight: bold;">
+                                    <td colspan="4" class="text-center">Total</td>
+                                    <td class="text-right">' . number_format($netInvoiceAmount, 2) . '</td>
+                                    <td class="text-right">' . number_format($netDeductions, 2) . '</td>
+                                    <td class="text-right">' . number_format($netBalance, 2) . '</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>';
+        
+                $netInvoiceAmount = 0;
+                $netDeductions = 0;
+                $netBalance = 0;
+                $c = 1;
+            }
+        
+            $netInvoiceAmount += $row['nettotal'];
+            $netDeductions += $row['payedamount'];
+            $netBalance += $row['nettotal'] - $row['payedamount'];
+        
+            if ($oldCustomerId != $customerId) {
+                $oldCustomerId = $customerId;
+        
+                echo '
+                   <div style="background: #fff; border-radius: 10px; box-shadow: 0px 3px 8px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid #004085;">
+                    <h2 style="margin: 0; font-weight: bold; color: #004085;">' . $row['customername'] . '</h2>
+                    <p style="margin: 3px 0 12px; font-size: 13px; color: #666;">' . $row['address'] . '</p>
+
+                    <table class="table table-bordered table-striped table-sm nowrap" id="dataTable" style="background: #fff; border-radius: 5px; overflow: hidden;">
+                        <thead style="background: #004085; color: #fff;">
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Invoice</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Rep Name</th>
+                                <th class="text-center">Invoice Amount</th>
+                                <th class="text-center">Deductions</th>
+                                <th class="text-center">Balance</th>
+                            </tr>
+                        </thead>
+                <tbody>';
+            }
+        
+            echo '
+                <tr style="">
+                <td class="text-center">' . $c . '</td>
+                <td class="text-center">' . $row['invoiceno'] . '</td>
+                <td class="text-center">' . $row['date'] . '</td>
+                <td class="text-center">' . $row['empname'] . '</td>
+                <td class="text-right">' . number_format($row['nettotal'], 2, '.', ',') . '</td>
+                <td class="text-right">' . number_format($row['payedamount'], 2, '.', ',') . '</td>
+                <td class="text-right">' . number_format($row['nettotal'] - $row['payedamount'], 2, '.', ',') . '</td>
+        </tr>';
+            $c++;
+        }
+        
+        echo '
+            </tbody>
+        <tfoot>
+            <tr style="background-color: #f1f1f1; font-weight: bold;">
+                <td colspan="4" class="text-center">Total</td>
+                <td class="text-right">' . number_format($netInvoiceAmount, 2) . '</td>
+                <td class="text-right">' . number_format($netDeductions, 2) . '</td>
+                <td class="text-right">' . number_format($netBalance, 2) . '</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>';
 } else {
     echo '<div class="alert alert-info" role="alert">No records found.</div>';
 }
 ?>
+

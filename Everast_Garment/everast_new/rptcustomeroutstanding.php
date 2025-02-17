@@ -1,6 +1,9 @@
 <?php 
 include "include/header.php";  
 include "include/topnavbar.php"; 
+
+$sqlreplist="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1";
+$resultreplist =$conn-> query($sqlreplist);
 ?>
 
 <div id="layoutSidenav">
@@ -26,6 +29,16 @@ include "include/topnavbar.php";
                             <div class="col-12">
                                 <form id="searchform">
                                     <div class="form-row">
+                                        <!-- <div class="col-3">
+                                            <label class="small font-weight-bold text-dark">Sales Rep*</label>
+                                            <select type="text" class="form-control form-control-sm" name="customerlist[]" id="customerlist" required multiple>
+                                                <?php if($resultreplist->num_rows > 0) {while ($row = $resultreplist-> fetch_assoc()) { ?>
+                                                <option value="<?php echo $row['idtbl_customer'] ?>"><?php echo $row['name'] ?></option>
+                                                <?php }} ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-1">
+                                        </div> -->
                                         <div class="col-3">
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
@@ -125,6 +138,8 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
 $(document).ready(function() {
+    $("#customerlist").select2();
+
     $('.dpd1a').datepicker({
         uiLibrary: 'bootstrap4',
         autoclose: 'true',
@@ -138,6 +153,7 @@ $(document).ready(function() {
         } else {
             var fromdate = $('#fromdate').val();
             var todate = $('#todate').val();
+            // var customerlist = $('#customerlist').val();
 
             $('#targetviewdetail').html(
                 '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
@@ -147,7 +163,8 @@ $(document).ready(function() {
                 type: "POST",
                 data: {
                     fromdate: fromdate,
-                    todate: todate
+                    todate: todate,
+                    // customerlist: customerlist
                 },
                 url: 'getprocess/getoutstandingsalesdata.php',
                 success: function(result) {
