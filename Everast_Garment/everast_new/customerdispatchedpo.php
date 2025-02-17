@@ -1082,7 +1082,8 @@ include "include/topnavbar.php";
             $.ajax({
                 type: "POST",
                 data: {
-                    productID: productID
+                    productID: productID,
+                    usingqty: newqty
                 },
                 url: 'getprocess/checkavailablestock.php',
                 success: function (result) { //alert(result)
@@ -2258,7 +2259,8 @@ include "include/topnavbar.php";
             $.ajax({
                 type: "POST",
                 data: {
-                    productID: productID
+                    productID: productID,
+                    usingqty: newqty
                 },
                 url: 'getprocess/checkavailablestock.php',
                 success: function (result) { //alert(result)
@@ -2280,7 +2282,10 @@ include "include/topnavbar.php";
         function checkIndividualStockBeforeDeliver(productID, newqty) {
             return $.ajax({
                 type: "POST",
-                data: { productID: productID },
+                data: { 
+                    productID: productID,
+                    usingqty: newqty
+                 },
                 url: 'getprocess/checkavailablestock.php'
             });
         }
@@ -2473,7 +2478,7 @@ include "include/topnavbar.php";
                 if (tableproductId && tableQty && deletestatus!=3) {
                     let request = checkIndividualStockBeforeDeliver(tableproductId, tableQty)
                         .then(result => {
-                            let obj = JSON.parse(result);
+                            let obj = JSON.parse(result); //alert(result)
                             if (obj.availableqty < tableQty) {
                                 stockCheckPassed = false;
 

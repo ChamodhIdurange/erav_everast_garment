@@ -1082,7 +1082,8 @@ include "include/topnavbar.php";
             $.ajax({
                 type: "POST",
                 data: {
-                    productID: productID
+                    productID: productID,
+                    usingqty: newqty
                 },
                 url: 'getprocess/checkavailablestock.php',
                 success: function (result) { //alert(result)
@@ -2258,7 +2259,8 @@ include "include/topnavbar.php";
             $.ajax({
                 type: "POST",
                 data: {
-                    productID: productID
+                    productID: productID,
+                    usingqty: newqty
                 },
                 url: 'getprocess/checkavailablestock.php',
                 success: function (result) { //alert(result)

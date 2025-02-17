@@ -5,7 +5,7 @@ require_once('../connection/db.php');
 $fromdate = $_POST['fromdate'];
 $today = date("Y-m-d");
 
-$sqlstock = "SELECT `p`.`product_code`, `p`.`retail`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, COALESCE(SUM(`s`.`qty`), 0)AS `qty`, `m`.`name`, (SELECT COALESCE(SUM(`h`.`qty`), 0) FROM `tbl_customer_order_hold_stock` AS `h` WHERE `h`.`status`='1' AND `h`.`tbl_product_idtbl_product`=`p`.`idtbl_product`) AS 'holdqty' 
+$sqlstock = "SELECT `p`.`product_code`, `p`.`retail`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, COALESCE(SUM(`s`.`qty`), 0)AS `qty`, `m`.`name`, (SELECT COALESCE(SUM(`h`.`qty`), 0) FROM `tbl_customer_order_hold_stock` AS `h` WHERE `h`.`status`='1' AND `h`.`invoiceissue`='0' AND `h`.`tbl_product_idtbl_product`=`p`.`idtbl_product`) AS 'holdqty' 
              FROM `tbl_stock` as `s` 
              LEFT JOIN `tbl_product` as `p` ON (`p`.`idtbl_product`=`s`.`tbl_product_idtbl_product`) 
              LEFT JOIN `tbl_sizes` AS `m` ON (`m`.`idtbl_sizes` = `p`.`tbl_sizes_idtbl_sizes`) 
@@ -49,3 +49,5 @@ if ($resultstock->num_rows > 0) {
     echo '<div class="alert alert-info" role="alert">No records found.</div>';
 }
 ?>
+
+
