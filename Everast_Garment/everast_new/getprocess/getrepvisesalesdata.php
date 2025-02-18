@@ -5,6 +5,8 @@ require_once('../connection/db.php');
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
 $today = date("Y-m-d");
+$replist = $_POST['replist'];
+$replist = implode(", ", $replist);
 
 $sqlstock =    "SELECT 
                     e.name,
@@ -38,6 +40,7 @@ $sqlstock =    "SELECT
                 LEFT JOIN tbl_employee AS e ON e.idtbl_employee = co.tbl_employee_idtbl_employee
                 WHERE co.status = '1'  
                 AND co.date BETWEEN '$fromdate' AND '$todate'
+                AND co.tbl_employee_idtbl_employee IN ($replist)
                 GROUP BY co.tbl_employee_idtbl_employee";
 $resultstock = $conn->query($sqlstock);
 

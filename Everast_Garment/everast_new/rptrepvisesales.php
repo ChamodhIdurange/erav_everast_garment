@@ -1,6 +1,9 @@
 <?php 
 include "include/header.php";  
 include "include/topnavbar.php"; 
+
+$sqlreplist="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
+$resultreplist =$conn-> query($sqlreplist);
 ?>
 
 <div id="layoutSidenav">
@@ -26,6 +29,19 @@ include "include/topnavbar.php";
                             <div class="col-12">
                                 <form id="searchform">
                                     <div class="form-row">
+                                        <div class="col-3">
+                                            <label class="small font-weight-bold text-dark">Sales Rep*</label>
+                                            <select type="text" class="form-control form-control-sm" name="replist[]"
+                                                id="replist" required multiple>
+                                                <option value="all">All</option>
+                                                <?php if($resultreplist->num_rows > 0) {while ($row = $resultreplist-> fetch_assoc()) { ?>
+                                                <option value="<?php echo $row['idtbl_employee'] ?>">
+                                                    <?php echo $row['name'] ?></option>
+                                                <?php }} ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-1">
+                                        </div>
                                         <div class="col-3">
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
@@ -124,103 +140,117 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-$(document).ready(function() {
-    $('.dpd1a').datepicker('remove');
-    $('.dpd1a').datepicker({
-        uiLibrary: 'bootstrap4',
-        autoclose: 'true',
-        todayHighlight: true,
-        format: 'yyyy-mm-dd'
-    });
+    $(document).ready(function () {
+        $("#replist").select2();
+        $('.dpd1a').datepicker('remove');
+        $('.dpd1a').datepicker({
+            uiLibrary: 'bootstrap4',
+            autoclose: 'true',
+            todayHighlight: true,
+            format: 'yyyy-mm-dd'
+        });
 
-    $('#formSearchBtn').click(function() {
-        if (!$("#searchform")[0].checkValidity()) {
-            $("#hidesubmit").click();
-        } else {
-            var fromdate = $('#fromdate').val();
-            var todate = $('#todate').val();
+        $("#replist").on("change", function () {
+            var selectedValues = $(this).val();
 
-            $('#targetviewdetail').html(
-                '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
-            ).show();
+            if (selectedValues && selectedValues.includes("all")) {
+                selectedValues = $("#replist option[value!='all']").map(function () {
+                    return this.value;
+                }).get();
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    fromdate: fromdate,
-                    todate: todate
-                },
-                url: 'getprocess/getrepvisesalesdata.php',
-                success: function(result) {
-                    $('#targetviewdetail').html(result);
-                    if ($.fn.DataTable.isDataTable('#dataTable')) {
-                        $('#dataTable').DataTable().destroy();
+                $(this).val(selectedValues).trigger("change");
+            }
+        });
+        $('#formSearchBtn').click(function () {
+            if (!$("#searchform")[0].checkValidity()) {
+                $("#hidesubmit").click();
+            } else {
+                var fromdate = $('#fromdate').val();
+                var todate = $('#todate').val();
+                var replist = $('#replist').val();
+
+                $('#targetviewdetail').html(
+                    '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
+                ).show();
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        fromdate: fromdate,
+                        todate: todate,
+                        replist: replist
+                    },
+                    url: 'getprocess/getrepvisesalesdata.php',
+                    success: function (result) {
+                        $('#targetviewdetail').html(result);
+                        if ($.fn.DataTable.isDataTable('#dataTable')) {
+                            $('#dataTable').DataTable().destroy();
+                        }
+                        $('#dataTable').DataTable({
+                            "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                            "buttons": [{
+                                    extend: 'csv',
+                                    className: 'btn btn-success btn-sm',
+                                    title: 'Rep vise Report',
+                                    text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                                },
+                                {
+                                    extend: 'pdf',
+                                    className: 'btn btn-danger btn-sm',
+                                    title: 'Rep vise Report',
+                                    text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                                },
+                                {
+                                    extend: 'print',
+                                    className: 'btn btn-primary btn-sm',
+                                    title: 'Rep vise Report',
+                                    text: '<i class="fas fa-print mr-2"></i> Print'
+                                }
+                            ],
+                            "paging": true,
+                            "searching": true,
+                            "ordering": true,
+                            "lengthMenu": [
+                                [10, 25, 50, -1],
+                                [10, 25, 50, 'All']
+                            ],
+                        });
+                        $('#hideprintBtn').show();
                     }
-                    $('#dataTable').DataTable({
-                        "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
-                        "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                        "buttons": [{
-                                extend: 'csv',
-                                className: 'btn btn-success btn-sm',
-                                title: 'Rep vise Report',
-                                text: '<i class="fas fa-file-csv mr-2"></i> CSV'
-                            },
-                            {
-                                extend: 'pdf',
-                                className: 'btn btn-danger btn-sm',
-                                title: 'Rep vise Report',
-                                text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
-                            },
-                            {
-                                extend: 'print',
-                                className: 'btn btn-primary btn-sm',
-                                title: 'Rep vise Report',
-                                text: '<i class="fas fa-print mr-2"></i> Print'
-                            }
-                        ],
-                        "paging": true,
-                        "searching": true,
-                        "ordering": true,
-                        "lengthMenu": [
-                            [10, 25, 50, -1],
-                            [10, 25, 50, 'All']
-                        ],
-                    });
-                    $('#hideprintBtn').show();
-                }
+                });
+            }
+        });
+
+        $('#printBtnStock').click(function () {
+
+            var fromdate = encodeURIComponent($('#fromdate').val());
+
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreportstock iframe').contents().find('body').html(
+                "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
+            );
+
+            var src = 'pdfprocess/stockreportpdf.php?fromdate=' + fromdate;
+
+            var width = $(this).attr('data-width') || 640;
+            var height = $(this).attr('data-height') || 360;
+
+            $("#printreportstock iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
             });
-        }
-    });
 
-    $('#printBtnStock').click(function() {
-
-        var fromdate = encodeURIComponent($('#fromdate').val());
-
-        $('#frame').html('');
-        $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
-        $('#printreportstock iframe').contents().find('body').html(
-            "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
-        );
-
-        var src = 'pdfprocess/stockreportpdf.php?fromdate=' + fromdate;
-
-        var width = $(this).attr('data-width') || 640;
-        var height = $(this).attr('data-height') || 360;
-
-        $("#printreportstock iframe").attr({
-            'src': src,
-            'height': height,
-            'width': width,
-            'allowfullscreen': ''
+            $('#printreportstock').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
         });
 
-        $('#printreportstock').modal({
-            keyboard: false,
-            backdrop: 'static'
-        });
     });
-
-});
 </script>
 <?php include "include/footer.php"; ?>

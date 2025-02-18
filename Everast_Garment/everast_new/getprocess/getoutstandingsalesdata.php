@@ -4,8 +4,8 @@ require_once('../connection/db.php');
 
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
-// $customerlist = $_POST['customerlist'];
-// $customerlist = implode(", ", $customerlist);
+$replist = $_POST['replist'];
+$replist = implode(", ", $replist);
 
 $today = date("Y-m-d");
 
@@ -29,6 +29,7 @@ $sqloutstanding =    "SELECT
                 WHERE co.status = '1'  
                 AND co.date BETWEEN '$fromdate' AND '$todate'
                 AND co.delivered = '1'
+                AND co.tbl_employee_idtbl_employee IN ($replist)
                 AND i.paymentcomplete = '0'
                 ORDER BY `c`.`idtbl_customer` DESC";
 $resultstock = $conn->query($sqloutstanding);
@@ -46,7 +47,7 @@ if ($resultstock->num_rows > 0) {
                 <h4 style="margin: 0;">EVEREST HARDWARE CO. (PVT) LTD</h4>
                 <p style="margin: 5px 0; font-size: 14px;">
                     #363/10/01, Malwatte, Kal-Eliya (Mirigama) <br>
-                    033 4 950 951 | <a href="mailto:everest.hardware@yahoo.com">everest.hardware@yahoo.com</a>
+                    033 4 950 951 | <a href="mailto:info&everesthardware.lk">info&everesthardware.lk</a>
                 </p>
             </div>
             <div>

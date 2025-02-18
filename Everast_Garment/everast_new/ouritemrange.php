@@ -33,8 +33,9 @@ include "include/topnavbar.php";
                                             <th>Item Code</th>
                                             <th>Item Name</th>
                                             <th>Retail</th>
+                                            <th>Retail (%)</th>
                                             <th>Wholesale</th>
-                                            <th>LST/AVRG Cost</th>
+                                            <th>Unit Cost</th>
                                             <th>Availability</th>
                                             <th>Last Month</th>
                                             <th>current</th>
@@ -123,6 +124,15 @@ include "include/topnavbar.php";
                         return addCommas(salePrice);
                     }
 
+                },
+                {
+                    "targets": -1,
+                    "className": 'text-right',
+                    "data": null,
+                    "render": function(data, type, full) {
+                        var percentageVal = parseFloat(full['percentageVal']).toFixed(2);
+                        return addCommas(percentageVal) + "%";
+                    }
                 },
                 {
                     "targets": -1,

@@ -2,7 +2,7 @@
 include "include/header.php";  
 include "include/topnavbar.php"; 
 
-$sqlreplist="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1";
+$sqlreplist="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
 $resultreplist =$conn-> query($sqlreplist);
 ?>
 
@@ -29,16 +29,19 @@ $resultreplist =$conn-> query($sqlreplist);
                             <div class="col-12">
                                 <form id="searchform">
                                     <div class="form-row">
-                                        <!-- <div class="col-3">
+                                        <div class="col-3">
                                             <label class="small font-weight-bold text-dark">Sales Rep*</label>
-                                            <select type="text" class="form-control form-control-sm" name="customerlist[]" id="customerlist" required multiple>
+                                            <select type="text" class="form-control form-control-sm" name="replist[]"
+                                                id="replist" required multiple>
+                                                <option value="all">All</option>
                                                 <?php if($resultreplist->num_rows > 0) {while ($row = $resultreplist-> fetch_assoc()) { ?>
-                                                <option value="<?php echo $row['idtbl_customer'] ?>"><?php echo $row['name'] ?></option>
+                                                <option value="<?php echo $row['idtbl_employee'] ?>">
+                                                    <?php echo $row['name'] ?></option>
                                                 <?php }} ?>
                                             </select>
                                         </div>
                                         <div class="col-1">
-                                        </div> -->
+                                        </div>
                                         <div class="col-3">
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
@@ -137,59 +140,71 @@ $resultreplist =$conn-> query($sqlreplist);
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-$(document).ready(function() {
-    $("#customerlist").select2();
+    $(document).ready(function () {
+        $("#replist").select2();
 
-    $('.dpd1a').datepicker({
-        uiLibrary: 'bootstrap4',
-        autoclose: 'true',
-        todayHighlight: true,
-        format: 'yyyy-mm-dd'
-    });
+        $('.dpd1a').datepicker({
+            uiLibrary: 'bootstrap4',
+            autoclose: 'true',
+            todayHighlight: true,
+            format: 'yyyy-mm-dd'
+        });
 
-    $('#formSearchBtn').click(function() {
-        if (!$("#searchform")[0].checkValidity()) {
-            $("#hidesubmit").click();
-        } else {
-            var fromdate = $('#fromdate').val();
-            var todate = $('#todate').val();
-            // var customerlist = $('#customerlist').val();
+        $("#replist").on("change", function () {
+            var selectedValues = $(this).val();
 
-            $('#targetviewdetail').html(
-                '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
-            ).show();
+            if (selectedValues && selectedValues.includes("all")) {
+                selectedValues = $("#replist option[value!='all']").map(function () {
+                    return this.value;
+                }).get();
 
-            $.ajax({
-                type: "POST",
-                data: {
-                    fromdate: fromdate,
-                    todate: todate,
-                    // customerlist: customerlist
-                },
-                url: 'getprocess/getoutstandingsalesdata.php',
-                success: function(result) {
-                    $('#targetviewdetail').html(result);
-                    $('#hideprintBtn').show();
-                }
-            });
+                $(this).val(selectedValues).trigger("change");
+            }
+        });
+
+        $('#formSearchBtn').click(function () {
+            if (!$("#searchform")[0].checkValidity()) {
+                $("#hidesubmit").click();
+            } else {
+                var fromdate = $('#fromdate').val();
+                var todate = $('#todate').val();
+                var replist = $('#replist').val();
+
+                $('#targetviewdetail').html(
+                    '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
+                ).show();
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        fromdate: fromdate,
+                        todate: todate,
+                        replist: replist
+                    },
+                    url: 'getprocess/getoutstandingsalesdata.php',
+                    success: function (result) {
+                        $('#targetviewdetail').html(result);
+                        $('#hideprintBtn').show();
+                    }
+                });
+            }
+        });
+
+        $('#printBtnStock').click(function () {
+            print()
+
+        });
+
+
+        function print() {
+            printJS({
+                printable: 'targetviewdetail',
+                type: 'html',
+                // style: '@page { size: landscape; }',
+                targetStyles: ['*']
+            })
         }
+
     });
-
-    $('#printBtnStock').click(function() {
-        print()
-        
-    });
-
-
-	function print() {
-		printJS({
-			printable: 'targetviewdetail',
-			type: 'html',
-			// style: '@page { size: landscape; }',
-			targetStyles: ['*']
-		})
-	}
-
-});
 </script>
 <?php include "include/footer.php"; ?>

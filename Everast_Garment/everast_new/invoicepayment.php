@@ -298,7 +298,6 @@ include "include/topnavbar.php";
             uiLibrary: 'bootstrap4',
             autoclose: 'true',
             todayHighlight: true,
-            startDate: 'today',
             format: 'yyyy-mm-dd'
         });
         $("#creditnote").select2();
