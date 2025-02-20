@@ -13,7 +13,6 @@ $options->set('isPhpEnabled', true);
 $dompdf = new Dompdf($options);
 
 $invoiceId=$_GET['invoiceId'];
-$paymentinoiceID=$_GET['invoiceId'];
 
 $sqlinvoice="SELECT * FROM `tbl_invoice` WHERE `idtbl_invoice`='$invoiceId'";
 $resultinvoice=$conn->query($sqlinvoice);
@@ -23,20 +22,9 @@ $total = $rowinvoice['total'];
 $discount = $rowinvoice['discount'];
 $invoiceno = $rowinvoice['invoiceno'];
 
-$sqlpaymentdetail="SELECT * FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_payment_idtbl_invoice_payment`='$paymentinoiceID'";
-$resultpaymentdetail=$conn->query($sqlpaymentdetail);
 
-$sqlpaymentmethodscash="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '1'";
-$resultpaymentmethodcash=$conn->query($sqlpaymentmethodscash);
-$rowcash=$resultpaymentmethodcash->fetch_assoc();
-$cashamount = $rowcash['payamount'];
 
-// $sqlpaymentmethodscheque="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '2'";
-// $resultpaymentmethodcheque=$conn->query($sqlpaymentmethodscheque);
-// $rowcheque=$resultpaymentmethodcheque->fetch_assoc();
-// $chequeamount = $rowcheque['payamount'];
-
-$sqlpayment="SELECT SUM(`ip`.`payment`) AS 'paymentmade' FROM `tbl_invoice_payment` AS `ip` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`ip`.`idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId' GROUP BY `ih`.`tbl_invoice_idtbl_invoice`";
+$sqlpayment="SELECT SUM(`ih`.`payamount`) AS 'paymentmade' FROM `tbl_invoice_payment` AS `ip` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`ip`.`idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId' GROUP BY `ih`.`tbl_invoice_idtbl_invoice`";
 $resultpayment=$conn->query($sqlpayment);
 $rowpayment=$resultpayment->fetch_assoc();
 $paymentmade = $rowpayment['paymentmade'];

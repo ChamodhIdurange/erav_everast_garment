@@ -30,13 +30,18 @@ $primaryKey = 'idtbl_invoice_payment';
 // indexes
 $columns = array(
 	array( 'db' => '`u`.`idtbl_invoice_payment`', 'dt' => 'idtbl_invoice_payment', 'field' => 'idtbl_invoice_payment' ),
+	array( 'db' => '`i`.`invoiceno`', 'dt' => 'invoiceno', 'field' => 'invoiceno' ),
+	array( 'db' => '`i`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
 	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
 	array( 'db' => '`u`.`payment`', 'dt' => 'payment', 'field' => 'payment' ),
 	array( 'db' => '`u`.`balance`', 'dt' => 'balance', 'field' => 'balance' ),
+	array( 'db' => '`c`.`name`', 'dt' => 'name', 'field' => 'name' ),
+	array( 'db' => '`c`.`address`', 'dt' => 'address', 'field' => 'address' ),
 	array( 'db' => '`i`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
 	array( 'db' => '`i`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`d`.`method`',   'dt' => 'method', 'field' => 'method' )
+	array( 'db' => '`d`.`method`',   'dt' => 'method', 'field' => 'method' ),
+	array( 'db' => '`d`.`receiptno`',   'dt' => 'receiptno', 'field' => 'receiptno' )
 );
 
 // SQL server connection information
@@ -56,9 +61,9 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_invoice_payment` AS `u` JOIN `tbl_invoice_payment_has_tbl_invoice` AS `p` ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) JOIN `tbl_invoice_payment_detail` as `d` ON (`d`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`)";
+$joinQuery = "FROM `tbl_invoice_payment_has_tbl_invoice` AS `p` LEFT JOIN  `tbl_invoice_payment` AS `u`  ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) JOIN `tbl_invoice_payment_detail` as `d` ON (`d`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) JOIN `tbl_customer` as `c` ON (`i`.`tbl_customer_order_idtbl_customer_order` = `c`.`idtbl_customer`)";
 
-$extraWhere = "`u`.`status` IN (1, 2) GROUP BY `p`.`tbl_invoice_idtbl_invoice`";
+$extraWhere = "`u`.`status` IN (1, 2)";
 
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)

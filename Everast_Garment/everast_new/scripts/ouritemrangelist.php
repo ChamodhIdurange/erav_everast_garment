@@ -76,7 +76,7 @@ $joinQuery = "FROM (
             WHEN MONTH(u.update) = MONTH(CURRENT_DATE()) THEN u.qty 
             ELSE 0 
         END) AS current_month_qty,
-        (ua.retail - ua.unitprice) / ua.unitprice AS percentageVal
+        (ua.saleprice - ua.unitprice) * 100 / ua.unitprice AS percentageVal
     FROM
         tbl_stock AS u
     LEFT JOIN

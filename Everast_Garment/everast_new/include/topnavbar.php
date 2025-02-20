@@ -37,7 +37,7 @@ $rowusertype = $resultusertype->fetch_assoc();
            
         </div>
         <div style="margin-right: 20px;">
-            <?php if ($sessionusertype == 1 || $sessionusertype == 2) {
+            <?php
                 if ($resultnotfication->num_rows > 0) {
                     $notficationres = $resultnotfication->fetch_assoc();
                     $notify = $notficationres['count'];
@@ -47,8 +47,7 @@ $rowusertype = $resultusertype->fetch_assoc();
                         <div class="badge">+ <?php echo $notify ?></div>
                     <?php } ?>
                     <a href="customerporder.php" data-toggle="tooltip" data-placement="bottom" title="Customer Porder"> <i class="fa fa-tasks"></i> </a>
-            <?php }
-            } ?>
+            <?php } ?>
             
         </div>
         <li class="nav-item dropdown no-caret mr-3 dropdown-user">

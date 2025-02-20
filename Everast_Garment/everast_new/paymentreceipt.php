@@ -36,10 +36,13 @@ include "include/topnavbar.php";
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Receipt No</th>
                                             <th>Date</th>
+                                            <th>Customer</th>
+                                            <th>Address</th>
+                                            <th>Invoice No</th>
+                                            <th>Receipt No</th>
                                             <th class="text-right">Payment</th>
-                                            <th class="text-right">Balance</th>
+                                            <!-- <th class="text-right">Balance</th> -->
                                             <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
@@ -95,18 +98,20 @@ include "include/topnavbar.php";
                     "data": "idtbl_invoice_payment"
                 },
                 {
-                    "targets": -1,
-                    "className": '',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        return 'PR-'+full['idtbl_invoice_payment'];
-                    }
-                },
-           
-                {
                     "data": "date"
                 },
-               
+                {
+                    "data": "name"
+                },
+                {
+                    "data": "address"
+                },
+                {
+                    "data": "invoiceno"
+                },
+                {
+                    "data": "receiptno"
+                },
                 {
                     "targets": -1,
                     "className": 'text-right',
@@ -116,15 +121,15 @@ include "include/topnavbar.php";
                         return payment;
                     }
                 },
-                {
-                    "targets": -1,
-                    "className": 'text-right',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        var payment=addCommas(parseFloat(full['balance']).toFixed(2));
-                        return payment;
-                    }
-                },
+                // {
+                //     "targets": -1,
+                //     "className": 'text-right',
+                //     "data": null,
+                //     "render": function(data, type, full) {
+                //         var payment=addCommas(parseFloat(full['balance']).toFixed(2));
+                //         return payment;
+                //     }
+                // },
                 {
                     "targets": -1,
                     "className": 'text-right',
