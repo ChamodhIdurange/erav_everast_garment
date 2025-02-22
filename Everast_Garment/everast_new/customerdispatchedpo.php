@@ -1281,6 +1281,8 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    $('#tableorderview > tbody').empty();
+
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1355,6 +1357,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    $('#tableorderview > tbody').empty();
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
@@ -1429,6 +1432,8 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    $('#tableorderview > tbody').empty();
+
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1710,6 +1715,7 @@ include "include/topnavbar.php";
                 url: 'getprocess/getcusorderlistaccoorderid.php',
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
+                    $('#tableorderview > tbody').empty();
                     var count=0;
 
                     $('#divsubtotalview').html(obj.subtotal);
@@ -2141,9 +2147,9 @@ include "include/topnavbar.php";
         });
 
 
-        $('#modalorderview').on('hidden.bs.modal', function (e) {
-            $('#tableorderview > tbody').html('');
-        });
+        // $('#modalorderview').on('hidden.bs.modal', function (e) {
+        //     $('#tableorderview > tbody').empty();
+        // });
         // Order print part
         $('#dataTable tbody').on('click', '.btnprint', function () {
             var id = $(this).attr('id');

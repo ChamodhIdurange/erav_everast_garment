@@ -26,15 +26,15 @@ $sqlstock =    "SELECT
                             WHERE r.status = '1' 
                                 AND r.acceptance_status = '1' 
                                 AND r.returndate BETWEEN '$fromdate' AND '$todate' 
-                                AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0) AS acceptedReturns,
+                                AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0) AS acceptedReturns
 
-                    (COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) + 
-                    COALESCE((SELECT SUM(r.total) 
-                            FROM tbl_return r 
-                            WHERE r.status = '1' 
-                                AND r.acceptance_status = '1' 
-                                AND r.returndate BETWEEN '$fromdate' AND '$todate' 
-                                AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0)) AS fullnettotal
+                    -- (COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) + 
+                    -- COALESCE((SELECT SUM(r.total) 
+                    --         FROM tbl_return r 
+                    --         WHERE r.status = '1' 
+                    --             AND r.acceptance_status = '1' 
+                    --             AND r.returndate BETWEEN '$fromdate' AND '$todate' 
+                    --             AND r.tbl_employee_idtbl_employee = e.idtbl_employee), 0)) AS fullnettotal
 
                 FROM tbl_customer_order AS co
                 LEFT JOIN tbl_employee AS e ON e.idtbl_employee = co.tbl_employee_idtbl_employee
@@ -65,11 +65,11 @@ if ($resultstock->num_rows > 0) {
     $returnTotal=0;
     $approvedReturnTotal=0;
     while ($rowstock = $resultstock->fetch_assoc()) {
-        $total += $rowstock['fullnettotal'];
+        $total += $rowstock['deliveredTotal'] - $rowstock['acceptedReturns'];
         $salesTotal += $rowstock['pendingTotal'];
         $approvedSalesTotal += $rowstock['deliveredTotal'];
         $returnTotal += $rowstock['pendingReturns'];
-        $approvedReturnTotal += $rowstock['fullnettotal'];
+        $approvedReturnTotal += $rowstock['acceptedReturns'];
         $c++;
         echo '<tr>
                 <td class="text-center">' . $c . '</td>
@@ -78,7 +78,7 @@ if ($resultstock->num_rows > 0) {
                 <td class="text-right">' . number_format($rowstock['deliveredTotal'], 2, '.', ',')  . '</td>
                 <td class="text-right">' . number_format($rowstock['pendingReturns'], 2, '.', ',') . '</td>
                 <td class="text-right">' . number_format($rowstock['acceptedReturns'], 2, '.', ',')  . '</td>
-                <td class="text-right">' . number_format($rowstock['fullnettotal'], 2, '.', ',') . '</td>
+                <td class="text-right">' . number_format($rowstock['deliveredTotal'] - $rowstock['acceptedReturns'], 2, '.', ',') . '</td>
             </tr>';
     }
     echo '</tbody>

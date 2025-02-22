@@ -80,6 +80,9 @@ if($acceptanceType == 1){
         $invoiceId = $rowinvoice['idtbl_invoice'];
         $invoiceNo = $rowinvoice['invoiceno'];
     }
+
+    $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime' WHERE `idtbl_invoice`='$invoiceId'";
+    $conn->query($updateinvoicehead);
 }
 
 if($conn->query($updatePoValues)==true){
@@ -152,9 +155,7 @@ if($conn->query($updatePoValues)==true){
         }else if($acceptanceType == 3){
             if($newstatus == 0){
                 if($isChangeStatus == 1){
-                    $updateinvoicehead="UPDATE `tbl_invoice` SET `total` = '$total', `discount` = '$fullDiscount', `nettotal` = '$nettotal', `updatedatetime` = '$updatedatetime' WHERE `idtbl_invoice`='$invoiceId'";
-                    $conn->query($updateinvoicehead);
-
+                    
                     $updatePoDetail="UPDATE  `tbl_customer_order_detail` SET `qty`='$qty', `discountpresent`='$linediscountprecentage', `discount`='$linediscountamount', `total`='$netTotal', `status`='$status', `saleprice` = '$saleprice'  WHERE `idtbl_customer_order_detail` = '$podetailId'";
 
                     $updateHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='3', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";

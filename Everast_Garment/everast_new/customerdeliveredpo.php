@@ -388,72 +388,6 @@ include "include/topnavbar.php";
                         <label>Customer Contact: <span id="dcuscontact">sss</span></label>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Product*</label>
-                            <select class="form-control form-control-sm select2" style="width: 100%;"
-                                name="modaleditproduct" id="modaleditproduct" required>
-                                <option value="">Select</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Sale price*</label>
-                            <input type="text" class="form-control form-control-sm" id="modaleditsaleprice" name="modaleditsaleprice"
-                                required>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Qty*</label>
-                            <input type="text" class="form-control form-control-sm" id="modaleditqty" name="modaleditqty"
-                                required>
-                               
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Discount (%)*</label>
-                            <input type="text" class="form-control form-control-sm" id="modaleditdiscountpercentage" name="modaleditdiscountpercentage"
-                                value = "0" required>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Discount*</label>
-                            <input type="text" class="form-control form-control-sm" id="modaleditdiscountamount" name="modaleditdiscountamount"
-                                value = "0" required>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group mb-1">
-                            <label class="small font-weight-bold text-dark">Total*</label>
-                            <input type="text" class="form-control form-control-sm" id="modaleditnettotal" name="modaleditnettotal"
-                                required>
-                               
-                        </div>
-                    </div>
-                    <input type="hidden" id="modaleditproductcode" id="modaleditproductcode">
-                    <input type="hidden" id="modaleditproductunitprice" id="modaleditproductunitprice">
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <button class="btn btn-secondary btn-sm fa-pull-right" id="btnAddNewProduct"><i
-                        class="fa fa-save"></i>&nbsp;Add New Product</button>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <div class="form-check">
-                            <input class="form-check-input" id="statusValue" type="checkbox">
-                            <label class="form-check-label" for="statusValue">Change Status</label>
-                        </div>
-                    </div>
-                </div>
                 <div class="row mt-3" id="errordivaddnew">
 
                 </div>
@@ -525,8 +459,8 @@ include "include/topnavbar.php";
 
                     </div>
                 </div>
-                <button class="btn btn-primary btn-sm fa-pull-right" id="btnUpdate"><i
-                        class="fa fa-save"></i>&nbsp;Update</button>
+                <button class="btn btn-primary btn-sm fa-pull-right mt-3" id="btnUpdatePoDiscount"><i
+                        class="fa fa-save"></i>&nbsp;Update PO Discount</button>
             </div>
         </div>
     </div>
@@ -1268,229 +1202,6 @@ include "include/topnavbar.php";
         });
 
 
-        $('#dataTable tbody').on('click', '.btnConfirm', function () {
-            var id = $(this).attr('id');
-            var confirmstatus = $(this).attr('name');
-
-            $('#hiddenpoid').val(id);
-            $.ajax({
-                type: "POST",
-                data: {
-                    orderID: id
-                },
-                url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function (result) { //console.log(result);
-                    var obj = JSON.parse(result);
-                    $('#divsubtotalview').html(obj.subtotal);
-                    $('#divdiscountview').html(obj.disamount);
-                    $('#divdiscountPOview').html(obj.po_amount);
-                    $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').val(obj.remark);
-                    $('#dcusname').html(obj.cusname);
-                    $('#dcuscontact').html(obj.cuscontact);
-                    $('#viewmodaltitle').html('Order No: PO-' + id);
-                    $('#editpodiscount').val(obj.podiscountpercentage);
-                    
-                    var objfirst = obj.tablelist;
-                    $.each(objfirst, function (i, item) {
-                        $('#tableorderview > tbody:last').append('<tr><td>' +
-                            objfirst[i].productname +
-                            '</td><td>' +
-                            objfirst[i].productcode +
-                            '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="d-none">' + objfirst[i]
-                            .podetailid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].orderqty +
-                            '</td><td class="text-center editlinediscountpernetage">' +
-                            objfirst[i].discountpresent +
-                            '</td><td class="text-center editlinediscount">' +
-                            objfirst[i].discount +
-                            '</td><td class="text-right total">' + objfirst[i]
-                            .total +
-                            '</td><td class="text-right colunitprice">' +
-                            objfirst[i]
-                            .unitprice +
-                            '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' +
-                            objfirst[i]
-                            .podetailid +
-                            '"><i class="fas fa-trash"></i></button></td><td class="d-none">' +
-                            objfirst[i]
-                            .status +
-                            '</td><td class="d-none totwithoutdiscount">' +
-                            objfirst[i]
-                            .totwithoutdiscount +
-                            '</td><td class="d-none">0</td></tr>');
-
-                        var newRow = $('#tableorderview > tbody:last tr:last');
-
-                        if (objfirst[i].status == 3) {
-                            newRow.css('background-color', '#ffcccc');
-                            newRow.find('.btnDeleteOrderProduct').removeClass()
-                                .addClass('btn btn-outline-success btn-sm');
-                        }
-                    });
-
-                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Confirm');
-                    $('#btnUpdate').prop('disabled', false);
-                    $('#acceptanceType').val(1)
-
-                    $('#modalorderview').modal('show');
-
-                    tabletotal1();
-                }
-            });
-        });
-        $('#dataTable tbody').on('click', '.btnDeliver', function () {
-            var id = $(this).attr('id');
-
-            var confirmstatus = $(this).attr('name');
-            $('#hiddenpoid').val(id);
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    orderID: id
-                },
-                url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function (result) { //console.log(result);
-                    var obj = JSON.parse(result);
-
-                    $('#divsubtotalview').html(obj.subtotal);
-                    $('#divdiscountview').html(obj.disamount);
-                    $('#divdiscountPOview').html(obj.po_amount);
-                    $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').val(obj.remark);
-                    $('#dcusname').html(obj.cusname);
-                    $('#dcuscontact').html(obj.cuscontact);
-                    $('#viewmodaltitle').html('Order No: PO-' + id);
-                    $('#editpodiscount').val(obj.podiscountpercentage);
-
-                    var objfirst = obj.tablelist;
-                    $.each(objfirst, function (i, item) {
-                        //alert(objfirst[i].id);
-                        $('#tableorderview > tbody:last').append('<tr><td>' +
-                            objfirst[i].productname +
-                            '</td><td>' +
-                            objfirst[i].productcode +
-                            '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="d-none">' + objfirst[i]
-                            .podetailid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].dispatchqty +
-                            '</td><td class="text-center editlinediscountpernetage">' +
-                            objfirst[i].discountpresent +
-                            '</td><td class="text-center editlinediscount">' +
-                            objfirst[i].discount +
-                            '</td><td class="text-right total">' + objfirst[i]
-                            .total +
-                            '</td><td class="text-right colunitprice">' +
-                            objfirst[i]
-                            .unitprice +
-                            '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' +
-                            objfirst[i]
-                            .podetailid +
-                            '"><i class="fas fa-trash"></i></button></td><td class="d-none">' +
-                            objfirst[i]
-                            .status +
-                            '</td><td class="d-none totwithoutdiscount">' +
-                            objfirst[i]
-                            .totwithoutdiscount +
-                            '</td><td class="d-none">0</td></tr>');
-
-                        var newRow = $('#tableorderview > tbody:last tr:last');
-
-                        if (objfirst[i].status == 3) {
-                            newRow.css('background-color', '#ffcccc');
-                            newRow.find('.btnDeleteOrderProduct').removeClass()
-                                .addClass('btn btn-outline-success btn-sm');
-
-                        }
-                    });
-                    
-                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
-                    $('#btnUpdate').prop('disabled', false);
-                    $('#acceptanceType').val(3)
-
-                    $('#modalorderview').modal('show');
-                    tabletotal1();
-                }
-            });
-        });
-        $('#dataTable tbody').on('click', '.btnDispatch', function () {
-            var id = $(this).attr('id');
-            var confirmstatus = $(this).attr('name');
-            $('#hiddenpoid').val(id);
-            $.ajax({
-                type: "POST",
-                data: {
-                    orderID: id
-                },
-                url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function (result) { //console.log(result);
-                    var obj = JSON.parse(result);
-                    $('#divsubtotalview').html(obj.subtotal);
-                    $('#divdiscountview').html(obj.disamount);
-                    $('#divdiscountPOview').html(obj.po_amount);
-                    $('#divtotalview').html(obj.nettotalshow);
-                    $('#remarkview').val(obj.remark);
-                    $('#dcusname').html(obj.cusname);
-                    $('#dcuscontact').html(obj.cuscontact);
-                    $('#viewmodaltitle').html('Order No: PO-' + id);
-                    $('#editpodiscount').val(obj.podiscountpercentage);
-
-                    var objfirst = obj.tablelist;
-                    $.each(objfirst, function (i, item) {
-                        //alert(objfirst[i].id);
-
-                        $('#tableorderview > tbody:last').append('<tr><td>' +
-                            objfirst[i].productname +
-                            '</td><td>' +
-                            objfirst[i].productcode +
-                            '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="d-none">' + objfirst[i]
-                            .podetailid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].confirmqty +
-                            '</td><td class="text-center editlinediscountpernetage">' +
-                            objfirst[i].discountpresent +
-                            '</td><td class="text-center editlinediscount">' +
-                            objfirst[i].discount +
-                            '</td><td class="text-right total">' + objfirst[i]
-                            .total +
-                            '</td><td class="text-right colunitprice">' +
-                            objfirst[i]
-                            .unitprice +
-                            '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' +
-                            objfirst[i]
-                            .podetailid +
-                            '"><i class="fas fa-trash"></i></button></td><td class="d-none">' +
-                            objfirst[i]
-                            .status +
-                            '</td><td class="d-none totwithoutdiscount">' +
-                            objfirst[i]
-                            .totwithoutdiscount +
-                            '</td><td class="d-none">0</td></tr>');
-
-                        var newRow = $('#tableorderview > tbody:last tr:last');
-
-                        if (objfirst[i].status == 3) {
-                            newRow.css('background-color', '#ffcccc');
-                            newRow.find('.btnDeleteOrderProduct').removeClass()
-                                .addClass('btn btn-outline-success btn-sm');
-
-                        }
-                    });
-
-                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Dispatch');
-                    $('#btnUpdate').prop('disabled', false);
-                    $('#acceptanceType').val(2)
-
-                    $('#modalorderview').modal('show');
-                    tabletotal1();
-                }
-            });
-        });
 
         $('#dataTable tbody').on('click', '.btncancel', function () {
             var r = confirm("Are you sure, Cancel this order ? ");
@@ -1711,6 +1422,7 @@ include "include/topnavbar.php";
                 success: function (result) { //console.log(result);
                     var obj = JSON.parse(result);
                     var count=0;
+                    $('#tableorderview > tbody').empty();
 
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
@@ -2141,9 +1853,9 @@ include "include/topnavbar.php";
         });
 
 
-        $('#modalorderview').on('hidden.bs.modal', function (e) {
-            $('#tableorderview > tbody').html('');
-        });
+        // $('#modalorderview').on('hidden.bs.modal', function (e) {
+        //     $('#tableorderview > tbody').html('');
+        // });
         // Order print part
         $('#dataTable tbody').on('click', '.btnprint', function () {
             var id = $(this).attr('id');
@@ -2434,23 +2146,12 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#btnUpdate').click(function () {
+        $('#btnUpdatePoDiscount').click(function () {
             jsonObj = [];
-            $('#btnUpdate').prop('disabled', true);
+            $('#btnUpdatePoDiscount').prop('disabled', true);
             
-            $("#tableorderview tbody tr").each(function () {
-                item = {}
-                $(this).find('td').each(function (col_idx) {
-                    item["col_" + (col_idx + 1)] = $(this).text();
-                });
-                jsonObj.push(item);
-            });
-            jsonObj = JSON.stringify(jsonObj);
-
-
             var poID = $('#hiddenpoid').val();
             var podiscountprecentage = $('#editpodiscount').val();
-            var acceptanceType = $('#acceptanceType').val();
             var remarkVal = $('#remarkview').val()
 
             var discount = $('#divdiscountview').text();
@@ -2461,7 +2162,6 @@ include "include/topnavbar.php";
 
             var total = $('#divsubtotalview').text();
             var cleartotal = total.split(",").join("")
-            var statusValue = $('#statusValue').is(':checked') ? 1 : 0;
 
             var podiscountAmount = $('#divdiscountPOview').text();
             var clearPodiscountAmount = podiscountAmount.split(",").join("")
@@ -2470,18 +2170,15 @@ include "include/topnavbar.php";
                 type: "POST",
                 data: {
                     poID: poID,
-                    tableData: jsonObj,
-                    acceptanceType: acceptanceType,
                     discount: cleandiscount,
                     nettotal: clearnettotal,
                     total: cleartotal,
                     podiscountPrecentage: podiscountprecentage,
                     podiscountAmount: clearPodiscountAmount,
-                    remarkVal: remarkVal,
-                    isChangeStatus: statusValue
+                    remarkVal: remarkVal
                 },
-                url: 'process/updatecustomerpoprocess.php',
-                success: function (result) { console.log(result);
+                url: 'process/updateCusPorderDiscountprocess.php',
+                success: function (result) { // alert(result);
                     action(result);
                     $('#modalorderview').modal('hide');
 
@@ -2489,7 +2186,6 @@ include "include/topnavbar.php";
                     location.reload();
                 }
             });
-
         });
 
         $('#tableorder').on('click', '.btndlt', function () {

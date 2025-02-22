@@ -39,7 +39,6 @@ include "include/topnavbar.php";
                                             <th>Date</th>
                                             <th>Customer</th>
                                             <th>Address</th>
-                                            <th>Invoice No</th>
                                             <th>Receipt No</th>
                                             <th class="text-right">Payment</th>
                                             <!-- <th class="text-right">Balance</th> -->
@@ -107,9 +106,6 @@ include "include/topnavbar.php";
                     "data": "address"
                 },
                 {
-                    "data": "invoiceno"
-                },
-                {
                     "data": "receiptno"
                 },
                 {
@@ -156,7 +152,7 @@ include "include/topnavbar.php";
             $('#modalpaymentreceipt iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
             // alert(id)
-            var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
+            var src = 'pdfprocess/paymentreceiptpdf.php?paymentinoiceID=' + id;
             //            alert(src);
             var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
             var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
@@ -209,3 +205,4 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
+

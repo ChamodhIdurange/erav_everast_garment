@@ -52,7 +52,7 @@ $qtyflag=0;
 // $resultpoID = $conn->query($sqlpoID);
 // $rowpoID = $resultpoID->fetch_assoc();
 
-$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`orderqty`, `tbl_customer_order_detail`.`confirmqty`, `tbl_customer_order_detail`.`dispatchqty`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice`, `tbl_customer_order_detail`.`discount` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1";
+$sqlinvoicedetail = "SELECT `tbl_product`.`product_name`, `tbl_product`.`product_code`, `tbl_product`.`idtbl_product`, `tbl_customer_order_detail`.`orderqty`, `tbl_customer_order_detail`.`confirmqty`, `tbl_customer_order_detail`.`dispatchqty`, `tbl_customer_order_detail`.`qty`, `tbl_customer_order_detail`.`saleprice`, `tbl_customer_order_detail`.`discount` FROM `tbl_customer_order_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_customer_order_detail`.`tbl_product_idtbl_product` WHERE `tbl_customer_order_detail`.`tbl_customer_order_idtbl_customer_order`='$recordID' AND `tbl_customer_order_detail`.`status`=1 ORDER BY `tbl_product`.`product_name` ASC";
 $resultinvoicedetail = $conn->query($sqlinvoicedetail);
 
 if($confirm == 1 && ($dispatchissue == null || $dispatchissue == 0) && ($delivered == null || $delivered == 0)){

@@ -55,6 +55,15 @@ if ($conn->query($sql) == true) {
 
         header("Location:../customerreturn.php?action=6");
     } else if ($type == 3) {
+        $sqlcredit = "INSERT INTO `tbl_creditenote`(`returnamount`, `payAmount`, `balAmount`, `baltotalamount`, `settle`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_customer_idtbl_customer`) VALUES ('$returntotal', 0, '$returntotal', 0, 0, 1, '$updatedatetime', '$userID', '$customerId')";
+        $conn->query($sqlcredit);
+        $noteId = mysqli_insert_id($conn);
+
+
+        $sqlcreditdetail = "INSERT INTO `tbl_creditenote_detail`(`returntotal`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_return_idtbl_return`, `tbl_creditenote_idtbl_creditenote`) VALUES ('$returntotal', 1, '$updatedatetime', '$userID', '$record', '$noteId')";
+        $conn->query($sqlcreditdetail);
+
+        
         header("Location:../customerreturn.php?action=6");
     }
 } else {
