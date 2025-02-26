@@ -13,14 +13,13 @@ if ($resultEmployees->num_rows > 0) {
         $empId = $rowEmployee['idtbl_employee'];
         $empName = $rowEmployee['name'];
 
-        $getdailytot = "SELECT SUM(`u`.`nettotal`) AS 'dailyTot'
-                FROM `tbl_invoice` AS `u`
-                LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
-                WHERE `u`.`status`='1' 
-                AND `u`.`paymentcomplete`='0'
-                AND DATE(`u`.`date`) = CURDATE() 
-                AND `ud`.`tbl_employee_idtbl_employee`='$empId'
-                GROUP BY `ud`.`tbl_employee_idtbl_employee`";
+        $getdailytot = "SELECT SUM(`ud`.`nettotal`) AS 'dailyTot'
+                        FROM `tbl_original_customer_order` AS `ud`
+                        LEFT JOIN `tbl_customer_order` AS `u` ON `u`.`idtbl_customer_order` = `ud`.`tbl_customer_order_idtblcustomer_order`
+                        WHERE `u`.`status`='1' 
+                        AND DATE(`ud`.`date`) = CURDATE() 
+                        AND `ud`.`tbl_employee_idtbl_employee`='$empId'
+                        GROUP BY `ud`.`tbl_employee_idtbl_employee`";
         $resultgetdailytot = $conn->query($getdailytot);
         $dailytotal = 0; 
 
@@ -29,13 +28,11 @@ if ($resultEmployees->num_rows > 0) {
         }
 
         $sqlgetalltot = "SELECT SUM(`u`.`nettotal`) AS 'fullalltot'
-                FROM `tbl_invoice` AS `u`
-                LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
-                WHERE `u`.`status`='1' 
-                AND `u`.`paymentcomplete`='0'
-                AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
-                AND `ud`.`tbl_employee_idtbl_employee`='$empId'
-                GROUP BY `ud`.`tbl_employee_idtbl_employee`";
+                        FROM `tbl_customer_order` AS `u`
+                        WHERE `u`.`status`='1' 
+                        AND MONTH(`u`.`date`) = MONTH(CURDATE()) 
+                        AND `u`.`tbl_employee_idtbl_employee`='$empId'
+                        GROUP BY `u`.`tbl_employee_idtbl_employee`";
 
         $resultgetalltot = $conn->query($sqlgetalltot);
         $fullalltot = 0; 

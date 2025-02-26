@@ -31,6 +31,9 @@ $resulthelperlist = $conn->query($sqlhelperlist);
 $sqlcustomer = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 $resultcustomer = $conn->query($sqlcustomer);
 
+$sqlvehicle = "SELECT `idtbl_vehicle`, `vehicleno` FROM `tbl_vehicle` WHERE `status`=1";
+$resultvehicle = $conn->query($sqlvehicle);
+
 include "include/topnavbar.php";
 ?>
 <style>
@@ -81,13 +84,41 @@ include "include/topnavbar.php";
                         <div class="row">
                             <div class="col-12">
                                 <div class="row">
-                                    <div class="col">
+                                    <!-- <div class="col">
                                         <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
                                             id="btnordercreate"><i class="fas fa-plus"></i>&nbsp;Create Purchsing
                                             Order</button>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <hr>
+                                <div class="col-12">
+                                    <form id="searchform">
+                                        <div class="form-row">
+                                            <div class="col-3">
+                                                <label class="small font-weight-bold text-dark">Start Date*</label>
+                                                <div class="input-group input-group-sm mb-3">
+                                                    <input type="text" class="form-control dpd2a rounded-0" id="fromdateFilter"
+                                                        name="fromdateFilter" value="2025-02-01" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text rounded-0"
+                                                            id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <label class="small font-weight-bold text-dark">End Date*</label>
+                                                <div class="input-group input-group-sm mb-3">
+                                                    <input type="text" class="form-control dpd2a rounded-0" id="todateFilter"
+                                                        name="todateFilter" value="<?php echo date('Y-m-d') ?>" required>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text rounded-0"
+                                                            id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="scrollbar pb-3" id="style-2">
                                     <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                         <thead>
@@ -508,9 +539,59 @@ include "include/topnavbar.php";
                             </select>
                         </div>
                     </div>
-                    <button ctype="button" class="btn btn-primary btn-sm fa-pull-right mt-3" id="btncuspoupdate"><i
+                    <button type="button" class="btn btn-primary btn-sm fa-pull-right mt-3" id="btncuspoupdate"><i
                             class="fa fa-save"></i>&nbsp;Update</button>
                     <input type="submit" class="d-none" id="hiddeneditsubmit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delivery Data Modal -->
+<div class="modal fade" id="modaldeliveryData" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal">
+        <div class="modal-content">
+            <div class="modal-header p-2">
+                <h6 class="modal-title" id="viewmodaltitle">Update PO Details</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input type="hidden" id="hiddencustomerpoidfordeliver">
+            <div class="modal-body">
+                <form id="deliveryDataForm" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="small font-weight-bold text-dark">Deliver Date*</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control dpd2a" placeholder="" name="deliverDate"
+                                    id="deliverDate" required>
+                                <div class="input-group-append">
+                                    <span class="btn btn-light border-gray-500"><i class="far fa-calendar"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small font-weight-bold text-dark">Vehicle*</label>
+                            <select class="form-control form-control-sm" name="deliverVehicle" id="deliverVehicle"
+                                required>
+                                <option value="">Select</option>
+                                <?php if ($resultvehicle->num_rows > 0) {
+                                     while ($rowvehicle = $resultvehicle->fetch_assoc()) { ?>
+                                <option value="<?php echo $rowvehicle['idtbl_vehicle'] ?>">
+                                    <?php echo $rowvehicle['vehicleno'] ?></option>
+                                <?php } } ?>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="small font-weight-bold text-dark">Remarks*</label>
+                            <textarea class="form-control form-control-sm" type="text" id="vehicleRemarks" name="vehicleRemarks"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm fa-pull-right mt-3" id="btndeliveryDataUpdate"><i
+                            class="fa fa-save"></i>&nbsp;Insert/Update</button>
+                    <input type="submit" class="d-none" id="hiddendeliversubmit">
                 </form>
             </div>
         </div>
@@ -731,7 +812,11 @@ include "include/topnavbar.php";
             "serverSide": true,
             ajax: {
                 url: "scripts/customerdeliveredporderlist.php",
-                type: "POST", // you can use GET
+                type: "POST", 
+                "data": function (d) {
+                    d.fromdate = $('#fromdateFilter').val();
+                    d.todate = $('#todateFilter').val();
+                }
             },
             "order": [
                 [0, "desc"]
@@ -839,6 +924,15 @@ include "include/topnavbar.php";
                         var button = '';
 
                         button +=
+                            '<button class="btn btn-outline-primary btn-sm btnDeliveryData mr-1 " data-toggle="tooltip" data-placement="bottom" title="Delivery Details" id="' +
+                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                            '" data-deliveryRemark="' + full['deliverRemarks'] +
+                            '" data-deliveryDate="' + full['deliverDate'] +
+                            '" data-vehicleId="' + full['tbl_vehicle_idtbl_vehicle'] +
+                            '"><i class="fa fa-truck"></i></button>';
+
+
+                        button +=
                             '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="fas fa-eye"></i></button>';
@@ -873,66 +967,61 @@ include "include/topnavbar.php";
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="far fa-eye"></i></button>';
-                        // if (usertype == 2 || usertype == 1) {
-                        //     button +=
-                        //         '<button class="btn btn-outline-secondary btn-sm btneditorder mr-1" id="' +
-                        //         full['idtbl_customer_order'] +
-                        //         '"><i class="fas fa-pen"></i></button>';
-                        // }
+                        
                         if (full['status'] == 2 && statuscheck == 1) {
                             button +=
                                 '<button class="btn btn-secondary btn-sm btnreactive mr-1" id="' +
                                 full['idtbl_customer_order'] +
                                 '"><i class="fas fa-check"></i></button>';
                         }
-                        if (full['status'] == 1 && full['confirm'] == null && editcheck == 1) {
-                            button +=
-                                '<button class="btn btn-warning btn-sm btnConfirm mr-1" data-toggle="tooltip" data-placement="bottom" title="Confirm Order" name="' +
-                                full['confirm'] +
-                                '" id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-times"></i></button>';
-                        } else if (full['status'] == 1 && full['confirm'] == 1 && editcheck ==
-                            1) {
-                            button +=
-                                '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Confirmed"  id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-check"></i></button>';
-                        }
+                        // if (full['status'] == 1 && full['confirm'] == null && editcheck == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-warning btn-sm btnConfirm mr-1" data-toggle="tooltip" data-placement="bottom" title="Confirm Order" name="' +
+                        //         full['confirm'] +
+                        //         '" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-times"></i></button>';
+                        // } else if (full['status'] == 1 && full['confirm'] == 1 && editcheck ==
+                        //     1) {
+                        //     button +=
+                        //         '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Confirmed"  id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-check"></i></button>';
+                        // }
 
-                        if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == null && editcheck == 1) {
-                            button +=
-                                '<button class="btn btn-warning btn-sm btnDispatch mr-1" data-toggle="tooltip" data-placement="bottom" title="Dispatch Order" name="' +
-                                full['confirm'] +
-                                '" id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-paper-plane"></i></button>';
-                        } else if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1 && editcheck == 1) {
-                            button +=
-                                '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Dispatched"  id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-paper-plane"></i></button>';
-                        }
+                        // if (full['status'] == 1 && full['confirm'] == 1 && full[
+                        //         'dispatchissue'] == null && editcheck == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-warning btn-sm btnDispatch mr-1" data-toggle="tooltip" data-placement="bottom" title="Dispatch Order" name="' +
+                        //         full['confirm'] +
+                        //         '" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-paper-plane"></i></button>';
+                        // } else if (full['status'] == 1 && full['confirm'] == 1 && full[
+                        //         'dispatchissue'] == 1 && editcheck == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Dispatched"  id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-paper-plane"></i></button>';
+                        // }
 
-                        if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1 && full['delivered'] == null &&
-                            editcheck == 1) {
-                            button +=
-                                '<button class="btn btn-warning btn-sm btnDeliver mr-1" data-toggle="tooltip" data-placement="bottom" title="Deliver Order" name="' +
-                                full['confirm'] +
-                                '" id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-truck"></i></button>';
-                        } else if (full['status'] == 1 && full['confirm'] == 1 && full[
-                                'dispatchissue'] == 1 && full['delivered'] == 1 && editcheck ==
-                            1) {
-                            button +=
-                                '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Delivered"  id="' +
-                                full['idtbl_customer_order'] +
-                                '"><i class="fa fa-truck"></i></button>';
-                        }
+                        // if (full['status'] == 1 && full['confirm'] == 1 && full[
+                        //         'dispatchissue'] == 1 && full['delivered'] == null &&
+                        //     editcheck == 1) {
+                        //     button +=
+                        //         '<button class="btn btn-warning btn-sm btnDeliver mr-1" data-toggle="tooltip" data-placement="bottom" title="Deliver Order" name="' +
+                        //         full['confirm'] +
+                        //         '" id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-truck"></i></button>';
+                        // } else if (full['status'] == 1 && full['confirm'] == 1 && full[
+                        //         'dispatchissue'] == 1 && full['delivered'] == 1 && editcheck ==
+                        //     1) {
+                        //     button +=
+                        //         '<button class="btn btn-success btn-sm  mr-1" data-toggle="tooltip" data-placement="bottom" title="Order Delivered"  id="' +
+                        //         full['idtbl_customer_order'] +
+                        //         '"><i class="fa fa-truck"></i></button>';
+                        // }
                         // if (full['status'] == 1) {
                         //     button +=
                         //         '<button class="btn btn-outline-primary btn-sm mr-1 btnprint" data-toggle="tooltip" data-placement="bottom" title="Print Order" id="' +
@@ -960,6 +1049,10 @@ include "include/topnavbar.php";
             ]
         });
 
+        $('#fromdateFilter, #todateFilter').on('change', function () {
+            $('#dataTable').DataTable().ajax.reload();
+        });
+        
         $('#modaleditproduct').change(function(){
             var productID = $('#modaleditproduct').val();
             var product = $("#modaleditproduct option:selected").text();
@@ -1199,6 +1292,20 @@ include "include/topnavbar.php";
 
             $('#editcustomer').append(new Option(customername, customerid, true, true)).trigger('change');
             $('#editcustomer').val(customerid);
+        });
+
+        $('#dataTable tbody').on('click', '.btnDeliveryData', function () {
+            var id = $(this).attr('id');
+            var deliveryRemark = $(this).attr('data-deliveryremark');
+            var deliverDate =  $(this).attr('data-deliveryDate');
+            var vehicleId = $(this).attr('data-vehicleId');
+
+            $('#deliverDate').val(deliverDate);
+            $('#deliverVehicle').val(vehicleId);
+            $('#vehicleRemarks').val(deliveryRemark);
+
+            $('#hiddencustomerpoidfordeliver').val(id);
+            $('#modaldeliveryData').modal('show');
         });
 
 
@@ -1939,6 +2046,35 @@ include "include/topnavbar.php";
                 });
             }
         });
+        $("#btndeliveryDataUpdate").click(function () {
+            if (!$("#deliveryDataForm")[0].checkValidity()) {
+                $("#hiddendeliversubmit").click();
+            } else {
+                var deliverDate = $('#deliverDate').val();
+                var deliverVehicle = $('#deliverVehicle').val();
+                var vehicleRemarks = $('#vehicleRemarks').val();
+                var porderId = $('#hiddencustomerpoidfordeliver').val();
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        deliverDate: deliverDate,
+                        deliverVehicle: deliverVehicle,
+                        vehicleRemarks: vehicleRemarks,
+                        porderId: porderId
+                    },
+                    url: 'process/insertudatedeliveryData.php',
+                    success: function (result) {  // alert(result)
+                        var obj = JSON.parse(result);
+                        if (obj.status == 1) {
+                            actionreload(obj.action);
+                        } else {
+                            action(obj.action);
+                        }
+                    }
+                });
+            }
+        });
 
         
         function checkCommon() {
@@ -2253,56 +2389,6 @@ include "include/topnavbar.php";
         });
 
     });
-
-    function action(data) { //alert(data);
-        var obj = JSON.parse(data);
-        $.notify({
-            // options
-            icon: obj.icon,
-            title: obj.title,
-            message: obj.message,
-            url: obj.url,
-            target: obj.target
-        }, {
-            // settings
-            element: 'body',
-            position: null,
-            type: obj.type,
-            allow_dismiss: true,
-            newest_on_top: false,
-            showProgressbar: false,
-            placement: {
-                from: "top",
-                align: "center"
-            },
-            offset: 100,
-            spacing: 10,
-            z_index: 1031,
-            delay: 5000,
-            timer: 1000,
-            url_target: '_blank',
-            mouse_over: null,
-            animate: {
-                enter: 'animated fadeInDown',
-                exit: 'animated fadeOutUp'
-            },
-            onShow: null,
-            onShown: null,
-            onClose: null,
-            onClosed: null,
-            icon_type: 'class',
-            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
-                '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-                '<span data-notify="icon"></span> ' +
-                '<span data-notify="title">{1}</span> ' +
-                '<span data-notify="message">{2}</span>' +
-                '<div class="progress" data-notify="progressbar">' +
-                '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-                '</div>' +
-                '<a href="{3}" target="{4}" data-notify="url"></a>' +
-                '</div>'
-        });
-    }
 
     function category(repId, value) {
         // alert(repId);

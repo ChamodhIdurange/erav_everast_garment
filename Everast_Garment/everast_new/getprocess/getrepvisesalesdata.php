@@ -10,7 +10,6 @@ $replist = implode(", ", $replist);
 
 $sqlstock =    "SELECT 
                     e.name,
-                    
                     COALESCE(SUM(co.nettotal ), 0) AS pendingTotal,
                     COALESCE(SUM(CASE WHEN co.delivered = '1' THEN co.nettotal ELSE 0 END), 0) AS deliveredTotal,
 

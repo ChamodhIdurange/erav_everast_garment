@@ -4,6 +4,7 @@ require_once('../connection/db.php');
 
 $fromdate = $_POST['fromdate'];
 $todate = $_POST['todate'];
+$agingval = $_POST['agingval'];
 $replist = $_POST['replist'];
 $replist = implode(", ", $replist);
 
@@ -33,7 +34,8 @@ $sqloutstanding =    "SELECT
                 AND co.delivered = '1'
                 AND co.tbl_employee_idtbl_employee IN ($replist)
                 AND i.paymentcomplete = '0'
-                ORDER BY `c`.`idtbl_customer` DESC";
+                AND DATEDIFF(CURDATE(), `co`.`date`) >= $agingval
+                ORDER BY `c`.`idtbl_customer` ASC";
 $resultstock = $conn->query($sqloutstanding);
 
 if ($resultstock->num_rows > 0) {
@@ -49,7 +51,7 @@ if ($resultstock->num_rows > 0) {
                 <h4 style="margin: 0; font-size: 16px;">EVEREST HARDWARE CO. (PVT) LTD</h4>
                 <p style="margin: 3px 0; font-size: 12px;">
                     #363/10/01, Malwatte, Kal-Eliya (Mirigama) <br>
-                    033 4 950 951 | <a href="mailto:info&everesthardware.lk">info&everesthardware.lk</a>
+                    033 4 950 951 | <a href="mailto:info@everesthardware.lk">info@everesthardware.lk</a>
                 </p>
             </div>
             <div>

@@ -41,6 +41,15 @@ $resultreplist =$conn-> query($sqlreplist);
                                             </select>
                                         </div>
                                         <div class="col-1">
+                                            <label class="small font-weight-bold text-dark">Aging*</label>
+                                            <select type="text" class="form-control form-control-sm" name="agingval"
+                                                id="agingval" required>
+                                                <option value="0">All</option>
+                                                <option value="30">30</option>
+                                                <option value="60">60</option>
+                                                <option value="90">90</option>
+                                                <option value="120">120</option>
+                                            </select>
                                         </div>
                                         <div class="col-3">
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
@@ -169,6 +178,7 @@ $resultreplist =$conn-> query($sqlreplist);
                 var fromdate = $('#fromdate').val();
                 var todate = $('#todate').val();
                 var replist = $('#replist').val();
+                var agingval = $('#agingval').val();
 
                 $('#targetviewdetail').html(
                     '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
@@ -179,7 +189,8 @@ $resultreplist =$conn-> query($sqlreplist);
                     data: {
                         fromdate: fromdate,
                         todate: todate,
-                        replist: replist
+                        replist: replist,
+                        agingval: agingval
                     },
                     url: 'getprocess/getoutstandingsalesdata.php',
                     success: function (result) {

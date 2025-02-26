@@ -103,6 +103,10 @@ if($conn->query($updatePoValues)==true){
 
         $netTotal = $fullTotal - $linediscountamount;
 
+        if($status == 3){
+            $deleteHoldStock="UPDATE  `tbl_customer_order_hold_stock` SET `qty`='$qty', `status`='3', `invoiceissue`='1' WHERE `tbl_product_idtbl_product` = '$productID' AND `tbl_customer_order_idtbl_customer_order` = '$poID'";
+            $conn->query($deleteHoldStock);
+        }
         if($acceptanceType == 1){
             if($newstatus == 0){
                 // This is to check whether poder status should be changed or now
