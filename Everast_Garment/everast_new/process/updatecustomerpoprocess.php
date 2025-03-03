@@ -29,8 +29,8 @@ $fullDiscount = $discount + $podiscountAmount;
 if($acceptanceType == 1){
     // CONFIRMED
     $updatePoValues="UPDATE  `tbl_customer_order` SET `date`='$today', `podiscount`='$podiscountAmount', `podiscountpercentage`='$podiscountPrecentage', `discount`='$discount', `nettotal`='$nettotal', `total`='$total', `confrimuser`='$userID', `remark`='$remarkVal' WHERE `idtbl_customer_order`='$poID'";
-
-    $updatePoStatus = "UPDATE  `tbl_customer_order` SET `confirm`='1' WHERE `idtbl_customer_order`='$poID'";
+    
+    $updatePoStatus = "UPDATE `tbl_customer_order` SET `confirm`='1' WHERE `idtbl_customer_order`='$poID'";
 
     $getporderdata = "SELECT * FROM `tbl_customer_order` WHERE `idtbl_customer_order` = '$poID'";
     $result = $conn->query($getporderdata);
@@ -46,8 +46,26 @@ if($acceptanceType == 1){
             $conn->query($insertInvoice);
             $invoiceId = $conn->insert_id;
 
+            $query = "SELECT MAX(invoiceno) AS max_id FROM tbl_invoice WHERE invoiceno LIKE 'IV/" . date('y/m/') . "%'";
+            $result = $conn->query($query);
+
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                if ($row['max_id']) {
+                    preg_match('/(\d+)$/', $row['max_id'], $matches);
+                    $next_id = isset($matches[1]) ? $matches[1] + 1 : 1;
+                } else {
+                    $next_id = 1;
+                }
+            } else {
+                $next_id = 1;
+            }
+
+            $next_id_padded = str_pad($next_id, 4, '0', STR_PAD_LEFT);
+
             $dateformat = date('y/m/');
-            $invoiceNo = 'IV/'. $dateformat . $invoiceId;
+            $invoiceNo = 'IV/' . $dateformat . $next_id_padded;
+      
 
             $updateInvoiceNo="UPDATE `tbl_invoice` SET `invoiceno`='$invoiceNo' WHERE `idtbl_invoice` = '$invoiceId'";
             $conn->query($updateInvoiceNo);

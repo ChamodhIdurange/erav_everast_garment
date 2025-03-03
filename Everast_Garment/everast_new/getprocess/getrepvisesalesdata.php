@@ -63,6 +63,7 @@ if ($resultstock->num_rows > 0) {
     $approvedSalesTotal=0;
     $returnTotal=0;
     $approvedReturnTotal=0;
+    
     while ($rowstock = $resultstock->fetch_assoc()) {
         $total += $rowstock['deliveredTotal'] - $rowstock['acceptedReturns'];
         $salesTotal += $rowstock['pendingTotal'];

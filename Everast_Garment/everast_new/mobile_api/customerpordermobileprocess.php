@@ -22,18 +22,25 @@ $updatedatetime=date('Y-m-d h:i:s');
 
 $month=date('n');
 
-$query = "SELECT MAX(idtbl_customer_order) AS max_id FROM tbl_customer_order";
+$query = "SELECT MAX(cuspono) AS max_id FROM tbl_customer_order WHERE cuspono LIKE 'CP/" . date('y/m/') . "%'";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $next_id = $row['max_id'] + 1;
+    if ($row['max_id']) {
+        preg_match('/(\d+)$/', $row['max_id'], $matches);
+        $next_id = isset($matches[1]) ? $matches[1] + 1 : 1;
+    } else {
+        $next_id = 1;
+    }
 } else {
     $next_id = 1;
 }
 
+$next_id_padded = str_pad($next_id, 4, '0', STR_PAD_LEFT);
+
 $dateformat = date('y/m/');
-$cuspono = 'CP/'. $dateformat . $next_id;
+$cuspono = 'CP/' . $dateformat . $next_id_padded;
 
 
 $insretorder = "INSERT INTO `tbl_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer')";

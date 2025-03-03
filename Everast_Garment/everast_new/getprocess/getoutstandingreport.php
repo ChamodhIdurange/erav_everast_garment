@@ -20,24 +20,13 @@ $sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`
         LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
-        AND `u`.`paymentcomplete`=0";
+        AND `u`.`paymentcomplete`=0
+        AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
 
 if (!empty($validfrom) && !empty($validto)) {
     $sql .= " AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
 }
-if ($searchType == '1') { 
-    
-} elseif ($searchType == '3') { 
-    if ($customerID > 0) {
-        $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
-    }
-} elseif ($searchType == '2') { 
-    if ($repID > 0) {
-        $sql .= " AND `ue`.`idtbl_employee` = '$repID'";
-    }
-} elseif ($searchType == '4') {
-    
-}
+
 $sql .= " ORDER BY `uc`.`name` ASC";
 
 

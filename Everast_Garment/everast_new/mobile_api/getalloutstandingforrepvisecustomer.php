@@ -14,6 +14,7 @@ $sql = "SELECT `uc`.`address`, `uc`.`idtbl_customer`,`uc`.`name`, `u`.`invoiceno
         AND `u`.`paymentcomplete`='0'
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         AND `uc`.`idtbl_customer`='$customerId'
+        AND `ud`.`delivered`='1'
         GROUP BY `u`.`idtbl_invoice`";
 $result = mysqli_query($con, $sql);
 $dataarray = array();

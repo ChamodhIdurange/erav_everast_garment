@@ -12,6 +12,7 @@ $sql = "SELECT `uc`.`address`, `uc`.`idtbl_customer`,`uc`.`name`, COALESCE(SUM(`
         WHERE `u`.`status`='1' 
         AND `u`.`paymentcomplete`='0'
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
+        AND `ud`.`delivered`='1'
         GROUP BY  `uc`.`idtbl_customer`";
 $result = mysqli_query($con, $sql);
 $dataarray = array();

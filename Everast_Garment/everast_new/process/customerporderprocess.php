@@ -27,19 +27,27 @@ $updatedatetime = date('Y-m-d h:i:s');
 
 // podiscount
 // podiscountamount
-
-$query = "SELECT MAX(idtbl_customer_order) AS max_id FROM tbl_customer_order";
+$query = "SELECT MAX(cuspono) AS max_id FROM tbl_customer_order WHERE cuspono LIKE 'CP/" . date('y/m/') . "%'";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
-    $next_id = $row['max_id'] + 1;
+    if ($row['max_id']) {
+        preg_match('/(\d+)$/', $row['max_id'], $matches);
+        $next_id = isset($matches[1]) ? $matches[1] + 1 : 1;
+    } else {
+        $next_id = 1;
+    }
 } else {
     $next_id = 1;
 }
 
+$next_id_padded = str_pad($next_id, 4, '0', STR_PAD_LEFT);
+
 $dateformat = date('y/m/');
-$cuspono = 'CP/'. $dateformat . $next_id;
+$cuspono = 'CP/' . $dateformat . $next_id_padded;
+
+
 
 if ($recordOption == 1) {
     if ($_POST['directcustomer'] != '') {
