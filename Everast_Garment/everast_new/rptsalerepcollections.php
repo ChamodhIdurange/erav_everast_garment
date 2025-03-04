@@ -192,19 +192,22 @@ $resultreplist =$conn-> query($sqlreplist);
                                     extend: 'csv',
                                     className: 'btn btn-success btn-sm',
                                     title: 'Rep vise Report',
-                                    text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                                    text: '<i class="fas fa-file-csv mr-2"></i> CSV',
+                                    footer: true
                                 },
                                 {
                                     extend: 'pdf',
                                     className: 'btn btn-danger btn-sm',
                                     title: 'Rep vise Report',
-                                    text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                                    text: '<i class="fas fa-file-pdf mr-2"></i> PDF',
+                                    footer: true
                                 },
                                 {
                                     extend: 'print',
                                     className: 'btn btn-primary btn-sm',
                                     title: 'Rep vise Report',
-                                    text: '<i class="fas fa-print mr-2"></i> Print'
+                                    text: '<i class="fas fa-print mr-2"></i> Print',
+                                    footer: true
                                 }
                             ],
                             "paging": true,
@@ -215,7 +218,7 @@ $resultreplist =$conn-> query($sqlreplist);
                                 [10, 25, 50, 'All']
                             ],
                         });
-                        $('#hideprintBtn').show();
+                        // $('#hideprintBtn').show();
                     }
                 });
             }
