@@ -7,6 +7,7 @@ $todate = $_POST['todate'];
 $agingval = $_POST['agingval'];
 $replist = $_POST['replist'];
 $replist = implode(", ", $replist);
+$fulltotal = 0;
 
 $today = date("Y-m-d");
 
@@ -76,6 +77,7 @@ if ($resultstock->num_rows > 0) {
                 </table>
             </div>';
     
+            $fulltotal += $netBalance;
             $netInvoiceAmount = 0;
             $netDeductions = 0;
             $netBalance = 0;
@@ -126,7 +128,7 @@ if ($resultstock->num_rows > 0) {
             </tr>';
         $c++;
     }
-    
+    $fulltotal += $netBalance;
     echo ' 
         </tbody>
         <tfoot>
@@ -138,6 +140,7 @@ if ($resultstock->num_rows > 0) {
             </tr>
         </tfoot>
     </table>
+    <h4 style="float: right;margin-top:25px;">Gross Total: Rs.' . number_format($fulltotal, 2) . '</h4>
 </div>';
 } else {
     echo '<div class="alert alert-info" role="alert">No records found.</div>';
