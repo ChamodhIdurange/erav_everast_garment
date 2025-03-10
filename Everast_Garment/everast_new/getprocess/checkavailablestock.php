@@ -18,7 +18,7 @@ $holdqty = $row['qty'];
 
 $obj=new stdClass();
 // Adding the hold quantity that is used in the ORDER
-$obj->availableqty=$stockqty + $usingqty - $holdqty;
+$obj->availableqty=$stockqty - $holdqty;
 $obj->stockqty=$stockqty;
 $obj->holdqty=$holdqty;
 

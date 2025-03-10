@@ -29,19 +29,21 @@ $primaryKey = 'idtbl_invoice_payment';
 // parameter represents the DataTables column identifier. In this case simple
 // indexes
 $columns = array(
-	array( 'db' => '`u`.`idtbl_invoice_payment`', 'dt' => 'idtbl_invoice_payment', 'field' => 'idtbl_invoice_payment' ),
-	array( 'db' => '`i`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
-	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
-	array( 'db' => '`u`.`payment`', 'dt' => 'payment', 'field' => 'payment' ),
-	array( 'db' => '`u`.`balance`', 'dt' => 'balance', 'field' => 'balance' ),
-	array( 'db' => '`c`.`name`', 'dt' => 'name', 'field' => 'name' ),
-	array( 'db' => '`c`.`address`', 'dt' => 'address', 'field' => 'address' ),
-	array( 'db' => '`i`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
-	array( 'db' => '`i`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
-	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`d`.`method`',   'dt' => 'method', 'field' => 'method' ),
-	array( 'db' => '`d`.`receiptno`',   'dt' => 'receiptno', 'field' => 'receiptno' )
+    array( 'db' => '`u`.`idtbl_invoice_payment`', 'dt' => 'idtbl_invoice_payment', 'field' => 'idtbl_invoice_payment' ),
+    array( 'db' => '`i`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
+    array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
+    array( 'db' => '`u`.`payment`', 'dt' => 'payment', 'field' => 'payment' ),
+    array( 'db' => '`u`.`balance`', 'dt' => 'balance', 'field' => 'balance' ),
+    array( 'db' => '`c`.`name`', 'dt' => 'customername', 'field' => 'name' ), 
+    array( 'db' => '`e`.`name` AS employeename', 'dt' => 'employeename', 'field' => 'employeename' ), 
+    array( 'db' => '`c`.`address`', 'dt' => 'address', 'field' => 'address' ),
+    array( 'db' => '`i`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
+    array( 'db' => '`i`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
+    array( 'db' => '`u`.`status`', 'dt' => 'status', 'field' => 'status' ),
+    array( 'db' => '`d`.`method`', 'dt' => 'method', 'field' => 'method' ),
+    array( 'db' => '`d`.`receiptno`', 'dt' => 'receiptno', 'field' => 'receiptno' )
 );
+
 
 // SQL server connection information
 require('config.php');
@@ -60,7 +62,7 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_invoice_payment` AS `u`  LEFT JOIN   `tbl_invoice_payment_has_tbl_invoice` AS `p` ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) left JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_invoice_payment_detail` as `d` ON (`d`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) LEFT JOIN `tbl_customer` as `c` ON (`i`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`)";
+$joinQuery = "FROM `tbl_invoice_payment` AS `u`  LEFT JOIN   `tbl_invoice_payment_has_tbl_invoice` AS `p` ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) left JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) LEFT JOIN `tbl_customer_order` AS `o` ON (`o`.`idtbl_customer_order` = `i`.`tbl_customer_order_idtbl_customer_order`) LEFT JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee`=`o`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_invoice_payment_detail` as `d` ON (`d`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) LEFT JOIN `tbl_customer` as `c` ON (`i`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`)";
 
 $extraWhere = "`u`.`status` IN (1, 2) GROUP BY `d`.`receiptno`";
 

@@ -37,8 +37,8 @@ include "include/topnavbar.php";
                                         <tr>
                                             <th>#</th>
                                             <th>Date</th>
+                                            <th>Sales Rep</th>
                                             <th>Customer</th>
-                                            <th>Address</th>
                                             <th>Receipt No</th>
                                             <th class="text-right">Payment</th>
                                             <!-- <th class="text-right">Balance</th> -->
@@ -100,10 +100,10 @@ include "include/topnavbar.php";
                     "data": "date"
                 },
                 {
-                    "data": "name"
+                    "data": "employeename"
                 },
                 {
-                    "data": "address"
+                    "data": "customername"
                 },
                 {
                     "data": "receiptno"

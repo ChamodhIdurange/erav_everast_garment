@@ -36,7 +36,7 @@ $sqloutstanding =    "SELECT
                 AND co.tbl_employee_idtbl_employee IN ($replist)
                 AND i.paymentcomplete = '0'
                 AND DATEDIFF(CURDATE(), `co`.`date`) >= $agingval
-                ORDER BY `c`.`idtbl_customer` ASC";
+                ORDER BY `c`.`name` ASC";
 $resultstock = $conn->query($sqloutstanding);
 
 if ($resultstock->num_rows > 0) {

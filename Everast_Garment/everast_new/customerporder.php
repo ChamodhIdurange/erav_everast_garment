@@ -706,10 +706,6 @@ include "include/topnavbar.php";
 <script>
     var prodCount = 0;
     $(document).ready(function () {
-        var addcheck
-        var editcheck
-        var statuscheck
-        var deletecheck
 
         $("#productcommonname").select2({
             ajax: {
@@ -1014,7 +1010,7 @@ include "include/topnavbar.php";
                         //     button +=
                         //         '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
                         // }
-                        if (full['delivered'] != 1 && full['status'] == 1) {
+                        if (full['delivered'] != 1 && full['status'] == 1 && deletecheck == 1) {
                             button +=
                                 '<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="' +
                                 full['idtbl_customer_order'] +
@@ -1097,7 +1093,6 @@ include "include/topnavbar.php";
                         $('#errormessageaddnew').html(
                             "There is not enough stock available for product '" + productname)
                     }else{
-
                         var productID = $('#modaleditproduct').val();
                         var product = $("#modaleditproduct option:selected").text();
                         var saleprice = $('#modaleditsaleprice').val();
