@@ -91,8 +91,8 @@ if ($resultstock->num_rows > 0) {
         if ($oldCustomerId != $customerId) {
             $oldCustomerId = $customerId;
     
-            echo ' 
-               <div style="background: #fff; border-radius: 10px; box-shadow: 0px 3px 8px rgba(0,0,0,0.1); padding: 10px; margin-bottom: 5px; border-left: 4px solid #004085;">
+            echo '
+               <div style="background: #fff; border-radius: 10px; box-shadow: 0px 3px 8px rgba(0,0,0,0.1); padding-left: 5px; margin-bottom: 5px; border-left: 4px solid #004085;">
                 <h2 style="margin: 0 0 5px; font-size: 16px; font-weight: bold; color: #004085;">' . $row['customername'] . '</h2>
                 <p style="margin: 0 0 8px; font-size: 12px; color: #666;">' . $row['address'] . '</p>
     
@@ -113,7 +113,6 @@ if ($resultstock->num_rows > 0) {
                     </thead>
             <tbody>';
         }
-    
         echo ' 
             <tr>
                 <td class="text-center">' . $c . '</td>
