@@ -34,8 +34,8 @@ $columns = array(
     array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
     array( 'db' => '`u`.`payment`', 'dt' => 'payment', 'field' => 'payment' ),
     array( 'db' => '`u`.`balance`', 'dt' => 'balance', 'field' => 'balance' ),
-    array( 'db' => '`c`.`name`', 'dt' => 'customername', 'field' => 'name' ), 
-    array( 'db' => '`e`.`name` AS employeename', 'dt' => 'employeename', 'field' => 'employeename' ), 
+    array( 'db' => '`c`.`name`', 'dt' => 'cusname', 'field' => 'cusname', 'as' => 'cusname' ),
+    array( 'db' => '`e`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' ),
     array( 'db' => '`c`.`address`', 'dt' => 'address', 'field' => 'address' ),
     array( 'db' => '`i`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
     array( 'db' => '`i`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
@@ -43,6 +43,7 @@ $columns = array(
     array( 'db' => '`d`.`method`', 'dt' => 'method', 'field' => 'method' ),
     array( 'db' => '`d`.`receiptno`', 'dt' => 'receiptno', 'field' => 'receiptno' )
 );
+
 
 
 // SQL server connection information

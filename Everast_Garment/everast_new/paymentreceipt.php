@@ -100,10 +100,10 @@ include "include/topnavbar.php";
                     "data": "date"
                 },
                 {
-                    "data": "employeename"
+                    "data": "repname"
                 },
                 {
-                    "data": "customername"
+                    "data": "cusname"
                 },
                 {
                     "data": "receiptno"

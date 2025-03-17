@@ -81,6 +81,7 @@ $joinQuery = "FROM (
         tbl_stock AS u
     LEFT JOIN
         tbl_product AS ua ON u.tbl_product_idtbl_product = ua.idtbl_product
+    WHERE `u`.`status` ='1'
     GROUP BY 
         ua.idtbl_product
 ) AS `s`";

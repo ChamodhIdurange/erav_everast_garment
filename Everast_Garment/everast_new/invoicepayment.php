@@ -254,9 +254,9 @@ include "include/topnavbar.php";
                                 <div id="balanceAmount"></div>
                             </div>
                         </div>
-                        <input type="hidden" id="hidePayAmount" value="0">
-                        <input type="hidden" id="hideBalAmount" value="0">
-                        <input type="hidden" id="hideAllBalAmount" value="0">
+                        <input type="text" id="hidePayAmount" value="0">
+                        <input type="text" id="hideBalAmount" value="0">
+                        <input type="text" id="hideAllBalAmount" value="0">
                         <!-- <textarea name="discountlist" id="discountlist" class="d-none"></textarea> -->
                     </div>
                 </div>
@@ -564,6 +564,7 @@ include "include/topnavbar.php";
                 $('#collapseThree').collapse('hide');
             }
         });
+        
         $('#btnIssueInv').click(function(){
             jsonObj = [];
             $("#paymentDetailTable tbody tr").each(function() {
@@ -623,6 +624,25 @@ include "include/topnavbar.php";
         $('#modalpaymentreceipt').on('hidden.bs.modal', function (e) {
             location.reload();
         });
+    });
+
+    $(document).on('click', '#tblPaymentTypeModal tbody tr', function() {
+
+        if (confirm('Are you sure you want to delete this row?')) {
+            var paidAmount = parseFloat($('#hidePayAmount').val());
+            var PayAmount = parseFloat($(this).find('td:eq(1)').text());
+            var paymentPayAmount = parseFloat($('#hideAllBalAmount').val());
+
+            paidAmount = (paidAmount - PayAmount);
+            var balance = (paymentPayAmount - paidAmount);
+            $('#hideBalAmount').val(balance);
+            $('#balanceAmount').html((balance).toFixed(2));
+            $('#payAmount').html((paidAmount).toFixed(2));
+            $('#hidePayAmount').val(paidAmount);
+
+            $(this).remove();
+        }
+      
     });
 
     function loadinvoice(customerID, asmID, invoiceno){

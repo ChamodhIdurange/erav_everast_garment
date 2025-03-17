@@ -123,7 +123,6 @@ include "include/topnavbar.php";
                         var salePrice = parseFloat(full['saleprice']).toFixed(2);
                         return addCommas(salePrice);
                     }
-
                 },
                 {
                     "targets": -1,
@@ -165,7 +164,6 @@ include "include/topnavbar.php";
 
                     "data": "current_month_qty"
                 },
-
             ],
             drawCallback: function(settings) {
                 $('[data-toggle="tooltip"]').tooltip();
