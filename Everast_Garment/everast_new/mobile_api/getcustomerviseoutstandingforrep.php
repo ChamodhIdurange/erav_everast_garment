@@ -14,7 +14,8 @@ $sql = "SELECT `ud`.`date`, `uc`.`address`, `uc`.`idtbl_customer`,`uc`.`name`, C
         AND `u`.`paymentcomplete`='0'
         AND `ud`.`tbl_employee_idtbl_employee`='$empId'
         AND `ud`.`delivered`='1'
-        GROUP BY  `uc`.`idtbl_customer`";
+        GROUP BY  `uc`.`idtbl_customer`
+        ORDER BY `uc`.`name`";
 
 $result = mysqli_query($con, $sql);
 $dataarray = array();

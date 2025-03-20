@@ -8,7 +8,7 @@ $today = date("Y-m-d");
 $replist = $_POST['replist'];
 $replist = implode(", ", $replist);
 
-$sql =    "SELECT `u`.`idtbl_invoice_payment`, `u`.`date`, `c`.`name` AS `cusname`, `e`.`name` AS 'empame', `d`.`receiptno`, `u`.`payment`
+$sql =    "SELECT  `u`.`date`, `c`.`name` AS `cusname`, `e`.`name` AS 'empame', `d`.`receiptno`, `u`.`payment`
                 FROM `tbl_invoice_payment` AS `u`  
                 LEFT JOIN   `tbl_invoice_payment_has_tbl_invoice` AS `p` ON (`p`.`tbl_invoice_payment_idtbl_invoice_payment` = `u`.`idtbl_invoice_payment`) 
                 LEFT JOIN `tbl_invoice` AS `i` ON (`i`.`idtbl_invoice` = `p`.`tbl_invoice_idtbl_invoice`) 
@@ -20,6 +20,9 @@ $sql =    "SELECT `u`.`idtbl_invoice_payment`, `u`.`date`, `c`.`name` AS `cusnam
                 AND `u`.`date` BETWEEN '$fromdate' AND '$todate'
                 AND `o`.`tbl_employee_idtbl_employee` IN ($replist)
                 GROUP BY `d`.`receiptno`";
+
+$sql2 = "SELECT * FROM `tbl_creditenote` AS `n` LEFT JOIN `tbl_return` AS `r` ON (`n`.`` = `r`.``)
+        ";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
