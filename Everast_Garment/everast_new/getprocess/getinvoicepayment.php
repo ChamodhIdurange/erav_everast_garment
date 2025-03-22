@@ -5,19 +5,19 @@ if(!empty($_POST['invoiceno'])){
     $invoiceno=$_POST['invoiceno'];
     $invoiceID=substr($invoiceno, 9);
 
-    $sql="SELECT `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`idtbl_invoice`='$invoiceID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1  Group BY `tbl_invoice`.`idtbl_invoice`";
+    $sql="SELECT DATEDIFF(CURDATE(), `tbl_invoice`.`date`) AS `date_diff`, `tbl_customer_order`.`remark`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`idtbl_invoice`='$invoiceID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1  Group BY `tbl_invoice`.`idtbl_invoice`";
     $result=$conn->query($sql);
 }
 else if(!empty($_POST['customerID'])){
     $customerID=$_POST['customerID'];
 
-    $sql="SELECT `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`tbl_customer_idtbl_customer`='$customerID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1 Group BY `tbl_invoice`.`idtbl_invoice`";
+    $sql="SELECT DATEDIFF(CURDATE(), `tbl_invoice`.`date`) AS `date_diff`, `tbl_customer_order`.`remark`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`tbl_customer_idtbl_customer`='$customerID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1 Group BY `tbl_invoice`.`idtbl_invoice`";
     $result=$conn->query($sql);
 }
 else if(!empty($_POST['asmID'])){
     $asmID=$_POST['asmID'];
 
-    $sql="SELECT `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_customer_order`.`tbl_employee_idtbl_employee`='$asmID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1 Group BY `tbl_invoice`.`idtbl_invoice`";
+    $sql="SELECT DATEDIFF(CURDATE(), `tbl_invoice`.`date`) AS `date_diff`, `tbl_customer_order`.`remark`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_customer_order`.`tbl_employee_idtbl_employee`='$asmID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1 Group BY `tbl_invoice`.`idtbl_invoice`";
     $result=$conn->query($sql);
 }
 ?>
@@ -34,6 +34,8 @@ else if(!empty($_POST['asmID'])){
             <th>Full Payment</th>
             <th>Half Payment</th>
             <th class="text-right">Payment</th>
+            <th>Remarks</th>
+            <th>Aging</th>
         </tr>
     </thead>
     <tbody>
@@ -59,6 +61,9 @@ else if(!empty($_POST['asmID'])){
                 </div>
             </td>
             <td class='paidAmount text-right'>0.00</td>            
+            <td class='d-none'></td>            
+            <td class='text-center'><?php echo $row['remark']; ?></td>            
+            <td class='text-center'><?php echo $row['date_diff']; ?></td>            
         </tr>
         <?php } ?>
     </tbody>

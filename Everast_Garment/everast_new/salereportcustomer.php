@@ -45,11 +45,11 @@ include "include/topnavbar.php";
                                                 <select class="form-control form-control-sm" name="searchType"
                                                     id="searchType">
                                                     <option value="0">Select Type</option>
-                                                    <option value="1">All</option>
+                                                    <!-- <option value="1">All</option> -->
                                                     <option value="2">Rep Vise</option>
-                                                    <option value="3">Product Vise</option>
-                                                    <option value="4">Customer Vise</option>
-                                                    <option value="5">Area Vise</option>
+                                                    <!-- <option value="3">Product Vise</option> -->
+                                                    <!-- <option value="4">Customer Vise</option> -->
+                                                    <!-- <option value="5">Area Vise</option> -->
                                                 </select>
                                             </div>
                                         </div>
@@ -107,12 +107,12 @@ include "include/topnavbar.php";
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">
                                             <label class="small font-weight-bold text-dark">From*</label>
                                             <input type="date" class="form-control form-control-sm" name="fromdate"
-                                                id="fromdate" required>
+                                                id="fromdate" value="2025-02-01"  required>
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateTo">
                                             <label class="small font-weight-bold text-dark">To*</label>
                                             <input type="date" class="form-control form-control-sm" name="todate"
-                                                id="todate" required>
+                                                id="todate" value="<?= date('Y-m-d'); ?>" required>
                                         </div>
                                         <div class="col-1 search-dependent" style="display: none;" id="hidesumbit">
                                             &nbsp;<br>
@@ -197,6 +197,8 @@ $(document).ready(function() {
             $('#selectAreaDiv, #selectDateFrom, #selectDateTo, #hidesumbit').show();
         }
     });
+    
+    $("#selectSaleRep").select2();
 
     $('#saleInformationForm').submit(function(event) {
         event.preventDefault();
@@ -254,7 +256,14 @@ $(document).ready(function() {
                             text: '<i class="fas fa-print mr-2"></i> Print',
                             footer: true
                         }
-                    ]
+                    ],
+                    "paging": true,
+                    "searching": true,
+                    "ordering": true,
+                    "lengthMenu": [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, 'All']
+                    ],
                 });
 
             }

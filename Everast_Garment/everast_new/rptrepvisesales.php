@@ -46,7 +46,7 @@ $resultreplist =$conn-> query($sqlreplist);
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
                                                 <input type="text" class="form-control dpd1a rounded-0" id="fromdate"
-                                                    name="fromdate" value="<?php echo date('Y-m-d') ?>" required>
+                                                    name="fromdate" value="2025-02-01"  required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text rounded-0"
                                                         id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
