@@ -2,8 +2,8 @@
 include "include/header.php";  
 include "include/topnavbar.php"; 
 
-$sqlreplist="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
-$resultreplist =$conn-> query($sqlreplist);
+$sqlgroupcategory="SELECT `idtbl_group_category`, `category` FROM `tbl_group_category` WHERE `status` IN (1)";
+$resultgroupcategory =$conn-> query($sqlgroupcategory);
 ?>
 
 <div id="layoutSidenav">
@@ -17,7 +17,7 @@ $resultreplist =$conn-> query($sqlreplist);
                     <div class="page-header-content py-3">
                         <h1 class="page-header-title">
                             <div class="page-header-icon"><i data-feather="file"></i></div>
-                            <span>Customer Outstanding Report</span>
+                            <span>Inventory Details Report</span>
                         </h1>
                     </div>
                 </div>
@@ -30,48 +30,15 @@ $resultreplist =$conn-> query($sqlreplist);
                                 <form id="searchform">
                                     <div class="form-row">
                                         <div class="col-3">
-                                            <label class="small font-weight-bold text-dark">Sales Rep*</label>
-                                            <select type="text" class="form-control form-control-sm" name="replist[]"
-                                                id="replist" required multiple>
+                                            <label class="small font-weight-bold text-dark">Product Category*</label>
+                                            <select type="text" class="form-control form-control-sm" name="categorylist[]"
+                                                id="categorylist" required multiple>
                                                 <option value="all">All</option>
-                                                <?php if($resultreplist->num_rows > 0) {while ($row = $resultreplist-> fetch_assoc()) { ?>
-                                                <option value="<?php echo $row['idtbl_employee'] ?>">
-                                                    <?php echo $row['name'] ?></option>
+                                                <?php if($resultgroupcategory->num_rows > 0) {while ($row = $resultgroupcategory-> fetch_assoc()) { ?>
+                                                <option value="<?php echo $row['idtbl_group_category'] ?>">
+                                                    <?php echo $row['category'] ?></option>
                                                 <?php }} ?>
                                             </select>
-                                        </div>
-                                        <div class="col-1">
-                                            <label class="small font-weight-bold text-dark">Aging*</label>
-                                            <select type="text" class="form-control form-control-sm" name="agingval"
-                                                id="agingval" required>
-                                                <option value="0">All</option>
-                                                <option value="30">30</option>
-                                                <option value="60">60</option>
-                                                <option value="90">90</option>
-                                                <option value="120">120</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-3">
-                                            <label class="small font-weight-bold text-dark">Start Date*</label>
-                                            <div class="input-group input-group-sm mb-3">
-                                                <input type="text" class="form-control dpd1a rounded-0" id="fromdate"
-                                                    name="fromdate" value="2025-02-01" required>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text rounded-0"
-                                                        id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3">
-                                            <label class="small font-weight-bold text-dark">End Date*</label>
-                                            <div class="input-group input-group-sm mb-3">
-                                                <input type="text" class="form-control dpd1a rounded-0" id="todate"
-                                                    name="todate" value="<?php echo date('Y-m-d') ?>" required>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text rounded-0"
-                                                        id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="col">
                                             <label class="small font-weight-bold text-dark">&nbsp;</label><br>
@@ -150,20 +117,13 @@ $resultreplist =$conn-> query($sqlreplist);
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function () {
-        $("#replist").select2();
+        $("#categorylist").select2();
 
-        $('.dpd1a').datepicker({
-            uiLibrary: 'bootstrap4',
-            autoclose: 'true',
-            todayHighlight: true,
-            format: 'yyyy-mm-dd'
-        });
-
-        $("#replist").on("change", function () {
+        $("#categorylist").on("change", function () {
             var selectedValues = $(this).val();
 
             if (selectedValues && selectedValues.includes("all")) {
-                selectedValues = $("#replist option[value!='all']").map(function () {
+                selectedValues = $("#categorylist option[value!='all']").map(function () {
                     return this.value;
                 }).get();
 
@@ -175,10 +135,7 @@ $resultreplist =$conn-> query($sqlreplist);
             if (!$("#searchform")[0].checkValidity()) {
                 $("#hidesubmit").click();
             } else {
-                var fromdate = $('#fromdate').val();
-                var todate = $('#todate').val();
-                var replist = $('#replist').val();
-                var agingval = $('#agingval').val();
+                var categorylist = $('#categorylist').val();
 
                 $('#targetviewdetail').html(
                     '<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>'
@@ -187,12 +144,9 @@ $resultreplist =$conn-> query($sqlreplist);
                 $.ajax({
                     type: "POST",
                     data: {
-                        fromdate: fromdate,
-                        todate: todate,
-                        replist: replist,
-                        agingval: agingval
+                        categorylist: categorylist,
                     },
-                    url: 'getprocess/getoutstandingsalesdata.php',
+                    url: 'getprocess/getavailableinventorydetails.php',
                     success: function (result) {
                         $('#targetviewdetail').html(result);
                         $('#hideprintBtn').show();
