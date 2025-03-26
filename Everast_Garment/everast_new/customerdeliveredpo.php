@@ -805,6 +805,27 @@ include "include/topnavbar.php";
             "destroy": true,
             "processing": true,
             "serverSide": true,
+            "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            "buttons": [{
+                extend: 'csv',
+                className: 'btn btn-success btn-sm',
+                title: 'Rep vise Report',
+                text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+            },
+            {
+                extend: 'pdf',
+                className: 'btn btn-danger btn-sm',
+                title: 'Rep vise Report',
+                text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+            },
+            {
+                extend: 'print',
+                className: 'btn btn-primary btn-sm',
+                title: 'Rep vise Report',
+                text: '<i class="fas fa-print mr-2"></i> Print'
+            }],
             ajax: {
                 url: "scripts/customerdeliveredporderlist.php",
                 type: "POST", 
@@ -813,8 +834,13 @@ include "include/topnavbar.php";
                     d.todate = $('#todateFilter').val();
                 }
             },
+            
             "order": [
                 [0, "desc"]
+            ],
+             "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All']
             ],
             "columns": [{
                     "data": "idtbl_customer_order"

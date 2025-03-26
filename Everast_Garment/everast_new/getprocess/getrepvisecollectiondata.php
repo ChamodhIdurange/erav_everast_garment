@@ -31,30 +31,8 @@ $sql =    "SELECT
             WHERE `i`.`status` IN (1, 2) 
                 AND `u`.`date` BETWEEN '$fromdate' AND '$todate'
                 AND `o`.`tbl_employee_idtbl_employee` IN ($replist)
-            GROUP BY `d`.`receiptno`
-            UNION ALL
-            SELECT  
-                `r`.`returndate` AS `date`, 
-                `c`.`name` AS `cusname`, 
-                `e`.`name` AS `empname`, 
-                `r`.`idtbl_return` AS `receiptno`, 
-                -`n`.`returnamount` AS `payment`,
-                'RETURN' AS `type`
-            FROM `tbl_creditenote` AS `n` 
-            LEFT JOIN `tbl_creditenote_detail` AS `nd` 
-                ON `n`.`idtbl_creditenote` = `nd`.`tbl_creditenote_idtbl_creditenote` 
-            LEFT JOIN `tbl_return` AS `r` 
-                ON `nd`.`tbl_return_idtbl_return` = `r`.`idtbl_return` 
-            LEFT JOIN `tbl_invoice` AS `i` 
-                ON `i`.`idtbl_invoice` = `r`.`tbl_invoice_idtbl_invoice` 
-            LEFT JOIN `tbl_customer_order` AS `o` 
-                ON `i`.`tbl_customer_order_idtbl_customer_order` = `o`.`idtbl_customer_order` 
-            LEFT JOIN `tbl_customer` AS `c` 
-                ON `i`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`
-            LEFT JOIN `tbl_employee` AS `e` 
-                ON `o`.`tbl_employee_idtbl_employee` = `e`.`idtbl_employee`
-            WHERE `r`.`returndate` BETWEEN '$fromdate' AND '$todate'
-                AND `o`.`tbl_employee_idtbl_employee` IN ($replist);";
+                AND `d`.`method` != '3'
+            GROUP BY `d`.`receiptno`";
 
 $result = $conn->query($sql);
 
@@ -91,7 +69,8 @@ if ($result->num_rows > 0) {
     echo '</tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="6" class="text-center"><strong>Total</strong></td>
+                        <td colspan="6
+                        " class="text-center"><strong>Total</strong></td>
                         <td class="text-right"><strong>' . number_format($fullPayment, 2) . '</strong></td>
                     </tr>
                 </tfoot>
