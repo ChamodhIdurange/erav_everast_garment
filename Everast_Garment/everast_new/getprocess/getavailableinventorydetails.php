@@ -14,8 +14,10 @@ $sqloutstanding = "SELECT
                     `p`.`product_name`,
                     `p`.`saleprice`,
                     `p`.`retail`,
+                    `p`.`unitprice`,
                     `g`.`idtbl_group_category`,
                     `g`.`category` AS 'groupcategory', 
+                     (p.saleprice - p.unitprice) * 100 / p.unitprice AS percentageVal,
                      COALESCE((SELECT SUM(`s`.`qty`) 
                             FROM `tbl_stock` `s` 
                             WHERE `s`.`tbl_product_idtbl_product` = `p`.`idtbl_product`), 0) AS availableqty
@@ -31,6 +33,8 @@ if ($resultstock->num_rows > 0) {
     $categoryId = -99;
     $oldCategoryId = -99;
     $totalSaleValue = 0;
+    $totalUnitPrice = 0;
+    $allTotalVal = 0;
 
     echo '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
             <div style="text-align: left;">
@@ -55,15 +59,19 @@ if ($resultstock->num_rows > 0) {
                         <tr style="background-color: #f1f1f1; font-weight: bold;">
                             <td colspan="5" class="text-center">Total</td>
                             <td class="text-right">' . number_format($totalSaleValue, 2) . '</td>
+                            <td colspan="1"></td>
+                            <td class="text-right">' . number_format($totalUnitPrice, 2) . '</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>';
-    
+            $allTotalVal += $totalSaleValue;
             $totalSaleValue = 0;
+            $totalUnitPrice = 0;
         }
     
-        $totalSaleValue += $row['retail'] * $row['availableqty'];
+        $totalSaleValue += $row['saleprice'] * $row['availableqty'];
+        $totalUnitPrice += $row['unitprice'];
     
         if ($oldCategoryId != $categoryId) {
             $oldCategoryId = $categoryId;
@@ -82,6 +90,8 @@ if ($resultstock->num_rows > 0) {
                             <th class="text-center" style="padding: 5px;">Qty</th>
                             <th class="text-center" style="padding: 5px;">Retail Price</th>
                             <th class="text-center" style="padding: 5px;">Sale Value</th>
+                            <th class="text-center" style="padding: 5px;">Pr Per</th>
+                            <th class="text-center" style="padding: 5px;">Cost Value</th>
                         </tr>
                     </thead>
             <tbody>';
@@ -92,8 +102,10 @@ if ($resultstock->num_rows > 0) {
                 <td class="text-center">' . $row['product_code'] . '</td>
                 <td class="text-center">' . $row['product_name'] . '</td>
                 <td class="text-center">' . $row['availableqty'] . '</td>
-                <td class="text-right">' . $row['retail'] . '</td>
-                <td class="text-right">' . number_format($row['retail'] * $row['availableqty'], 2, '.', ',')   . '</td>
+                <td class="text-right">' . $row['saleprice'] . '</td>
+                <td class="text-right">' . number_format($row['saleprice'] * $row['availableqty'], 2, '.', ',')   . '</td>
+                <td class="text-right">' . number_format($row['percentageVal'], 2) . '%</td>
+                <td class="text-right">' . $row['unitprice'] . '</td>
             </tr>';
         $c++;
     }
@@ -101,12 +113,14 @@ if ($resultstock->num_rows > 0) {
         </tbody>
         <tfoot>
             <tr style="background-color: #f1f1f1; font-weight: bold;">
-                <td colspan="5" class="text-center">Total</td>
+                <td  colspan="5" class="text-center">Total</td>
                 <td class="text-right">' . number_format($totalSaleValue, 2) . '</td>
+                <td colspan="1"></td>
+                <td class="text-right">' . number_format($totalUnitPrice, 2) . '</td>
             </tr>
         </tfoot>
     </table>
-    <h4 style="float: right;margin-top:25px;">Gross Total: Rs.' . number_format($totalSaleValue, 2) . '</h4>
+    <h4 style="float: right;margin-top:25px;">Gross Total: Rs.' . number_format($allTotalVal, 2) . '</h4>
 </div>';
 } else {
     echo '<div class="alert alert-info" role="alert">No records found.</div>';
