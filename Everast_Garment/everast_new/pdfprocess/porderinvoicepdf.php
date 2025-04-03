@@ -3,6 +3,10 @@ session_start();
 require_once('../connection/db.php');
 require_once '../vendor/autoload.php'; // Adjust the path as necessary
 
+ini_set('memory_limit', '999M');
+ini_set('max_execution_time', '999');
+
+
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -62,6 +66,8 @@ if($confirm == 1 && ($dispatchissue == null || $dispatchissue == 0) && ($deliver
 }else if($confirm == 1 && $dispatchissue == 1 && $delivered == 1){
     $qtyflag = 3;
 }
+
+$invoiceNo = '-';
 
 $getinvoicedata = "SELECT * FROM `tbl_invoice` WHERE `tbl_customer_order_idtbl_customer_order` = '$recordID'";
 $resultinvoice = $conn->query($getinvoicedata);
