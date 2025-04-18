@@ -142,7 +142,7 @@ include "include/topnavbar.php";
                         fromdate: fromdate,
                         todate: todate
                     },
-                    url: 'getprocess/getitemviseprofitdata.php',
+                    url: 'getprocess/getinvoiceviseprofitdata.php',
                     success: function (result) {
                         $('#targetviewdetail').html(result);
                         if ($.fn.DataTable.isDataTable('#dataTable')) {

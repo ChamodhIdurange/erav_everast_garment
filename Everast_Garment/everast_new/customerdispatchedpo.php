@@ -1338,22 +1338,21 @@ include "include/topnavbar.php";
                 }
             });
         });
-        $('#dataTable tbody').on('click', '.btnDeliver', function () {
-            var id = $(this).attr('id');
-
-            var confirmstatus = $(this).attr('name');
-            $('#hiddenpoid').val(id);
+       $('#dataTable tbody').on('click', '.btnDeliver', function () {
+            let $this = $(this);
+            let id = $this.attr('id');
+            let $hiddenPoId = $('#hiddenpoid').val(id);
+            let $modal = $('#modalorderview');
+            let $tbody = $('#tableorderview > tbody');
 
             $.ajax({
                 type: "POST",
-                data: {
-                    orderID: id
-                },
                 url: 'getprocess/getcusorderlistaccoorderid.php',
-                success: function (result) { //console.log(result);
-                    var obj = JSON.parse(result);
-                    $('#tableorderview > tbody').empty();
+                data: { orderID: id },
+                success: function (result) {
+                    let obj = $.parseJSON(result);
 
+                    // Update HTML Elements Efficiently
                     $('#divsubtotalview').html(obj.subtotal);
                     $('#divdiscountview').html(obj.disamount);
                     $('#divdiscountPOview').html(obj.po_amount);
@@ -1363,58 +1362,45 @@ include "include/topnavbar.php";
                     $('#dcuscontact').html(obj.cuscontact);
                     $('#viewmodaltitle').html('Order No: PO-' + id);
                     $('#editpodiscount').val(obj.podiscountpercentage);
+                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver').prop('disabled', false);
+                    $('#acceptanceType').val(3);
 
-                    var objfirst = obj.tablelist;
-                    $.each(objfirst, function (i, item) {
-                        //alert(objfirst[i].id);
-                        $('#tableorderview > tbody:last').append('<tr><td>' +
-                            objfirst[i].productname +
-                            '</td><td>' +
-                            objfirst[i].productcode +
-                            '</td><td class="d-none">' + objfirst[i].productid +
-                            '</td><td class="d-none">' + objfirst[i]
-                            .podetailid +
-                            '</td><td class="text-center editnewqty">' +
-                            objfirst[i].dispatchqty +
-                            '</td><td class="text-center editlinediscountpernetage">' +
-                            objfirst[i].discountpresent +
-                            '</td><td class="text-center editlinediscount">' +
-                            objfirst[i].discount +
-                            '</td><td class="text-right total">' + objfirst[i]
-                            .total +
-                            '</td><td class="text-right colunitprice">' +
-                            objfirst[i]
-                            .unitprice +
-                            '</td><td class="text-right"><button class="btn btn-outline-danger btn-sm btnDeleteOrderProduct mr-1" data-placement="bottom" title="Invoice Print" id="' +
-                            objfirst[i]
-                            .podetailid +
-                            '"><i class="fas fa-trash"></i></button></td><td class="d-none">' +
-                            objfirst[i]
-                            .status +
-                            '</td><td class="d-none totwithoutdiscount">' +
-                            objfirst[i]
-                            .totwithoutdiscount +
-                            '</td><td class="d-none">0</td></tr>');
+                    // Optimize Table Row Creation
+                    let rows = obj.tablelist.map(item => {
+                        let statusClass = item.status == 3 ? ' style="background-color: #ffcccc;"' : '';
+                        let deleteButtonClass = item.status == 3 ? 'btn-outline-success' : 'btn-outline-danger';
 
-                        var newRow = $('#tableorderview > tbody:last tr:last');
+                        return `<tr${statusClass}>
+                            <td>${item.productname}</td>
+                            <td>${item.productcode}</td>
+                            <td class="d-none">${item.productid}</td>
+                            <td class="d-none">${item.podetailid}</td>
+                            <td class="text-center editnewqty">${item.dispatchqty}</td>
+                            <td class="text-center editlinediscountpernetage">${item.discountpresent}</td>
+                            <td class="text-center editlinediscount">${item.discount}</td>
+                            <td class="text-right total">${item.total}</td>
+                            <td class="text-right colunitprice">${item.unitprice}</td>
+                            <td class="text-right">
+                                <button class="btn btn-sm ${deleteButtonClass} btnDeleteOrderProduct mr-1" id="${item.podetailid}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                            <td class="d-none">${item.status}</td>
+                            <td class="d-none totwithoutdiscount">${item.totwithoutdiscount}</td>
+                            <td class="d-none">0</td>
+                        </tr>`;
+                    }).join('');
 
-                        if (objfirst[i].status == 3) {
-                            newRow.css('background-color', '#ffcccc');
-                            newRow.find('.btnDeleteOrderProduct').removeClass()
-                                .addClass('btn btn-outline-success btn-sm');
+                    // Update Table in One Go
+                    $tbody.html(rows);
 
-                        }
-                    });
-                    
-                    $('#btnUpdate').html('<i class="far fa-save"></i>&nbsp;Deliver');
-                    $('#btnUpdate').prop('disabled', false);
-                    $('#acceptanceType').val(3)
-
-                    $('#modalorderview').modal('show');
+                    // Show Modal & Recalculate Totals
+                    $modal.modal('show');
                     tabletotal1();
                 }
             });
         });
+
         $('#dataTable tbody').on('click', '.btnDispatch', function () {
             var id = $(this).attr('id');
             var confirmstatus = $(this).attr('name');
