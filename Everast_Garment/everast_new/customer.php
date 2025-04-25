@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 </head>
 <?php 
+
 include "include/header.php";  
 
 $sql="SELECT `idtbl_customer`, `name`, `nic`, `phone`, `status`, `type`, `tbl_area_idtbl_area` FROM `tbl_customer` WHERE `status` IN (1,2)";
@@ -574,7 +575,7 @@ include "include/topnavbar.php";
                     "data": "idtbl_customer"
                 },
                 {
-                    "data": "name"
+                    "data": "customer"
                 },
                 {
                     "data": "area"

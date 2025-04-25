@@ -1,6 +1,7 @@
 <?php 
 include "include/header.php";  
 
+
 $sqlProduct = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
 $resultProduct =$conn-> query($sqlProduct);
 
@@ -70,6 +71,7 @@ include "include/topnavbar.php";
                                     <th class="text-right">Nettotal</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Transfer Status</th>
+                                    <th class="text-center">Payment Status</th>
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -196,7 +198,7 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
-<!-- Modal GRn Detail -->
+<!-- Modal GRN Detail -->
 <div class="modal fade" id="modalgrndetail" data-backdrop="static" data-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -212,6 +214,26 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
+<!-- Modal Payment Receipt -->
+<div class="modal fade" id="modalpayments" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="embed-responsive embed-responsive-16by9" id="frame">
+                    <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function () {
@@ -341,6 +363,22 @@ include "include/topnavbar.php";
                 },
                 {
                     "targets": -1,
+                    "className": 'text-center',
+                    "data": null,
+                    "render": function (data, type, full) {
+                        var html = '';
+                        if (full['paymentcomplete'] == 0) {
+                            html +=
+                                '<i class="fas fa-times text-danger"></i>&nbsp;Pending';
+                        } else {
+                            html +=
+                                '<i class="fas fa-check text-success"></i>&nbsp;Completed';
+                        }
+                        return html;
+                    }
+                },
+                {
+                    "targets": -1,
                     "className": 'text-right',
                     "data": null,
                     "render": function (data, type, full) {
@@ -384,6 +422,16 @@ include "include/topnavbar.php";
                                 full['idtbl_grn'] +
                                 '"><i class="fas fa-exchange-alt"></i></button>';
                         }
+                        
+                        if (full['confirm_status'] == 1 && full['paymentcomplete'] == 1 &&
+                            statuscheck == 1) {
+                            button+='<button type="button" data-actiontype="3" title="View Payment History" class="btn btn-outline-success btn-sm mr-1 btnViewPayments" id="'+full['idtbl_grn']+'"><i class="fa fa-credit-card"></i></button>';
+
+                        } else if (full['confirm_status'] == 1 && full['paymentcomplete'] == 0 &&
+                            statuscheck == 1) {
+                                button+='<button type="button" data-actiontype="3" title="View Payment History" class="btn btn-outline-danger btn-sm mr-1 btnViewPayments" id="'+full['idtbl_grn']+'"><i class="fa fa-credit-card"></i></button>';
+
+                        }
 
 
 
@@ -392,6 +440,34 @@ include "include/topnavbar.php";
                 }
             ]
         });
+
+        $('#dataTable tbody').on('click', '.btnViewPayments', function() {
+            var id = $(this).attr('id');
+
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#modalpayments iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/grnpaymentpdf.php?grnId=' + id;
+
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#modalpayments iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#modalpayments').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
+        });
+
         $('#btnordercreate').click(function () {
             $('#modalcreateorder').modal('show');
             $('#modalcreateorder').on('shown.bs.modal', function () {

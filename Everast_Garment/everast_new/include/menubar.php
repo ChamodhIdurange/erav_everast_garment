@@ -3,6 +3,7 @@ $getUrl = $_SERVER['SCRIPT_NAME'];
 $url = explode('/', $getUrl);
 $lastElement = end($url);
 
+
 if ($lastElement == 'useraccount.php') {
     $addcheck    = checkprivilege($menuprivilegearray, 1, 1);
     $editcheck   = checkprivilege($menuprivilegearray, 1, 2);
@@ -328,6 +329,24 @@ else if ($lastElement == 'rptitemviseprofitreport.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 65, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 65, 4);
 }
+else if ($lastElement == 'grnpayment.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 66, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 66, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 66, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 66, 4);
+}
+else if ($lastElement == 'newgrnreturn.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 67, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 67, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 67, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 67, 4);
+}
+else if ($lastElement == 'allgrnreturn.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 68, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 68, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 68, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 68, 4);
+}
 
 
 function checkprivilege($arraymenu, $menuID, $type)
@@ -457,11 +476,30 @@ function checkprivilege($arraymenu, $menuID, $type)
                 Purchsing Order
             </a>
             <?php }
-                if (menucheck($menuprivilegearray, 16) == 1) { ?>
-            <a class="nav-link p-0 px-3 py-2" href="grn.php">
-                <div class="nav-link-icon"><i data-feather="truck"></i></div>
-                Good Receive
+                if (menucheck($menuprivilegearray, 16) == 1 | menucheck($menuprivilegearray, 66) == 1 | menucheck($menuprivilegearray, 67) == 1 | menucheck($menuprivilegearray, 68) == 1) { ?>
+            <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
+                data-target="#collapsegrn" aria-expanded="false" aria-controls="collapsegrn">
+                <div class="nav-link-icon"><i class="fa fa-truck" aria-hidden="true"></i></div>
+                GRN Data
+                <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
+            <div class="collapse <?php if ($lastElement == "grnpayment.php" | $lastElement == "grn.php" | $lastElement == "newgrnreturn.php" | $lastElement == "allgrnreturn.php") {echo 'show';} ?>"
+                id="collapsegrn" data-parent="#accordionSidenav">
+                <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
+                    <?php if (menucheck($menuprivilegearray, 6) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="grn.php">GRN</a>
+                    <?php }
+                        if (menucheck($menuprivilegearray, 66) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="grnpayment.php">GRN Payment</a>
+                    <?php }
+                        if (menucheck($menuprivilegearray, 67) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="newgrnreturn.php">GRN Return</a>
+                    <?php }
+                        if (menucheck($menuprivilegearray, 68) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="allgrnreturn.php">All GRN Return</a>
+                    <?php } ?>
+                </nav>
+            </div>
             <?php }
                     if (menucheck($menuprivilegearray, 40) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">

@@ -2,6 +2,7 @@
 session_start();
 require_once('../connection/db.php');
 
+
 $categorylist = $_POST['categorylist'];
 $categorylist = implode(", ", $categorylist);
 $fulltotal = 0;
@@ -95,7 +96,7 @@ if ($resultstock->num_rows > 0) {
                             <th class="text-center" style="padding: 5px;">Item Name</th>
                             <th class="text-center" style="padding: 5px;">Qty</th>
                             <th class="text-center" style="padding: 5px;">Retail Price</th>
-                            <th class="text-center" style="padding: 5px;">Sale Value</th>
+                            <th class="text-center" style="padding: 5px;">Sale Total</th>
                             <th class="text-center" style="padding: 5px;">Pr Per</th>
                             <th class="text-center" style="padding: 5px;">Cost Value</th>
                             <th class="text-center" style="padding: 5px;">Cost Total</th>
@@ -138,6 +139,9 @@ if ($resultstock->num_rows > 0) {
         </tr>
         <tr>
             <th class="text-right"> Gross Cost Total: Rs.' . number_format($allCostTotalVal, 2) . '</th>
+        </tr>
+        <tr>
+            <th class="text-right"> Gross PR Per: ' . number_format(($allTotalVal - $allCostTotalVal)*100/$allCostTotalVal, 2) . '%</th>
         </tr>
     </table>
 </div>';

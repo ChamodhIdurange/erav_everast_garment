@@ -4,6 +4,7 @@ if(!isset($_SESSION['userid'])){header ("Location:index.php");}
 require_once('../connection/db.php');//die('bc');
 $userID=$_SESSION['userid'];
 
+
 $tblData=$_POST['tblData'];
 $tblPayData=$_POST['tblPayData'];
 $totAmount=$_POST['totAmount'];
@@ -14,17 +15,16 @@ $paymentdate=$_POST['paymentdate'];
 $today=date('Y-m-d');
 $updatedatetime=date('Y-m-d h:i:s');
 
-
 // mysqli_autocommit($conn, false);
 // mysqli_begin_transaction($conn);
 
-$insertpayment="INSERT INTO `tbl_invoice_payment`(`date`, `payment`, `balance`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$paymentdate','$payAmount','$balAmount','1','$updatedatetime','$userID')";
+$insertpayment="INSERT INTO `tbl_grn_payment`(`date`, `payment`, `balance`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$paymentdate','$payAmount','$balAmount','1','$updatedatetime','$userID')";
 if($conn->query($insertpayment)==true){
     $paymentID=$conn->insert_id;
 
     foreach($tblData as $rowtabledata){
         // $invno=$rowtabledata['col_1'];
-        $invoiceID=$rowtabledata['col_1'];
+        $grnId=$rowtabledata['col_1'];
         $invamount=$rowtabledata['col_5'];
         $invpayamount=$rowtabledata['col_10'];
         // $fullhalfstatus=$rowtabledata['col_11'];
@@ -41,8 +41,8 @@ if($conn->query($insertpayment)==true){
         }
 
         if($invpayamount>0){
-            $updateinvoicehas="INSERT INTO `tbl_invoice_payment_has_tbl_invoice`(`tbl_invoice_payment_idtbl_invoice_payment`, `tbl_invoice_idtbl_invoice`, `total`, `discount`, `payamount`, `fullstatus`, `halfstatus`) VALUES ('$paymentID','$invoiceID','0','0','$invpayamount','$fullstatus','$halfstatus')";
-            $conn->query($updateinvoicehas);
+            $updategrnhas="INSERT INTO `tbl_grn_payment_has_tbl_grn`(`tbl_grn_payment_idtbl_grn_payment`, `tbl_grn_idtbl_grn`, `total`, `discount`, `payamount`, `fullstatus`, `halfstatus`) VALUES ('$paymentID','$grnId','0','0','$invpayamount','$fullstatus','$halfstatus')";
+            $conn->query($updategrnhas);
 
             // if (array_key_exists($invno,$meta_array)){
             //     $invtotal=$meta_array[$invno]->invtotal;
@@ -50,10 +50,10 @@ if($conn->query($insertpayment)==true){
             //     $payamount=$meta_array[$invno]->payamount;
             // }
 
-            // $updateinvoice="UPDATE `tbl_invoice` SET `paymentcomplete`='$paymentcompletestatus', `payment_created`='1',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_invoice`='$invoiceID'";
+            // $updateinvoice="UPDATE `tbl_invoice` SET `paymentcomplete`='$paymentcompletestatus', `payment_created`='1',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_invoice`='$grnId'";
             // $conn->query($updateinvoice);
 
-            $sqlsumpayment="SELECT SUM(`payamount`) AS `netpayment` FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_idtbl_invoice`='$invoiceID'";
+            $sqlsumpayment="SELECT SUM(`payamount`) AS `netpayment` FROM `tbl_grn_payment_has_tbl_grn` WHERE `tbl_grn_idtbl_grn`='$grnId'";
             $resultsumpayment = $conn->query($sqlsumpayment);
             $rowsumpayment = $resultsumpayment->fetch_assoc();
 
@@ -64,8 +64,8 @@ if($conn->query($insertpayment)==true){
                 $paymentcompletestatus=0;
             }
 
-            $updateinvoice="UPDATE `tbl_invoice` SET `paymentcomplete`='$paymentcompletestatus',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_invoice`='$invoiceID'";
-            $conn->query($updateinvoice);
+            $updategrn="UPDATE `tbl_grn` SET `paymentcomplete`='$paymentcompletestatus',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_grn`='$grnId'";
+            $conn->query($updategrn);
         }
     }
 
@@ -92,7 +92,7 @@ if($conn->query($insertpayment)==true){
             $paidamount=$creditnote;
         }
 
-        $insertpaydetail="INSERT INTO `tbl_invoice_payment_detail`(`method`, `amount`, `branch`, `receiptno`, `chequeno`, `chequedate`, `status`, `creditnoteid`, `updatedatetime`, `tbl_bank_idtbl_bank`, `tbl_user_idtbl_user`, `tbl_invoice_payment_idtbl_invoice_payment`) VALUES ('$typeID','$paidamount','-','$receiptno','$chequeno','$chequedate', '1', '$creditnoteID','$updatedatetime','$bankID','$userID','$paymentID')";
+        $insertpaydetail="INSERT INTO `tbl_grn_payment_detail`(`method`, `amount`, `branch`, `receiptno`, `chequeno`, `chequedate`, `status`, `creditnoteid`, `updatedatetime`, `tbl_bank_idtbl_bank`, `tbl_user_idtbl_user`, `tbl_grn_payment_idtbl_grn_payment`) VALUES ('$typeID','$paidamount','-','$receiptno','$chequeno','$chequedate', '1', '$creditnoteID','$updatedatetime','$bankID','$userID','$paymentID')";
         $conn->query($insertpaydetail);
 
         if($typeID==3){
@@ -100,8 +100,6 @@ if($conn->query($insertpayment)==true){
             $conn->query($updatecreditnote);
         }
     }
-
-    // mysqli_commit($conn);
 
     $actionObj=new stdClass();
     $actionObj->icon='fas fa-check-circle';
@@ -114,7 +112,7 @@ if($conn->query($insertpayment)==true){
     $action=json_encode($actionObj);
 
     $obj=new stdClass();
-    $obj->paymentinvoice=$paymentID;
+    $obj->paymentgrn=$paymentID;
     $obj->action=$action;
 
     echo $actionJSON=json_encode($obj);
@@ -133,7 +131,7 @@ else{
     $action=json_encode($actionObj);
 
     $obj=new stdClass();
-    $obj->paymentinvoice='0';
+    $obj->paymentgrn='0';
     $obj->action=$action;
 
     echo $actionJSON=json_encode($obj);

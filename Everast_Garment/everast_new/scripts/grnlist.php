@@ -13,7 +13,6 @@
  *
  * @license MIT - http://datatables.net/license_mit
  */
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
  */
@@ -39,6 +38,7 @@ $columns = array(
 	array( 'db' => '`u`.`batchno`', 'dt' => 'batchno', 'field' => 'batchno' ),
 	array( 'db' => '`u`.`confirm_status`', 'dt' => 'confirm_status', 'field' => 'confirm_status' ),
 	array( 'db' => '`u`.`transferstatus`', 'dt' => 'transferstatus', 'field' => 'transferstatus' ),
+	array( 'db' => '`u`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
 	array( 'db' => '`us`.`suppliername`', 'dt' => 'suppliername', 'field' => 'suppliername' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
