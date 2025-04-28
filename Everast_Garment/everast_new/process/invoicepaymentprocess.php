@@ -10,17 +10,23 @@ $totAmount=$_POST['totAmount'];
 $payAmount=$_POST['payAmount'];
 $balAmount=$_POST['balAmount'];
 $paymentdate=$_POST['paymentdate'];
+$customerId=$_POST['customerId'];
+$createCreditNote=$_POST['createCreditNote'];
 
 $today=date('Y-m-d');
 $updatedatetime=date('Y-m-d h:i:s');
 
-
-// mysqli_autocommit($conn, false);
-// mysqli_begin_transaction($conn);
-
 $insertpayment="INSERT INTO `tbl_invoice_payment`(`date`, `payment`, `balance`, `status`, `updatedatetime`, `tbl_user_idtbl_user`) VALUES ('$paymentdate','$payAmount','$balAmount','1','$updatedatetime','$userID')";
 if($conn->query($insertpayment)==true){
     $paymentID=$conn->insert_id;
+
+    if($payAmount > $totAmount && $createCreditNote == 1){
+        $excessAmount = $payAmount - $totAmount;
+    
+        // fetch customer ID somehow
+        $sqlexcess = "INSERT INTO `tbl_invoice_excess_payment`(`date`, `excess_amount`, `paydate`, `paystatus`, `payreceiptid`, `status`, `updatedatetime`, `updateuser`, `tbl_invoice_payment_idtbl_invoice_payment`, `tbl_customer_idtbl_customer`) VALUES ('$today', $excessAmount, NULL, 0, NULL, 1, '$updatedatetime', '$userID', '$paymentID', '$customerId')";
+        $conn->query($sqlexcess);
+    }
 
     foreach($tblData as $rowtabledata){
         // $invno=$rowtabledata['col_1'];
@@ -88,16 +94,21 @@ if($conn->query($insertpayment)==true){
         else if($typeID==2){
             $paidamount=$bankamount;
         }
-        else if($typeID==3){
+        else if($typeID==3 || $typeID==4){
             $paidamount=$creditnote;
         }
 
         $insertpaydetail="INSERT INTO `tbl_invoice_payment_detail`(`method`, `amount`, `branch`, `receiptno`, `chequeno`, `chequedate`, `status`, `creditnoteid`, `updatedatetime`, `tbl_bank_idtbl_bank`, `tbl_user_idtbl_user`, `tbl_invoice_payment_idtbl_invoice_payment`) VALUES ('$typeID','$paidamount','-','$receiptno','$chequeno','$chequedate', '1', '$creditnoteID','$updatedatetime','$bankID','$userID','$paymentID')";
         $conn->query($insertpaydetail);
+        $paymentDetailID=$conn->insert_id;
 
         if($typeID==3){
-            $updatecreditnote="UPDATE `tbl_creditenote` SET `settle`='1', `settledate`='$today' WHERE `idtbl_creditenote`='$creditnoteID'";
+            $updatecreditnote="UPDATE `tbl_creditenote` SET `settle`='1', `payAmount`='$paidamount', `settledate`='$today' WHERE `idtbl_creditenote`='$creditnoteID'";
             $conn->query($updatecreditnote);
+        }
+        if($typeID==4){
+            $updateexcessnote="UPDATE `tbl_invoice_excess_payment` SET `paystatus`='1', `payreceiptid`='$paymentDetailID', `paydate`='$today' WHERE `idtbl_invoice_excess_payment`='$creditnoteID'";
+            $conn->query($updateexcessnote);
         }
     }
 

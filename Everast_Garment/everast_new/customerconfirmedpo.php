@@ -2677,6 +2677,7 @@ include "include/topnavbar.php";
         $('#hidetotalorderdispatch').val(sum);
     }
 
+    
     function calculateNewAddedProductTot() {
         var saleprice = $('#modaleditsaleprice').val();
         var qty = $('#modaleditqty').val();
@@ -2686,6 +2687,7 @@ include "include/topnavbar.php";
         var discountAmount = (totPrice * discountprecentage) / 100;
         var netTotal = totPrice - discountAmount;
 
+        $('#modaleditdiscountamount').val(discountAmount);
         $('#modaleditnettotal').val(parseFloat(netTotal).toFixed(2));
 
     }

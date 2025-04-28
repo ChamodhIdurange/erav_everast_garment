@@ -11,6 +11,7 @@ include "include/topnavbar.php";
         table-layout: fixed;
 
     }
+    
 </style>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
@@ -39,6 +40,7 @@ include "include/topnavbar.php";
                                             <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                                 <thead>
                                                     <tr>
+                                                        <th>Invoice Id</th>
                                                         <th>Invoice No</th>
                                                         <th>Date</th>
                                                         <th>Purchase Order</th>
@@ -196,6 +198,9 @@ include "include/topnavbar.php";
                 [0, "desc"]
             ],
             "columns": [
+                {
+                    "data": "idtbl_invoice"
+                },
                 {
                     "data": "invoiceno"
                 },

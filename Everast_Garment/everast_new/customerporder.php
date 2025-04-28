@@ -2698,10 +2698,12 @@ include "include/topnavbar.php";
         var discountAmount = (totPrice * discountprecentage) / 100;
         var netTotal = totPrice - discountAmount;
 
+        $('#modaleditdiscountamount').val(discountAmount);
         $('#modaleditnettotal').val(parseFloat(netTotal).toFixed(2));
 
     }
 
+    
     function calculateTotals(row) {
         var sum = 0;
         var disvalue = 0;

@@ -1,11 +1,13 @@
 <?php 
 require_once('../connection/db.php');
 
+
+
 if(!empty($_POST['invoiceno'])){
     $invoiceno=$_POST['invoiceno'];
-    $invoiceID=substr($invoiceno, 9);
+    // $invoiceID=substr($invoiceno, 9);
 
-    $sql="SELECT DATEDIFF(CURDATE(), `tbl_invoice`.`date`) AS `date_diff`, `tbl_customer_order`.`remark`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`idtbl_invoice`='$invoiceID' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1  Group BY `tbl_invoice`.`idtbl_invoice`";
+    $sql="SELECT DATEDIFF(CURDATE(), `tbl_invoice`.`date`) AS `date_diff`, `tbl_customer_order`.`remark`, `tbl_invoice`.`tbl_customer_idtbl_customer`, `tbl_employee`.`name` as `asm`, `tbl_invoice`.`idtbl_invoice`,`tbl_invoice`.`invoiceno`, `tbl_invoice`.`paymentcomplete`, `tbl_invoice`.`date`, `tbl_invoice`.`nettotal`, SUM(`tbl_invoice_payment_has_tbl_invoice`.`payamount`) AS `payamount` FROM `tbl_invoice` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` ON `tbl_invoice_payment_has_tbl_invoice`.`tbl_invoice_idtbl_invoice`=`tbl_invoice`.`idtbl_invoice` LEFT JOIN `tbl_customer_order` ON `tbl_customer_order`.`idtbl_customer_order`=`tbl_invoice`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_employee` ON `tbl_employee`.`idtbl_employee` = `tbl_customer_order`.`tbl_employee_idtbl_employee` WHERE `tbl_invoice`.`invoiceno`='$invoiceno' AND `tbl_invoice`.`status`=1 AND `tbl_invoice`.`paymentcomplete`=0 AND `tbl_customer_order`.`delivered`=1  Group BY `tbl_invoice`.`idtbl_invoice`";
     $result=$conn->query($sql);
 }
 else if(!empty($_POST['customerID'])){

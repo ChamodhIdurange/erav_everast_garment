@@ -16,6 +16,10 @@ $resultasm =$conn-> query($sqlasm);
 $sqlcreditnote="SELECT `u`.`idtbl_creditenote`, `u`.`balAmount`, `c`.`name` FROM `tbl_creditenote` AS `u` LEFT JOIN `tbl_customer` AS `c` ON (`u`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`) WHERE `u`.`status`=1 AND `u`.`settle`=0 AND `u`.`balAmount`>0";
 $resultcreditnote =$conn-> query($sqlcreditnote); 
 
+$sqlexcessnote="SELECT `u`.`idtbl_invoice_excess_payment`, `u`.`excess_amount`, `c`.`name` FROM `tbl_invoice_excess_payment` AS `u` LEFT JOIN `tbl_customer` AS `c` ON (`u`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`) WHERE `u`.`status`=1 AND `u`.`paystatus`=0 AND `u`.`excess_amount`>0";
+$resultexcessnote =$conn-> query($sqlexcessnote); 
+
+
 include "include/topnavbar.php"; 
 ?>
 <div id="layoutSidenav">
@@ -45,8 +49,9 @@ include "include/topnavbar.php";
                                         <select class="form-control form-control-sm" name="customer" id="customer" required>
                                             <option value="">Select</option>
                                         </select>
+                                        <input type="hidden" id="hidecustomerId">
                                     </div>
-                                    <div class="col-3">
+                                    <!-- <div class="col-3">
                                         <label class="small font-weight-bold text-dark">ASM*</label>
                                         <select class="form-control form-control-sm" name="asm" id="asm" required>
                                             <option value="">Select</option>
@@ -54,8 +59,8 @@ include "include/topnavbar.php";
                                             <option value="<?php echo $rowasm['idtbl_employee'] ?>"><?php echo $rowasm['name']; ?></option>
                                             <?php }} ?>
                                         </select>
-                                    </div>
-                                    <div class="col-3">
+                                    </div> -->
+                                    <div class="col-3 ml-3">
                                         <form id="searchform">
                                             <label class="small font-weight-bold text-dark">Invoice Search</label>
                                             <div class="input-group input-group-sm">
@@ -112,6 +117,14 @@ include "include/topnavbar.php";
                 <div class="row">
                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
                         <form id="formModal">
+                            <div class="form-group mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="createCreditNote" name="createCreditNote">
+                                    <label class="form-check-label small font-weight-bold text-dark" for="createCreditNote">
+                                        Create Excess Note
+                                    </label>
+                                </div>
+                            </div>
                             <div class="form-group mb-1">
                                 <label class="small font-weight-bold text-dark">Payment Date*</label>
                                 <div class="input-group input-group-sm">
@@ -142,6 +155,7 @@ include "include/topnavbar.php";
                                     <option value="1">Cash</option>
                                     <option value="2">Bank / Cheque</option>
                                     <option value="3">Credit Note</option>
+                                    <option value="4">Excess Note</option>
                                 </select>
                             </div>
                             <div class="form-group mb-1">
@@ -206,6 +220,22 @@ include "include/topnavbar.php";
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card shadow-none border-0">
+                                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body p-0">
+                                            <div class="form-group mb-1">
+                                                <label class="small font-weight-bold text-dark">Excess Note</label>
+                                                <select id="excessnote" name="excessnote" type="text" style="width: 100%;" class="form-control form-control-sm" disabled required>
+                                                    <option value="">Select</option>
+                                                    <?php if($resultexcessnote->num_rows > 0) {while ($rowexcessnote = $resultexcessnote-> fetch_assoc()) { ?>
+                                                    <option value="<?php echo $rowexcessnote['idtbl_invoice_excess_payment'] ?>" data-excessnoteamount="<?php echo $rowexcessnote['excess_amount']; ?>"><?php echo 'EX'.$rowexcessnote['idtbl_invoice_excess_payment'].'-'.number_format($rowexcessnote['excess_amount'], 2).' / ' . $rowexcessnote['name']; ?></option>
+                                                    <?php }} ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group mt-3">
                                 <button name="submitBtnModal" type="button" id="submitBtnModal" class="btn btn-outline-primary btn-sm fa-pull-right"><i class="fas fa-file-invoice-dollar"></i>&nbsp;Add Payment</button>
@@ -219,14 +249,14 @@ include "include/topnavbar.php";
                                 <th>Type</th>
                                 <th class="text-right">Cash</th>
                                 <th class="text-right">Cheque / Deposit</th>
-                                <th class="text-right">Credit Note</th>
+                                <th class="text-right">Credit/Excess Note</th>
                                 <th>Che No</th>
                                 <th>Receipt</th>
                                 <th>Che Date</th>
                                 <th>Bank</th>
                                 <th class="">BankID</th>
                                 <th class="">paymethod</th>
-                                <th class="">CreditnoteID</th>
+                                <th class="">Credit/Excess noteID</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -301,6 +331,7 @@ include "include/topnavbar.php";
             format: 'yyyy-mm-dd'
         });
         $("#creditnote").select2();
+        $("#excessnote").select2();
         
         $("#customer").select2({
             ajax: {
@@ -324,6 +355,7 @@ include "include/topnavbar.php";
 
         $('#customer').change(function(){
             var customerID = $(this).val();
+            $('#hidecustomerId').val(customerID)
             var asmID = '';
             var invoiceno = '';
             loadinvoice(customerID, asmID, invoiceno);
@@ -345,6 +377,20 @@ include "include/topnavbar.php";
                 var customerID = '';
                 var asmID = '';
                 var invoiceno = $('#formInvNum').val();
+
+                var invCustomerId = 0;
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        invoiceno: invoiceno
+                    },
+                    url: 'getprocess/getinvoicecustomer.php',
+                    success: function(result) {// alert(result);
+                        var obj = JSON.parse(result);
+                        $('#hidecustomerId').val(obj.customerId);
+                    }
+                });  
+                
                 loadinvoice(customerID, asmID, invoiceno);
             }
         });
@@ -463,6 +509,7 @@ include "include/topnavbar.php";
                 $('#paymentBank').prop("disabled", true);
                 $('#paymentCash').prop("readonly", false);
                 $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseOne').collapse('show');
             } else if ($(this).val() == '2') {
                 $('#paymentCheque').prop("readonly", false);
@@ -471,6 +518,7 @@ include "include/topnavbar.php";
                 $('#paymentBank').prop("disabled", false);
                 $('#paymentCash').prop("readonly", true);
                 $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseTwo').collapse('show');
             } else if ($(this).val() == '3') {
                 $('#paymentCheque').prop("readonly", true);
@@ -479,7 +527,17 @@ include "include/topnavbar.php";
                 $('#paymentBank').prop("disabled", true);
                 $('#paymentCash').prop("readonly", true);
                 $('#creditnote').prop("disabled", false);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseThree').collapse('show');
+            } else if ($(this).val() == '4') {
+                $('#paymentCheque').prop("readonly", true);
+                $('#paymentChequeNum').prop("readonly", true);
+                $('#paymentchequeDate').prop("readonly", true);
+                $('#paymentBank').prop("disabled", true);
+                $('#paymentCash').prop("readonly", true);
+                $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", false);
+                $('#collapseFour').collapse('show');
             }
         });
         $("#submitBtnModal").click(function() {
@@ -498,6 +556,8 @@ include "include/topnavbar.php";
                 var paymentCash = $('#paymentCash').val();
                 var creditnote = $('#creditnote').val();
                 var creditnoteamount = $('#creditnote').find(':selected').attr('data-creditnoteamount');
+                var excessnote = $('#excessnote').val();
+                var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
 
                 if(paymenttype==1){
                     $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Cash</td><td class="text-right">' + parseFloat(paymentCash).toFixed(2) + '</td><td class=""></td><td class=""></td><td class=""></td><td>'+paymentReceiptNum+'</td><td></td><td></td><td class=""></td><td class="">1</td><td class=""></td></tr>');
@@ -558,10 +618,30 @@ include "include/topnavbar.php";
 
                     $('#btnIssueInv').prop('disabled', false);
                 }
+                else if(paymenttype==4){
+                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Excess Note</td><td class=""></td><td class=""></td><td class="text-right">' + parseFloat(excessnoteamount).toFixed(2) + '</td><td class=""></td><td class="">'+paymentReceiptNum+'</td><td></td><td></td><td></td><td class="">4</td><td class="">'+excessnote+'</td></tr>');
+
+                    var paidAmount = parseFloat($('#hidePayAmount').val());
+                    var PayAmount = parseFloat(excessnoteamount);
+                    var paymentPayAmount = parseFloat($('#hideAllBalAmount').val());
+
+                    paidAmount = (paidAmount + PayAmount);
+                    var balance = (paymentPayAmount - paidAmount);
+                    $('#hideBalAmount').val(balance);
+                    $('#balanceAmount').html((balance).toFixed(2));
+                    $('#payAmount').html((paidAmount).toFixed(2));
+                    $('#hidePayAmount').val(paidAmount);
+
+                    $('#excessnote').val('').prop('disabled', true);
+                    $('#paymentMethod').val('');
+
+                    $('#btnIssueInv').prop('disabled', false);
+                }
 
                 $('#collapseOne').collapse('hide');
                 $('#collapseTwo').collapse('hide');
                 $('#collapseThree').collapse('hide');
+                $('#collapseFour').collapse('hide');
             }
         });
         
@@ -590,7 +670,15 @@ include "include/topnavbar.php";
             var payAmount = $('#hidePayAmount').val();
             var balAmount = $('#hideBalAmount').val();
             var paymentdate = $('#paymentdate').val();
+            var customerId = $('#hidecustomerId').val();
+            var createCreditNote = 0;
             // var discountlist = $('#discountlist').val();
+
+            if ($('#createCreditNote').is(':checked')) {
+                createCreditNote = 1;
+            } else {
+                createCreditNote = 0
+            }
 
             $.ajax({
                 type: "POST",
@@ -600,7 +688,9 @@ include "include/topnavbar.php";
                     totAmount: totAmount,
                     payAmount: payAmount,
                     balAmount: balAmount,
-                    paymentdate: paymentdate
+                    paymentdate: paymentdate,
+                    customerId: customerId,
+                    createCreditNote: createCreditNote,
                     // discountlist: discountlist
                 },
                 url: 'process/invoicepaymentprocess.php',

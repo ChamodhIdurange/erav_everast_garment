@@ -23,13 +23,12 @@ $discount = $rowinvoice['discount'];
 $invoiceno = $rowinvoice['invoiceno'];
 
 
-
 $sqlpayment="SELECT SUM(`ih`.`payamount`) AS 'paymentmade' FROM `tbl_invoice_payment` AS `ip` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`ip`.`idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId' GROUP BY `ih`.`tbl_invoice_idtbl_invoice`";
 $resultpayment=$conn->query($sqlpayment);
 $rowpayment=$resultpayment->fetch_assoc();
 $paymentmade = $rowpayment['paymentmade'];
 
-$sqlpaymentbank="SELECT `id`.`method`, `id`.`amount`, `id`.`receiptno`, `id`.`chequeno` FROM `tbl_invoice_payment_detail` AS `id` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`id`.`tbl_invoice_payment_idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `tbl_invoice_idtbl_invoice`='$invoiceId'";
+$sqlpaymentbank="SELECT `id`.`method`, `id`.`amount`, `id`.`receiptno`, `id`.`chequeno` FROM `tbl_invoice_payment_detail` AS `id` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`id`.`tbl_invoice_payment_idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId'";
 $resultpaymentbank=$conn->query($sqlpaymentbank);
 // echo $sqlpaymentbank;
 $html = '
@@ -156,6 +155,8 @@ $html = '
                                     $html.='Cheque';
                                 }else if($rowpaymentbank['method']==3){
                                     $html.='Credit Note';
+                                }else if($rowpaymentbank['method']==4){
+                                    $html.='Exfess Note';
                                 }
                             $html.='</td>
                                 <td>'.$rowpaymentbank['receiptno'].'</td>

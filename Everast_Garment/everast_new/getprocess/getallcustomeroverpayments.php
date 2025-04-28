@@ -8,12 +8,12 @@ $customerID = isset($_POST['customer']) ? $_POST['customer'] : null;
 $sql = "SELECT `c`.`returnamount`, `c`.`baltotalamount`, `c`.`payAmount`, `c`.`settle`, `cu`.`name`
         FROM `tbl_creditenote` AS `c` 
         LEFT JOIN `tbl_creditenote_detail` AS `cd` ON (`c`.`idtbl_creditenote` = `cd`.`tbl_creditenote_idtbl_creditenote`) 
-        LEFT JOIN `tbl_return` AS `r` ON (`r`.`idtbl_return` = `cd`.`tbl_return_idtbl_return`)  
         LEFT JOIN `tbl_customer` AS `cu` ON (`cu`.`idtbl_customer` = `c`.`tbl_customer_idtbl_customer`)";
 
 if (!empty($customerID)) {
     $sql .= " WHERE `c`.`tbl_customer_idtbl_customer` = '$customerID'";
 }
+
 
 
 // if ($customerID > 0) {
