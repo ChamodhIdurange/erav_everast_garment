@@ -1684,27 +1684,27 @@ include "include/topnavbar.php";
             $('#divtotalview').html(shownet);
         })
 
-        $('#tableorderview tbody').on('click', '.editnewqty, .editlinediscountpernetage', function (e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
+        // $('#tableorderview tbody').on('click', '.editnewqty, .editlinediscountpernetage', function (e) {
+        //     var row = $(this);
+        //     // var rowid = row.closest("tr").find('td:eq(0)').text();
+        //     // var selectvalueone = $('.optionpiorityone' + rowid).val();
+        //     // row.closest("tr").find('td:eq(7)').text(selectvalueone);
 
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        //     e.preventDefault();
+        //     e.stopImmediatePropagation();
 
-            $this = $(this);
-            if ($this.data('editing')) return;
+        //     $this = $(this);
+        //     if ($this.data('editing')) return;
 
-            var val = $this.text();
+        //     var val = $this.text();
 
-            $this.empty();
-            $this.data('editing', true);
+        //     $this.empty();
+        //     $this.data('editing', true);
 
-            $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val)
-                .appendTo($this);
-            textremoveQtyandPrecentageAndSalePrice('.optionnewqty', row);
-        });
+        //     $('<input type="Text" class="form-control form-control-sm optionnewqty">').val(val)
+        //         .appendTo($this);
+        //     textremoveQtyandPrecentageAndSalePrice('.optionnewqty', row);
+        // });
 
         function qtyChangeCheckStock(classname, row) {
             return new Promise((resolve, reject) => {
@@ -1789,49 +1789,49 @@ include "include/topnavbar.php";
         }
 
 
-        $('#tableorderview tbody').on('click', '.colunitprice', function (e) {
-            var row = $(this);
-            // var rowid = row.closest("tr").find('td:eq(0)').text();
-            // var selectvalueone = $('.optionpiorityone' + rowid).val();
-            // row.closest("tr").find('td:eq(7)').text(selectvalueone);
+        // $('#tableorderview tbody').on('click', '.colunitprice', function (e) {
+        //     var row = $(this);
+        //     // var rowid = row.closest("tr").find('td:eq(0)').text();
+        //     // var selectvalueone = $('.optionpiorityone' + rowid).val();
+        //     // row.closest("tr").find('td:eq(7)').text(selectvalueone);
 
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        //     e.preventDefault();
+        //     e.stopImmediatePropagation();
 
-            $this = $(this);
-            if ($this.data('editing')) return;
+        //     $this = $(this);
+        //     if ($this.data('editing')) return;
 
-            var val = $this.text();
+        //     var val = $this.text();
 
-            $this.empty();
-            $this.data('editing', true);
+        //     $this.empty();
+        //     $this.data('editing', true);
 
-            $('<input type="Text" class="form-control form-control-sm optionsaleprice">').val(val)
-                .appendTo($this);
-                textremoveQtyandPrecentageAndSalePrice('.optionsaleprice', row);
-        });
+        //     $('<input type="Text" class="form-control form-control-sm optionsaleprice">').val(val)
+        //         .appendTo($this);
+        //         textremoveQtyandPrecentageAndSalePrice('.optionsaleprice', row);
+        // });
 
         
 
-        $('#tableorderview tbody').on('click', '.editlinediscount', function (e) {
-            var row = $(this);
+        // $('#tableorderview tbody').on('click', '.editlinediscount', function (e) {
+        //     var row = $(this);
 
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        //     e.preventDefault();
+        //     e.stopImmediatePropagation();
 
-            $this = $(this);
-            if ($this.data('editing')) return;
+        //     $this = $(this);
+        //     if ($this.data('editing')) return;
 
-            var val = $this.text();
+        //     var val = $this.text();
 
-            $this.empty();
-            $this.data('editing', true);
+        //     $this.empty();
+        //     $this.data('editing', true);
 
-            $('<input type="Text" class="form-control form-control-sm optionnewlinediscount">').val(val)
-                .appendTo($this);
+        //     $('<input type="Text" class="form-control form-control-sm optionnewlinediscount">').val(val)
+        //         .appendTo($this);
 
-            textremoveDiscountAmount('.optionnewlinediscount', row);
-        });
+        //     textremoveDiscountAmount('.optionnewlinediscount', row);
+        // });
 
         function textremoveDiscountAmount(classname, row) {
             // $('#tableorderview tbody').on('keyup', classname, function (e) {
@@ -1899,18 +1899,18 @@ include "include/topnavbar.php";
         // }
 
 
-        $('#tableorderview tbody').on('click', '.btnDeleteOrderProduct', function (e) {
-            var row = $(this).closest('tr');
-            row.css('background-color', '#ffcccc');
+        // $('#tableorderview tbody').on('click', '.btnDeleteOrderProduct', function (e) {
+        //     var row = $(this).closest('tr');
+        //     row.css('background-color', '#ffcccc');
 
-            row.find('td:nth-child(11)').text('3');
-            tabletotal1();
-        });
-        $('#tableorderview tbody').on('click', '.btnDeleteNewProduct', function (e) {
-            var row = $(this).closest('tr');
-            row.remove();
-            tabletotal1();
-        });
+        //     row.find('td:nth-child(11)').text('3');
+        //     tabletotal1();
+        // });
+        // $('#tableorderview tbody').on('click', '.btnDeleteNewProduct', function (e) {
+        //     var row = $(this).closest('tr');
+        //     row.remove();
+        //     tabletotal1();
+        // });
 
 
         function tabletotal1() {

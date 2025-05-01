@@ -3,6 +3,7 @@ include "include/header.php";
 include "include/topnavbar.php"; 
 ?>
 
+
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <?php include "include/menubar.php"; ?>
@@ -52,6 +53,7 @@ include "include/topnavbar.php";
                                     <table id="dataTable" class="display table table-striped table-bordered">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
                                                 <th>Product</th>
                                                 <th>Color</th>
                                                 <th>Category</th>

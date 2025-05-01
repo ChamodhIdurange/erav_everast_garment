@@ -13,6 +13,8 @@ $paymentdate=$_POST['paymentdate'];
 $customerId=$_POST['customerId'];
 $createCreditNote=$_POST['createCreditNote'];
 
+
+
 $today=date('Y-m-d');
 $updatedatetime=date('Y-m-d h:i:s');
 
@@ -111,9 +113,6 @@ if($conn->query($insertpayment)==true){
             $conn->query($updateexcessnote);
         }
     }
-
-    // mysqli_commit($conn);
-
     $actionObj=new stdClass();
     $actionObj->icon='fas fa-check-circle';
     $actionObj->title='';
@@ -131,8 +130,6 @@ if($conn->query($insertpayment)==true){
     echo $actionJSON=json_encode($obj);
 }
 else{
-    // mysqli_rollback($conn);
-
     $actionObj=new stdClass();
     $actionObj->icon='fas fa-exclamation-triangle';
     $actionObj->title='';

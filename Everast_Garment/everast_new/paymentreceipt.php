@@ -4,6 +4,7 @@ include "include/header.php";
 $sql="SELECT * FROM `tbl_invoice_payment` WHERE `status`=1";
 $result =$conn-> query($sql); 
 
+
 include "include/topnavbar.php"; 
 ?>
 <style>
@@ -36,13 +37,13 @@ include "include/topnavbar.php";
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Invoice No</th>
                                             <th>Date</th>
                                             <th>Sales Rep</th>
                                             <th>Customer</th>
-                                            <th>Receipt No</th>
                                             <th class="text-right">Payment</th>
                                             <!-- <th class="text-right">Balance</th> -->
-                                            <th class="text-right">Actions</th>
+                                            <!-- <th class="text-right">Actions</th> -->
                                         </tr>
                                     </thead>
                                     
@@ -97,6 +98,9 @@ include "include/topnavbar.php";
                     "data": "idtbl_invoice_payment"
                 },
                 {
+                    "data": "invoiceno"
+                },
+                {
                     "data": "date"
                 },
                 {
@@ -106,14 +110,11 @@ include "include/topnavbar.php";
                     "data": "cusname"
                 },
                 {
-                    "data": "receiptno"
-                },
-                {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
-                        var payment=addCommas(parseFloat(full['payment']).toFixed(2));
+                        var payment=addCommas(parseFloat(full['payamount']).toFixed(2));
                         return payment;
                     }
                 },

@@ -381,12 +381,13 @@ include "include/topnavbar.php";
                     invoicestatus: invoicestatus
                 },
                 url: 'process/grnreturnprocess.php',
-                success: function (result) {console.log(result)
+                success: function (result) {// console.log(result)
                     location.reload();
                 }
             });
         }
     });
+    
 
     $('#returntype').change(function () {
         var type = $(this).val();

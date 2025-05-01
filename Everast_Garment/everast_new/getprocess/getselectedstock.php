@@ -5,7 +5,7 @@ require_once('../connection/db.php');
 $fromdate = $_POST['fromdate'];
 $today = date("Y-m-d");
 
-$sqlstock = "SELECT `p`.`product_code`, `p`.`saleprice`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, COALESCE(SUM(`s`.`qty`), 0)AS `qty`, `m`.`name`, (SELECT COALESCE(SUM(`h`.`qty`), 0) FROM `tbl_customer_order_hold_stock` AS `h` WHERE `h`.`status`='1' AND `h`.`invoiceissue`='0' AND `h`.`tbl_product_idtbl_product`=`p`.`idtbl_product`) AS 'holdqty' 
+$sqlstock = "SELECT `p`.`idtbl_product`, `p`.`product_code`, `p`.`saleprice`, `sp`.`category` as `subcat`, `gp`.`category` as `groupcat`, `pc`.`category` as `maincat`, `p`.`product_name`, COALESCE(SUM(`s`.`qty`), 0)AS `qty`, `m`.`name`, (SELECT COALESCE(SUM(`h`.`qty`), 0) FROM `tbl_customer_order_hold_stock` AS `h` WHERE `h`.`status`='1' AND `h`.`invoiceissue`='0' AND `h`.`tbl_product_idtbl_product`=`p`.`idtbl_product`) AS 'holdqty' 
              FROM `tbl_stock` as `s` 
              LEFT JOIN `tbl_product` as `p` ON (`p`.`idtbl_product`=`s`.`tbl_product_idtbl_product`) 
              LEFT JOIN `tbl_sizes` AS `m` ON (`m`.`idtbl_sizes` = `p`.`tbl_sizes_idtbl_sizes`) 
@@ -18,10 +18,12 @@ $sqlstock = "SELECT `p`.`product_code`, `p`.`saleprice`, `sp`.`category` as `sub
 
 $resultstock = $conn->query($sqlstock);
 
+
 if ($resultstock->num_rows > 0) {
     echo '<table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
             <thead>
                 <tr>
+                    <th>*</th>
                     <th>Product</th>
                     <th>Code</th>
                     <th>Size</th>
@@ -35,6 +37,7 @@ if ($resultstock->num_rows > 0) {
     while ($rowstock = $resultstock->fetch_assoc()) {
         $total = $rowstock['saleprice'] * $rowstock['qty'];
         echo '<tr>
+                <td>' . $rowstock['idtbl_product'] . '</td>
                 <td>' . $rowstock['product_name'] . '</td>
                 <td>' . $rowstock['product_code'] . '</td>
                 <td>' . $rowstock['name'] . '</td>
