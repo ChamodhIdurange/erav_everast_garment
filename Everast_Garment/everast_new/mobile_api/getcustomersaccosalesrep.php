@@ -8,8 +8,23 @@ $result = mysqli_query($conn, $sql);
 
 $customerarray = array();
 
+
 while ($row = mysqli_fetch_array($result)) {
-    array_push($customerarray, array("id" => $row['idtbl_customer'], "name" => $row['name'], "nic" => $row['nic'], "phone" => $row['phone'], "email" => $row['email'], "address" => $row['address'], "areaId" => $row['tbl_area_idtbl_area']));
+    $customerId = $row['idtbl_customer'];
+    $haveOutstanding = 0;
+
+    $customerOustandingCount = "SELECT MAX(DATEDIFF(CURDATE(), `i`.`date`)) AS max_date_diff FROM `tbl_invoice` AS `i` WHERE `i`.`tbl_customer_idtbl_customer` = '$customerId' AND `i`.`paymentcomplete` = 0 AND `i`.`status` = 1";
+
+    $outstandingresult = mysqli_query($conn, $customerOustandingCount);
+
+    if ($outstandingresult && $rowresult = $outstandingresult->fetch_assoc()) {
+        $maxDateDiff = $rowresult['max_date_diff'];
+        if($maxDateDiff >= 90){
+            $haveOutstanding = 1;
+        }
+    } 
+
+    array_push($customerarray, array("id" => $row['idtbl_customer'], "name" => $row['name'], "nic" => $row['nic'], "phone" => $row['phone'], "email" => $row['email'], "address" => $row['address'], "areaId" => $row['tbl_area_idtbl_area'], "haveOutstanding" => $haveOutstanding));
 }
 
 echo json_encode($customerarray);

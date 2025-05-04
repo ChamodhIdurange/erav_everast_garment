@@ -13,7 +13,8 @@ $totalAmount = 0;
 $totalPayAmount = 0;
 $totalBalance = 0;
 
-$sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, `uf`.`payamount`
+
+$sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, SUM(`uf`.`payamount`) as `payamount`
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
@@ -21,13 +22,13 @@ $sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
         AND `u`.`paymentcomplete`=0
-        AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
+        AND `u`.`tbl_customer_idtbl_customer` = '$customerID' ";
 
 if (!empty($validfrom) && !empty($validto)) {
     $sql .= " AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
 }
 
-$sql .= " ORDER BY `uc`.`name` ASC";
+$sql .= "GROUP BY `u`.`idtbl_invoice` ORDER BY `uc`.`name` ASC";
 
 
 $result = $conn->query($sql);
@@ -55,10 +56,13 @@ while($row = $result->fetch_assoc()) {
         ($aginvalue == 2 && $datecount > 15 && $datecount <= 30) ||
         ($aginvalue == 3 && $datecount > 30 && $datecount <= 45)) {
         
+        $balance = $row['nettotal'] - $row['payamount'];
+
+        $row['datecount'] = $datecount; 
+        $row['balance'] = $balance; 
         array_push($customerarray, $row);
         $totalAmount += $row['nettotal'];
         $totalPayAmount += $row['payamount'];
-        $balance = $row['nettotal'] - $row['payamount'];
         $totalBalance += $balance;
     }
 }
@@ -84,11 +88,11 @@ foreach($customerarray as $rowcustomerarray) {
         <td>' . htmlspecialchars($rowcustomerarray['cusname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['date']) . '</td>
-        <td class="text-center">' . $datecount . '</td>
+        <td class="text-center">' . $rowcustomerarray['datecount'] . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['invoiceno']) . '</td>
         <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['nettotal'] ?? 0)) . '</td>
         <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['payamount'] ?? 0)) . '</td>
-        <td class="text-center">' . number_format($balance) . '</td>
+        <td class="text-center">' . number_format($rowcustomerarray['balance'] ) . '</td>
     </tr>';
 }
 

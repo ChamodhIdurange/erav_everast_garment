@@ -4,7 +4,6 @@ include "include/header.php";
 $sql="SELECT * FROM `tbl_invoice_payment` WHERE `status`=1";
 $result =$conn-> query($sql); 
 
-
 include "include/topnavbar.php"; 
 ?>
 <style>
@@ -127,24 +126,25 @@ include "include/topnavbar.php";
                 //         return payment;
                 //     }
                 // },
-                {
-                    "targets": -1,
-                    "className": 'text-right',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        var button='';
-                        button+='<button class="btn btn-outline-dark btn-sm btnview mr-1" id="'+full['idtbl_invoice_payment']+'"><i class="fas fa-eye"></i></button>';
-                        if(full['paymentcomplete']==0  && deletecheck != 0){
+                // {
+                //     "targets": -1,
+                //     "className": 'text-right',
+                //     "data": null,
+                //     "render": function(data, type, full) {
+                //         var button='';
+                //         // button+='<button class="btn btn-outline-dark btn-sm btnview mr-1" id="'+full['idtbl_invoice_payment']+'"><i class="fas fa-eye"></i></button>';
+                //         // if(full['paymentcomplete']==0  && deletecheck != 0){
 
-                            button+='<button type="button" data-url="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3"  data-actiontype="3" title="Delete" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice_payment']+'"><i class="far fa-trash-alt"></i></button>';
+                //         //     button+='<button type="button" data-url="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3"  data-actiontype="3" title="Delete" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice_payment']+'"><i class="far fa-trash-alt"></i></button>';
                         
-                            // button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
-                        }
-                        return button;
-                    }
-                }
+                //         //     // button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
+                //         // }
+                //         return button;
+                //     }
+                // }
             ]
         } );
+        
         $('#dataTable tbody').on('click', '.btnview', function() {
             var id = $(this).attr('id');
            // alert(id);
