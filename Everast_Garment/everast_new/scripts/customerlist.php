@@ -13,7 +13,6 @@
  *
  * @license MIT - http://datatables.net/license_mit
  */
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
  */
@@ -29,10 +28,11 @@ $primaryKey = 'idtbl_customer';
 // indexes
 $columns = array(
 	array( 'db' => '`u`.`idtbl_customer`', 'dt' => 'idtbl_customer', 'field' => 'idtbl_customer' ),
-	array( 'db' => '`u`.`customer`', 'dt' => 'customer', 'field' => 'customer' ),
+	array( 'db' => '`u`.`name`', 'dt' => 'name', 'field' => 'name' ),
 	array( 'db' => '`u`.`nic`', 'dt' => 'nic', 'field' => 'nic' ),
 	array( 'db' => '`u`.`phone`', 'dt' => 'phone', 'field' => 'phone' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
+	array( 'db' => '`u`.`enable_for_porder`',   'dt' => 'enable_for_porder', 'field' => 'enable_for_porder' ),
 	array( 'db' => '`u`.`type`',   'dt' => 'type', 'field' => 'type' ),
 	array( 'db' => '`u`.`address`',   'dt' => 'address', 'field' => 'address' ),
 	array( 'db' => '`e`.`name`', 'dt' => 'empname', 'field' => 'empname', 'as' => 'empname' ),

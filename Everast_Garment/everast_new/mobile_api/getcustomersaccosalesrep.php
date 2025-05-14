@@ -11,6 +11,7 @@ $customerarray = array();
 
 while ($row = mysqli_fetch_array($result)) {
     $customerId = $row['idtbl_customer'];
+    $isenable = $row['enable_for_porder'];
     $haveOutstanding = 0;
 
     $customerOustandingCount = "SELECT MAX(DATEDIFF(CURDATE(), `i`.`date`)) AS max_date_diff FROM `tbl_invoice` AS `i` WHERE `i`.`tbl_customer_idtbl_customer` = '$customerId' AND `i`.`paymentcomplete` = 0 AND `i`.`status` = 1";
@@ -19,8 +20,10 @@ while ($row = mysqli_fetch_array($result)) {
 
     if ($outstandingresult && $rowresult = $outstandingresult->fetch_assoc()) {
         $maxDateDiff = $rowresult['max_date_diff'];
-        if($maxDateDiff >= 90){
+        if($maxDateDiff >= 90 && $isenable == 0){
             $haveOutstanding = 1;
+        }else{
+            $haveOutstanding = 0;
         }
     } 
 

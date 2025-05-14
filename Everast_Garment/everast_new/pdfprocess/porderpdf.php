@@ -317,6 +317,13 @@ $html = '
                                     </td>
                                 </tr>
                             </table>
+                            <div style="margin-top: 10px; border-top: 1px solid #ccc; padding: 6px 10px; font-size: 10px; background-color: #f7f7f7; text-align: center;">
+                                <strong>Aging Summary:</strong> 
+                                Below 30 Days = 90 &nbsp; | &nbsp; 
+                                Below 60 Days = 20 &nbsp; | &nbsp; 
+                                Below 90 Days = 59 &nbsp; | &nbsp; 
+                                Above 90 Days = 49
+                            </div>
                         </div>
                     </footer>';
             }
@@ -326,7 +333,6 @@ $html = '
     </main>
     </body>
     </html>';
-
 $dompdf->loadHtml($html);
 $dompdf->setPaper('21.5cm', '27.5cm', 'portrait');
 $dompdf->render();

@@ -3,7 +3,6 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 </head>
 <?php 
-
 include "include/header.php";  
 
 $sql="SELECT `idtbl_customer`, `name`, `nic`, `phone`, `status`, `type`, `tbl_area_idtbl_area` FROM `tbl_customer` WHERE `status` IN (1,2)";
@@ -575,7 +574,7 @@ include "include/topnavbar.php";
                     "data": "idtbl_customer"
                 },
                 {
-                    "data": "customer"
+                    "data": "name"
                 },
                 {
                     "data": "area"
@@ -645,6 +644,13 @@ include "include/topnavbar.php";
                             // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
                         }else if(full['status']==2 && statuscheck==1){
                             button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
+                        }
+                        if(full['enable_for_porder']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusenableforpo.php?record='+full['idtbl_customer']+'&type=0" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fa fa-hourglass-start"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['enable_for_porder']==0 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusenableforpo.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fa fa-hourglass-start"></i></button>';
                         }
                         if(deletecheck==1){
                             button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';

@@ -20,7 +20,6 @@ $insertOrderQuery = "UPDATE `tbl_porder` SET `total`='$nettotal', `nettotal`='$n
 
 if ($conn->query($insertOrderQuery) === TRUE) {
     $orderID = $conn->insert_id;
-
     foreach ($orderDetails as $detail) {
         $productId = $detail['productId'];
         $unitPrice = $detail['unitPrice'];
@@ -42,7 +41,7 @@ if ($conn->query($insertOrderQuery) === TRUE) {
         if ($newPrice !== null) {
             $totalPrice = $newQty * $unitPrice; 
 
-            if($recordOption == 0){
+            if($recordOption == 0 && $newQty != 0){
                 $insertUpdateQuery = "INSERT INTO tbl_porder_detail (`qty`, `unitprice`, `saleprice`, `total`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_porder_idtbl_porder`) VALUES ('$newQty', '$newPrice', '$newsalePrice', '$totalPrice', '1', '$updatedatetime', '$userID', '$productId', '$porderId')";
             } else {
                 $insertUpdateQuery = "UPDATE `tbl_porder_detail` SET `qty`='$newQty', `unitprice`='$newPrice', `saleprice`='$newsalePrice', `total`='$totalPrice' WHERE `idtbl_porder_detail` = '$detailsId'";
