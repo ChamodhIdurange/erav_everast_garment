@@ -7,18 +7,17 @@ ini_set('max_execution_time', 3600); //3600 seconds = 60 minutes
 $userID=$_SESSION['userid'];
 
 if(!isset($_POST["searchTerm"])){
-    $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 ORDER BY `idtbl_product` ASC LIMIT 5";
+    $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 ORDER BY `idtbl_product` ASC LIMIT 15";
     $resultagent=$conn->query($sqlagent);
 }
 else{
-    $searchTerm=$_POST["searchTerm"];
-    
+    $searchTerm=$_POST["searchTerm"];  
     if(!empty($searchTerm)){
-        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 AND `product_name` LIKE '%$searchTerm%' ORDER BY `product_name` ASC LIMIT 5";
+        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 AND `product_name` LIKE '%$searchTerm%' ORDER BY `product_name` ASC LIMIT 15";
         $resultagent=$conn->query($sqlagent);
     }
     else{
-        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 ORDER BY `idtbl_product` ASC LIMIT 5";
+        $sqlagent="SELECT `product_name`, `idtbl_product` FROM `tbl_product` WHERE `status`=1 ORDER BY `idtbl_product` ASC LIMIT 15";
         $resultagent=$conn->query($sqlagent);
     }
 }

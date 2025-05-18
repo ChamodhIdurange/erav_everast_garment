@@ -37,7 +37,6 @@ if($userID==1){
     $sqlpoprinted="UPDATE `tbl_customer_order` SET `is_printed`='1' WHERE `idtbl_customer_order`='$recordID'";
     $conn->query($sqlpoprinted);
 }
-
 $sqlporderinfo = "SELECT `o`.`cuspono`, `o`.`discount`, `o`.`podiscount`, `o`.`confirm`, `o`.`dispatchissue`, `o`.`delivered`,`o`.`remark`, `o`.`idtbl_customer_order`, `o`.`date`, `o`.`total`, `l`.`idtbl_locations`, `l`.`locationname`, `c`.`name`, `c`.`address`, `c`.`phone`, `e`.`name` AS `saleref`, `e`.`phone`, `a`.`area`, `u`.`name` as `username`, `o`.`tbl_customer_idtbl_customer`, `o`.`cuspono` FROM `tbl_customer_order` AS `o` LEFT JOIN `tbl_customer_order_detail` AS `od` ON `o`.`idtbl_customer_order`=`od`.`tbl_customer_order_idtbl_customer_order` LEFT JOIN `tbl_customer` AS `c` ON (`c`.`idtbl_customer` = `o`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_locations` AS `l` ON (`l`.`idtbl_locations` = `o`.`tbl_locations_idtbl_locations`) LEFT JOIN `tbl_employee` AS `e` ON `e`.`idtbl_employee`=`o`.`tbl_employee_idtbl_employee` LEFT JOIN `tbl_area` AS `a` ON `a`.`idtbl_area`=`o`.`tbl_area_idtbl_area` LEFT JOIN `tbl_user` AS `u` ON `u`.`idtbl_user`=`o`.`tbl_user_idtbl_user` WHERE `o`.`status`=1 AND `o`.`idtbl_customer_order`='$recordID'";
 $resultporderinfo = $conn->query($sqlporderinfo);
 $rowporderinfo = $resultporderinfo->fetch_assoc();
@@ -52,12 +51,18 @@ $poderId = $rowporderinfo['idtbl_customer_order'];
 $remark = $rowporderinfo['remark'];
 $cuspono = $rowporderinfo['cuspono'];
 $fulltot = $rowporderinfo['total'];
-
 $confirm = $rowporderinfo['confirm']; 
 $dispatchissue = $rowporderinfo['dispatchissue']; 
 $delivered = $rowporderinfo['delivered']; 
 $qtyflag=0;
 
+
+$sqlgetoutstanding = "SELECT  SUM(DATEDIFF(CURDATE(), `date`) > 90) AS above_90_days,
+    SUM(DATEDIFF(CURDATE(), `date`) > 60 AND DATEDIFF(CURDATE(), `date`) <= 90) AS between_61_and_90_days,
+    SUM(DATEDIFF(CURDATE(), `date`) > 30 AND DATEDIFF(CURDATE(), `date`) <= 60) AS between_31_and_60_days,
+    SUM(DATEDIFF(CURDATE(), `date`) <= 30) AS within_30_days  FROM `tbl_invoice` WHERE `tbl_customer_idtbl_customer` = '$customerID'";
+$resultoutstanding = $conn->query($sqlgetoutstanding);
+$rowoutstanding = $resultoutstanding->fetch_assoc();
 
 if($confirm == 1 && ($dispatchissue == null || $dispatchissue == 0) && ($delivered == null || $delivered == 0)){
     $qtyflag = 1;
@@ -319,10 +324,10 @@ $html = '
                             </table>
                             <div style="margin-top: 10px; border-top: 1px solid #ccc; padding: 6px 10px; font-size: 10px; background-color: #f7f7f7; text-align: center;">
                                 <strong>Aging Summary:</strong> 
-                                Below 30 Days = 90 &nbsp; | &nbsp; 
-                                Below 60 Days = 20 &nbsp; | &nbsp; 
-                                Below 90 Days = 59 &nbsp; | &nbsp; 
-                                Above 90 Days = 49
+                                Below 30 Days = '. $rowoutstanding["within_30_days"] .' &nbsp; | &nbsp; 
+                                Between 60 and 30 Days = '. $rowoutstanding["between_31_and_60_days"] .' &nbsp; | &nbsp; 
+                                Between 90 and 60 Days = '. $rowoutstanding["between_61_and_90_days"] .' &nbsp; | &nbsp; 
+                                Above 90 Days = '. $rowoutstanding["above_90_days"] .'
                             </div>
                         </div>
                     </footer>';

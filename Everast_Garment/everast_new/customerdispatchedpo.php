@@ -1,6 +1,5 @@
 <?php
-include "include/header.php";
-
+include "include/header.php"
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames = $conn->query($sqlcommonnames);
 
@@ -80,13 +79,13 @@ include "include/topnavbar.php";
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col-12">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col">
                                         <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
                                             id="btnordercreate"><i class="fas fa-plus"></i>&nbsp;Create Purchsing
                                             Order</button>
                                     </div>
-                                </div>
+                                </div> -->
                                 <hr>
                                 <div class="scrollbar pb-3" id="style-2">
                                     <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">

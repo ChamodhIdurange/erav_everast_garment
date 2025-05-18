@@ -3,12 +3,11 @@ require_once('../connection/db.php');
 
 
 if(!isset($_POST['searchTerm'])){ 
-    $sql="SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1 LIMIT 5";
+    $sql="SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1 LIMIT 15";
 
 }else{
     $search = $_POST['searchTerm'];   
-    $sql="SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1 AND `category` LIKE '%$search%' LIMIT 5";
-
+    $sql="SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1 AND `category` LIKE '%$search%' LIMIT 15";
 }
 $result=$conn->query($sql);
 

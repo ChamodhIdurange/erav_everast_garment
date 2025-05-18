@@ -5,7 +5,6 @@ include "connection/db.php";
 $sqlcustomer = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 $resultcustomer = $conn->query($sqlcustomer);
 
-
 $sqlrep = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 ORDER BY `name` ASC";
 $resultrep = $conn->query($sqlrep);
 
@@ -225,7 +224,7 @@ include "include/topnavbar.php";
                     rep: rep,
                     aginvalue: aginvalue
                 },
-                url: 'getprocess/getoutstandingreport.php',
+            url: 'getprocess/getoutstandingreport.php',
                 success: function (result) {
                     $('#targetviewdetail').html(result).show(); // Show the table
                     $('#hideprintBtn').show();

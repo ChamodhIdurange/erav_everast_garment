@@ -1,6 +1,5 @@
 <?php
 include "include/header.php";
-
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames = $conn->query($sqlcommonnames);
 
@@ -1084,7 +1083,9 @@ include "include/topnavbar.php";
                 url: 'getprocess/checkavailablestock.php',
                 success: function (result) { //alert(result)
                     var obj = JSON.parse(result);
-                    if (obj.availableqty < newqty) {
+                    // To add the validation uncomment below code
+                    //if (obj.availableqty < newqty) {
+                    if (false) {
                         var productname = $("#product option:selected").text();
 
                         $('#errordivaddnew').empty().html(
@@ -2256,12 +2257,13 @@ include "include/topnavbar.php";
                         checkTarget()
                     } else {
                         var productname = $("#product option:selected").text();
-
-                        $('#errordiv').empty().html(
-                            "  <div class='alert alert-danger alert-dismissible fade show' role='alert'><h5 id = 'errormessage'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>"
-                        )
-                        $('#errormessage').html(
-                            "There is not enough stock available for product '" + productname)
+                        // Coment the check qty and uncomment the below code to add stock check validation again
+                        checkTarget()
+                        // $('#errordiv').empty().html(
+                        //     "  <div class='alert alert-danger alert-dismissible fade show' role='alert'><h5 id = 'errormessage'></h5><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>"
+                        // )
+                        // $('#errormessage').html(
+                        //     "There is not enough stock available for product '" + productname)
                     }
                 }
             });

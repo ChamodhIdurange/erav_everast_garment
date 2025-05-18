@@ -4,7 +4,6 @@
 </head>
 <?php 
 include "include/header.php";  
-
 $sql="SELECT `idtbl_customer`, `name`, `nic`, `phone`, `status`, `type`, `tbl_area_idtbl_area` FROM `tbl_customer` WHERE `status` IN (1,2)";
 $result =$conn-> query($sql); 
 
@@ -616,7 +615,7 @@ include "include/topnavbar.php";
                         var button = '';
                         button += '<a href="customerprofile.php?record=' + full[
                                 'idtbl_customer'] +
-                            '&type=1"  target="_self" class="btn btn-outline-primary btn-sm "><i class="far fa-eye"></i></a>'
+                            '&type=1"  target="_self" class="btn btn-outline-primary btn-sm mr-1"><i class="far fa-eye"></i></a>'
                         // if (full['type'] == 2) {
                         //     button +=
                         //         '<button class="btn btn-outline-dark btn-sm btnAddProductStock mr-1 ';
@@ -644,6 +643,13 @@ include "include/topnavbar.php";
                             // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
                         }else if(full['status']==2 && statuscheck==1){
                             button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
+                        }
+                        if(full['is_verified']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusisverified.php?record='+full['idtbl_customer']+'&type=0" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fa fa-pause"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['is_verified']==0 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusisverified.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-danger btn-sm mr-1 text-light btntableaction"><i class="fa fa-pause"></i></button>';
                         }
                         if(full['enable_for_porder']==1 && statuscheck==1){
                             button+='<button type="button" data-url="process/statusenableforpo.php?record='+full['idtbl_customer']+'&type=0" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fa fa-hourglass-start"></i></button>';

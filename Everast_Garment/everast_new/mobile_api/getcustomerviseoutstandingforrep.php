@@ -2,9 +2,6 @@
 require_once('dbConnect.php');
 
 $empId=$_POST["empId"];
-
-
-
 $sql = "SELECT `ud`.`date`, `uc`.`address`, `uc`.`idtbl_customer`,`uc`.`name`, COALESCE(SUM(`u`.`nettotal`), 0) AS 'totalamount', COALESCE(SUM(`ue`.`payamount`), 0) AS 'totpayedamount'
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
@@ -21,7 +18,26 @@ $result = mysqli_query($con, $sql);
 $dataarray = array();
 
 while ($row = mysqli_fetch_array($result)) {
-    array_push($dataarray, array("customerId" => $row['idtbl_customer'], "customername" => $row['name'], "fulltot" => $row['totalamount'], "payedamount" => $row['totpayedamount'], "address" => $row['address'], "date" => $row['date']));
+    $customerId = $row['idtbl_customer'];
+    $limit = 0;
+
+    $customerOustandingCount = "SELECT MAX(DATEDIFF(CURDATE(), `i`.`date`)) AS max_date_diff FROM `tbl_invoice` AS `i` WHERE `i`.`tbl_customer_idtbl_customer` = '$customerId' AND `i`.`paymentcomplete` = 0 AND `i`.`status` = 1";
+
+    $outstandingresult = mysqli_query($con, $customerOustandingCount);
+
+    if ($outstandingresult && $rowresult = $outstandingresult->fetch_assoc()) {
+        $maxDateDiff = $rowresult['max_date_diff'];
+
+        if($maxDateDiff >= 90){
+            $limit = 2;
+        }else if($maxDateDiff >= 60){
+            $limit = 1;
+        }else{
+            $limit = 0;
+        }
+    }
+
+    array_push($dataarray, array("customerId" => $row['idtbl_customer'], "customername" => $row['name'], "fulltot" => $row['totalamount'], "payedamount" => $row['totpayedamount'], "address" => $row['address'], "date" => $row['date'], "limit" => $limit));
 }
 echo json_encode($dataarray);
 
