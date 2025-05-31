@@ -3,6 +3,7 @@ include "include/header.php";
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames = $conn->query($sqlcommonnames);
 
+
 $sqlproduct = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
 $resultproduct = $conn->query($sqlproduct);
 
@@ -1872,7 +1873,9 @@ include "include/topnavbar.php";
                     success: function (result) {// alert(result)
                         var obj = JSON.parse(result);
 
-                        if (obj.availableqty < newqty) {
+                        //Uncomment below to add the validation again - CIA
+                        // if (obj.availableqty < newqty) {
+                        if (false) {
                             var productname = $("#product option:selected").text();
 
                             $('#errordivaddnew').empty().html(

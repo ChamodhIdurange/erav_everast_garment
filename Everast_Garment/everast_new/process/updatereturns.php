@@ -21,8 +21,9 @@ $returntype=$_POST['returntype'];
 
 $tot = $total - ($total * ($discount/100));
  
+
 if($prevtot !=  $total || $hiddendiscount != $discount ){
-    $query="UPDATE `tbl_return_details` SET `qty`='$qty',`discount`='$discount', `total`='$tot',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_return_details`='$record'";
+    $query="UPDATE `tbl_return_details` SET `qty`='$qty',`discount`='$discount', `unitprice`='$unitprice', `total`='$tot',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `idtbl_return_details`='$record'";
         
         if($conn->query($query)==true) {
             $query1="UPDATE `tbl_return` SET `total`=(`total` - '$prevtot' + '$tot') WHERE `idtbl_return`='$mainID'";

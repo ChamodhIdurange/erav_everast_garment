@@ -1867,6 +1867,7 @@ include "include/topnavbar.php";
             textremoveQtyandPrecentageAndSalePrice('.optionnewqty', row);
         });
 
+        
         function qtyChangeCheckStock(classname, row) {
             return new Promise((resolve, reject) => {
                 var productID = parseFloat(row.closest("tr").find('td:eq(2)').text());
@@ -1883,7 +1884,9 @@ include "include/topnavbar.php";
                     success: function (result) {// alert(result)
                         var obj = JSON.parse(result);
 
-                        if (obj.availableqty < newqty) {
+                        //Uncomment below to add the validation again - CIA
+                        // if (obj.availableqty < newqty) {
+                        if (false) {
                             var productname = $("#product option:selected").text();
 
                             $('#errordivaddnew').empty().html(

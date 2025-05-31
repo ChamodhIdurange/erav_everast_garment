@@ -6,6 +6,7 @@ $record=$_POST['recordID'];
 $sql="SELECT `d`.`actualqty`, `d`.`idtbl_return_details`,`p`.`product_name`, `d`.`unitprice`, `d`.`qty`, `d`.`discount`, `d`.`total` FROM `tbl_return` as `r` join `tbl_return_details` as `d` ON (`r`.`idtbl_return` = `d`.`tbl_return_idtbl_return`) JOIN `tbl_product` as `p` ON (`d`.`tbl_product_idtbl_product` = `p`.`idtbl_product`) WHERE `d`.`tbl_return_idtbl_return` = '$record'";
 $result=$conn->query($sql);
 
+
 $sqlReturn = "SELECT `recieved_status`, `returntype` FROM `tbl_return` WHERE `idtbl_return` = '$record'";
 $resultReturn=$conn->query($sqlReturn);
 $rowReturn = $resultReturn-> fetch_assoc();
@@ -22,15 +23,19 @@ if($recievedStatus == 0){
 
             <div class="row">
 
-                <div class="col-md-6">
-
+                <div class="col-md">
                     <div class="form-group mb-1">
                         <label class="small font-weight-bold text-dark">Quantity</label>
                         <input id="qty" type="text" name="qty" class="form-control form-control-sm" placeholder="">
                     </div>
                 </div>
+                <div class="col-md">
+                    <div class="form-group mb-1">
+                        <label class="small font-weight-bold text-dark">Price</label>
+                        <input id="unitprice" type="text" name="unitprice" class="form-control form-control-sm" placeholder="">
+                    </div>
+                </div>
                 <div class="col-md-6 d-none">
-
                     <div class="form-group mb-1">
                         <label class="small font-weight-bold text-dark">
                             Discount(%)</label>
@@ -38,8 +43,7 @@ if($recievedStatus == 0){
                             placeholder="">
                     </div>
                 </div>
-                <div class="col-md-6">
-
+                <div class="col-md">
                     <div class="form-group mb-1">
                         <label class="small font-weight-bold text-dark">Total</label>
                         <input id="total" type="number" name="total" class="form-control form-control-sm" placeholder=""
@@ -47,7 +51,7 @@ if($recievedStatus == 0){
                     </div>
                 </div>
             </div>
-            <input type="hidden" name="unitprice" id="unitprice">
+            <!-- <input type="hidden" name="unitprice" id="unitprice"> -->
             <input type="hidden" name="hiddenid" id="hiddenid">
             <input type="hidden" name="recordOption" id="recordOption" value="2">
             <input type="hidden" name="hiddentotal" id="hiddentotal" value="">
@@ -124,7 +128,7 @@ if($recievedStatus == 0){
                 },
                 url: 'getprocess/getspecificreturndetails.php',
                 success: function (result) {
-                    //alert(result);
+                    // alert(result);
                     var obj = JSON.parse(result);
                     $('#hiddenid').val(obj.id);
                     $('#unitprice').val(obj.unitprice);

@@ -10,10 +10,12 @@ $replist = implode(", ", $replist);
 $fulltotal = 0;
 $today = date("Y-m-d");
 
+
 $sqloutstanding =    "SELECT 
                     `e`.`name` AS 'empname',
                     `c`.`name` AS 'customername',
                     `c`.`address`,
+                    `c`.`phone`,
                     `c`.`idtbl_customer`,
                     `co`.`date`,
                     `co`.`remark`,
@@ -32,6 +34,7 @@ $sqloutstanding =    "SELECT
                 LEFT JOIN tbl_invoice AS i ON i.tbl_customer_order_idtbl_customer_order = co.idtbl_customer_order
                 LEFT JOIN tbl_customer_order_delivery_data AS d ON d.tbl_customer_order_idtbl_customer_order = co.idtbl_customer_order
                 WHERE co.status = '1'  
+                AND i.status = '1'
                 AND co.date BETWEEN '$fromdate' AND '$todate'
                 AND co.delivered = '1'
                 AND co.tbl_employee_idtbl_employee IN ($replist)
@@ -97,6 +100,7 @@ if ($resultstock->num_rows > 0) {
                <div style="background: #fff; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); padding: 0px; margin-bottom: 3px; border-left: 3px solid #004085;">
                 <h3 style="margin: 0 0 4px; font-size: 13px; font-weight: bold; color: #004085;">' . $row['customername'] . '</h3>
                 <p style="margin: 0 0 6px; font-size: 10px; color: #555;">' . $row['address'] . '</p>
+                <p style="margin: 0 0 6px; font-size: 10px; color: #555;">' . $row['phone'] . '</p>
 
                 <table class="table table-bordered table-sm nowrap" style="background: #fff; font-size: 10px; width: 100%;">
                     <thead style="background: #004085; color: #fff;">

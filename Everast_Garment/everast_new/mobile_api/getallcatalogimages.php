@@ -26,6 +26,16 @@ while ($row = mysqli_fetch_array($res)) {
         } else {
             $holdqty = 0;
         }
+        
+        
+        $sqlcategory="SELECT `tbl_product_category_idtbl_product_category` FROM `tbl_product` WHERE `idtbl_product`='$productId'";
+        $resultcategory = $conn->query($sqlcategory);
+
+        if ($rowcategory = $resultcategory->fetch_assoc()) {
+            $maincategoryId = $rowcategory['tbl_product_category_idtbl_product_category'];
+        } else {
+            $maincategoryId = 0;
+        }
 
         if($avialableqty-$holdqty > 0){
             array_push($result, array(
@@ -33,7 +43,8 @@ while ($row = mysqli_fetch_array($res)) {
                 "path" => $row['imagepath'],
                 "catalog_id" => $catelogId,
                 "category" => $row['category'],
-                "sequence" => $row['sequence']
+                "sequence" => $row['sequence'],
+                "maincategoryId" => $maincategoryId
             ));
         }
     }

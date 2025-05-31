@@ -421,12 +421,12 @@ include "include/topnavbar.php";
             });
 
         });
-
         $('#invPaymentCreateBtn').click(function() {
             var table = $("#paymentDetailTable tbody");
             var total = '0';
             var invnetBal = '0';
             var invBal = '0';
+            var customerId = $('#hidecustomerId').val()
             
             table.find('tr').each(function(i, el) {
                 var $tds = $(this).find('td');
@@ -473,6 +473,31 @@ include "include/topnavbar.php";
                     keyboard: false,
                     backdrop: 'static'
                 });
+
+                alert(customerId)
+                $("#excessnote").select2({
+                    ajax: {
+                        url: "getprocess/getcustomerexcessnotesforselect2.php",
+                        // url: "getprocess/getproductaccosupplier.php",
+                        type: "post",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                customerId: customerId,
+                                searchTerm: params.term, // search term
+                            };
+                        },
+                        processResults: function (response) { //console.log(response)
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    },
+                    dropdownParent: $("#paymentmodal")
+                });
+
                 // $.ajax({
                 //     type: "POST",
                 //     data: {
@@ -557,7 +582,16 @@ include "include/topnavbar.php";
                 var creditnote = $('#creditnote').val();
                 var creditnoteamount = $('#creditnote').find(':selected').attr('data-creditnoteamount');
                 var excessnote = $('#excessnote').val();
-                var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
+
+                var data = $('#excessnote').select2('data');
+                if (data.length > 0) {
+                    var excessnoteamount = data[0].excessnoteamount;
+                    console.log("Excess Note Amount: " + excessnoteamount);
+                }else{
+                    var excessnoteamount = 0
+                }
+                alert(excessnoteamount)
+                // var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
 
                 if(paymenttype==1){
                     $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Cash</td><td class="text-right">' + parseFloat(paymentCash).toFixed(2) + '</td><td class=""></td><td class=""></td><td class=""></td><td>'+paymentReceiptNum+'</td><td></td><td></td><td class=""></td><td class="">1</td><td class=""></td></tr>');
@@ -905,5 +939,7 @@ include "include/topnavbar.php";
 
 </script>
 <?php include "include/footer.php"; ?>
+
+
 
 

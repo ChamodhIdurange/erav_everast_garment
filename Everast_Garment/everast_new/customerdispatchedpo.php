@@ -1,7 +1,10 @@
 <?php
-include "include/header.php"
+include "include/header.php";
+
+
 $sqlcommonnames = "SELECT DISTINCT `common_name` FROM `tbl_product` WHERE `status`=1";
 $resultcommonnames = $conn->query($sqlcommonnames);
+
 
 $sqlproduct = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
 $resultproduct = $conn->query($sqlproduct);
