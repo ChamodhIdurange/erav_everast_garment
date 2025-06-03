@@ -98,7 +98,7 @@ include "include/topnavbar.php";
                                                 <label class="small font-weight-bold text-dark">Start Date*</label>
                                                 <div class="input-group input-group-sm mb-3">
                                                     <input type="text" class="form-control dpd2a rounded-0" id="fromdateFilter"
-                                                        name="fromdateFilter" value="2025-02-01" required>
+                                                        name="fromdateFilter" value="<?php echo date('Y-m-01'); ?>" required>
                                                     <div class="input-group-append">
                                                         <span class="input-group-text rounded-0"
                                                             id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>

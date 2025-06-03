@@ -487,7 +487,7 @@ include "include/topnavbar.php";
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function (result) {
+                    success: function (result) {// alert(result)
                         action(result);
                         setTimeout(function () {
                             window.location.reload();
