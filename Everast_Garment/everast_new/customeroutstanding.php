@@ -5,8 +5,12 @@ include "connection/db.php";
 $sqlcustomer = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 $resultcustomer = $conn->query($sqlcustomer);
 
+
 $sqlrep = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 ORDER BY `name` ASC";
 $resultrep = $conn->query($sqlrep);
+
+$firstDay = date('Y-m-01');
+$lastDay = date('Y-m-t');
 
 include "include/topnavbar.php"; 
 ?>
@@ -67,12 +71,12 @@ include "include/topnavbar.php";
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">
                                             <label class="small font-weight-bold text-dark">From*</label>
                                             <input type="date" class="form-control form-control-sm" name="fromdate"
-                                                id="fromdate">
+                                                id="fromdate" value="<?php echo $firstDay; ?>">
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateTo">
                                             <label class="small font-weight-bold text-dark">To*</label>
                                             <input type="date" class="form-control form-control-sm" name="todate"
-                                                id="todate">
+                                                id="todate" value="<?php echo $lastDay; ?>">
                                         </div>
                                         <div class="col-2" style="display: none" id="aginreportshow">
                                             <label class="small font-weight-bold text-dark">Agin Report*</label>

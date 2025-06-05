@@ -2,8 +2,12 @@
 include "include/header.php";  
 include "include/topnavbar.php"; 
 
+
 $sqlreplist="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
 $resultreplist =$conn-> query($sqlreplist);
+
+$firstDay = date('Y-m-01');
+$lastDay = date('Y-m-t');
 ?>
 
 <div id="layoutSidenav">
@@ -55,7 +59,7 @@ $resultreplist =$conn-> query($sqlreplist);
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
                                                 <input type="text" class="form-control dpd1a rounded-0" id="fromdate"
-                                                    name="fromdate" value="2025-02-01" required>
+                                                    name="fromdate" value="<?php echo $firstDay; ?>" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text rounded-0"
                                                         id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
@@ -66,7 +70,7 @@ $resultreplist =$conn-> query($sqlreplist);
                                             <label class="small font-weight-bold text-dark">End Date*</label>
                                             <div class="input-group input-group-sm mb-3">
                                                 <input type="text" class="form-control dpd1a rounded-0" id="todate"
-                                                    name="todate" value="<?php echo date('Y-m-d') ?>" required>
+                                                    name="todate" value="<?php echo $lastDay; ?>"required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text rounded-0"
                                                         id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>

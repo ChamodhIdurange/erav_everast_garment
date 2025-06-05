@@ -8,6 +8,7 @@ $repID = $_POST['rep'];
 $searchType = $_POST['searchType'];
 $aginvalue = $_POST['aginvalue'];
 
+
 $customerarray = array();
 $totalAmount = 0;
 $totalPayAmount = 0;
@@ -21,6 +22,8 @@ $sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`
         LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
+        AND `ud`.`delivered`=1 
+        AND `u`.`status`=1 
         AND `u`.`paymentcomplete`=0
         AND `u`.`tbl_customer_idtbl_customer` = '$customerID' ";
 

@@ -671,7 +671,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <a class="nav-link p-0 px-3 py-1" href="bincard.php">Bin Card</a>
                     <?php }
                                     if (menucheck($menuprivilegearray, 33) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Outstanding Reports</a>
+                    <a class="nav-link p-0 px-3 py-1" href="customeroutstanding.php">Individual Deptor Report</a>
                     <?php }
                                     if (menucheck($menuprivilegearray, 34) == 1) { ?>
                     <!-- <a class="nav-link p-0 px-3 py-1" href="dailysale.php">Daily Sale</a> -->
