@@ -78,7 +78,6 @@ $sql =    "SELECT tb1.idtbl_invoice_payment, tb1.date, tb1.receiptno, tb1.payamo
             WHERE 
             tb2.idtbl_invoice_payment IS NOT NULL";
 
-
 $result = $conn->query($sql);
 
 
@@ -87,13 +86,13 @@ if ($result->num_rows > 0) {
             <thead>
                  <tr>
                     <th>#</th>
-                    <th class="text-center">INV No</th>
                     <th class="text-center">Date</th>
                     <th class="text-center">Receipt No</th>
                     <th class="text-center">Rep</th>
                     <th class="text-center">Customer Name</th>
                     <th class="text-center">Type</th>
                     <th class="text-right">Payment</th>
+                    <th class="text-right">Actions</th>
                 </tr>
             </thead>
             <tbody>';
@@ -105,13 +104,13 @@ if ($result->num_rows > 0) {
         $c++;
         echo '<tr>
                 <td class="text-center">' . $c . '</td>
-                <td class="text-center">' . $rowstock['invoiceno'] . '</td>
                 <td class="text-center">' . $rowstock['date'] . '</td>
                 <td class="text-center">' . $rowstock['receiptno'] . '</td>
                 <td class="text-center">' . $rowstock['empname'] . '</td>
                 <td class="text-center">' . $rowstock['cusname'] . '</td>
                 <td class="text-center">' . $rowstock['type'] . '</td>
                 <td class="text-right">' . number_format($rowstock['payamount'], 2, '.', ',')  . '</td>
+                <td class="text-right"><button id="' . $rowstock['idtbl_invoice_payment'] . '" class="btn btn-outline-primary btn-sm  btnpaymentdetails"><i class="fas fa-eye"</i></button></td>
             </tr>';
     }
     echo '</tbody>

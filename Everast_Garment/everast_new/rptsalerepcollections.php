@@ -50,7 +50,7 @@ $lastDay = date('Y-m-t');
                                             <label class="small font-weight-bold text-dark">Start Date*</label>
                                             <div class="input-group input-group-sm mb-3">
                                                 <input type="text" class="form-control dpd1a rounded-0" id="fromdate"
-                                                    name="fromdate" value="<?php echo $firstDay; ?>"  required>
+                                                    name="fromdate" value="2025/02/01" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text rounded-0"
                                                         id="inputGroup-sizing-sm"><i data-feather="calendar"></i></span>
@@ -83,12 +83,12 @@ $lastDay = date('Y-m-t');
                                     <table id="dataTable" class="display table table-striped table-bordered">
                                         <thead>
                                             <tr>
-                                            <th>#</th>
-                                            <th class="text-center">Date</th>
-                                            <th class="text-center">Rep</th>
-                                            <th class="text-center">Customer Name</th>
-                                            <th class="text-center">Receipt No</th>
-                                            <th class="text-right">Payment</th>
+                                                <th>#</th>
+                                                <th class="text-center">Date</th>
+                                                <th class="text-center">Rep</th>
+                                                <th class="text-center">Customer Name</th>
+                                                <th class="text-center">Receipt No</th>
+                                                <th class="text-right">Payment</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -134,6 +134,27 @@ $lastDay = date('Y-m-t');
                             <iframe class="embed-responsive-item" frameborder="0"></iframe>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal return details -->
+<div class="modal fade" id="modalpaymentdetails" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header p-2">
+                <h5 class="modal-title" id="viewmodaltitle">Invoice Payment Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div id="viewdetail"></div>
                     </div>
                 </div>
             </div>
@@ -222,11 +243,31 @@ $lastDay = date('Y-m-t');
                                 [10, 25, 50, 'All']
                             ],
                         });
+
+                        $('#dataTable tbody').on('click', '.btnpaymentdetails',
+                        async function () {
+                                var id = $(this).attr('id');
+                                $.ajax({
+                                    type: "POST",
+                                    data: {
+                                        recordID: id
+                                    },
+                                    url: 'getprocess/getpayedinvoicedetails.php',
+                                    success: function (
+                                    result) { //alert(result);
+                                        $('#viewdetail').html(result);
+                                        $('#modalpaymentdetails').modal('show');
+
+                                    }
+                                });
+                            });
                         // $('#hideprintBtn').show();
                     }
                 });
             }
         });
+
+
 
         $('#printBtnStock').click(function () {
 
@@ -259,4 +300,3 @@ $lastDay = date('Y-m-t');
     });
 </script>
 <?php include "include/footer.php"; ?>
-
