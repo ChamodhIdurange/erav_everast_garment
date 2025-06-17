@@ -250,8 +250,13 @@ include "include/topnavbar.php";
                         if (full['paymentcomplete'] == 0 && deletecheck != 0) {
                             button+='<button type="button" data-url="process/invoicecancellprocess.php?record='+full['idtbl_invoice']+'&type=3"  data-actiontype="3" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="far fa-trash-alt"></i></button>';
                         }
-                        
                         button+='<button type="button" data-actiontype="3" title="View Payment History" class="btn btn-outline-secondary btn-sm mr-1 btnViewPayments" id="'+full['idtbl_invoice']+'"><i class="fa fa-credit-card"></i></button>';
+
+                        if (full['paymentcomplete'] == 0) {
+                            button+='<button type="button" data-url="process/paymentcompleteprocess.php?record='+full['idtbl_invoice']+'&type=1"  data-actiontype="9" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="fa fa-check"></i></button>';
+                        }else{
+                            button+='<button type="button" title="Complete Order" class="btn btn-outline-success btn-sm mr-1 disabled" id="'+full['idtbl_invoice']+'"><i class="fa fa-check"></i></button>';
+                        }
                         return button;
                     }
                 }

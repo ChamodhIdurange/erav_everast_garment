@@ -103,6 +103,7 @@
         else if(actiontype==6){title='Are you sure that you want to confirm this order?'}
         else if(actiontype==7){title='Are you sure you want to Transfer to Stock?'}
         else if(actiontype==8){title='Are you sure you want to accept this return?'}
+        else if(actiontype==9){title='Are you sure you want to Complete the payment?'}
 
         Swal.fire({
             title: "Are you sure?",

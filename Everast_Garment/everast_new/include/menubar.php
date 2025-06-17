@@ -701,7 +701,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <a class="nav-link p-0 px-3 py-1" href="overpaymentreport.php">Customer Overpayment</a>
                     <?php }
                                     if (menucheck($menuprivilegearray, 70) == 1) { ?>
-                    <a class="nav-link p-0 px-3 py-1" href="rptcustomeroutstandingexcel.php">Customer Overpayment Excel</a>
+                    <a class="nav-link p-0 px-3 py-1" href="rptcustomeroutstandingexcel.php">Customer Outstanding Excel</a>
                     <?php }
                                     if (menucheck($menuprivilegearray, 49) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-1" href="productinvoicesreport.php">Product Invoices</a>
