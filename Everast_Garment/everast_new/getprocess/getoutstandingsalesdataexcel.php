@@ -11,6 +11,7 @@ $fulltotal = 0;
 $today = date("Y-m-d");
 
 
+
 $sqloutstanding =    "SELECT 
                     `e`.`name` AS 'empname',
                     `c`.`name` AS 'customername',
@@ -49,6 +50,8 @@ if ($resultstock->num_rows > 0) {
             <thead>
                 <tr>
                     <th>No</th>
+                    <th>Customer</th>
+                    <th>Employee</th>
                     <th>Invoice</th>
                     <th>Delivery</th>
                     <th>Date</th>
@@ -65,6 +68,8 @@ if ($resultstock->num_rows > 0) {
         $c += 1;
         echo '<tr>
                 <td class="text-center" style="padding: 3px;">' . $c . '</td>
+                <td class="text-center" style="padding: 3px;">' . $row['customername'] . '</td>
+                <td class="text-center" style="padding: 3px;">' . $row['empname'] . '</td>
                 <td class="text-center" style="padding: 3px;">' . $row['invoiceno'] . '</td>
                 <td class="text-center" style="padding: 3px;">' . $row['deliverDate'] . '</td>
                 <td class="text-center" style="padding: 3px;">' . $row['date'] . '</td>
