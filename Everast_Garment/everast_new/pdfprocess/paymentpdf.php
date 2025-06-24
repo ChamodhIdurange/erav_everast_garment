@@ -123,8 +123,7 @@ $html = '
                                 <td>'.$i.'</td>
                                 <td>'.$invoiceno.'</td>
                                 <td style="text-align: right">';
-
-                                    $html.=$nettotal;
+                                    $html.=$total;
                                 $html.='</td>
                                 <td style="text-align: right">'.$discount.'</td>
                                 <td style="text-align: right">';$paymentdone = $total- $discount; $html.=number_format($paymentdone,2).'</td>

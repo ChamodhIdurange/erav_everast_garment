@@ -422,6 +422,8 @@ include "include/topnavbar.php";
 
         });
         $('#invPaymentCreateBtn').click(function() {
+            $(this).prop('disabled', true);
+
             var table = $("#paymentDetailTable tbody");
             var total = '0';
             var invnetBal = '0';
