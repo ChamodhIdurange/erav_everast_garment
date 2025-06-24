@@ -28,11 +28,13 @@ $primaryKey = 'idtbl_customer_order';
 
 $fromdate = isset($_POST['fromdate']) ? $_POST['fromdate'] : '';
 $todate = isset($_POST['todate']) ? $_POST['todate'] : '';
+$searchOriginal = isset($_POST['searchOriginal']) ? $_POST['searchOriginal'] : '';
 
 
 $columns = array(
 	array( 'db' => '`u`.`idtbl_customer_order`', 'dt' => 'idtbl_customer_order', 'field' => 'idtbl_customer_order' ),
 	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
+	array( 'db' => '`oo`.`date`', 'dt' => 'originaldate', 'field' => 'originaldate', 'as' => 'originaldate' ),
 	array( 'db' => '`u`.`total`', 'dt' => 'total', 'field' => 'total' ),
 	array( 'db' => '`u`.`discount`', 'dt' => 'discount', 'field' => 'discount' ),
 	array( 'db' => '`u`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
@@ -72,11 +74,13 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_customer_order_delivery_data` AS `od` ON (`od`.`tbl_customer_order_idtbl_customer_order` = `u`.`idtbl_customer_order`)";
+$joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_customer_order_delivery_data` AS `od` ON (`od`.`tbl_customer_order_idtbl_customer_order` = `u`.`idtbl_customer_order`) LEFT JOIN `tbl_original_customer_order` AS `oo` ON (`oo`.`tbl_customer_order_idtblcustomer_order` = `u`.`idtbl_customer_order`)";
 
 $extraWhere = "`u`.`status` = 1 AND `u`.`confirm` = 1 AND `u`.`dispatchissue` = 1 AND  `u`.`delivered` = 1";
 
-if (!empty($fromdate)) {
+if ($searchOriginal == 1) {
+    $extraWhere .= " AND `oo`.`date` BETWEEN '$fromdate' AND '$fromdate'";
+}else{
     $extraWhere .= " AND `u`.`date` BETWEEN '$fromdate' AND '$todate'";
 }
 

@@ -116,6 +116,14 @@ include "include/topnavbar.php";
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-3 d-flex align-items-end">
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="searchOriginal" name="searchOriginal" value="1">
+                                                    <label class="form-check-label small font-weight-bold text-dark">
+                                                        Search Original
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -124,6 +132,7 @@ include "include/topnavbar.php";
                                         <thead>
                                             <tr>
                                                 <th>#</th>
+                                                <th>Original Date</th>
                                                 <th>Date</th>
                                                 <th>Order No</th>
                                                 <th>Rep Name</th>
@@ -832,6 +841,7 @@ include "include/topnavbar.php";
                 "data": function (d) {
                     d.fromdate = $('#fromdateFilter').val();
                     d.todate = $('#todateFilter').val();
+                    d.searchOriginal = $('#searchOriginal').is(':checked') ? 1 : 0; 
                 }
             },
             
@@ -844,6 +854,9 @@ include "include/topnavbar.php";
             ],
             "columns": [{
                     "data": "idtbl_customer_order"
+                },
+                {
+                    "data": "originaldate"
                 },
                 {
                     "data": "date"

@@ -476,7 +476,7 @@ include "include/topnavbar.php";
                     backdrop: 'static'
                 });
 
-                alert(customerId)
+                // alert(customerId)
                 $("#excessnote").select2({
                     ajax: {
                         url: "getprocess/getcustomerexcessnotesforselect2.php",
@@ -592,7 +592,7 @@ include "include/topnavbar.php";
                 }else{
                     var excessnoteamount = 0
                 }
-                alert(excessnoteamount)
+                // alert(excessnoteamount)
                 // var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
 
                 if(paymenttype==1){
