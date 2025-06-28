@@ -109,7 +109,7 @@ if($recievedStatus == 0){
 </div>
 
 <script>
-    $('#qty').change(function () {
+    $('#qty, #unitprice').keyup(function () {
         // alert("asd")
         var qty = $("#qty").val();
         var unitprice = $("#unitprice").val();
