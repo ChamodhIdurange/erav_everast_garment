@@ -1,9 +1,7 @@
 <?php 
 include "include/header.php";  
 include "include/topnavbar.php"; 
-
 ?>
-
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <?php include "include/menubar.php"; ?>

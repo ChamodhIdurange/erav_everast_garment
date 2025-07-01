@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 </head>
+
 <?php 
 include "include/header.php";  
 $sql="SELECT `idtbl_customer`, `name`, `nic`, `phone`, `status`, `type`, `tbl_area_idtbl_area` FROM `tbl_customer` WHERE `status` IN (1,2)";
@@ -247,9 +248,13 @@ include "include/topnavbar.php";
                             </div>
                             <div class="col-8">
                                 <div class="row">
-                                    <div class="col">
+                                    <!-- <div class="col">
                                         <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
                                             id="btnassignref"><i class="fas fa-plus"></i>&nbsp;Assign Ref</button>
+                                    </div> -->
+                                    <div class="col">
+                                        <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
+                                            id="btnunhold"><i class="fas fa-plus"></i>&nbsp;Unhold all</button>
                                     </div>
                                 </div>
                                 <div class="scrollbar pb-3 mt-4" id="style-2">
@@ -939,6 +944,15 @@ include "include/topnavbar.php";
         });
     });
     
+    $('#btnunhold').click(function () {
+        $.ajax({
+            type: "POST",
+            url: 'process/unholdallcustomerprocess.php',
+            success: function (result) { alert(result);
+                action(result);
+            }
+        });
+    })
 
     $('#btnassignref').click(function () {
         $.ajax({
