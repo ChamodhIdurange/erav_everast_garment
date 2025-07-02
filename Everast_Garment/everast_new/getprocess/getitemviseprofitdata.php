@@ -9,9 +9,10 @@ $sql =    "SELECT
                 `d`.`tbl_product_idtbl_product`, 
                 `u`.`invoiceno`, 
                 `pc`.`category`, 
-                SUM(`d`.`unitprice` * `d`.`qty`) AS `total_unitprice`,
+                -- SUM(`d`.`unitprice` * `d`.`qty`) AS `total_unitprice`,
+                SUM(IF(`d`.`unitprice` = 0, `p`.`unitprice`, `d`.`unitprice`) * `d`.`qty`) AS `total_unitprice`,
                 SUM(`d`.`saleprice` * `d`.`qty`) AS `total_saleprice`,
-                SUM((`d`.`saleprice` - `d`.`unitprice`) * `d`.`qty`) AS `total_profit`,
+                SUM((`d`.`saleprice` - IF(`d`.`unitprice` = 0, `p`.`unitprice`, `d`.`unitprice`)) * `d`.`qty`) / SUM(`d`.`saleprice`) AS `total_profit`,
                 SUM(`d`.`qty`) AS `total_qty`,
                 `p`.`product_name`
             FROM `tbl_invoice` AS `u`  
