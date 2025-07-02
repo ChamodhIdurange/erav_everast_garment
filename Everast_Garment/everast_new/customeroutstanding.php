@@ -5,11 +5,10 @@ include "connection/db.php";
 $sqlcustomer = "SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 $resultcustomer = $conn->query($sqlcustomer);
 
-
 $sqlrep = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 ORDER BY `name` ASC";
 $resultrep = $conn->query($sqlrep);
 
-$firstDay = date('Y-m-01');
+$firstDay = date('2025-02-01');
 $lastDay = date('Y-m-t');
 
 include "include/topnavbar.php"; 
@@ -63,9 +62,8 @@ include "include/topnavbar.php";
                                         <div class="col-2 search-dependent"
                                             id="selectCustomerDiv">
                                             <label class="small font-weight-bold text-dark">Customer*</label>
-                                            <select class="form-control form-control-sm" style="width: 100%;" name="selectCustomer"
-                                                id="selectCustomer">
-                                                <option value="0">All</option>
+                                            <select class="form-control form-control-sm" style="width: 100%;" name="selectCustomer[]"
+                                                id="selectCustomer" multiple>
                                             </select>
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">

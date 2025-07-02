@@ -8,13 +8,18 @@ if(!isset($_POST['searchTerm'])){
 }else{
     $search = $_POST['searchTerm'];   
     $sql="SELECT `idtbl_customer`, `name`, `address` FROM `tbl_customer`  WHERE `status`=1 AND `name` LIKE '%$search%'";
-
 }
 $result=$conn->query($sql);
 
 
 $arraylist=array();
 
+
+$obj=new stdClass();
+$obj->id='all';
+$obj->text='All';
+    
+array_push($arraylist, $obj);
 
 while($row=$result->fetch_assoc()){
     $fullname = $row['name'] . ' - ' . $row['address'];

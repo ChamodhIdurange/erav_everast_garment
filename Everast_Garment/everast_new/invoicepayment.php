@@ -6,7 +6,6 @@ $result =$conn-> query($sql);
 
 // $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 // $resultcustomer =$conn-> query($sqlcustomer);
-
 $sqlbank="SELECT `idtbl_bank`, `bankname` FROM `tbl_bank` WHERE `status`=1 AND `idtbl_bank`!=1";
 $resultbank =$conn-> query($sqlbank); 
 
@@ -282,6 +281,13 @@ include "include/topnavbar.php";
                             <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right">Balance :</div>
                             <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
                                 <div id="balanceAmount"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
+                                <div id="errordiv">
+                                    <p id="errortext" style="color: red;"></p>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" id="hidePayAmount" value="0">
@@ -567,6 +573,27 @@ include "include/topnavbar.php";
                 $('#collapseFour').collapse('show');
             }
         });
+
+        $('#paymentReceiptNum').change(function(){
+            var receiptNo = $(this).val();
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    receiptNo: receiptNo,
+                },
+                url: 'getprocess/checkreceiptexists.php',
+                success: function(result) { alert(result);
+                    if (result == 'true') {
+                        $('#errortext').text('This Receipt No already exists');
+                    } else {
+                        $('#errortext').text('');
+                    }
+                    
+                }
+            });
+
+        })
         $("#submitBtnModal").click(function() {
             if (!$("#formModal")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;

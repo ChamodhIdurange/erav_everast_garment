@@ -6,7 +6,7 @@ include "include/topnavbar.php";
 $sqlreplist="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_user_type_idtbl_user_type`=7 AND `status`=1";
 $resultreplist =$conn-> query($sqlreplist);
 
-$firstDay = date('Y-m-01');
+$firstDay = date('2025-02-01');
 $lastDay = date('Y-m-t');
 ?>
 

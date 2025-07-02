@@ -3,7 +3,9 @@ require_once('../connection/db.php');
 
 $validfrom = $_POST['validfrom'];
 $validto = $_POST['validto'];
-$customerID = $_POST['customer'];
+$customerList = $_POST['customer'];
+$customerList = implode(", ", $customerList);
+
 $repID = $_POST['rep'];
 $searchType = $_POST['searchType'];
 $aginvalue = $_POST['aginvalue'];
@@ -23,9 +25,13 @@ $sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
         AND `ud`.`delivered`=1 
+        AND `ud`.`status`=1 
         AND `u`.`status`=1 
-        AND `u`.`paymentcomplete`=0
-        AND `u`.`tbl_customer_idtbl_customer` = '$customerID' ";
+        AND `u`.`paymentcomplete`=0";
+
+if ($customerList != 'all') {
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer` IN ($customerList)";
+}
 
 if (!empty($validfrom) && !empty($validto)) {
     $sql .= " AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
@@ -36,11 +42,6 @@ $sql .= "GROUP BY `u`.`idtbl_invoice` ORDER BY `uc`.`name` ASC";
 
 $result = $conn->query($sql);
 
-// if (!$result) {
-//     die("Query failed: " . $conn->error);
-// }
-
-// echo $aginvalue;
 
 if ($result->num_rows == 0) {
     echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
