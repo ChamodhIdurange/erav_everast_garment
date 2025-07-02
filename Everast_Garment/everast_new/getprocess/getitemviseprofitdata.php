@@ -12,7 +12,7 @@ $sql =    "SELECT
                 -- SUM(`d`.`unitprice` * `d`.`qty`) AS `total_unitprice`,
                 SUM(IF(`d`.`unitprice` = 0, `p`.`unitprice`, `d`.`unitprice`) * `d`.`qty`) AS `total_unitprice`,
                 SUM(`d`.`saleprice` * `d`.`qty`) AS `total_saleprice`,
-                SUM((`d`.`saleprice` - IF(`d`.`unitprice` = 0, `p`.`unitprice`, `d`.`unitprice`)) * `d`.`qty`) / SUM(`d`.`saleprice`) AS `total_profit`,
+                SUM((`d`.`saleprice` - IF(`d`.`unitprice` = 0, `p`.`unitprice`, `d`.`unitprice`)) * `d`.`qty`) AS `total_profit`,
                 SUM(`d`.`qty`) AS `total_qty`,
                 `p`.`product_name`
             FROM `tbl_invoice` AS `u`  
@@ -67,7 +67,7 @@ if ($result->num_rows > 0) {
                 <td class="text-right">' . number_format($rowstock['total_unitprice'], 2, '.', ',')  . '</td>
                 <td class="text-right">' . number_format($rowstock['total_saleprice'], 2, '.', ',')  . '</td>
                 <td class="text-right">' . number_format($rowstock['total_profit'], 2, '.', ',')  . '</td>
-                <td class="text-right">' . number_format((($rowstock['total_profit'] / ($rowstock['total_unitprice'] ?: 1)) * 100), 2, '.', ',') . ' %</td>
+                <td class="text-right">' . number_format((($rowstock['total_profit'] / ($rowstock['total_saleprice'] ?: 1)) * 100), 2, '.', ',') . ' %</td>
             </tr>';
     }
     echo '</tbody>
@@ -77,6 +77,7 @@ if ($result->num_rows > 0) {
                         <td class="text-right"><strong>' . number_format($unit_profit, 2) . '</strong></td>
                         <td class="text-right"><strong>' . number_format($sale_profit, 2) . '</strong></td>
                         <td class="text-right"><strong>' . number_format($full_profit, 2) . '</strong></td>
+                        <td class="text-right"><strong>' . number_format(($full_profit/$sale_profit) * 100, 2) . '%</strong></td>
                     </tr>
                 </tfoot>
             </table>';
