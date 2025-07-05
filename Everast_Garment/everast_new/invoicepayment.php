@@ -576,14 +576,13 @@ include "include/topnavbar.php";
 
         $('#paymentReceiptNum').change(function(){
             var receiptNo = $(this).val();
-
             $.ajax({
                 type: "POST",
                 data: {
                     receiptNo: receiptNo,
                 },
                 url: 'getprocess/checkreceiptexists.php',
-                success: function(result) { alert(result);
+                success: function(result) { //alert(result);
                     if (result == 'true') {
                         $('#errortext').text('This Receipt No already exists');
                     } else {
@@ -612,13 +611,8 @@ include "include/topnavbar.php";
                 var creditnoteamount = $('#creditnote').find(':selected').attr('data-creditnoteamount');
                 var excessnote = $('#excessnote').val();
 
-                var data = $('#excessnote').select2('data');
-                if (data.length > 0) {
-                    var excessnoteamount = data[0].excessnoteamount;
-                    console.log("Excess Note Amount: " + excessnoteamount);
-                }else{
-                    var excessnoteamount = 0
-                }
+                var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount') || 0;
+
                 // alert(excessnoteamount)
                 // var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
 
@@ -682,6 +676,8 @@ include "include/topnavbar.php";
                     $('#btnIssueInv').prop('disabled', false);
                 }
                 else if(paymenttype==4){
+                    // alert('asd')
+                    // alert(excessnoteamount)
                     $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Excess Note</td><td class=""></td><td class=""></td><td class="text-right">' + parseFloat(excessnoteamount).toFixed(2) + '</td><td class=""></td><td class="">'+paymentReceiptNum+'</td><td></td><td></td><td></td><td class="">4</td><td class="">'+excessnote+'</td></tr>');
 
                     var paidAmount = parseFloat($('#hidePayAmount').val());
