@@ -3,7 +3,6 @@ $getUrl = $_SERVER['SCRIPT_NAME'];
 $url = explode('/', $getUrl);
 $lastElement = end($url);
 
-
 if ($lastElement == 'useraccount.php') {
     $addcheck    = checkprivilege($menuprivilegearray, 1, 1);
     $editcheck   = checkprivilege($menuprivilegearray, 1, 2);
@@ -359,7 +358,18 @@ else if ($lastElement == 'rptcustomeroutstandingexcel.php') {
     $statuscheck = checkprivilege($menuprivilegearray, 70, 3);
     $deletecheck = checkprivilege($menuprivilegearray, 70, 4);
 }
-
+else if ($lastElement == 'rptcustomerporderdeliverydata.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 71, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 71, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 71, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 71, 4);
+}
+else if ($lastElement == 'originalcustomerdeliveredpo.php') {
+    $addcheck    = checkprivilege($menuprivilegearray, 72, 1);
+    $editcheck   = checkprivilege($menuprivilegearray, 72, 2);
+    $statuscheck = checkprivilege($menuprivilegearray, 72, 3);
+    $deletecheck = checkprivilege($menuprivilegearray, 72, 4);
+}
 
 
 function checkprivilege($arraymenu, $menuID, $type)
@@ -520,14 +530,14 @@ function checkprivilege($arraymenu, $menuID, $type)
                 Vat Info
             </a>
             <?php }
-                if (menucheck($menuprivilegearray, 17) == 1 | menucheck($menuprivilegearray, 51) == 1 | menucheck($menuprivilegearray, 52) == 1 | menucheck($menuprivilegearray, 53) == 1 | menucheck($menuprivilegearray, 58) == 1) { ?>
+                if (menucheck($menuprivilegearray, 17) == 1 | menucheck($menuprivilegearray, 51) == 1 | menucheck($menuprivilegearray, 52) == 1 | menucheck($menuprivilegearray, 53) == 1 | menucheck($menuprivilegearray, 58) == 1 | menucheck($menuprivilegearray, 72) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
                 data-target="#collapsecustomerpo" aria-expanded="false" aria-controls="collapsecustomerpo">
                 <div class="nav-link-icon"><i class="fa fa-puzzle-piece" aria-hidden="true"></i></div>
                 Customer PO Details
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
-            <div class="collapse <?php if ($lastElement == "customerporder.php" | $lastElement == "customerconfirmedpo.php" | $lastElement == "customerdispatchedpo.php" | $lastElement == "customerdeliveredpo.php" | $lastElement == "cancelledcustomerpo.php") {echo 'show';} ?>"
+            <div class="collapse <?php if ($lastElement == "customerporder.php" | $lastElement == "customerconfirmedpo.php" | $lastElement == "customerdispatchedpo.php" | $lastElement == "customerdeliveredpo.php" | $lastElement == "cancelledcustomerpo.php" | $lastElement == "originalcustomerdeliveredpo.php") {echo 'show';} ?>"
                 id="collapsecustomerpo" data-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                     <?php if (menucheck($menuprivilegearray, 17) == 1) { ?>
@@ -538,6 +548,8 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <a class="nav-link p-0 px-3 py-1" href="customerdispatchedpo.php">Dispatched PO</a>
                     <?php } if (menucheck($menuprivilegearray, 53) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-1" href="customerdeliveredpo.php">Delivered PO</a>
+                    <?php } if (menucheck($menuprivilegearray, 72) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="originalcustomerdeliveredpo.php">Original Delivered PO</a>
                     <?php } if (menucheck($menuprivilegearray, 58) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-1" href="cancelledcustomerpo.php">Cancelled PO</a>
                     <?php } ?>
@@ -660,14 +672,14 @@ function checkprivilege($arraymenu, $menuID, $type)
                 </nav>
             </div>
             <?php }
-                if (menucheck($menuprivilegearray, 31) == 1 | menucheck($menuprivilegearray, 32) == 1 | menucheck($menuprivilegearray, 33) == 1 | menucheck($menuprivilegearray, 34) == 1 | menucheck($menuprivilegearray, 35) == 1 | menucheck($menuprivilegearray, 36) == 1 | menucheck($menuprivilegearray, 37) == 1 | menucheck($menuprivilegearray, 38) == 1 | menucheck($menuprivilegearray, 39) == 1 | menucheck($menuprivilegearray, 48) == 1 | menucheck($menuprivilegearray, 49) == 1 | menucheck($menuprivilegearray, 57) == 1 | menucheck($menuprivilegearray, 59) == 1 | menucheck($menuprivilegearray, 61) == 1 | menucheck($menuprivilegearray, 62) == 1 | menucheck($menuprivilegearray, 63) == 1 | menucheck($menuprivilegearray, 64) == 1  | menucheck($menuprivilegearray, 69) == 1 | menucheck($menuprivilegearray, 70) == 1 ) { ?>
+                if (menucheck($menuprivilegearray, 31) == 1 | menucheck($menuprivilegearray, 32) == 1 | menucheck($menuprivilegearray, 33) == 1 | menucheck($menuprivilegearray, 34) == 1 | menucheck($menuprivilegearray, 35) == 1 | menucheck($menuprivilegearray, 36) == 1 | menucheck($menuprivilegearray, 37) == 1 | menucheck($menuprivilegearray, 38) == 1 | menucheck($menuprivilegearray, 39) == 1 | menucheck($menuprivilegearray, 48) == 1 | menucheck($menuprivilegearray, 49) == 1 | menucheck($menuprivilegearray, 57) == 1 | menucheck($menuprivilegearray, 59) == 1 | menucheck($menuprivilegearray, 61) == 1 | menucheck($menuprivilegearray, 62) == 1 | menucheck($menuprivilegearray, 63) == 1 | menucheck($menuprivilegearray, 64) == 1  | menucheck($menuprivilegearray, 69) == 1 | menucheck($menuprivilegearray, 70) == 1 | menucheck($menuprivilegearray, 71) == 1 ) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
                 data-target="#collapsereport" aria-expanded="false" aria-controls="collapsereport">
                 <div class="nav-link-icon"><i data-feather="file"></i></div>
                 Reports
                 <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
             </a>
-            <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "accountreport.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php" | $lastElement == "overpaymentreport.php" | $lastElement == "productinvoicesreport.php" | $lastElement == "rptrepvisesales.php" | $lastElement == "rptcustomeroutstanding.php" | $lastElement == "rptsalerepcollections.php" | $lastElement == "rptinventorydetails.php" | $lastElement == "rptstockadjustmentdetails.php" | $lastElement == "rptitemviseprofitreport.php" | $lastElement == "rptinvoiceviseprofitreport.php" | $lastElement == "rptcustomerorderholdstock.php" | $lastElement == "rptcustomeroutstandingexcel.php") {echo 'show';} ?>"
+            <div class="collapse <?php if ($lastElement == "stock.php" | $lastElement == "customeroutstanding.php" | $lastElement == "dailysale.php" | $lastElement == "dailycash.php" | $lastElement == "salereportcustomer.php" | $lastElement == "accountreport.php" | $lastElement == "bufferstockmaintainreport.php" | $lastElement == "ouritemrange.php" | $lastElement == "salesorder.php" | $lastElement == "bincard.php" | $lastElement == "overpaymentreport.php" | $lastElement == "productinvoicesreport.php" | $lastElement == "rptrepvisesales.php" | $lastElement == "rptcustomeroutstanding.php" | $lastElement == "rptsalerepcollections.php" | $lastElement == "rptinventorydetails.php" | $lastElement == "rptstockadjustmentdetails.php" | $lastElement == "rptitemviseprofitreport.php" | $lastElement == "rptinvoiceviseprofitreport.php" | $lastElement == "rptcustomerorderholdstock.php" | $lastElement == "rptcustomeroutstandingexcel.php" | $lastElement == "rptcustomerporderdeliverydata.php") {echo 'show';} ?>"
                 id="collapsereport" data-parent="#accordionSidenav">
                 <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPages">
                     <?php if (menucheck($menuprivilegearray, 31) == 1) { ?>
@@ -729,6 +741,9 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <?php }
                                     if (menucheck($menuprivilegearray, 69) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-1" href="rptcustomerorderholdstock.php">Hold Stock Report</a>
+                    <?php }
+                                    if (menucheck($menuprivilegearray, 71) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-1" href="rptcustomerporderdeliverydata.php">Customer Porder Delivery Report</a>
                     <?php } ?>
                 </nav>
             </div>

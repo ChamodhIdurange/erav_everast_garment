@@ -67,7 +67,7 @@ include "include/topnavbar.php";
                             <div class="page-header-content py-3">
                                 <h1 class="page-header-title">
                                     <div class="page-header-icon"><i data-feather="archive"></i></div>
-                                    <span>Customer Delivered POrder</span>
+                                    <span>Original Customer Delivered POrder</span>
                                 </h1>
                             </div>
                         </div>
@@ -117,6 +117,14 @@ include "include/topnavbar.php";
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-3 d-flex align-items-end">
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="searchOriginal" name="searchOriginal" value="1">
+                                                    <label class="form-check-label small font-weight-bold text-dark">
+                                                        Search Original
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -125,6 +133,7 @@ include "include/topnavbar.php";
                                         <thead>
                                             <tr>
                                                 <th>#</th>
+                                                <th>Original Date</th>
                                                 <th>Date</th>
                                                 <th>Order No</th>
                                                 <th>Rep Name</th>
@@ -828,11 +837,12 @@ include "include/topnavbar.php";
                 text: '<i class="fas fa-print mr-2"></i> Print'
             }],
             ajax: {
-                url: "scripts/customerdeliveredporderlist.php",
+                url: "scripts/originalcustomerdeliveredporderlist.php",
                 type: "POST", 
                 "data": function (d) {
                     d.fromdate = $('#fromdateFilter').val();
                     d.todate = $('#todateFilter').val();
+                    d.searchOriginal = $('#searchOriginal').is(':checked') ? 1 : 0; 
                 }
             },
             
@@ -845,6 +855,9 @@ include "include/topnavbar.php";
             ],
             "columns": [{
                     "data": "idtbl_customer_order"
+                },
+                {
+                    "data": "originaldate"
                 },
                 {
                     "data": "date"
