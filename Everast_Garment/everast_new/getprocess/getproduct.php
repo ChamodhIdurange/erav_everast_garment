@@ -31,6 +31,7 @@ $obj->size=$row['tbl_sizes_idtbl_sizes'];
 $obj->sizecategory=$row['tbl_size_categories_idtbl_size_categories'];
 $obj->uom=$row['uom'];
 $obj->categoryname=$row['category'];
+$obj->isspecial=$row['is_special'];
 
 echo json_encode($obj);
 ?>

@@ -38,12 +38,13 @@ include "include/topnavbar.php";
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col-12">
-                                <form action="process/productprocess.php" method="post" autocomplete="off"  enctype="multipart/form-data">
+                                <form action="process/productprocess.php" method="post" autocomplete="off"
+                                    enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-4 d-none">
                                             <div class="form mb-1">
                                                 <label class="small font-weight-bold text-dark">Supplier Name*</label>
-                                                    <input type="text" name="supplier" id="supplier" value="1" required >
+                                                <input type="text" name="supplier" id="supplier" value="1" required>
                                                 <!-- <select class="form-control form-control-sm" name="supplier"
                                                     id="supplier" value="2" required>
                                                     <option value="">Select</option>
@@ -85,8 +86,8 @@ include "include/topnavbar.php";
                                         <div class="col-md-4">
                                             <div class="form mb-1">
                                                 <label class="small font-weight-bold text-dark">Size Category*</label>
-                                                <select class="form-control form-control-sm" name="sizecategory" id="sizecategory"
-                                                    required>
+                                                <select class="form-control form-control-sm" name="sizecategory"
+                                                    id="sizecategory" required>
                                                     <option value="">Select</option>
                                                     <?php if($resultsizecategories->num_rows > 0) {while ($rowsizes = $resultsizecategories-> fetch_assoc()) { ?>
                                                     <option value="<?php echo $rowsizes['idtbl_size_categories'] ?>">
@@ -170,8 +171,8 @@ include "include/topnavbar.php";
                                         <div class="col-md-4">
                                             <div class="form-group mb-1">
                                                 <label class="small font-weight-bold text-dark">Uom</label>
-                                                <select class="form-control form-control-sm" name="uom"
-                                                    id="uom" required>
+                                                <select class="form-control form-control-sm" name="uom" id="uom"
+                                                    required>
                                                     <option value="">Select</option>
                                                     <option value="1">PCS</option>
                                                     <option value="2">Packet</option>
@@ -234,12 +235,22 @@ include "include/topnavbar.php";
                                         </div>
                                     </div>
                                     <div class="row">
-                                    <div class="col-md-3">
+                                        <div class="col-md-3">
                                             <div class="custom-control custom-checkbox">
                                                 <input class="custom-control-input" type="checkbox" name="discountradio"
                                                     id="discountradio" value="4">
                                                 <label class="custom-control-label" for="discountradio">
                                                     Additional Discount
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="custom-control custom-checkbox">
+                                                <input class="custom-control-input" type="checkbox" name="specialproduct"
+                                                    id="specialproduct" value="0">
+                                                    <input type="hidden" id="hiddenspecialproduct" name="hiddenspecialproduct" value="0">
+                                                <label class="custom-control-label" for="specialproduct">
+                                                    Special Product
                                                 </label>
                                             </div>
                                         </div>
@@ -308,7 +319,6 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-
     $(document).ready(function () {
         var addcheck = '<?php echo $addcheck; ?>';
         var editcheck = '<?php echo $editcheck; ?>';
@@ -316,41 +326,41 @@ include "include/topnavbar.php";
         var deletecheck = '<?php echo $deletecheck; ?>';
 
         $('#dataTable').DataTable({
-           "destroy": true,
-			"processing": true,
-			"serverSide": true,
-			dom: "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" +
-				"<'row'<'col-sm-5'i><'col-sm-7'p>>",
-			responsive: true,
-			lengthMenu: [
-				[10, 25, 50, -1],
-				[10, 25, 50, 'All'],
-			],
-			"buttons": [{
-					extend: 'csv',
-					className: 'btn btn-success btn-sm',
-					title: 'Product Information',
-					text: '<i class="fas fa-file-csv mr-2"></i> CSV',
-				},
-				{
-					extend: 'pdf',
-					className: 'btn btn-danger btn-sm',
-					title: 'Product Information',
-					text: '<i class="fas fa-file-pdf mr-2"></i> PDF',
-				},
-				{
-					extend: 'print',
-					title: 'Product Information',
-					className: 'btn btn-primary btn-sm',
-					text: '<i class="fas fa-print mr-2"></i> Print',
-					customize: function (win) {
-						$(win.document.body).find('table')
-							.addClass('compact')
-							.css('font-size', 'inherit');
-					},
-				},
-				// 'copy', 'csv', 'excel', 'pdf', 'print'
-			],
+            "destroy": true,
+            "processing": true,
+            "serverSide": true,
+            dom: "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" + "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+            responsive: true,
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, 'All'],
+            ],
+            "buttons": [{
+                    extend: 'csv',
+                    className: 'btn btn-success btn-sm',
+                    title: 'Product Information',
+                    text: '<i class="fas fa-file-csv mr-2"></i> CSV',
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-danger btn-sm',
+                    title: 'Product Information',
+                    text: '<i class="fas fa-file-pdf mr-2"></i> PDF',
+                },
+                {
+                    extend: 'print',
+                    title: 'Product Information',
+                    className: 'btn btn-primary btn-sm',
+                    text: '<i class="fas fa-print mr-2"></i> Print',
+                    customize: function (win) {
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    },
+                },
+                // 'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             ajax: {
                 url: "scripts/productlist.php",
                 type: "POST", // you can use GET
@@ -394,16 +404,27 @@ include "include/topnavbar.php";
                     "data": null,
                     "render": function (data, type, full) {
                         var button = '';
-                        if(editcheck=1){
-                            button+='<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="'+full['idtbl_product']+'"><i class="fas fa-pen"></i></button>';
+                        if (editcheck = 1) {
+                            button +=
+                                '<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="' +
+                                full['idtbl_product'] + '"><i class="fas fa-pen"></i></button>';
                         }
-                        if(full['status']==1  && statuscheck==1){
-                            button+='<button type="button" data-url="process/statusproduct.php?record='+full['idtbl_product']+'&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
-                        }else if(full['status']==2 && statuscheck==1){
-                            button+='<button type="button" data-url="process/statusproduct.php?record='+full['idtbl_product']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
+                        if (full['status'] == 1 && statuscheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusproduct.php?record=' +
+                                full['idtbl_product'] +
+                                '&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
+                        } else if (full['status'] == 2 && statuscheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusproduct.php?record=' +
+                                full['idtbl_product'] +
+                                '&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
                         }
-                        if(deletecheck==1){
-                            button+='<button type="button" data-url="process/statusproduct.php?record='+full['idtbl_product']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
+                        if (deletecheck == 1) {
+                            button +=
+                                '<button type="button" data-url="process/statusproduct.php?record=' +
+                                full['idtbl_product'] +
+                                '&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
                         }
 
                         return button;
@@ -445,8 +466,15 @@ include "include/topnavbar.php";
                         $('#size').val(obj.size);
                         $('#sizecategory').val(obj.sizecategory);
                         $('#uom').val(obj.uom);
+                        $('#hiddenspecialproduct').val(obj.isspecial);
 
                         $('#productimage').prop('required', false);
+
+                        if (obj.isspecial == 0) {
+                            $('#specialproduct').prop('checked', false);
+                        } else {
+                            $('#specialproduct').prop('checked', true);
+                        }
 
                         loadsizecategory(obj.sizecategory, obj.size);
                         loadsubcategory(obj.category, obj.subcategory);
@@ -478,11 +506,7 @@ include "include/topnavbar.php";
             }
         });
     });
-    $('input[type="checkbox"]').change(function (e) {
-
-
-        var value = $('input[name="discountradio"]:checked')
-
+    $('#discountradio').change(function () {
         if ($(this).prop("checked") == true) {
             $('#discountdiv').removeClass('d-none');
             $('#additionaldiscount').prop('required', true);
@@ -491,6 +515,16 @@ include "include/topnavbar.php";
             $('#discountdiv').addClass('d-none');
             $('#additionaldiscount').prop('required', false);
             $('#additionaldiscount').val(0);
+        }
+
+    });
+    $('#specialproduct').change(function () {
+        if ($(this).prop("checked") == true) {
+            $('#hiddenspecialproduct').val(1);
+
+        } else {
+            $('#hiddenspecialproduct').val(0);
+            
         }
 
     });
@@ -539,6 +573,7 @@ include "include/topnavbar.php";
             }
         });
     }
+
     function loadsubcategory(categoryID, value) {
         $.ajax({
             type: "POST",
@@ -594,4 +629,3 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
-

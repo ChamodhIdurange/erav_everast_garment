@@ -1303,7 +1303,14 @@ include "include/topnavbar.php";
 
                     var rows = $.map(obj.tablelist, function (item) {
 
-                        var bgColor = item.status == 3 ? 'style="background-color:#ffcccc"' : '';
+                        if(item.status == 3){
+                            var bgColor = 'style="background-color:#ffcccc"';
+                        }else if(item.isspecial == 1){
+                            var bgColor = 'style="background-color:#75f0b1"';
+                        }else{
+                            var bgColor = '';
+                        }
+
                         var deleteBtnClass = item.status == 3 ? 'btn-outline-success' : 'btn-outline-danger';
 
                         return `<tr ${bgColor}>

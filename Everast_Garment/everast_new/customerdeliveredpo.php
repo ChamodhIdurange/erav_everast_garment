@@ -945,28 +945,30 @@ include "include/topnavbar.php";
                     "render": function (data, type, full) {
                         var button = '';
 
-                        button +=
-                            '<button class="btn btn-outline-primary btn-sm btnDeliveryData mr-1 " data-toggle="tooltip" data-placement="bottom" title="Delivery Details" id="' +
-                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
-                            '" data-deliveryRemark="' + full['deliverRemarks'] +
-                            '" data-deliveryDate="' + full['deliverDate'] +
-                            '" data-vehicleId="' + full['tbl_vehicle_idtbl_vehicle'] +
-                            '"><i class="fa fa-truck"></i></button>';
+                        if (statuscheck == 1 && editcheck == 1) {
+                            button +=
+                                '<button class="btn btn-outline-primary btn-sm btnDeliveryData mr-1 " data-toggle="tooltip" data-placement="bottom" title="Delivery Details" id="' +
+                                full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                                '" data-deliveryRemark="' + full['deliverRemarks'] +
+                                '" data-deliveryDate="' + full['deliverDate'] +
+                                '" data-vehicleId="' + full['tbl_vehicle_idtbl_vehicle'] +
+                                '"><i class="fa fa-truck"></i></button>';
 
 
-                        button +=
-                            '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
-                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
-                            '"><i class="fas fa-eye"></i></button>';
+                            button +=
+                                '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
+                                full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                                '"><i class="fas fa-eye"></i></button>';
 
-                        button +=
-                            '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
-                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
-                            '"  data-podate="' + full['date'] +
-                            '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
-                            '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
-                            '" data-repid="' + full['tbl_employee_idtbl_employee'] +
-                            '"><i class="fas fa-pen"></i></button>';
+                            button +=
+                                '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
+                                full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                                '"  data-podate="' + full['date'] +
+                                '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
+                                '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
+                                '" data-repid="' + full['tbl_employee_idtbl_employee'] +
+                                '"><i class="fas fa-pen"></i></button>';
+                        }
                         button +=
                             '<button class="btn btn-outline-';
                         if (full['is_printed'] == 0) {
@@ -990,7 +992,7 @@ include "include/topnavbar.php";
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="far fa-eye"></i></button>';
                         
-                        if (full['status'] == 2 && statuscheck == 1) {
+                        if (full['status'] == 2 && statuscheck == 1 && deletecheck == 1) {
                             button +=
                                 '<button class="btn btn-secondary btn-sm btnreactive mr-1" id="' +
                                 full['idtbl_customer_order'] +
@@ -1059,7 +1061,7 @@ include "include/topnavbar.php";
                         //     button +=
                         //         '<button class="btn btn-outline-success btn-sm mr-1" data-toggle="tooltip" data-placement="bottom" title="Accepted Order"><i class="fas fa-check"></i></button>';
                         // }
-                        if (full['delivered'] != 1 && full['status'] == 1 && deletecheck == 1) {
+                        if (full['delivered'] != 1 && full['status'] == 1 && deletecheck == 1 && editcheck == 1) {
                             button +=
                                 '<button class="btn btn-outline-danger btn-sm mr-1 btncancel" data-toggle="tooltip" data-placement="bottom" title="Cancel order" id="' +
                                 full['idtbl_customer_order'] +
@@ -1617,6 +1619,8 @@ include "include/topnavbar.php";
                             newRow.css('background-color', '#ffcccc');
                             newRow.find('.btnDeleteOrderProduct').removeClass()
                                 .addClass('btn btn-outline-success btn-sm');
+                        }else if(item.isspecial == 1){
+                            newRow.css('background-color', '#75f0b1');
                         }else{
                             count++;
                         }
@@ -2556,3 +2560,4 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
+
