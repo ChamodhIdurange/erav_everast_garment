@@ -998,10 +998,12 @@ include "include/topnavbar.php";
                             full['idtbl_customer_order'] +
                             '"><i class="fas fa-eye"></i></button>';
 
-                        button +=
+                        if (editcheck == 1 && statuscheck == 1 && deletecheck == 1) {
+                            button +=
                             '<button class="btn btn-outline-dark btn-sm btnview mr-1 " data-toggle="tooltip" data-placement="bottom" title="View PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="far fa-eye"></i></button>';
+                        }
                         
                         if (full['status'] == 2 && statuscheck == 1) {
                             button +=

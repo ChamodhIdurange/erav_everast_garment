@@ -899,31 +899,32 @@ include "include/topnavbar.php";
                     "render": function (data, type, full) {
                         var button = '';
 
-                        button +=
-                            '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
-                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
-                            '"><i class="fas fa-eye"></i></button>';
+                        if (editcheck == 1 && statuscheck == 1 && deletecheck == 1) {
+                            button +=
+                                '<button class="btn btn-outline-info btn-sm btnOriginal mr-1 " data-toggle="tooltip" data-placement="bottom" title="View Original PO Details" id="' +
+                                full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                                '"><i class="fas fa-eye"></i></button>';
 
-                        button +=
-                            '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
-                            full['idtbl_customer_order'] + '" name="' + full['confirm'] +
-                            '"  data-podate="' + full['date'] +
-                            '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
-                            '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
-                            '" data-repid="' + full['tbl_employee_idtbl_employee'] +
-                            '"><i class="fas fa-pen"></i></button>';
-                        button +=
-                            '<button class="btn btn-outline-';
-                        if (full['is_printed'] == 0) {
-                            button += 'secondary';
-                        } else {
-                            button += 'success';
-                        }
-
-                        button +=
+                            button +=
+                                '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 " data-toggle="tooltip" data-placement="bottom" title="Edit PO Details" id="' +
+                                full['idtbl_customer_order'] + '" name="' + full['confirm'] +
+                                '"  data-podate="' + full['date'] +
+                                '" data-customerid="' + full['tbl_customer_idtbl_customer'] +
+                                '" data-customername="' + full['cusname'] + ' - ' +  full['cusaddress']  +
+                                '" data-repid="' + full['tbl_employee_idtbl_employee'] +
+                                '"><i class="fas fa-pen"></i></button>';
+                            button +=
+                                '<button class="btn btn-outline-';
+                            if (full['is_printed'] == 0) {
+                                button += 'secondary';
+                            } else {
+                                button += 'success';
+                            }
+                            button +=
                             ' btn-sm btnPrint mr-1 " data-toggle="tooltip" data-placement="bottom" title="Print PO Details" id="' +
                             full['idtbl_customer_order'] + '" name="' + full['confirm'] +
                             '"><i class="fas fa-file-invoice-dollar"></i></button>';
+                        }
 
                         button +=
                             '<button class="btn btn-outline-secondary btn-sm btnInvoicePrint mr-1" data-placement="bottom" title="Invoice Print" id="' +

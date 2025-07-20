@@ -78,7 +78,7 @@ $joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (
 $extraWhere = "`u`.`status` = 1 AND `u`.`confirm` = 1 AND `u`.`dispatchissue` = 1 AND  `u`.`delivered` = 1";
 
 if ($searchOriginal == 1) {
-    $extraWhere .= " AND `oo`.`date` BETWEEN '$fromdate' AND '$fromdate'";
+    $extraWhere .= " AND `oo`.`date` BETWEEN '$fromdate' AND '$todate'";
 }else{
     $extraWhere .= " AND `u`.`date` BETWEEN '$fromdate' AND '$todate'";
 }
