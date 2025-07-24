@@ -93,6 +93,7 @@ include "include/topnavbar.php";
                                             <tr>
                                                 <th>#</th>
                                                 <th>Date</th>
+                                                <th>Insert Time</th>
                                                 <th>Order No</th>
                                                 <th>Rep Name</th>
                                                 <th>Remarks</th>
@@ -802,6 +803,18 @@ include "include/topnavbar.php";
                 },
                 {
                     "data": "date"
+                },
+                {
+                    "data": "insertdatetime",
+                    "className": 'text-right',
+                    "render": function (data, type, full) {
+                        if (data) {
+                            // Extract only the time portion (HH:MM:SS)
+                            const timeOnly = data.split(' ')[1]; // e.g., "14:32:15"
+                            return timeOnly;
+                        }
+                        return '';
+                    }
                 },
                 {
                     "data": "cuspono"

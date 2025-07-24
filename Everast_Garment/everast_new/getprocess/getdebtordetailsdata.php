@@ -127,7 +127,6 @@ if ($resultstock->num_rows > 0) {
             $netBalance = 0;
             $c = 1;
         }
-
         $netInvoiceAmount += $row['nettotal'];
         $netBelow30 += ($row['below_30'] > 0) ? ($row['below_30'] - $row['payedamount']) : 0;
         $net30to60  += ($row['between_30_60'] > 0) ? ($row['between_30_60'] - $row['payedamount']) : 0;
