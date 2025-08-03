@@ -705,6 +705,8 @@ include "include/topnavbar.php";
         });
         
         $('#btnIssueInv').click(function(){
+            $(this).prop('disabled', true);
+
             jsonObj = [];
             $("#paymentDetailTable tbody tr").each(function() {
                 item = {}

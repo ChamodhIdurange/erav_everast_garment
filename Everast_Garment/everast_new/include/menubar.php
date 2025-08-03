@@ -755,6 +755,7 @@ function checkprivilege($arraymenu, $menuID, $type)
                     <?php } ?>
                 </nav>
             </div>
+            
             <?php }
                 if (menucheck($menuprivilegearray, 1) == 1 | menucheck($menuprivilegearray, 2) == 1 | menucheck($menuprivilegearray, 3) == 1) { ?>
             <a class="nav-link p-0 px-3 py-2 collapsed" href="javascript:void(0);" data-toggle="collapse"
