@@ -3,45 +3,45 @@ require_once('../connection/db.php');
 
 $validfrom = $_POST['validfrom'];
 $validto = $_POST['validto'];
-$customerID = $_POST['customer'];
+$customerList = $_POST['customer'];
+$customerList = implode(", ", $customerList);
+
 $repID = $_POST['rep'];
 $searchType = $_POST['searchType'];
 $aginvalue = $_POST['aginvalue'];
+
 
 $customerarray = array();
 $totalAmount = 0;
 $totalPayAmount = 0;
 $totalBalance = 0;
 
-$sql = "SELECT `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, `uf`.`payamount`
+
+$sql = "SELECT `u`.`nettotal`, `u`.`idtbl_invoice`, `u`.`invoiceno`, `u`.`total`, `u`.`date`, `uc`.`name` AS `cusname`, `ue`.`name` AS `repname`, SUM(`uf`.`payamount`) as `payamount`
         FROM `tbl_invoice` AS `u`
         LEFT JOIN `tbl_customer` AS `uc` ON `u`.`tbl_customer_idtbl_customer` = `uc`.`idtbl_customer`
         LEFT JOIN `tbl_customer_order` AS `ud` ON `u`.`tbl_customer_order_idtbl_customer_order` = `ud`.`idtbl_customer_order`
         LEFT JOIN `tbl_employee` AS `ue` ON `ud`.`tbl_employee_idtbl_employee` = `ue`.`idtbl_employee`
         LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `uf` ON `u`.`idtbl_invoice` = `uf`.`tbl_invoice_idtbl_invoice`
         WHERE `u`.`status`=1 
-        AND `u`.`paymentcomplete`=0 
-        AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+        AND `ud`.`delivered`=1 
+        AND `ud`.`status`=1 
+        AND `u`.`status`=1 
+        AND `u`.`paymentcomplete`=0";
 
-if ($searchType == '1') { 
-    
-} elseif ($searchType == '3') { 
-    if ($customerID > 0) {
-        $sql .= " AND `u`.`tbl_customer_idtbl_customer` = '$customerID'";
-    }
-} elseif ($searchType == '2') { 
-    if ($repID > 0) {
-        $sql .= " AND `ue`.`idtbl_employee` = '$repID'";
-    }
-} elseif ($searchType == '4') {
-    
+if ($customerList != 'all') {
+    $sql .= " AND `u`.`tbl_customer_idtbl_customer` IN ($customerList)";
 }
+
+if (!empty($validfrom) && !empty($validto)) {
+    $sql .= " AND `u`.`date` BETWEEN '$validfrom' AND '$validto'";
+}
+
+$sql .= "GROUP BY `u`.`idtbl_invoice` ORDER BY `uc`.`name` ASC";
+
 
 $result = $conn->query($sql);
 
-// if (!$result) {
-//     die("Query failed: " . $conn->error);
-// }
 
 if ($result->num_rows == 0) {
     echo "<div style=\"color: red; font-size:20px;\">No Records</div>";
@@ -60,10 +60,13 @@ while($row = $result->fetch_assoc()) {
         ($aginvalue == 2 && $datecount > 15 && $datecount <= 30) ||
         ($aginvalue == 3 && $datecount > 30 && $datecount <= 45)) {
         
+        $balance = $row['nettotal'] - $row['payamount'];
+
+        $row['datecount'] = $datecount; 
+        $row['balance'] = $balance; 
         array_push($customerarray, $row);
-        $totalAmount += $row['total'];
+        $totalAmount += $row['nettotal'];
         $totalPayAmount += $row['payamount'];
-        $balance = $row['total'] - $row['payamount'];
         $totalBalance += $balance;
     }
 }
@@ -84,16 +87,16 @@ $html = '<table class="table table-striped table-bordered table-sm small" id="ou
     <tbody>';
 
 foreach($customerarray as $rowcustomerarray) { 
-    $balance = $rowcustomerarray['total'] - $rowcustomerarray['payamount'];
+    $balance = $rowcustomerarray['nettotal'] ?? 0 - $rowcustomerarray['payamount'] ?? 0;
     $html .= '<tr>
         <td>' . htmlspecialchars($rowcustomerarray['cusname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['repname']) . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['date']) . '</td>
-        <td class="text-center">' . $datecount . '</td>
+        <td class="text-center">' . $rowcustomerarray['datecount'] . '</td>
         <td class="text-center">' . htmlspecialchars($rowcustomerarray['invoiceno']) . '</td>
-        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['total'])) . '</td>
-        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['payamount'])) . '</td>
-        <td class="text-center">' . number_format($balance) . '</td>
+        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['nettotal'] ?? 0)) . '</td>
+        <td class="text-center">' . number_format(htmlspecialchars($rowcustomerarray['payamount'] ?? 0)) . '</td>
+        <td class="text-center">' . number_format($rowcustomerarray['balance'] ) . '</td>
     </tr>';
 }
 

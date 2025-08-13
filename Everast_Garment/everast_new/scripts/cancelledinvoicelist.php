@@ -31,18 +31,18 @@ $primaryKey = 'idtbl_invoice';
 $columns = array(
 	array( 'db' => '`u`.`idtbl_invoice`', 'dt' => 'idtbl_invoice', 'field' => 'idtbl_invoice' ),
 	array( 'db' => '`u`.`date`', 'dt' => 'date', 'field' => 'date' ),
-	array( 'db' => '`u`.`total`', 'dt' => 'total', 'field' => 'total' ),
-	array( 'db' => '`u`.`qtycancelstatus`', 'dt' => 'qtycancelstatus', 'field' => 'qtycancelstatus' ),
+	array( 'db' => '`u`.`invoiceno`', 'dt' => 'invoiceno', 'field' => 'invoiceno' ),
+	array( 'db' => '`u`.`nettotal`', 'dt' => 'nettotal', 'field' => 'nettotal' ),
 	array( 'db' => '`u`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
+	array( 'db' => '`u`.`vat_status`', 'dt' => 'vat_status', 'field' => 'vat_status' ),
+	array( 'db' => '`u`.`cancelreason`', 'dt' => 'cancelreason', 'field' => 'cancelreason' ),
 	array( 'db' => '`ua`.`name`',   'dt' => 'name', 'field' => 'name' ),
-	array( 'db' => '`ub`.`name`', 'dt' => 'salepep', 'field' => 'salepep', 'as' => 'salepep' ),
-	array( 'db' => '`uc`.`area`',   'dt' => 'area', 'field' => 'area' ),
-	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
-	array( 'db' => '`e`.`name`',   'dt' => 'empname', 'field' => 'empname', 'as' => 'empname' ),
-	array( 'db' => '`u`.`qtyreason`',   'dt' => 'qtyreason', 'field' => 'qtyreason' ),
-	array( 'db' => '`u`.`invoice_cancel_reason`',   'dt' => 'invoice_cancel_reason', 'field' => 'invoice_cancel_reason' ),
-	array( 'db' => '`u`.`tbl_user_idtbl_user`',   'dt' => 'tbl_user_idtbl_user', 'field' => 'tbl_user_idtbl_user' ),
-	array( 'db' => '`l`.`name`',   'dt' => 'username', 'field' => 'username', 'as' => 'username'  )
+	array( 'db' => '`ub`.`idtbl_customer_order`',   'dt' => 'idtbl_customer_order', 'field' => 'idtbl_customer_order' ),
+	array( 'db' => '`ub`.`return`',   'dt' => 'return', 'field' => 'return' ),
+	array( 'db' => '`ub`.`cuspono`',   'dt' => 'cuspono', 'field' => 'cuspono' ),
+	array( 'db' => '`uc`.`name`', 'dt' => 'salepep', 'field' => 'salepep', 'as' => 'salepep' ),
+	array( 'db' => '`ud`.`area`',   'dt' => 'area', 'field' => 'area' ),
+	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
 // SQL server connection information
@@ -62,10 +62,11 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_invoice` AS `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ub` ON (`ub`.`idtbl_employee` = `u`.`ref_id`) LEFT JOIN `tbl_area` AS `uc` ON (`uc`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) JOIN `tbl_employee` AS `e` ON (`e`.`idtbl_employee` = `u`.`ref_id`) LEFT JOIN `tbl_user` AS `l` ON (`l`.`idtbl_user` = `u`.`tbl_user_idtbl_user`)";
+$joinQuery = "FROM `tbl_invoice` AS `u` LEFT JOIN `tbl_customer` AS `ua` ON (`ua`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_customer_order` AS `ub` ON (`ub`.`idtbl_customer_order` = `u`.`tbl_customer_order_idtbl_customer_order`) LEFT JOIN `tbl_employee` AS `uc` ON (`uc`.`idtbl_employee` = `ub`.`tbl_employee_idtbl_employee`) LEFT JOIN `tbl_area` AS `ud` ON (`ud`.`idtbl_area` = `u`.`tbl_area_idtbl_area`)";
 
-$extraWhere = "`u`.`status` = '3' and `u`.`qtycancelstatus` != '1' and `u`.`qtycancelstatus` != '2' ";
+$extraWhere = "`u`.`status` = 3";
 
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
 );
+// JOIN `tbl_porder` AS `p` ON (`p`.`idtbl_porder` = `u`.`asd`)

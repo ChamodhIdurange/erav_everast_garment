@@ -14,7 +14,7 @@ $sqlordercount="SELECT COUNT(*) AS `count` FROM `tbl_porder` WHERE `orderdate`='
 $resultordercount=$conn->query($sqlordercount);
 $rowordercount=$resultordercount->fetch_assoc();
 
-$sqlorderinfo="SELECT `tbl_porder_detail`.*, `tbl_product`.`product_name` FROM `tbl_porder_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_porder_detail`.`tbl_product_idtbl_product` WHERE `tbl_porder_detail`.`status`=1 AND `tbl_porder_detail`.`tbl_porder_idtbl_porder`='$orderID'";
+$sqlorderinfo="SELECT `tbl_porder_detail`.*, `tbl_product`.`product_name`, `tbl_product`.`product_code` FROM `tbl_porder_detail` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product`=`tbl_porder_detail`.`tbl_product_idtbl_product` WHERE `tbl_porder_detail`.`status`=1 AND `tbl_porder_detail`.`tbl_porder_idtbl_porder`='$orderID'";
 $resultorderinfo=$conn->query($sqlorderinfo);
 
 $arrayaccessories=array();
@@ -30,46 +30,42 @@ while($rowaccessories=$resultaccessories->fetch_assoc()){
 
 ?>
 <div class="row">
-    <div class="col-12 small">
-        <table class="table table-borderless table-sm text-center w-100 tableprint">
+    <div class="col-8 small">
+        <table class="table table-borderless table-sm text-left w-100 tableprint">
             <tbody>
                 <tr>
-                    <td>&nbsp;</td>
                     <td>
-                        <h3 class="font-weight-light m-0">Everest Hardware (Pvt) Ltd</h3>
-                        <h4 class="mt-2">Purchsing Order</h4>
+                        <h3 class="font-weight-light m-0">EVEREST HARDWARE CO. (PVT) LTD;</h3>
+                        <h4 class="mt-2">#363/10/01, Malwatte, Kal-Eliya (Mirigama).</h4>
                     </td>
                     <td>&nbsp;</td>
                 </tr>
-            </tbody>            
-        </table>        
+            </tbody>
+        </table>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <table class="table table-bordered table-black bg-transparent table-sm small w-100 tableprint">
-            <tr>
-                <td class="small">Order Date</td>
-                <td class="small"><?php echo $roworder['orderdate'] ?></td>
-                <td class="small">Distributor</td>
-                <td class="small" colspan="3">Switch Company (Pvt) Ltd</td>
-                <td class="small">Code</td>
-                <td class="small">1008684</td>
-            </tr>
-            <tr>
-                <td class="small">ASM Name</td>
-                <td class="small" colspan="7"><?php echo $_SESSION['name'] ?></td>
-            </tr>
+    <div class="col-4 small">
+        <table class="table table-borderless table-sm text-left w-100 tableprint">
+            <tbody>
+                <tr>
+                    <td class="small">Order Date</td>
+                    <td class="small"><?php echo $roworder['orderdate'] ?></td>
+                </tr>
+                <tr>
+                    <td class="small">ASM Name</td>
+                    <td class="small"><?php echo $_SESSION['name'] ?></td>
+                </tr>
         </table>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
-        <table class="table table-striped table-bordered table-black table-sm small bg-transparent text-center mb-0 tableprint">
+        <table
+            class="table table-striped table-bordered table-black table-sm small bg-transparent text-center mb-0 tableprint">
             <thead>
                 <tr>
                     <td class="align-top small">#</td>
                     <td class="align-top small">Prodcut Name</td>
+                    <td class="align-top small">Prodcut Code</td>
                     <td class="align-top small text-right">Unit Price</td>
                     <td class="align-top small text-center">Prodcut Qty</td>
                     <td class="align-top small text-right">Total</td>
@@ -80,15 +76,18 @@ while($rowaccessories=$resultaccessories->fetch_assoc()){
                 <tr>
                     <td class="align-top small"><?php echo $i ?></td>
                     <td class="align-top small"><?php echo $roworderinfo['product_name'] ?></td>
-                    <td class="align-top small text-right"><?php echo number_format($roworderinfo['unitprice'],2) ?></td>
+                    <td class="align-top small"><?php echo $roworderinfo['product_code'] ?></td>
+                    <td class="align-top small text-right"><?php echo number_format($roworderinfo['unitprice'],2) ?>
+                    </td>
                     <td class="align-top small text-center"><?php echo $roworderinfo['qty'] ?></td>
-                    <td class="align-top small text-right"><?php echo number_format(($roworderinfo['qty']*$roworderinfo['unitprice']), 2) ?></td>
+                    <td class="align-top small text-right">
+                        <?php echo number_format(($roworderinfo['qty']*$roworderinfo['unitprice']), 2) ?></td>
                 </tr>
                 <?php $i++;} ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <th class="text-left" colspan="4">Net Total</th>
+                    <th class="text-left" colspan="5">Net Total</th>
                     <th class="text-right"><?php echo number_format($roworder['nettotal'], 2) ?></th>
                 </tr>
             </tfoot>
@@ -102,16 +101,18 @@ while($rowaccessories=$resultaccessories->fetch_assoc()){
                 <tr>
                     <td>
                         **Collection only<br>
-                        **Time (For collections - approximate plant arrival time / for delivery - approximate time to arrive to distributor)
+                        **Time (For collections - approximate plant arrival time / for delivery - approximate time to
+                        arrive to distributor)
                     </td>
                 </tr>
-            </tbody>            
-        </table>        
+            </tbody>
+        </table>
     </div>
 </div>
 <div class="row">
     <div class="col-12">
-        <table class="table table-striped table-bordered table-black table-sm small bg-transparent text-center tableprint">
+        <table
+            class="table table-striped table-bordered table-black table-sm small bg-transparent text-center tableprint">
             <tbody>
                 <tr>
                     <td><?php echo $roworder['remark'] ?></td>
@@ -140,7 +141,7 @@ while($rowaccessories=$resultaccessories->fetch_assoc()){
                         Agreed by: Signature of ASM / DSE /DSO
                     </td>
                 </tr>
-            </tbody>            
-        </table>          
+            </tbody>
+        </table>
     </div>
 </div>

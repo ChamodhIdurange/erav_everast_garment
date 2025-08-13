@@ -37,7 +37,9 @@ $columns = array(
     array('db' => '`s`.`unitprice`', 'dt' => 'unitprice', 'field' => 'unitprice'),
     array('db' => '`s`.`total_qty`', 'dt' => 'total_qty', 'field' => 'total_qty'),
     array('db' => '`s`.`last_month_qty`', 'dt' => 'last_month_qty', 'field' => 'last_month_qty'),
-    array('db' => '`s`.`current_month_qty`', 'dt' => 'current_month_qty', 'field' => 'current_month_qty')
+    array('db' => '`s`.`current_month_qty`', 'dt' => 'current_month_qty', 'field' => 'current_month_qty'),
+    array('db' => '`s`.`percentageVal`', 'dt' => 'percentageVal', 'field' => 'percentageVal'),
+
 );
 
 // SQL server connection information
@@ -73,17 +75,15 @@ $joinQuery = "FROM (
         SUM(CASE 
             WHEN MONTH(u.update) = MONTH(CURRENT_DATE()) THEN u.qty 
             ELSE 0 
-        END) AS current_month_qty
+        END) AS current_month_qty,
+        (ua.saleprice - ua.unitprice) * 100 / ua.unitprice AS percentageVal
     FROM
         tbl_stock AS u
     LEFT JOIN
         tbl_product AS ua ON u.tbl_product_idtbl_product = ua.idtbl_product
+    WHERE `u`.`status` ='1'
     GROUP BY 
-        ua.product_code, 
-        ua.product_name, 
-        ua.saleprice, 
-        ua.retail,
-        ua.unitprice
+        ua.idtbl_product
 ) AS `s`";
 
 // $extraWhere = "WHERE `u`.`status` ='1'";
