@@ -369,6 +369,12 @@ function checkprivilege($arraymenu, $menuID, $type)
                         Good Receive
                     </a>
                 <?php }
+                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="monthend.php">
+                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
+                        Month End
+                    </a>
+                <?php }
                     if (menucheck($menuprivilegearray, 40) == 1) { ?>
                     <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">
                         <div class="nav-link-icon"><i data-feather="archive"></i></div>
