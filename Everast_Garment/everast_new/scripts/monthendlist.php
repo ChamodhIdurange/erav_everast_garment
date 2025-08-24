@@ -1,5 +1,4 @@
 <?php
-
 require_once('../connection/db.php');
 
 $draw   = isset($_POST['draw']) ? intval($_POST['draw']) : 1;
@@ -20,7 +19,6 @@ $resAll = $conn->query($sql);
 $totalRecords = $resAll ? $resAll->num_rows : 0;
 
 $orderSql = " ORDER BY ym DESC ";
-
 $limitSql = " LIMIT $start, $length ";
 
 $res = $conn->query($sql . $orderSql . $limitSql);

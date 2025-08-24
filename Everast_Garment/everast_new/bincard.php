@@ -1,10 +1,10 @@
-<?php 
-include "include/header.php";  
+<?php
+include "include/header.php";
 
-$sqlemployee="SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
-$resultemployee =$conn-> query($sqlemployee);
+$sqlemployee = "SELECT `idtbl_product`, `product_name` FROM `tbl_product` WHERE `status`=1";
+$resultemployee = $conn->query($sqlemployee);
 
-include "include/topnavbar.php"; 
+include "include/topnavbar.php";
 ?>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
@@ -43,13 +43,19 @@ include "include/topnavbar.php";
                                             <div class="input-group input-group-sm">
                                                 <select class="form-control form-control-sm rounded-0" name="item" id="item" required>
                                                     <option value="">Select</option>
-                                                    <?php if($resultemployee->num_rows > 0) {while ($rowemployee = $resultemployee-> fetch_assoc()) { ?>
-                                                    <option value="<?php echo $rowemployee['idtbl_product'] ?>"><?php echo $rowemployee['product_name']; ?></option>
-                                                    <?php }} ?>
+                                                    <?php if ($resultemployee->num_rows > 0) {
+                                                        while ($rowemployee = $resultemployee->fetch_assoc()) { ?>
+                                                            <option value="<?php echo $rowemployee['idtbl_product'] ?>"><?php echo $rowemployee['product_name']; ?></option>
+                                                    <?php }
+                                                    } ?>
                                                 </select>
                                                 <div class="input-group-append">
                                                     <button class="btn btn-outline-dark rounded-0" type="button" id="formSearchBtn"><i class="fas fa-search"></i>&nbsp;Search</button>
                                                 </div>
+                                            </div>
+                                            <div class="col">&nbsp;</div>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-success rounded-0" type="button" id="binprint"><i class="fas fa-print"></i>&nbsp;Print BIN</button>
                                             </div>
                                         </div>
                                         <div class="col">&nbsp;</div>
@@ -59,9 +65,10 @@ include "include/topnavbar.php";
                             </div>
                             <div class="col-12">
                                 <hr class="border-dark">
-                                <div id="targetviewdetail"></div>  
-                                                           
+                                <div id="targetviewdetail"></div>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -81,18 +88,18 @@ include "include/topnavbar.php";
             todayHighlight: true,
             format: 'yyyy-mm',
             endDate: 'today',
-            viewMode: "months", 
+            viewMode: "months",
             minViewMode: "months"
         });
 
-        $('#formSearchBtn').click(function(){
+        $('#formSearchBtn').click(function() {
             if (!$("#searchform")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
                 $("#hidesubmit").click();
-            } else {   
+            } else {
                 var item = $('#item').val();
-               
+
 
                 $('#targetviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
 
@@ -100,19 +107,37 @@ include "include/topnavbar.php";
                     type: "POST",
                     data: {
                         item: item
-                        
+
                     },
                     url: 'getprocess/getbincard.php',
-                    success: function(result) {//alert(result);
+                    success: function(result) { //alert(result);
                         $('#targetviewdetail').html(result);
                         invoiceviewoption();
                     }
                 });
             }
         });
+
+        $('#binprint').click(function() {
+    if (!$("#searchform")[0].checkValidity()) {
+        $("#hidesubmit").click();
+    } else {
+        var item = $('#item').val();
+        if(!item){
+            alert("Please select a product!");
+            return;
+        }
+
+        // Open PDF in new tab
+        window.open('pdfprocess/bin_report.php?item=' + item, '_blank');
+    }
+});
+
+
+
     });
 
-    function invoiceviewoption(){
+    function invoiceviewoption() {
         $('#tableoutstanding tbody').on('click', '.viewbtninv', function() {
             var invID = $(this).attr('id');
 
@@ -122,10 +147,10 @@ include "include/topnavbar.php";
             $.ajax({
                 type: "POST",
                 data: {
-                    invID : invID
+                    invID: invID
                 },
                 url: 'getprocess/getissueinvoiceinfo.php',
-                success: function(result) {//alert(result);
+                success: function(result) { //alert(result);
                     $('#viewinvoicedetail').html(result);
                 }
             });
@@ -181,6 +206,5 @@ include "include/topnavbar.php";
                 '</div>'
         });
     }
-
 </script>
 <?php include "include/footer.php"; ?>

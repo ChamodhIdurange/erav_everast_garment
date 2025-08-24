@@ -1,7 +1,5 @@
 <?php
-
 require_once('../connection/db.php');
-
 header('Content-Type: application/json');
 
 $ym = isset($_POST['ym']) ? $_POST['ym'] : '';
