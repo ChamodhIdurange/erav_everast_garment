@@ -16,7 +16,7 @@ $category = $row['category'];
 
 $count = 0;
 
-$sqldetails = "SELECT `tbl_catalog_details`.`idtbl_catalog_details`, `tbl_catalog_details`.`status`, `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_product`.`saleprice`,  `tbl_product`.`product_code`, SUM(`tbl_stock`.`qty`) AS `qty`, `tbl_product`.`tbl_sizes_idtbl_sizes`, `tbl_product`.`tbl_size_categories_idtbl_size_categories`, `tbl_sizes`.`name` AS `sizename`, `tbl_size_categories`.`name` AS `catname` FROM `tbl_catalog_details` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product` = `tbl_catalog_details`.`product_name` LEFT JOIN `tbl_stock` ON `tbl_stock`.`tbl_product_idtbl_product` = `tbl_product`.`idtbl_product` LEFT JOIN `tbl_sizes` ON `tbl_sizes`.`idtbl_sizes` = `tbl_product`.`tbl_sizes_idtbl_sizes` LEFT JOIN `tbl_size_categories` ON `tbl_size_categories`.`idtbl_size_categories` = `tbl_product`.`tbl_size_categories_idtbl_size_categories` WHERE `tbl_catalog_idtbl_catalog`='$productID' AND `tbl_catalog_details`.`status`IN (1, 2) GROUP BY `tbl_product`.`idtbl_product`";
+$sqldetails = "SELECT `tbl_catalog_details`.`idtbl_catalog_details`, `tbl_catalog_details`.`status`, `tbl_product`.`product_name`, `tbl_product`.`idtbl_product`, `tbl_product`.`saleprice`,  `tbl_product`.`product_code`, SUM(`tbl_stock`.`qty`) AS `qty`, `tbl_product`.`tbl_sizes_idtbl_sizes`, `tbl_product`.`tbl_size_categories_idtbl_size_categories`, `tbl_sizes`.`name` AS `sizename`, `tbl_size_categories`.`name` AS `catname`, `tbl_sizes`.`sequence` FROM `tbl_catalog_details` LEFT JOIN `tbl_product` ON `tbl_product`.`idtbl_product` = `tbl_catalog_details`.`product_name` LEFT JOIN `tbl_stock` ON `tbl_stock`.`tbl_product_idtbl_product` = `tbl_product`.`idtbl_product` LEFT JOIN `tbl_sizes` ON `tbl_sizes`.`idtbl_sizes` = `tbl_product`.`tbl_sizes_idtbl_sizes` LEFT JOIN `tbl_size_categories` ON `tbl_size_categories`.`idtbl_size_categories` = `tbl_product`.`tbl_size_categories_idtbl_size_categories` WHERE `tbl_catalog_idtbl_catalog`='$productID' AND `tbl_catalog_details`.`status`IN (1, 2) GROUP BY `tbl_product`.`idtbl_product` ORDER BY `tbl_sizes`.`sequence`";
 $resultdetails = $conn->query($sqldetails);
 
 
@@ -54,6 +54,8 @@ $result = $conn->query($sql);
                 <th scope="col">Item Name</th>
                 <th scope="col">Price</th>
                 <th scope="col" class="text-center">Available Qty</th>
+                <th scope="col">Size Name</th>
+                <th scope="col">Sequence</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -70,6 +72,8 @@ $result = $conn->query($sql);
                         <td><?php echo $row1['product_name'] ?></td>
                         <td><?php echo number_format($row1['saleprice'], 2) ?></td>
                         <td class="text-center"><?php echo $row1['qty'] ?></td>
+                        <td class="text-center"><?php echo $row1['sizename'] ?></td>
+                        <td class="text-center"><?php echo $row1['sequence'] ?></td>
                         <td>
                             <?php if ($row1['status'] == 1) { ?>
                                 <button id="<?php echo $row1['idtbl_catalog_details'] ?>" onclick="return confirm('Are you sure you want to deactive this?');" class="btn btn-outline-success btn-sm btnstatus2"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -107,9 +111,6 @@ $result = $conn->query($sql);
             <?php }
                 }
             } ?>
-
-
-
         </tbody>
     </table>
 
@@ -126,7 +127,6 @@ $result = $conn->query($sql);
     <?php while ($row = $result->fetch_assoc()) { ?>
         <div class="card mb-3" style="width: 18rem; margin-right: 10px; margin-top:10px">
             <img src="<?php echo $row['imagepath'] ?>" class="card-img-top" width="200" height="200">
-
             <div class="card-body d-flex flex-column">
 
                 <div class="mt-auto">
@@ -162,7 +162,7 @@ $result = $conn->query($sql);
                     id: id
                 },
                 url: 'process/imageuploadcatalog.php',
-                success: function(result) {
+                success: function(result) {console.log(result)
                     loadlistimages(); 
                 }
             });

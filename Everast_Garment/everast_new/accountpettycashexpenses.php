@@ -98,7 +98,11 @@ $resultpettycashexpensesaccount =$conn-> query($pettycashexpensesccountsql);
                                                     <?php if($row['status']==3){ ?>
                                                         <span>Cancelled</span>
                                                     <?php }else{ ?>
-                                                        <a href="process/statusaccountpettycashexpenses.php?record=<?php echo $row['idtbl_pettycash_expenses'] ?>&type=3" onclick="return confirm('Are you sure you want to Cancel this?');" target="_self" class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>" data-toggle="tooltip" data-placement="bottom" title="Cancel"><i data-feather="x"></i></a>
+                                                        <button
+                                                    data-url="process/statusaccountpettycashexpenses.php?record=<?php echo $row['idtbl_pettycash_expenses'] ?>&type=3"
+                                                    data-actiontype="3"
+                                                    class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                        data-feather="x"></i></button>
                                                     <?php } ?>
                                                 </td>
                                             </tr>

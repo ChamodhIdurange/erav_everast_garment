@@ -130,15 +130,17 @@ include "include/topnavbar.php";
                 "render": function(data, type, full) {
                     var button = '';
 
-                    button += '<button class="btn btn-outline-primary btn-sm mr-1 btnEdit ' + (editcheck == 0 ? 'd-none' : '') + '" id="' + full['idtbl_bank_branch'] + '"><i data-feather="edit-2"></i></button>';
-
-                    if (full['status'] == 1) {
-                        button += '<a href="process/statusbankbranchinfo.php?record=' + full['idtbl_bank_branch'] + '&type=2" onclick="return confirm(\'Are you sure you want to deactivate this?\');" target="_self" class="btn btn-outline-success mr-1 btn-sm ' + (statuscheck == 0 ? 'd-none' : '') + '"><i data-feather="check"></i></a>';
-                    } else {
-                        button += '<a href="process/statusbankbranchinfo.php?record=' + full['idtbl_bank_branch'] + '&type=1" onclick="return confirm(\'Are you sure you want to activate this?\');" target="_self" class="btn btn-outline-warning mr-1 btn-sm ' + (statuscheck == 0 ? 'd-none' : '') + '"><i data-feather="x-square"></i></a>';
-                    }
-                    button += '<a href="process/statusbankbranchinfo.php?record=' + full['idtbl_bank_branch'] + '&type=3" onclick="return confirm(\'Are you sure you want to remove this?\');" target="_self" class="btn btn-outline-danger btn-sm ' + (deletecheck == 0 ? 'd-none' : '') + '"><i data-feather="trash-2"></i></a>';
-
+                    if(editcheck=1){
+                            button+='<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="'+full['idtbl_bank_branch']+'"><i class="fas fa-pen"></i></button>';
+                        }
+                        if(full['status']==1  && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusbankbranchinfo.php?record='+full['idtbl_bank_branch']+'&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
+                        }else if(full['status']==2 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusbankbranchinfo.php?record='+full['idtbl_bank_branch']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
+                        }
+                        if(deletecheck==1){
+                            button+='<button type="button" data-url="process/statusbankbranchinfo.php?record='+full['idtbl_bank_branch']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
+                        }
                     return button;
                 }
             }
@@ -147,8 +149,8 @@ include "include/topnavbar.php";
         feather.replace();
     });
 
-    $('#dataTable tbody').on('click', '.btnEdit', function() {
-        var r = confirm("Are you sure, You want to Edit this ? ");
+    $('#dataTable tbody').on('click', '.btnEdit', async function () {
+        var r = await Otherconfirmation("You want to edit this ? ");
         if (r == true) {
             var id = $(this).attr('id');
             $.ajax({

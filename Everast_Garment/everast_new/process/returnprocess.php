@@ -11,6 +11,8 @@ $tableData = $_POST['tableData'];
 $returntype = $_POST['returntype'];
 $customerinvoice = $_POST['customerinvoice'];
 $total = $_POST['total'];
+$invoicestatus = $_POST['invoicestatus'];
+$repId = $_POST['repId'];
 
 $today = date('Y-m-d');
 
@@ -18,7 +20,7 @@ if ($returntype == 3 || $returntype == 1) {
     $customer = $_POST['customer'];
     $remarks = $_POST['remarks'];
 
-    $query = "INSERT INTO `tbl_return`(`returntype`, `returndate`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `acceptance_status`, `total`, `damaged_reason`, `credit_note`, `credit_note_issue`, `tbl_invoice_idtbl_invoice`) VALUES ('$returntype','$today','1','$updatedatetime','$userID', '0', '$total', '$remarks', '0', '0', '$customerinvoice')";
+    $query = "INSERT INTO `tbl_return`(`returntype`, `has_invoice`, `returndate`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `acceptance_status`, `total`, `damaged_reason`, `credit_note`, `credit_note_issue`, `tbl_invoice_idtbl_invoice`, `tbl_customer_idtbl_customer`, `tbl_employee_idtbl_employee`) VALUES ('$returntype', '$invoicestatus', '$today','1','$updatedatetime','$userID', '0', '$total', '$remarks', '0', '0', '$customerinvoice', '$customer', '$repId')";
 
     if ($conn->query($query) == true) {
         $last_id = mysqli_insert_id($conn);
@@ -50,7 +52,7 @@ if ($returntype == 3 || $returntype == 1) {
     $supplier = $_POST['supplier'];
 
 
-    $query = "INSERT INTO `tbl_return`(`returntype`, `returndate`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `acceptance_status`, `total`, `damaged_reason`, `credit_note`, `credit_note_issue`, `tbl_invoice_idtbl_invoice`) VALUES ('$returntype','$today','1','$updatedatetime','$userID', '0', '$total', '$remarks', '0', '0', '$customerinvoice')";
+    $query = "INSERT INTO `tbl_return`(`returntype`, `returndate`, `has_invoice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `acceptance_status`, `total`, `damaged_reason`, `credit_note`, `credit_note_issue`, `tbl_invoice_idtbl_invoice`, `tbl_return_idtbl_return`) VALUES ('$returntype', '$invoicestatus', '$today','1','$updatedatetime','$userID', '0', '$total', '$remarks', '0', '0', '$customerinvoice', '$customer')";
 
     echo $query;
 

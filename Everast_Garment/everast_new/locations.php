@@ -105,8 +105,7 @@ include "include/topnavbar.php";
                                     <div class="row">
                                         <div class="col-md-6 form-group mb-1">
                                             <label class="small font-weight-bold text-dark">Bank name*</label>
-                                            <select class="form-control form-control-sm" name="bank" id="bank"
-                                                required>
+                                            <select class="form-control form-control-sm" name="bank" id="bank" required>
                                                 <option value="">Select</option>
                                                 <?php if($resultBank->num_rows > 0) {while ($rowcategory = $resultBank-> fetch_assoc()) { ?>
                                                 <option value="<?php echo $rowcategory['idtbl_bank'] ?>">
@@ -122,8 +121,8 @@ include "include/topnavbar.php";
                                     </div>
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Account number*</label>
-                                        <input type="text" class="form-control form-control-sm" name="accountnumber" id="accountnumber"
-                                            required>
+                                        <input type="text" class="form-control form-control-sm" name="accountnumber"
+                                            id="accountnumber" required>
                                     </div>
 
 
@@ -164,25 +163,30 @@ include "include/topnavbar.php";
                                                 <td><?php echo $row['email'] ?></td>
                                                 <td><?php echo $row['headperson'] ?></td>
                                                 <td class="text-right">
-
-                                                    <button class="btn btn-outline-primary btn-sm btnEdit"
+                                                <?php if($editcheck==1){ ?>
+                                                    <button
+                                                        class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
                                                         id="<?php echo $row['idtbl_locations'] ?>"><i
                                                             data-feather="edit-2"></i></button>
-                                                    <?php if($row['status']==1){ ?>
-                                                    <a href="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=2"
-                                                        onclick="return confirm('Are you sure you want to deactive this?');"
-                                                        target="_self" class="btn btn-outline-success btn-sm"><i
-                                                            data-feather="check"></i></a>
-                                                    <?php }else{ ?>
-                                                    <a href="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=1"
-                                                        onclick="return confirm('Are you sure you want to active this?');"
-                                                        target="_self" class="btn btn-outline-warning btn-sm"><i
-                                                            data-feather="x-square"></i></a>
+                                                    <?php } if($statuscheck==1 && $row['status']==1){ ?>
+                                                    <button
+                                                        data-url="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=2"
+                                                        data-actiontype="2"
+                                                        class="btn btn-outline-success btn-sm btntableaction"><i
+                                                            data-feather="check"></i></button>
+                                                    <?php } else if($statuscheck==1 && $row['status']==2){ ?>
+                                                    <button
+                                                        data-url="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=1"
+                                                        data-actiontype="1"
+                                                        class="btn btn-outline-warning btn-sm btntableaction"><i
+                                                            data-feather="x-square"></i></button>
+                                                    <?php } if($deletecheck==1){ ?>
+                                                    <button
+                                                        data-url="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=3"
+                                                        data-actiontype="3"
+                                                        class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                            data-feather="trash-2"></i></button>
                                                     <?php } ?>
-                                                    <a href="process/statuslocation.php?record=<?php echo $row['idtbl_locations'] ?>&type=3"
-                                                        onclick="return confirm('Are you sure you want to remove this?');"
-                                                        target="_self" class="btn btn-outline-danger btn-sm"><i
-                                                            data-feather="trash-2"></i></a>
                                                 </td>
                                             </tr>
                                             <?php }} ?>
@@ -209,8 +213,8 @@ include "include/topnavbar.php";
         var statuscheck
         var deletecheck
 
-        $('#dataTable tbody').on('click', '.btnEdit', function () {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({

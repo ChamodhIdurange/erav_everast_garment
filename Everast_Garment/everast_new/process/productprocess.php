@@ -30,6 +30,7 @@ $sizecategory = $_POST['sizecategory'];
 $salediscount = $_POST['salediscount'];
 $retaildiscount = $_POST['retaildiscount'];
 $priceradio = $_POST['priceradio'];
+$hiddenspecialproduct = $_POST['hiddenspecialproduct'];
 // $productimage=$_POST['productimage'];
 
 // Product Image
@@ -75,7 +76,7 @@ $updatedatetime=date('Y-m-d h:i:s');
 $today=date('Y-m-d');
 
 if($recordOption==1){
-    $query = "INSERT INTO `tbl_product`(`product_code`, `product_name`, `size`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_category_idtbl_product_category`, `barcode`, `rol`, `pices_per_box`, `retail`, `starpoints`, `tbl_group_category_idtbl_group_category`, `tbl_sub_product_category_idtbl_sub_product_category`, `tbl_supplier_idtbl_supplier`, `retaildiscount`, `salediscount`, `price_acceptable`, `additional_discount`, `common_name`, `tbl_sizes_idtbl_sizes`, `tbl_size_categories_idtbl_size_categories`, `productimagepath`, `uom`) Values ('$productcode','$product_name','','$unitprice','$saleprice','1','$updatedatetime','$userID','$category','$barcode','$rol','$peices','$retail','$starpoints','$groupcategory','$subcategory','$supplier','$retaildiscount','$salediscount', '$priceradio', '$additionaldiscount', '$commonname', '$size', '$sizecategory', '$productimagepath', '$uom')";
+    $query = "INSERT INTO `tbl_product`(`product_code`, `product_name`, `size`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_product_category_idtbl_product_category`, `barcode`, `rol`, `pices_per_box`, `retail`, `starpoints`, `tbl_group_category_idtbl_group_category`, `tbl_sub_product_category_idtbl_sub_product_category`, `tbl_supplier_idtbl_supplier`, `retaildiscount`, `salediscount`, `price_acceptable`, `additional_discount`, `common_name`, `tbl_sizes_idtbl_sizes`, `tbl_size_categories_idtbl_size_categories`, `productimagepath`, `uom`, `is_special`) Values ('$productcode','$product_name','','$unitprice','$saleprice','1','$updatedatetime','$userID','$category','$barcode','$rol','$peices','$retail','$starpoints','$groupcategory','$subcategory','$supplier','$retaildiscount','$salediscount', '$priceradio', '$additionaldiscount', '$commonname', '$size', '$sizecategory', '$productimagepath', '$uom', '$hiddenspecialproduct')";
     if($conn->query($query)==true){
         $productID=$conn->insert_id;
 
@@ -98,9 +99,9 @@ if($recordOption==1){
 else{
     echo $productimagepath;
     if($productimagepath!=''){
-        $query = "UPDATE `tbl_product` SET `product_code`='$productcode',`product_name`='$product_name',`unitprice`='$unitprice',`saleprice`='$saleprice',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_product_category_idtbl_product_category`='$category',`barcode`='$barcode',`rol`='$rol',`pices_per_box`='$peices',`retail`='$retail',`starpoints`='$starpoints',`tbl_sub_product_category_idtbl_sub_product_category`='$subcategory',`tbl_group_category_idtbl_group_category`='$groupcategory',`tbl_supplier_idtbl_supplier`='$supplier',`retaildiscount`='$retaildiscount',`salediscount`='$salediscount', `price_acceptable` = '$priceradio', `additional_discount` = '$additionaldiscount', `common_name` = '$commonname', `tbl_sizes_idtbl_sizes` = '$size', `tbl_size_categories_idtbl_size_categories` = '$sizecategory', `uom` = '$uom', `productimagepath` = '$productimagepath'  WHERE `idtbl_product`='$recordID'";
+        $query = "UPDATE `tbl_product` SET `product_code`='$productcode',`product_name`='$product_name',`unitprice`='$unitprice',`saleprice`='$saleprice',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_product_category_idtbl_product_category`='$category',`barcode`='$barcode',`rol`='$rol',`pices_per_box`='$peices',`retail`='$retail',`starpoints`='$starpoints',`tbl_sub_product_category_idtbl_sub_product_category`='$subcategory',`tbl_group_category_idtbl_group_category`='$groupcategory',`tbl_supplier_idtbl_supplier`='$supplier',`retaildiscount`='$retaildiscount',`salediscount`='$salediscount', `price_acceptable` = '$priceradio', `additional_discount` = '$additionaldiscount', `common_name` = '$commonname', `tbl_sizes_idtbl_sizes` = '$size', `tbl_size_categories_idtbl_size_categories` = '$sizecategory', `uom` = '$uom', `productimagepath` = '$productimagepath', `is_special` = '$hiddenspecialproduct'  WHERE `idtbl_product`='$recordID'";
     }else{
-        $query = "UPDATE `tbl_product` SET `product_code`='$productcode',`product_name`='$product_name',`unitprice`='$unitprice',`saleprice`='$saleprice',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_product_category_idtbl_product_category`='$category',`barcode`='$barcode',`rol`='$rol',`pices_per_box`='$peices',`retail`='$retail',`starpoints`='$starpoints',`tbl_sub_product_category_idtbl_sub_product_category`='$subcategory',`tbl_group_category_idtbl_group_category`='$groupcategory',`tbl_supplier_idtbl_supplier`='$supplier',`retaildiscount`='$retaildiscount',`salediscount`='$salediscount', `price_acceptable` = '$priceradio', `additional_discount` = '$additionaldiscount', `common_name` = '$commonname', `tbl_sizes_idtbl_sizes` = '$size', `tbl_size_categories_idtbl_size_categories` = '$sizecategory', `uom` = '$uom'  WHERE `idtbl_product`='$recordID'";
+        $query = "UPDATE `tbl_product` SET `product_code`='$productcode',`product_name`='$product_name',`unitprice`='$unitprice',`saleprice`='$saleprice',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID', `tbl_product_category_idtbl_product_category`='$category',`barcode`='$barcode',`rol`='$rol',`pices_per_box`='$peices',`retail`='$retail',`starpoints`='$starpoints',`tbl_sub_product_category_idtbl_sub_product_category`='$subcategory',`tbl_group_category_idtbl_group_category`='$groupcategory',`tbl_supplier_idtbl_supplier`='$supplier',`retaildiscount`='$retaildiscount',`salediscount`='$salediscount', `price_acceptable` = '$priceradio', `additional_discount` = '$additionaldiscount', `common_name` = '$commonname', `tbl_sizes_idtbl_sizes` = '$size', `tbl_size_categories_idtbl_size_categories` = '$sizecategory', `uom` = '$uom', `is_special` = '$hiddenspecialproduct'  WHERE `idtbl_product`='$recordID'";
     }
     
     if($conn->query($query)==true){
@@ -112,7 +113,6 @@ else{
             $updateproductsale="UPDATE `tbl_customer_product` SET `saleprice`='$saleprice',`updatedatetime`='$updatedatetime',`tbl_user_idtbl_user`='$userID' WHERE `tbl_product_idtbl_product`='$recordID' AND `tbl_customer_idtbl_customer`='$customerID'";
             $conn->query($updateproductsale);
         }
-
         header("Location:../product.php?action=6");
     }
     else{header("Location:../product.php?action=5");}

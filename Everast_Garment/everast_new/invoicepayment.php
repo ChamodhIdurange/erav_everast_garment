@@ -6,15 +6,18 @@ $result =$conn-> query($sql);
 
 // $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 // $resultcustomer =$conn-> query($sqlcustomer);
-
 $sqlbank="SELECT `idtbl_bank`, `bankname` FROM `tbl_bank` WHERE `status`=1 AND `idtbl_bank`!=1";
 $resultbank =$conn-> query($sqlbank); 
 
 $sqlasm="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 AND `tbl_user_type_idtbl_user_type` IN ('8','9') ORDER BY `name` ASC";
 $resultasm =$conn-> query($sqlasm);
 
-$sqlcreditnote="SELECT `idtbl_creditenote`, `balAmount` FROM `tbl_creditenote` WHERE `status`=1 AND `balAmount`>0";
+$sqlcreditnote="SELECT `u`.`idtbl_creditenote`, `u`.`balAmount`, `c`.`name` FROM `tbl_creditenote` AS `u` LEFT JOIN `tbl_customer` AS `c` ON (`u`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`) WHERE `u`.`status`=1 AND `u`.`settle`=0 AND `u`.`balAmount`>0";
 $resultcreditnote =$conn-> query($sqlcreditnote); 
+
+$sqlexcessnote="SELECT `u`.`idtbl_invoice_excess_payment`, `u`.`excess_amount`, `c`.`name` FROM `tbl_invoice_excess_payment` AS `u` LEFT JOIN `tbl_customer` AS `c` ON (`u`.`tbl_customer_idtbl_customer` = `c`.`idtbl_customer`) WHERE `u`.`status`=1 AND `u`.`paystatus`=0 AND `u`.`excess_amount`>0";
+$resultexcessnote =$conn-> query($sqlexcessnote); 
+
 
 include "include/topnavbar.php"; 
 ?>
@@ -45,8 +48,9 @@ include "include/topnavbar.php";
                                         <select class="form-control form-control-sm" name="customer" id="customer" required>
                                             <option value="">Select</option>
                                         </select>
+                                        <input type="hidden" id="hidecustomerId">
                                     </div>
-                                    <div class="col-3">
+                                    <!-- <div class="col-3">
                                         <label class="small font-weight-bold text-dark">ASM*</label>
                                         <select class="form-control form-control-sm" name="asm" id="asm" required>
                                             <option value="">Select</option>
@@ -54,8 +58,8 @@ include "include/topnavbar.php";
                                             <option value="<?php echo $rowasm['idtbl_employee'] ?>"><?php echo $rowasm['name']; ?></option>
                                             <?php }} ?>
                                         </select>
-                                    </div>
-                                    <div class="col-3">
+                                    </div> -->
+                                    <div class="col-3 ml-3">
                                         <form id="searchform">
                                             <label class="small font-weight-bold text-dark">Invoice Search</label>
                                             <div class="input-group input-group-sm">
@@ -112,6 +116,25 @@ include "include/topnavbar.php";
                 <div class="row">
                     <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
                         <form id="formModal">
+                            <div class="form-group mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="createCreditNote" name="createCreditNote">
+                                    <label class="form-check-label small font-weight-bold text-dark" for="createCreditNote">
+                                        Create Excess Note
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label class="small font-weight-bold text-dark">Payment Date*</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control dpd1a" placeholder="" name="paymentdate"
+                                        id="paymentdate" required>
+                                    <div class="input-group-append">
+                                        <span class="btn btn-light border-gray-500"><i
+                                                class="far fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group mb-1">
                                 <label class="small font-weight-bold text-dark">Payment Amount</label>
                                 <input id="paymentPayAmountWithoutdis" name="paymentPayAmountWithoutdis" type="text" class="form-control form-control-sm" placeholder="Total Amount" readonly>
@@ -131,7 +154,13 @@ include "include/topnavbar.php";
                                     <option value="1">Cash</option>
                                     <option value="2">Bank / Cheque</option>
                                     <option value="3">Credit Note</option>
+                                    <option value="4">Excess Note</option>
                                 </select>
+                            </div>
+                            <div class="form-group mb-1">
+                                <label class="small font-weight-bold text-dark">Receipt Number</label>
+                                <input id="paymentReceiptNum" name="paymentReceiptNum" type="text"
+                                    class="form-control form-control-sm" placeholder="">
                             </div>
                             <div class="accordion" id="accordionExample">
                                 <div class="card shadow-none border-0">
@@ -157,11 +186,7 @@ include "include/topnavbar.php";
                                                 <label class="small font-weight-bold text-dark">Cheque Number</label>
                                                 <input id="paymentChequeNum" name="paymentChequeNum" type="text" class="form-control form-control-sm" placeholder="" readonly>
                                             </div>
-                                            <div class="form-group mb-1">
-                                                <label class="small font-weight-bold text-dark">Receipt Number</label>
-                                                <input id="paymentReceiptNum" name="paymentReceiptNum" type="text" class="form-control form-control-sm" placeholder="" readonly>
-                                                <small id="" class="form-text text-muted">Bank deposit receipt number only</small>
-                                            </div>
+                                           
                                             <div class="form-group mb-1">
                                                 <label class="small font-weight-bold text-dark">Cheque Date</label>
                                                 <input type="date" class="form-control form-control-sm" placeholder="" name="paymentchequeDate" id="paymentchequeDate" readonly>
@@ -184,10 +209,26 @@ include "include/topnavbar.php";
                                         <div class="card-body p-0">
                                             <div class="form-group mb-1">
                                                 <label class="small font-weight-bold text-dark">Credit Note</label>
-                                                <select id="creditnote" name="creditnote" type="text" class="form-control form-control-sm" disabled required>
+                                                <select id="creditnote" name="creditnote" type="text" style="width: 100%;" class="form-control form-control-sm" disabled required>
                                                     <option value="">Select</option>
                                                     <?php if($resultcreditnote->num_rows > 0) {while ($rowcreditnote = $resultcreditnote-> fetch_assoc()) { ?>
-                                                    <option value="<?php echo $rowcreditnote['idtbl_creditenote'] ?>" data-creditnoteamount="<?php echo $rowcreditnote['balAmount']; ?>"><?php echo 'CRN'.$rowcreditnote['idtbl_creditenote'].'-'.number_format($rowcreditnote['balAmount'], 2); ?></option>
+                                                    <option value="<?php echo $rowcreditnote['idtbl_creditenote'] ?>" data-creditnoteamount="<?php echo $rowcreditnote['balAmount']; ?>"><?php echo 'CRN'.$rowcreditnote['idtbl_creditenote'].'-'.number_format($rowcreditnote['balAmount'], 2).' / ' . $rowcreditnote['name']; ?></option>
+                                                    <?php }} ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow-none border-0">
+                                    <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body p-0">
+                                            <div class="form-group mb-1">
+                                                <label class="small font-weight-bold text-dark">Excess Note</label>
+                                                <select id="excessnote" name="excessnote" type="text" style="width: 100%;" class="form-control form-control-sm" disabled required>
+                                                    <option value="">Select</option>
+                                                    <?php if($resultexcessnote->num_rows > 0) {while ($rowexcessnote = $resultexcessnote-> fetch_assoc()) { ?>
+                                                    <option value="<?php echo $rowexcessnote['idtbl_invoice_excess_payment'] ?>" data-excessnoteamount="<?php echo $rowexcessnote['excess_amount']; ?>"><?php echo 'EX'.$rowexcessnote['idtbl_invoice_excess_payment'].'-'.number_format($rowexcessnote['excess_amount'], 2).' / ' . $rowexcessnote['name']; ?></option>
                                                     <?php }} ?>
                                                 </select>
                                             </div>
@@ -207,14 +248,14 @@ include "include/topnavbar.php";
                                 <th>Type</th>
                                 <th class="text-right">Cash</th>
                                 <th class="text-right">Cheque / Deposit</th>
-                                <th class="text-right">Credit Note</th>
+                                <th class="text-right">Credit/Excess Note</th>
                                 <th>Che No</th>
                                 <th>Receipt</th>
                                 <th>Che Date</th>
                                 <th>Bank</th>
                                 <th class="">BankID</th>
                                 <th class="">paymethod</th>
-                                <th class="">CreditnoteID</th>
+                                <th class="">Credit/Excess noteID</th>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -240,6 +281,13 @@ include "include/topnavbar.php";
                             <div class="col-sm-12 col-md-9 col-lg-9 col-xl-9 text-right">Balance :</div>
                             <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
                                 <div id="balanceAmount"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-xl-3 text-right">
+                                <div id="errordiv">
+                                    <p id="errortext" style="color: red;"></p>
+                                </div>
                             </div>
                         </div>
                         <input type="hidden" id="hidePayAmount" value="0">
@@ -282,9 +330,18 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function() {
+        $('.dpd1a').datepicker({
+            uiLibrary: 'bootstrap4',
+            autoclose: 'true',
+            todayHighlight: true,
+            format: 'yyyy-mm-dd'
+        });
+        $("#creditnote").select2();
+        $("#excessnote").select2();
+        
         $("#customer").select2({
             ajax: {
-                url: 'getprocess/getcustomerlist.php',
+                url: 'getprocess/getcustomerlistforreturn.php',
                 type: "post",
                 dataType: 'json',
                 delay: 250,
@@ -304,6 +361,7 @@ include "include/topnavbar.php";
 
         $('#customer').change(function(){
             var customerID = $(this).val();
+            $('#hidecustomerId').val(customerID)
             var asmID = '';
             var invoiceno = '';
             loadinvoice(customerID, asmID, invoiceno);
@@ -325,6 +383,20 @@ include "include/topnavbar.php";
                 var customerID = '';
                 var asmID = '';
                 var invoiceno = $('#formInvNum').val();
+
+                var invCustomerId = 0;
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        invoiceno: invoiceno
+                    },
+                    url: 'getprocess/getinvoicecustomer.php',
+                    success: function(result) {// alert(result);
+                        var obj = JSON.parse(result);
+                        $('#hidecustomerId').val(obj.customerId);
+                    }
+                });  
+                
                 loadinvoice(customerID, asmID, invoiceno);
             }
         });
@@ -355,12 +427,14 @@ include "include/topnavbar.php";
             });
 
         });
-
         $('#invPaymentCreateBtn').click(function() {
+            $(this).prop('disabled', true);
+
             var table = $("#paymentDetailTable tbody");
             var total = '0';
             var invnetBal = '0';
             var invBal = '0';
+            var customerId = $('#hidecustomerId').val()
             
             table.find('tr').each(function(i, el) {
                 var $tds = $(this).find('td');
@@ -407,6 +481,31 @@ include "include/topnavbar.php";
                     keyboard: false,
                     backdrop: 'static'
                 });
+
+                // alert(customerId)
+                $("#excessnote").select2({
+                    ajax: {
+                        url: "getprocess/getcustomerexcessnotesforselect2.php",
+                        // url: "getprocess/getproductaccosupplier.php",
+                        type: "post",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                customerId: customerId,
+                                searchTerm: params.term, // search term
+                            };
+                        },
+                        processResults: function (response) { //console.log(response)
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    },
+                    dropdownParent: $("#paymentmodal")
+                });
+
                 // $.ajax({
                 //     type: "POST",
                 //     data: {
@@ -439,32 +538,61 @@ include "include/topnavbar.php";
             if ($(this).val() == '1') {
                 $('#paymentCheque').prop("readonly", true);
                 $('#paymentChequeNum').prop("readonly", true);
-                $('#paymentReceiptNum').prop("readonly", true);
                 $('#paymentchequeDate').prop("readonly", true);
                 $('#paymentBank').prop("disabled", true);
                 $('#paymentCash').prop("readonly", false);
                 $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseOne').collapse('show');
             } else if ($(this).val() == '2') {
                 $('#paymentCheque').prop("readonly", false);
                 $('#paymentChequeNum').prop("readonly", false);
-                $('#paymentReceiptNum').prop("readonly", false);
                 $('#paymentchequeDate').prop("readonly", false);
                 $('#paymentBank').prop("disabled", false);
                 $('#paymentCash').prop("readonly", true);
                 $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseTwo').collapse('show');
             } else if ($(this).val() == '3') {
                 $('#paymentCheque').prop("readonly", true);
                 $('#paymentChequeNum').prop("readonly", true);
-                $('#paymentReceiptNum').prop("readonly", true);
                 $('#paymentchequeDate').prop("readonly", true);
                 $('#paymentBank').prop("disabled", true);
                 $('#paymentCash').prop("readonly", true);
                 $('#creditnote').prop("disabled", false);
+                $('#excessnote').prop("disabled", true);
                 $('#collapseThree').collapse('show');
+            } else if ($(this).val() == '4') {
+                $('#paymentCheque').prop("readonly", true);
+                $('#paymentChequeNum').prop("readonly", true);
+                $('#paymentchequeDate').prop("readonly", true);
+                $('#paymentBank').prop("disabled", true);
+                $('#paymentCash').prop("readonly", true);
+                $('#creditnote').prop("disabled", true);
+                $('#excessnote').prop("disabled", false);
+                $('#collapseFour').collapse('show');
             }
         });
+
+        $('#paymentReceiptNum').change(function(){
+            var receiptNo = $(this).val();
+            $.ajax({
+                type: "POST",
+                data: {
+                    receiptNo: receiptNo,
+                },
+                url: 'getprocess/checkreceiptexists.php',
+                success: function(result) { //alert(result);
+                    if (result == 'true') {
+                        $('#errortext').text('This Receipt No already exists');
+                    } else {
+                        $('#errortext').text('');
+                    }
+                    
+                }
+            });
+
+        })
         $("#submitBtnModal").click(function() {
             if (!$("#formModal")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
@@ -481,9 +609,15 @@ include "include/topnavbar.php";
                 var paymentCash = $('#paymentCash').val();
                 var creditnote = $('#creditnote').val();
                 var creditnoteamount = $('#creditnote').find(':selected').attr('data-creditnoteamount');
+                var excessnote = $('#excessnote').val();
+
+                var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount') || 0;
+
+                // alert(excessnoteamount)
+                // var excessnoteamount = $('#excessnote').find(':selected').attr('data-excessnoteamount');
 
                 if(paymenttype==1){
-                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Cash</td><td class="text-right">' + parseFloat(paymentCash).toFixed(2) + '</td><td class=""></td><td class=""></td><td class=""></td><td></td><td></td><td></td><td class=""></td><td class="">1</td><td class=""></td></tr>');
+                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Cash</td><td class="text-right">' + parseFloat(paymentCash).toFixed(2) + '</td><td class=""></td><td class=""></td><td class=""></td><td>'+paymentReceiptNum+'</td><td></td><td></td><td class=""></td><td class="">1</td><td class=""></td></tr>');
                     var paidAmount = parseFloat($('#hidePayAmount').val());
                     var PayAmount = parseFloat(paymentCash);
                     var paymentPayAmount = parseFloat($('#hideAllBalAmount').val());
@@ -516,7 +650,6 @@ include "include/topnavbar.php";
 
                     $('#paymentCheque').val('').prop('readonly', true);
                     $('#paymentChequeNum').val('').prop('readonly', true);
-                    $('#paymentReceiptNum').val('').prop('readonly', true);
                     $('#paymentchequeDate').val('').prop('readonly', true);
                     $('#paymentBank').val('').prop('disabled', true);
                     $('#paymentMethod').val('');
@@ -524,7 +657,7 @@ include "include/topnavbar.php";
                     $('#btnIssueInv').prop('disabled', false);
                 }
                 else if(paymenttype==3){
-                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Credit Note</td><td class=""></td><td class=""></td><td class="text-right">' + parseFloat(creditnoteamount).toFixed(2) + '</td><td class=""></td><td class=""></td><td>-</td><td></td><td></td><td class="">3</td><td class="">'+creditnote+'</td></tr>');
+                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Credit Note</td><td class=""></td><td class=""></td><td class="text-right">' + parseFloat(creditnoteamount).toFixed(2) + '</td><td class=""></td><td class="">'+paymentReceiptNum+'</td><td></td><td></td><td></td><td class="">3</td><td class="">'+creditnote+'</td></tr>');
 
                     var paidAmount = parseFloat($('#hidePayAmount').val());
                     var PayAmount = parseFloat(creditnoteamount);
@@ -542,13 +675,38 @@ include "include/topnavbar.php";
 
                     $('#btnIssueInv').prop('disabled', false);
                 }
+                else if(paymenttype==4){
+                    // alert('asd')
+                    // alert(excessnoteamount)
+                    $('#tblPaymentTypeModal > tbody:last').append('<tr><td>Excess Note</td><td class=""></td><td class=""></td><td class="text-right">' + parseFloat(excessnoteamount).toFixed(2) + '</td><td class=""></td><td class="">'+paymentReceiptNum+'</td><td></td><td></td><td></td><td class="">4</td><td class="">'+excessnote+'</td></tr>');
+
+                    var paidAmount = parseFloat($('#hidePayAmount').val());
+                    var PayAmount = parseFloat(excessnoteamount);
+                    var paymentPayAmount = parseFloat($('#hideAllBalAmount').val());
+
+                    paidAmount = (paidAmount + PayAmount);
+                    var balance = (paymentPayAmount - paidAmount);
+                    $('#hideBalAmount').val(balance);
+                    $('#balanceAmount').html((balance).toFixed(2));
+                    $('#payAmount').html((paidAmount).toFixed(2));
+                    $('#hidePayAmount').val(paidAmount);
+
+                    $('#excessnote').val('').prop('disabled', true);
+                    $('#paymentMethod').val('');
+
+                    $('#btnIssueInv').prop('disabled', false);
+                }
 
                 $('#collapseOne').collapse('hide');
                 $('#collapseTwo').collapse('hide');
                 $('#collapseThree').collapse('hide');
+                $('#collapseFour').collapse('hide');
             }
         });
+        
         $('#btnIssueInv').click(function(){
+            $(this).prop('disabled', true);
+
             jsonObj = [];
             $("#paymentDetailTable tbody tr").each(function() {
                 item = {}
@@ -572,7 +730,16 @@ include "include/topnavbar.php";
             var totAmount = $('#paymentPayAmount').val();
             var payAmount = $('#hidePayAmount').val();
             var balAmount = $('#hideBalAmount').val();
+            var paymentdate = $('#paymentdate').val();
+            var customerId = $('#hidecustomerId').val();
+            var createCreditNote = 0;
             // var discountlist = $('#discountlist').val();
+
+            if ($('#createCreditNote').is(':checked')) {
+                createCreditNote = 1;
+            } else {
+                createCreditNote = 0
+            }
 
             $.ajax({
                 type: "POST",
@@ -581,7 +748,10 @@ include "include/topnavbar.php";
                     tblPayData: jsonObjOne,
                     totAmount: totAmount,
                     payAmount: payAmount,
-                    balAmount: balAmount
+                    balAmount: balAmount,
+                    paymentdate: paymentdate,
+                    customerId: customerId,
+                    createCreditNote: createCreditNote,
                     // discountlist: discountlist
                 },
                 url: 'process/invoicepaymentprocess.php',
@@ -605,6 +775,25 @@ include "include/topnavbar.php";
         $('#modalpaymentreceipt').on('hidden.bs.modal', function (e) {
             location.reload();
         });
+    });
+
+    $(document).on('click', '#tblPaymentTypeModal tbody tr', function() {
+
+        if (confirm('Are you sure you want to delete this row?')) {
+            var paidAmount = parseFloat($('#hidePayAmount').val());
+            var PayAmount = parseFloat($(this).find('td:eq(1)').text());
+            var paymentPayAmount = parseFloat($('#hideAllBalAmount').val());
+
+            paidAmount = (paidAmount - PayAmount);
+            var balance = (paymentPayAmount - paidAmount);
+            $('#hideBalAmount').val(balance);
+            $('#balanceAmount').html((balance).toFixed(2));
+            $('#payAmount').html((paidAmount).toFixed(2));
+            $('#hidePayAmount').val(paidAmount);
+
+            $(this).remove();
+        }
+      
     });
 
     function loadinvoice(customerID, asmID, invoiceno){
@@ -777,5 +966,4 @@ include "include/topnavbar.php";
 
 </script>
 <?php include "include/footer.php"; ?>
-
 

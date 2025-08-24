@@ -35,6 +35,7 @@ $columns = array(
 	array( 'db' => '`uc`.`name`', 'dt' => 'name', 'field' => 'name' ),
 	array( 'db' => '`u`.`confirmstatus`', 'dt' => 'confirmstatus', 'field' => 'confirmstatus' ),
 	array( 'db' => '`u`.`completestatus`', 'dt' => 'completestatus', 'field' => 'completestatus' ),
+	array( 'db' => '`ub`.`suppliername`', 'dt' => 'suppliername', 'field' => 'suppliername' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
@@ -55,7 +56,7 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_porder` AS `u` LEFT JOIN `tbl_user` AS `uc` ON (`uc`.`idtbl_user` = `u`.`tbl_user_idtbl_user`)";
+$joinQuery = "FROM `tbl_porder` AS `u` LEFT JOIN `tbl_user` AS `uc` ON (`uc`.`idtbl_user` = `u`.`tbl_user_idtbl_user`) LEFT JOIN `tbl_supplier` AS `ub` ON (`ub`.`idtbl_supplier` = `u`.`tbl_supplier_idtbl_supplier`)";
 
 $extraWhere = "`u`.`confirmstatus` IN (1,0,2) AND `u`.`status`=1";
 

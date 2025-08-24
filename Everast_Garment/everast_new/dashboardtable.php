@@ -36,45 +36,48 @@ $rowproduct = $resproduct->fetch_assoc();
 $itemcount = $rowproduct['count'];
 $todaysaleprice = 0;
 $pendingsaleprice = 0;
-$returnsaleprice = 0;
 $monthsaleprice = 0;
 $todayqty = 0;
 $pendingqty = 0;
-$returnqty = 0;
 $monthyqty = 0;
 
-$sqlmaintable = "SELECT 
-`ud`.`name`, 
-`ub`.`area`, 
-SUM(CASE WHEN DATE(`u`.`orderdate`) = CURDATE() THEN `uz`.`qty` ELSE 0 END) AS todayqty,
-SUM(CASE WHEN DATE(`u`.`orderdate`) = CURDATE() THEN `u`.`nettotal` ELSE 0 END) AS todaysaleprice,
-SUM(CASE WHEN `u`.`deliverystatus` = 0 AND DATE(`u`.`orderdate`) = CURDATE() THEN `uz`.`qty` ELSE 0 END) AS pendingqty,
-SUM(CASE WHEN `u`.`deliverystatus` = 0 AND DATE(`u`.`orderdate`) = CURDATE() THEN `u`.`nettotal` ELSE 0 END) AS pendingsaleprice,
-SUM(CASE WHEN `u`.`returnstatus` = 1 AND MONTH(`u`.`orderdate`) = MONTH(CURDATE()) THEN `uz`.`qty` ELSE 0 END) AS returnqty,
-SUM(CASE WHEN `u`.`returnstatus` = 1 AND MONTH(`u`.`orderdate`) = MONTH(CURDATE()) THEN `u`.`nettotal` ELSE 0 END) AS returnsaleprice,
-SUM(CASE WHEN MONTH(`u`.`orderdate`) = MONTH(CURDATE()) THEN `uz`.`qty` ELSE 0 END) AS monthyqty,
-SUM(CASE WHEN MONTH(`u`.`orderdate`) = MONTH(CURDATE()) THEN `u`.`nettotal` ELSE 0 END) AS monthsaleprice,
-`u`.`idtbl_porder`
-FROM 
-`tbl_porder` AS `u` 
-LEFT JOIN 
-`tbl_porder_otherinfo` AS `ua` ON (`ua`.`porderid` = `u`.`idtbl_porder`) 
-LEFT JOIN 
-`tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `ua`.`areaid`) 
-LEFT JOIN 
-`tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `ua`.`customerid`) 
-LEFT JOIN 
-`tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `ua`.`repid`) 
-LEFT JOIN 
-`tbl_porder_detail` AS `uz` ON (`uz`.`tbl_porder_idtbl_porder` = `u`.`idtbl_porder`) 
-WHERE 
-DATE(`u`.`orderdate`) = CURDATE() OR 
-(`u`.`deliverystatus` = 0 AND DATE(`u`.`orderdate`) = CURDATE()) OR 
-MONTH(`u`.`orderdate`) = MONTH(CURDATE()) 
-GROUP BY 
-`u`.`idtbl_porder`
-";
+
+// $sqlmaintable = "SELECT 
+//                     `ud`.`name`, 
+//                     `ub`.`area`, 
+//                     SUM(CASE WHEN DATE(`u`.`date`) = CURDATE() THEN `uz`.`qty` ELSE 0 END) AS todayqty,
+//                     SUM(CASE WHEN DATE(`u`.`date`) = CURDATE() THEN `u`.`nettotal` ELSE 0 END) AS todaysaleprice,
+//                     SUM(CASE WHEN `u`.`delivered` = 0 AND DATE(`u`.`date`) = CURDATE() THEN `uz`.`qty` ELSE 0 END) AS pendingqty,
+//                     SUM(CASE WHEN `u`.`delivered` = 0 AND DATE(`u`.`date`) = CURDATE() THEN `u`.`nettotal` ELSE 0 END) AS pendingsaleprice,
+//                     SUM(CASE WHEN MONTH(`u`.`date`) = MONTH(CURDATE()) THEN `uz`.`qty` ELSE 0 END) AS monthyqty,
+//                     SUM(CASE WHEN MONTH(`u`.`date`) = MONTH(CURDATE()) THEN `u`.`nettotal` ELSE 0 END) AS monthsaleprice,
+//                     `u`.`idtbl_customer_order`
+//                     FROM 
+//                     `tbl_customer_order` AS `u` 
+//                     LEFT JOIN 
+//                     `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) 
+//                     LEFT JOIN 
+//                     `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) 
+//                     LEFT JOIN 
+//                     `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) 
+//                     LEFT JOIN 
+//                     `tbl_porder_detail` AS `uz` ON (`uz`.`tbl_porder_idtbl_porder` = `u`.`idtbl_customer_order`) 
+//                     WHERE 
+//                     DATE(`u`.`date`) = CURDATE() OR 
+//                     (`u`.`delivered` = 0 AND DATE(`u`.`date`) = CURDATE()) OR 
+//                     MONTH(`u`.`date`) = MONTH(CURDATE()) 
+//                     GROUP BY 
+//                     `u`.`idtbl_customer_order`
+//                     ";
+//                     $resmain = $conn->query($sqlmaintable);
+
+$sqlmaintable = "SELECT `ud`.`name`, `ub`.`area`, SUM(`u`.`nettotal`) AS `nettotal` FROM  `tbl_customer_order` AS `u` 
+                  LEFT JOIN  `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`)
+                  LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`) 
+                  WHERE `u`.`date` = CURDATE() GROUP BY `u`.`tbl_employee_idtbl_employee`";
 $resmain = $conn->query($sqlmaintable);
+
+
 ?>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
@@ -102,67 +105,22 @@ $resmain = $conn->query($sqlmaintable);
 
                         <div class="row">
                             <div class="col-7">
-                                <div>Outbound Summary</div>
+                                <div>Daily Sales</div>
                                 <hr class="border-dark">
                                 <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                     <thead>
                                         <tr>
-                                            <th rowspan="2" style="border : 1px solid gray" class="text-center small">Territory</th>
-                                            <th rowspan="2" style="border : 1px solid gray" class="text-center small">Rep</th>
-                                            <th colspan="2" style="border : 1px solid gray" class="text-center small">Today Order</th>
-                                            <th colspan="2" style="border : 1px solid gray" class="text-center small">Pending Deliveries</th>
-                                            <th colspan="2" style="border : 1px solid gray" class="text-center small">Monthly Sales</th>
-                                            <th colspan="2" style="border : 1px solid gray" class="text-center small">Monthly Returns</th>
-                                            <th rowspan="2" style="border : 1px solid gray" class="text-center small">GP</th>
+                                            <th style="border : 1px solid gray" class="text-center small">Territory</th>
+                                            <th style="border : 1px solid gray" class="text-center small">Rep</th>
+                                            <th style="border : 1px solid gray" class="text-center small">Today Total</th>
                                         </tr>
-                                        <tr>
-                                            <th class="text-center small" style="border : 1px solid gray">Qty</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Value</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Qty</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Value</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Qty</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Value</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Qty</th>
-                                            <th class="text-center small" style="border : 1px solid gray">Value</th>
-
-                                        </tr>
-                                        <?php while ($row2 = $resmain->fetch_assoc()) {
-                                            $todaysaleprice += $row2['todaysaleprice'];
-                                            $pendingsaleprice += $row2['pendingsaleprice'];
-                                            $returnsaleprice += $row2['returnsaleprice'];
-                                            $monthsaleprice += $row2['monthsaleprice'];
-                                            $todayqty += $row2['todayqty'];
-                                            $pendingqty += $row2['pendingqty'];
-                                            $returnqty += $row2['returnqty'];
-                                            $monthyqty += $row2['monthyqty'];
-                                        ?>
+                                        <?php while ($row2 = $resmain->fetch_assoc()) { ?>
                                             <tr>
                                                 <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['area']; ?></th>
                                                 <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['name']; ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['todayqty']; ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($row2['todaysaleprice'], 2, '.', ','); ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['pendingqty']; ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($row2['pendingsaleprice'], 2, '.', ','); ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['monthyqty']; ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($row2['monthsaleprice'], 2, '.', ','); ?></th>
-
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['returnqty']; ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($row2['returnsaleprice'], 2, '.', ','); ?></th>
-                                                <th class="text-center small" style="border : 1px solid gray">##.##</th>
+                                                <th class="text-center small" style="border : 1px solid gray"><?php echo $row2['nettotal']; ?></th>
                                             </tr>
                                         <?php } ?>
-                                        <tr>
-                                            <th colspan="2" class="text-center small" style="border : 1px solid gray"></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo $todayqty; ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($todaysaleprice, 2, '.', ','); ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo $pendingqty; ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($pendingsaleprice, 2, '.', ','); ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo $monthyqty; ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($monthsaleprice, 2, '.', ','); ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo $returnqty; ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray"><?php echo number_format($returnsaleprice, 2, '.', ','); ?></th>
-                                            <th class="text-center small" style="border : 1px solid gray">##.##</th>
-                                        </tr>
                                     </thead>
                                 </table>
                                 <hr class="border-dark">

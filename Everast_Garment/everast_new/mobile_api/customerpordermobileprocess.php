@@ -13,54 +13,72 @@ $repname=$_POST['repname'];
 $area=$_POST['area'];
 $customer=$_POST['customer'];
 $location=$_POST['locationID'];
+$podiscount=$_POST['podiscount'];
 $paymentoption=1;
 $tableData=$_POST['tableData'];
 $tableData = json_decode($tableData);
 
 $updatedatetime=date('Y-m-d h:i:s');
 
-
 $month=date('n');
 
+$query = "SELECT MAX(cuspono) AS max_id FROM tbl_customer_order WHERE cuspono LIKE 'CP/" . date('y/m/') . "%'";
+$result = $conn->query($query);
 
-$insretorder="INSERT INTO `tbl_porder`(`potype`, `orderdate`, `subtotal`, `disamount`, `discount`, `nettotal`, `payfullhalf`, `remark`, `confirmstatus`, `dispatchissue`, `grnissuestatus`, `paystatus`, `shipstatus`, `deliverystatus`, `trackingno`, `trackingwebsite`, `callstatus`, `narration`, `cancelreason`, `returnstatus`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `podiscount`, `po_amount`, `tbl_locations_idtbl_locations`) VALUES ('1','$orderdate','$total','$discount','$discountpresentage','$nettotal','$paymentoption','$remark','0','0','0','0','0','0','','-','0','-','-','0','1','$updatedatetime','$userID', '0', '0', '$location')";
-
-if($conn->query($insretorder)==true){
-    $orderID=$conn->insert_id;
-
-    $insertporderother="INSERT INTO `tbl_porder_otherinfo`(`porderid`, `mobileid`, `areaid`, `customerid`, `repid`, `status`, `updatedatetime`) VALUES ('$orderID','0','$area','$customer','$repname','1','$updatedatetime')";
-    $conn->query($insertporderother);
-
-
-    foreach ($tableData as $item) {
-        $productID=$item->productID;
-        $product=0;
-        $unitprice=$item->unitprice;;
-        $saleprice=$item->saleprice;
-        $newqty=$item->newqty;
-        $freeprodcutid=0;
-        $freeqty=0;
-        $total==$item->total;
-
-        $insertorderdetail="INSERT INTO `tbl_porder_detail`(`type`, `qty`, `freeqty`, `freeproductid`, `unitprice`, `saleprice`, `status`, `updatedatetime`, `tbl_user_idtbl_user`, `tbl_porder_idtbl_porder`, `tbl_product_idtbl_product`) VALUES ('0','$newqty','$freeqty','$product','$unitprice','$saleprice','1','$updatedatetime','$userID','$orderID','$productID')";
-        $conn->query($insertorderdetail);
-
-        $updatereptarget="UPDATE `tbl_employee_target` SET `targetqtycomplete`=(`targetqtycomplete`+'$newqty') WHERE MONTH(`month`)='$month' AND `status`=1 AND `tbl_employee_idtbl_employee`='$repname' AND `tbl_product_idtbl_product`='$productID'";
-        $conn->query($updatereptarget);
-
-        $updatereptargetfree="UPDATE `tbl_employee_target` SET `targetqtycomplete`=(`targetqtycomplete`+'$freeqty') WHERE MONTH(`month`)='$month' AND `status`=1 AND `tbl_employee_idtbl_employee`='$repname' AND `tbl_product_idtbl_product`='$product'";
-        $conn->query($updatereptargetfree);
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    if ($row['max_id']) {
+        preg_match('/(\d+)$/', $row['max_id'], $matches);
+        $next_id = isset($matches[1]) ? $matches[1] + 1 : 1;
+    } else {
+        $next_id = 1;
     }
-    $actionObj=new stdClass();
-    $actionObj->code='200';
-    $actionObj->message='Addedd Successfully';
-
-    echo json_encode($actionObj);
-}
-else{
-    echo $actionJSON='Something went wrong';
+} else {
+    $next_id = 1;
 }
 
+$next_id_padded = str_pad($next_id, 4, '0', STR_PAD_LEFT);
+
+$dateformat = date('y/m/');
+$cuspono = 'CP/' . $dateformat . $next_id_padded;
 
 
+$insretorder = "INSERT INTO `tbl_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer')";
 
+    if ($conn->query($insretorder) == true) {
+        $orderID = $conn->insert_id;
+
+        $insretoriginalorder = "INSERT INTO `tbl_original_customer_order`(`cuspono`, `date`, `total`, `discount`, `podiscount`, `vat`, `nettotal`, `remark`, `vatpre`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_area_idtbl_area`, `tbl_employee_idtbl_employee`, `tbl_locations_idtbl_locations`, `tbl_customer_idtbl_customer`, `tbl_customer_order_idtblcustomer_order`) VALUES ('$cuspono', '$orderdate','$total','$discount', '$podiscount', '0', '$nettotal', '$remark', '0','1', '$updatedatetime', '$userID', '$area', '$repname', '$location' , '$customer', '$orderID')";
+        $conn->query($insretoriginalorder);
+        $originalOrderID = $conn->insert_id;
+
+        foreach ($tableData as $item) {
+            $productID=$item->productID;
+            $product=0;
+            $unitprice=$item->unitprice;;
+            $saleprice=$item->saleprice;
+            $newqty=$item->newqty;
+            $total=$item->nettotal;
+            $freeprodcutid=0;
+            $freeqty=0;
+
+            $insertorderdetail = "INSERT INTO `tbl_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_customer_order_idtbl_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$orderID','$productID')";
+            $conn->query($insertorderdetail);
+
+
+            $insertoriginalorderdetail = "INSERT INTO `tbl_original_customer_order_detail`(`orderqty`, `total`, `confirmqty`, `dispatchqty`, `qty`, `unitprice`, `saleprice`, `discountpresent`, `discount`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_original_customer_order_idtbl_original_customer_order`, `tbl_product_idtbl_product`) VALUES ('$newqty', '$total', '$newqty', '$newqty', '$newqty', '$unitprice','$saleprice', '0', '0', '1','$updatedatetime','$userID','$originalOrderID','$productID')";
+            $conn->query($insertoriginalorderdetail);
+
+            $insertholdstock = "INSERT INTO `tbl_customer_order_hold_stock`(`qty`, `invoiceissue`, `status`, `insertdatetime`, `tbl_user_idtbl_user`, `tbl_product_idtbl_product`, `tbl_customer_order_idtbl_customer_order`) VALUES ('$newqty', '0', '1', '$updatedatetime', '$userID', '$productID','$orderID')";
+            $conn->query($insertholdstock);
+        }
+
+        $actionObj=new stdClass();
+        $actionObj->code='200';
+        $actionObj->message='Addedd Successfully';
+    
+        echo json_encode($actionObj);
+    } else {
+        echo $actionJSON='Something went wrong';
+
+    }
