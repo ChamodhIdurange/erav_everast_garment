@@ -58,6 +58,15 @@ include "include/topnavbar.php";
                                                 <button class="btn btn-outline-success rounded-0" type="button" id="binprint"><i class="fas fa-print"></i>&nbsp;Print BIN</button>
                                             </div>
                                         </div>
+                                        <div class="col-2">
+                                            <label class="small font-weight-bold text-dark">From Month*</label>
+                                            <input type="month" class="form-control form-control-sm" name="frommonth" id="frommonth" required>
+                                        </div>
+                                        <div class="col-2">
+                                            <label class="small font-weight-bold text-dark">To Month*</label>
+                                            <input type="month" class="form-control form-control-sm" name="tomonth" id="tomonth" required>
+                                        </div>
+
                                         <div class="col">&nbsp;</div>
                                     </div>
                                     <input type="submit" class="d-none" id="hidesubmit">
@@ -99,39 +108,52 @@ include "include/topnavbar.php";
                 $("#hidesubmit").click();
             } else {
                 var item = $('#item').val();
-
-
-                $('#targetviewdetail').html('<div class="card border-0 shadow-none bg-transparent"><div class="card-body text-center"><img src="images/spinner.gif" alt="" srcset=""></div></div>');
+                var frommonth = $('#frommonth').val();
+                var tomonth = $('#tomonth').val();
 
                 $.ajax({
                     type: "POST",
                     data: {
-                        item: item
-
+                        item,
+                        frommonth,
+                        tomonth
                     },
                     url: 'getprocess/getbincard.php',
-                    success: function(result) { //alert(result);
+                    success: function(result) {
                         $('#targetviewdetail').html(result);
-                        invoiceviewoption();
                     }
                 });
+
             }
         });
 
         $('#binprint').click(function() {
-    if (!$("#searchform")[0].checkValidity()) {
-        $("#hidesubmit").click();
-    } else {
-        var item = $('#item').val();
-        if(!item){
-            alert("Please select a product!");
-            return;
-        }
+            if (!$("#searchform")[0].checkValidity()) {
+                $("#hidesubmit").click();
+            } else {
+                var item = $('#item').val();
+                var frommonth = $('#frommonth').val();
+                var tomonth = $('#tomonth').val();
 
-        // Open PDF in new tab
-        window.open('pdfprocess/bin_report.php?item=' + item, '_blank');
-    }
-});
+                if (!item) {
+                    alert("Please select a product!");
+                    return;
+                }
+                if (!frommonth || !tomonth) {
+                    alert("Please select month range!");
+                    return;
+                }
+
+                // ✅ Now all values are passed correctly
+                window.open(
+                    'pdfprocess/bin_report.php?item=' + item +
+                    '&frommonth=' + frommonth +
+                    '&tomonth=' + tomonth,
+                    '_blank'
+                );
+            }
+        });
+
 
 
 
