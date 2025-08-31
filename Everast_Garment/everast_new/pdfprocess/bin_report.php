@@ -12,26 +12,23 @@ if (!$item || !$frommonth || !$tomonth) {
     die("Missing filters");
 }
 
-// -------------------------------
-// 1. Convert months to full dates
-// -------------------------------
-$fromdate = $frommonth . "-01"; // e.g. 2025-04 → 2025-04-01
 
-// -------------------------------
-// 2. Get product name
-// -------------------------------
+// Convert months to full dates
+
+$fromdate = $frommonth . "-01"; 
+
+
+// Get product name
+
 $sql_product = $conn->prepare("SELECT product_name FROM tbl_product WHERE idtbl_product=?");
 $sql_product->bind_param("i", $item);
 $sql_product->execute();
 $res_product = $sql_product->get_result();
 $product_name = $res_product->fetch_assoc()['product_name'] ?? 'Unknown Product';
 
-// -------------------------------
-// 3. Opening Balance (from stock)
-// -------------------------------
-// -------------------------------
-// 3. Opening Balance (first available in from-month)
-// -------------------------------
+
+// Opening Balance (first available in from-month)
+
 $sql_opening = $conn->prepare("
     SELECT qty, `update`
     FROM tbl_stock 
@@ -46,10 +43,9 @@ $res_opening = $sql_opening->get_result();
 $row_opening = $res_opening->fetch_assoc();
 
 if ($row_opening) {
-    $fromdate         = $row_opening['update'];  // ✅ real first available date in that month
+    $fromdate         = $row_opening['update'];  
     $opening_balance  = $row_opening['qty'];
 } else {
-    // if no stock in that month, fallback to last qty before that month
     $sql_fallback = $conn->prepare("
         SELECT qty, `update`
         FROM tbl_stock 
@@ -64,14 +60,14 @@ if ($row_opening) {
     $res_fb = $sql_fallback->get_result();
     $row_fb = $res_fb->fetch_assoc();
 
-    $fromdate        = $startMonthDate;                 // still use requested month start
-    $opening_balance = $row_fb['qty'] ?? 0;             // last known balance before month
+    $fromdate        = $startMonthDate;                 
+    $opening_balance = $row_fb['qty'] ?? 0;             
 }
 
 
-// -------------------------------
-// 4. To Date (from tbl_month_end)
-// -------------------------------
+
+// To Date (from tbl_month_end)
+
 $sql_monthend = $conn->prepare("
     SELECT date 
     FROM tbl_month_end 
@@ -90,33 +86,61 @@ if ($row_monthend) {
     $todate = date("Y-m-t", strtotime($tomonth . "-01")); // fallback
 }
 
-// -------------------------------
-// 5. Fetch transactions
-// -------------------------------
+
+// Fetch transactions
+
 $transactions = [];
 
+
+// IN (GRN Purchases)
+
+$sql_grn = $conn->prepare("
+    SELECT g.date as date, gd.qty as qty, 'IN' as type,
+           CONCAT('GRN #', g.invoicenum) as reference,
+           NULL as customer
+    FROM tbl_grndetail gd
+    INNER JOIN tbl_grn g ON gd.tbl_grn_idtbl_grn = g.idtbl_grn
+    WHERE gd.tbl_product_idtbl_product=? 
+          AND g.status=1 
+          AND g.date BETWEEN ? AND ?
+");
+$sql_grn->bind_param("iss", $item, $fromdate, $todate);
+$sql_grn->execute();
+$res_grn = $sql_grn->get_result();
+while ($row = $res_grn->fetch_assoc()) {
+    $transactions[] = $row;
+}
+
+
 // IN (Returns)
-$sql_in = $conn->prepare("
+
+$sql_return = $conn->prepare("
     SELECT r.returndate as date, rd.qty as qty, 'IN' as type,
-           CONCAT('Return #', r.idtbl_return) as reference,
+           CASE 
+               WHEN r.has_invoice = 1 AND r.tbl_invoice_idtbl_invoice IS NOT NULL
+               THEN CONCAT('Invoice #', i.invoiceno)
+
+           END as reference,
            c.name as customer
     FROM tbl_return_details rd
     INNER JOIN tbl_return r ON rd.tbl_return_idtbl_return = r.idtbl_return
     LEFT JOIN tbl_customer c ON r.tbl_customer_idtbl_customer = c.idtbl_customer
+    LEFT JOIN tbl_invoice i ON r.tbl_invoice_idtbl_invoice = i.idtbl_invoice
     WHERE rd.tbl_product_idtbl_product=? AND r.status=1 
           AND r.returndate BETWEEN ? AND ?
 ");
-$sql_in->bind_param("iss", $item, $fromdate, $todate);
-$sql_in->execute();
-$res_in = $sql_in->get_result();
-while ($row = $res_in->fetch_assoc()) {
+$sql_return->bind_param("iss", $item, $fromdate, $todate);
+$sql_return->execute();
+$res_return = $sql_return->get_result();
+while ($row = $res_return->fetch_assoc()) {
     $transactions[] = $row;
 }
+
 
 // OUT (Invoices)
 $sql_out = $conn->prepare("
     SELECT i.date as date, id.qty as qty, 'OUT' as type,
-           CONCAT('Invoice #', i.idtbl_invoice) as reference,
+           CONCAT(i.invoiceno) as reference,
            c.name as customer
     FROM tbl_invoice_detail id
     INNER JOIN tbl_invoice i ON id.tbl_invoice_idtbl_invoice = i.idtbl_invoice
@@ -135,9 +159,9 @@ usort($transactions, function ($a, $b) {
     return strtotime($a['date']) - strtotime($b['date']);
 });
 
-// -------------------------------
-// 6. Build HTML
-// -------------------------------
+
+// Build HTML
+
 $html = '
 <p style="font-weight:bold;font-size:20px;">EVEREST HARDWARE CO. (PVT) LTD;</p>
 <p style="font-weight:bold;">#363/10/01, Malwatte, Kal-Eliya (Mirigama).</p>
@@ -153,7 +177,7 @@ $html = '
             <th>Date</th>
             <th>Reference</th>
             <th>Customer</th>
-            <th>In Qty</th>
+            <th>Return/GRN Qty</th>
             <th>Out Qty</th>
             <th>Balance</th>
         </tr>
@@ -198,9 +222,9 @@ $html .= '<tr style="background:#ddd;font-weight:bold;">
 
 $html .= '</tbody></table>';
 
-// -------------------------------
-// 7. Generate PDF
-// -------------------------------
+
+// Generate PDF
+
 $dompdf = new Dompdf();
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
