@@ -81,9 +81,9 @@ $res_monthend = $sql_monthend->get_result();
 $row_monthend = $res_monthend->fetch_assoc();
 
 if ($row_monthend) {
-    $todate = $row_monthend['date'];   // ✅ real saved month-end date
+    $todate = $row_monthend['date'];   
 } else {
-    $todate = date("Y-m-t", strtotime($tomonth . "-01")); // fallback
+    $todate = date("Y-m-t", strtotime($tomonth . "-01")); 
 }
 
 
