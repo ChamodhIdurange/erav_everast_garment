@@ -6,11 +6,13 @@ $result = $conn->query($sql);
 
 include "include/topnavbar.php";
 ?>
+
 <style>
     .tableprint {
         table-layout: fixed;
 
     }
+    
 </style>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
@@ -39,6 +41,7 @@ include "include/topnavbar.php";
                                             <table class="table table-bordered table-striped table-sm nowrap" id="dataTable">
                                                 <thead>
                                                     <tr>
+                                                        <th>Invoice Id</th>
                                                         <th>Invoice No</th>
                                                         <th>Date</th>
                                                         <th>Purchase Order</th>
@@ -65,7 +68,6 @@ include "include/topnavbar.php";
         <?php include "include/footerbar.php"; ?>
     </div>
 </div>
-
 <!-- Modal Invoice Receipt -->
 <div class="modal fade" id="modalinvoicereceipt" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -158,6 +160,25 @@ include "include/topnavbar.php";
         </div>
     </div>
 </div>
+<!-- Modal Payment Receipt -->
+<div class="modal fade" id="modalpayments" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="embed-responsive embed-responsive-16by9" id="frame">
+                    <iframe class="embed-responsive-item" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php include "include/footerscripts.php"; ?>
 <script>
     $(document).ready(function() {
@@ -178,6 +199,9 @@ include "include/topnavbar.php";
                 [0, "desc"]
             ],
             "columns": [
+                {
+                    "data": "idtbl_invoice"
+                },
                 {
                     "data": "invoiceno"
                 },
@@ -224,13 +248,47 @@ include "include/topnavbar.php";
                     "render": function(data, type, full) {
                         var button = '';
                         button += '<button class="btn btn-outline-dark btn-sm btnView mr-1" id="' + full['idtbl_invoice'] + '"><i class="fas fa-eye"></i></button> ';
-                        if (full['paymentcomplete'] == 0 && deletecheck != 0) {
-                            button += '<button class="btn btn-outline-danger btn-sm btnDelete" id="' + full['idtbl_invoice'] + '"><i class="fas fa-trash"></i></button> ';
+                        if (full['paymentcomplete'] == 0 && deletecheck == 1 && editcheck == 1) {
+                            button+='<button type="button" data-url="process/invoicecancellprocess.php?record='+full['idtbl_invoice']+'&type=3"  data-actiontype="3" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="far fa-trash-alt"></i></button>';
+                        }
+                        button+='<button type="button" data-actiontype="3" title="View Payment History" class="btn btn-outline-secondary btn-sm mr-1 btnViewPayments" id="'+full['idtbl_invoice']+'"><i class="fa fa-credit-card"></i></button>';
+
+                        if (full['paymentcomplete'] == 0 && deletecheck == 1 && editcheck == 1) {
+                            button+='<button type="button" data-url="process/paymentcompleteprocess.php?record='+full['idtbl_invoice']+'&type=1"  data-actiontype="9" title="Complete Order" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice']+'"><i class="fa fa-check"></i></button>';
+                        }else if  (deletecheck == 1 && editcheck == 1) {
+                            button+='<button type="button" title="Complete Order" class="btn btn-outline-success btn-sm mr-1 disabled" id="'+full['idtbl_invoice']+'"><i class="fa fa-check"></i></button>';
                         }
                         return button;
                     }
                 }
             ]
+        });
+
+        $('#dataTable tbody').on('click', '.btnViewPayments', function() {
+            var id = $(this).attr('id');
+
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#modalpayments iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
+
+            var src = 'pdfprocess/paymentpdf.php?invoiceId=' + id;
+
+            var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
+            var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
+
+            var allowfullscreen = $(this).attr('data-video-fullscreen'); // impostiamo sul bottone l'attributo allowfullscreen se è un video per permettere di passare alla modalità tutto schermo
+
+            // stampiamo i nostri dati nell'iframe
+            $("#modalpayments iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': ''
+            });
+            $('#modalpayments').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
         });
 
         $('#dataTable tbody').on('click', '.btnView', function() {

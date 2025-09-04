@@ -2,9 +2,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 </head>
+
 <?php 
 include "include/header.php";  
-
 $sql="SELECT `idtbl_customer`, `name`, `nic`, `phone`, `status`, `type`, `tbl_area_idtbl_area` FROM `tbl_customer` WHERE `status` IN (1,2)";
 $result =$conn-> query($sql); 
 
@@ -248,9 +248,13 @@ include "include/topnavbar.php";
                             </div>
                             <div class="col-8">
                                 <div class="row">
-                                    <div class="col">
+                                    <!-- <div class="col">
                                         <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
                                             id="btnassignref"><i class="fas fa-plus"></i>&nbsp;Assign Ref</button>
+                                    </div> -->
+                                    <div class="col">
+                                        <button type="button" class="btn btn-outline-primary btn-sm fa-pull-right"
+                                            id="btnunhold"><i class="fas fa-plus"></i>&nbsp;Unhold all</button>
                                     </div>
                                 </div>
                                 <div class="scrollbar pb-3 mt-4" id="style-2">
@@ -616,77 +620,51 @@ include "include/topnavbar.php";
                         var button = '';
                         button += '<a href="customerprofile.php?record=' + full[
                                 'idtbl_customer'] +
-                            '&type=1"  target="_self" class="btn btn-outline-primary btn-sm "><i class="far fa-eye"></i></a>'
-                        if (full['type'] == 2) {
-                            button +=
-                                '<button class="btn btn-outline-dark btn-sm btnAddProductStock mr-1 ';
-                            if (addcheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-warehouse"></i></button>';
+                            '&type=1"  target="_self" class="btn btn-outline-primary btn-sm mr-1"><i class="far fa-eye"></i></a>'
+                        // if (full['type'] == 2) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-dark btn-sm btnAddProductStock mr-1 ';
+                        //     if (addcheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '" id="' + full['idtbl_customer'] +
+                        //         '"><i class="fas fa-warehouse"></i></button>';
+                        // }
+                        // if (full['type'] == 1 | full['type'] == 3) {
+                        //     button +=
+                        //         '<button class="btn btn-outline-purple btn-sm btnAddProduct mr-1 ';
+                        //     if (addcheck == 0) {
+                        //         button += 'd-none';
+                        //     }
+                        //     button += '" id="' + full['idtbl_customer'] +
+                        //         '"><i class="fas fa-shopping-cart"></i></button>';
+                        // }
+                        if(editcheck=1){
+                            button+='<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="'+full['idtbl_customer']+'"><i class="fas fa-pen"></i></button>';
                         }
-                        if (full['type'] == 1 | full['type'] == 3) {
-                            button +=
-                                '<button class="btn btn-outline-purple btn-sm btnAddProduct mr-1 ';
-                            if (addcheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-shopping-cart"></i></button>';
+                        if(full['status']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['status']==2 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
                         }
-                        button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 ';
-                        if (editcheck == 0) {
-                            button += 'd-none';
+                        if(full['is_verified']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusisverified.php?record='+full['idtbl_customer']+'&type=0" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fa fa-pause"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['is_verified']==0 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusisverified.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-danger btn-sm mr-1 text-light btntableaction"><i class="fa fa-pause"></i></button>';
                         }
-                        button += '" id="' + full['idtbl_customer'] +
-                            '"><i class="fas fa-pen"></i></button>';
-                        if (full['status'] == 1) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=2" onclick="return deactive_confirm()" target="_self" class="btn btn-outline-success btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-check"></i></a>';
-                        } else if (full['status'] != 5) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=1" onclick="return active_confirm()" target="_self" class="btn btn-outline-warning btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-times"></i></a>';
+                        if(full['enable_for_porder']==1 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusenableforpo.php?record='+full['idtbl_customer']+'&type=0" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fa fa-hourglass-start"></i></button>';
+                            // button+='<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';if(deletecheck==0){button+='d-none';}button+='" id="'+full['idtbl_customer']+'"><i class="fas fa-times-circle"></i></button>';
+                            // button+='<button data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=4"  data-actiontype="4" class="btn btn-outline-dark btn-sm mr-1 btntableaction"><i class="far fa-calendar-check"></i></button>';
+                        }else if(full['enable_for_porder']==0 && statuscheck==1){
+                            button+='<button type="button" data-url="process/statusenableforpo.php?record='+full['idtbl_customer']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fa fa-hourglass-start"></i></button>';
                         }
-                        if (full['status'] == 1) {
-                            button +=
-                                '<button type="button" class="btn btn-outline-pink btn-sm mr-1 btnclose ';
-                            if (deletecheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '" id="' + full['idtbl_customer'] +
-                                '"><i class="fas fa-times-circle"></i></button>';
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=4" onclick="return emergancyactive_confirm()" target="_self" class="btn btn-outline-dark btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="far fa-calendar-check"></i></a>';
-                        } else if (full['status'] == 5) {
-                            button +=
-                                '<button type="button" class="btn btn-outline-purple btn-sm mr-1 btncloseview" id="' +
-                                full['idtbl_customer'] +
-                                '"><i class="fas fa-file"></i></button>';
-                        }
-                        if (full['status'] != 5) {
-                            button += '<a href="process/statuscustomer.php?record=' + full[
-                                    'idtbl_customer'] +
-                                '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
-                            if (deletecheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="far fa-trash-alt"></i></a>';
+                        if(deletecheck==1){
+                            button+='<button type="button" data-url="process/statuscustomer.php?record='+full['idtbl_customer']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
                         }
 
                         return button;
@@ -694,8 +672,8 @@ include "include/topnavbar.php";
                 }
             ]
         });
-        $('#dataTable tbody').on('click', '.btnEdit', function () {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({
@@ -966,6 +944,15 @@ include "include/topnavbar.php";
         });
     });
     
+    $('#btnunhold').click(function () {
+        $.ajax({
+            type: "POST",
+            url: 'process/unholdallcustomerprocess.php',
+            success: function (result) { alert(result);
+                action(result);
+            }
+        });
+    })
 
     $('#btnassignref').click(function () {
         $.ajax({

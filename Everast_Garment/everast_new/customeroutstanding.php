@@ -8,6 +8,9 @@ $resultcustomer = $conn->query($sqlcustomer);
 $sqlrep = "SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `status`=1 ORDER BY `name` ASC";
 $resultrep = $conn->query($sqlrep);
 
+$firstDay = date('2025-02-01');
+$lastDay = date('Y-m-t');
+
 include "include/topnavbar.php"; 
 ?>
 <div id="layoutSidenav">
@@ -21,7 +24,7 @@ include "include/topnavbar.php";
                     <div class="page-header-content py-3">
                         <h1 class="page-header-title">
                             <div class="page-header-icon"><i data-feather="file"></i></div>
-                            <span>Outstanding Report</span>
+                            <span>Individual Deptor Report</span>
                         </h1>
                     </div>
                 </div>
@@ -39,10 +42,8 @@ include "include/topnavbar.php";
                                                 <select class="form-control form-control-sm" name="searchType"
                                                     id="searchType">
                                                     <option value="0">Select Type</option>
-                                                    <option value="1">All</option>
-                                                    <option value="2">Rep Vise</option>
                                                     <option value="3">Customer Vise</option>
-                                                    
+
                                                 </select>
                                             </div>
                                         </div>
@@ -58,30 +59,24 @@ include "include/topnavbar.php";
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                        <div class="col-2 search-dependent" style="display: none"
+                                        <div class="col-2 search-dependent"
                                             id="selectCustomerDiv">
                                             <label class="small font-weight-bold text-dark">Customer*</label>
-                                            <select class="form-control form-control-sm" style="width: 100%;"
-                                                name="selectCustomer" id="selectCustomer">
-                                                <option value="0">All</option>
-                                                <?php while ($rowcustomerlist = $resultcustomer->fetch_assoc()) { ?>
-                                                <option value="<?php echo $rowcustomerlist['idtbl_customer']; ?>">
-                                                    <?php echo $rowcustomerlist['name']; ?>
-                                                </option>
-                                                <?php } ?>
+                                            <select class="form-control form-control-sm" style="width: 100%;" name="selectCustomer[]"
+                                                id="selectCustomer" multiple>
                                             </select>
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateFrom">
                                             <label class="small font-weight-bold text-dark">From*</label>
                                             <input type="date" class="form-control form-control-sm" name="fromdate"
-                                                id="fromdate" >
+                                                id="fromdate" value="<?php echo $firstDay; ?>">
                                         </div>
                                         <div class="col-2 search-dependent" style="display: none" id="selectDateTo">
                                             <label class="small font-weight-bold text-dark">To*</label>
                                             <input type="date" class="form-control form-control-sm" name="todate"
-                                                id="todate" >
+                                                id="todate" value="<?php echo $lastDay; ?>">
                                         </div>
-                                        <div class="col-2"style="display: none" id="aginreportshow">
+                                        <div class="col-2" style="display: none" id="aginreportshow">
                                             <label class="small font-weight-bold text-dark">Agin Report*</label>
                                             <div class="input-group input-group-sm">
                                                 <select class="form-control form-control-sm" name="aginvalue"
@@ -131,13 +126,13 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                         <br>
-                        <div class="col-12" style="display: none" align="right" id="hideprintBtn">
+                        <!-- <div class="col-12" style="display: none" align="right" id="hideprintBtn">
                             <button type="button"
                                 class="btn btn-outline-danger btn-sm ml-auto w-10 mt-2 px-5 align-right printBtn"
                                 id="printBtn">
                                 <i class="fas fa-file-pdf"></i>&nbsp;Print
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-12" id="showpdfview" style="display: none;">
                             <div class="embed-responsive embed-responsive-1by1" id="pdfframe">
                                 <iframe class="embed-responsive-item" frameborder="0"></iframe>
@@ -176,133 +171,156 @@ include "include/topnavbar.php";
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-$(document).ready(function() {
-    $('#searchType').change(function() {
-        var searchType = $(this).val();
-        resetFields();
-        if (searchType == 1) {
-            $('#selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
-        } else if (searchType == 2) {
-            $('#selectSaleRepDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
-        } else if (searchType == 3) {
-            $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
-        } 
-    });
-
-    $('#outstandingForm').submit(function(event) {
-        event.preventDefault();
-
-        var searchType = $('#searchType').val();
-        var validfrom = $('#fromdate').val();
-        var validto = $('#todate').val();
-        var customer = $('#selectCustomer').val();
-        var rep = $('#selectSaleRep').val();
-        var aginvalue = $('#aginvalue').val();
-
-        $.ajax({
-            type: "POST",
-            data: {
-                searchType: searchType,
-                validfrom: validfrom,
-                validto: validto,
-                customer: customer,
-                rep: rep,
-                aginvalue: aginvalue
-            },
-            url: 'getprocess/getoutstandingreport.php',
-            success: function(result) {
-                $('#targetviewdetail').html(result).show(); // Show the table
-                $('#hideprintBtn').show();
-
-                if ($.fn.DataTable.isDataTable('#outstandingReportTable')) {
-                    $('#outstandingReportTable').DataTable().destroy();
-                }
-
-                $('#outstandingReportTable').DataTable({
-                    "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
-                        "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                    "buttons": [{
-                            extend: 'csv',
-                            className: 'btn btn-success btn-sm',
-                            title: 'Everest Outstanding Report Information',
-                            text: '<i class="fas fa-file-csv mr-2"></i> CSV'
-                        },
-                        {
-                            extend: 'pdf',
-                            className: 'btn btn-danger btn-sm',
-                            title: 'Everest Outstanding Report Information',
-                            text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
-                        },
-                        {
-                            extend: 'print',
-                            title: 'Everest Outstanding Report Information',
-                            className: 'btn btn-primary btn-sm',
-                            text: '<i class="fas fa-print mr-2"></i> Print'
-                        }
-                    ],
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                });
-
-                $('#totalAmount').text($('#totalAmount').text());
-                //resetForm();
+    $(document).ready(function () {
+        $("#selectCustomer").select2({
+            ajax: {
+                url: "getprocess/getcustomerlistforreturn.php",
+                // url: "getprocess/getproductaccosupplier.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term,
+                    };
+                },
+                processResults: function (response) { //console.log(response)
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
             }
         });
-    });
-
-    $('#printBtn').click(function() {
-        var searchType = $('#searchType').val();
-        var validfrom = $('#fromdate').val();
-        var validto = $('#todate').val();
-        var customer = getElementValue('#selectCustomer');
-        var rep = getElementValue('#selectSaleRep');
-        var aginvalue = getElementValue('#aginvalue');
-
-        
-        $('#frame').html('');
-        $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
-        $('#printreport iframe').contents().find('body').html(
-            "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
-        );
-
-        
-        var params = `?validfrom=${encodeURIComponent(validfrom)}&validto=${encodeURIComponent(validto)}&searchType=${encodeURIComponent(searchType)}&customer=${encodeURIComponent(customer)}&rep=${encodeURIComponent(rep)}&aginvalue=${encodeURIComponent(aginvalue)}`;
-        var src = 'pdfprocess/outstandingreportpdf.php' + params;
-
-        var width = $(this).attr('data-width') || 640;
-        var height = $(this).attr('data-height') || 360;
-
-        $("#printreport iframe").attr({
-            'src': src,  
-            'height': height,
-            'width': width,
-            'allowfullscreen': true
+        $('#searchType').change(function () {
+            var searchType = $(this).val();
+            resetFields();
+            if (searchType == 1) {
+                $('#selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow').show();
+            } else if (searchType == 2) {
+                $('#selectSaleRepDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow')
+                    .show();
+            } else if (searchType == 3) {
+                $('#selectCustomerDiv, #selectDateFrom, #selectDateTo, #hidesumbit, #aginreportshow')
+                    .show();
+            }
         });
 
-        $('#printreport').modal({
-            keyboard: false,
-            backdrop: 'static'
+        $('#outstandingForm').submit(function (event) {
+            event.preventDefault();
+
+            var searchType = $('#searchType').val();
+            var validfrom = $('#fromdate').val();
+            var validto = $('#todate').val();
+            var customer = $('#selectCustomer').val();
+            var rep = $('#selectSaleRep').val();
+            var aginvalue = $('#aginvalue').val();
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    searchType: searchType,
+                    validfrom: validfrom,
+                    validto: validto,
+                    customer: customer,
+                    rep: rep,
+                    aginvalue: aginvalue
+                },
+            url: 'getprocess/getoutstandingreport.php',
+                success: function (result) {
+                    $('#targetviewdetail').html(result).show(); // Show the table
+                    $('#hideprintBtn').show();
+
+                    if ($.fn.DataTable.isDataTable('#outstandingReportTable')) {
+                        $('#outstandingReportTable').DataTable().destroy();
+                    }
+
+                    $('#outstandingReportTable').DataTable({
+                        "dom": "<'row'<'col-sm-5'B><'col-sm-2'l><'col-sm-5'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        "buttons": [{
+                                extend: 'csv',
+                                className: 'btn btn-success btn-sm',
+                                title: 'Everest Outstanding Report Information',
+                                text: '<i class="fas fa-file-csv mr-2"></i> CSV'
+                            },
+                            {
+                                extend: 'pdf',
+                                className: 'btn btn-danger btn-sm',
+                                title: 'Everest Outstanding Report Information',
+                                text: '<i class="fas fa-file-pdf mr-2"></i> PDF'
+                            },
+                            {
+                                extend: 'print',
+                                title: 'Everest Outstanding Report Information',
+                                className: 'btn btn-primary btn-sm',
+                                text: '<i class="fas fa-print mr-2"></i> Print'
+                            }
+                        ],
+                        "paging": true,
+                        "searching": true,
+                        "ordering": true,
+                    });
+
+                    $('#totalAmount').text($('#totalAmount').text());
+                    //resetForm();
+                }
+            });
         });
-        resetForm();
 
+        $('#printBtn').click(function () {
+            var searchType = $('#searchType').val();
+            var validfrom = $('#fromdate').val();
+            var validto = $('#todate').val();
+            var customer = getElementValue('#selectCustomer');
+            var rep = getElementValue('#selectSaleRep');
+            var aginvalue = getElementValue('#aginvalue');
+
+
+            $('#frame').html('');
+            $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
+            $('#printreport iframe').contents().find('body').html(
+                "<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />"
+            );
+
+
+            var params =
+                `?validfrom=${encodeURIComponent(validfrom)}&validto=${encodeURIComponent(validto)}&searchType=${encodeURIComponent(searchType)}&customer=${encodeURIComponent(customer)}&rep=${encodeURIComponent(rep)}&aginvalue=${encodeURIComponent(aginvalue)}`;
+            var src = 'pdfprocess/outstandingreportpdf.php' + params;
+
+            var width = $(this).attr('data-width') || 640;
+            var height = $(this).attr('data-height') || 360;
+
+            $("#printreport iframe").attr({
+                'src': src,
+                'height': height,
+                'width': width,
+                'allowfullscreen': true
+            });
+
+            $('#printreport').modal({
+                keyboard: false,
+                backdrop: 'static'
+            });
+            resetForm();
+
+        });
+
+
+        function getElementValue(id) {
+            var element = $(id);
+
+        }
+
+        function resetFields() {
+            $('.search-dependent').hide();
+        }
+
+        function resetForm() {
+            $('#outstandingForm')[0].reset();
+            resetFields();
+            $('#searchType').val(0);
+        }
     });
-
-
-    function getElementValue(id) {
-        var element = $(id);
-        
-    }
-
-    function resetFields() {
-        $('.search-dependent').hide();
-    }
-
-    function resetForm() {
-        $('#outstandingForm')[0].reset();
-        resetFields();
-        $('#searchType').val(0);
-    }
-});
 </script>

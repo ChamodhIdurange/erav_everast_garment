@@ -1,6 +1,7 @@
 <?php
 include "include/header.php";
 $sql = "SELECT *, `tbl_catalog_category`.`category`, `tbl_catalog`.`status` FROM `tbl_catalog` LEFT JOIN `tbl_catalog_category` ON(`tbl_catalog_category`.`idtbl_catalog_category` = `tbl_catalog`.`tbl_catalog_category_idtbl_catalog_category`) WHERE `tbl_catalog`.`status`IN(1,2)";
+
 $result = $conn->query($sql);
 
 $productarray = array();
@@ -14,16 +15,6 @@ while ($rowproduct = $resultproduct->fetch_assoc()) {
     array_push($productarray, $obj);
 }
 
-$productcatarray = array();
-$sqlproductcat = "SELECT `idtbl_catalog_category`, `category` FROM `tbl_catalog_category` WHERE `status`=1";
-$resultproductcat = $conn->query($sqlproductcat);
-while ($productcat = $resultproductcat->fetch_assoc()) {
-    $obj = new stdClass();
-    $obj->productcatalogID = $productcat['idtbl_catalog_category'];
-    $obj->productcatalogcat = $productcat['category'];
-
-    array_push($productcatarray, $obj);
-}
 include "include/topnavbar.php";
 ?>
 <div id="layoutSidenav">
@@ -47,19 +38,19 @@ include "include/topnavbar.php";
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col-3">
-                                <form method="post" id="createorderform" autocomplete="off" enctype="multipart/form-data">
+                                <form method="post" id="createorderform" autocomplete="off"
+                                    enctype="multipart/form-data">
                                     <div class="form-group mb-1">
-                                        <label class="small font-weight-bold text-dark">Product Catalog Category*</label>
-                                        <select class="form-control form-control-sm" name="catalogcat" id="catalogcat" required>
+                                        <label class="small font-weight-bold text-dark">Catalog Category*</label>
+                                        <select class="form-control form-control-sm select2" style="width: 100%;"
+                                            name="catalogcat" id="catalogcat" required>
                                             <option value="">Select</option>
-                                            <?php foreach ($productcatarray as $rowproductcatlist) { ?>
-                                                <option value="<?php echo $rowproductcatlist->productcatalogID ?>"><?php echo $rowproductcatlist->productcatalogcat ?></option>
-                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Product*</label>
-                                        <select class="form-control form-control-sm select2" style="width: 100%;" name="product" id="product" required>
+                                        <select class="form-control form-control-sm select2" style="width: 100%;"
+                                            name="product" id="product" required>
                                             <option value="">Select</option>
                                         </select>
 
@@ -96,11 +87,14 @@ include "include/topnavbar.php";
 
                                     <div class="form-group mt-3">
                                         <label class="small font-weight-bold text-dark">Product Image</label>
-                                        <input type="file" name="productimage[]" id="productimage" class="form-control form-control-sm" style="padding-bottom:32px;" multiple>
+                                        <input type="file" name="productimage[]" id="productimage"
+                                            class="form-control form-control-sm" style="padding-bottom:32px;" multiple>
                                         <small id="" class="form-text text-danger">Image size 800X800 Pixel</small>
                                     </div>
                                     <div class="form-group mt-3">
-                                        <button id="formsubmit" class="btn btn-outline-primary btn-sm w-50 fa-pull-right" <?php if ($addcheck == 0) {
+                                        <button id="formsubmit"
+                                            class="btn btn-outline-primary btn-sm w-50 fa-pull-right"
+                                            <?php if ($addcheck == 0) {
                                                                                                                                 echo 'disabled';
                                                                                                                             } ?>><i class="far fa-save"></i>&nbsp;Add</button>
 
@@ -125,9 +119,12 @@ include "include/topnavbar.php";
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group mt-2">
-                                            <button type="button" id="btncreateorder" class="btn btn-outline-primary btn-sm fa-pull-right" <?php if ($addcheck == 0) {
+                                            <button type="button" id="btncreateorder"
+                                                class="btn btn-outline-primary btn-sm fa-pull-right"
+                                                <?php if ($addcheck == 0) {
                                                                                                                                                 echo 'disabled';
-                                                                                                                                            } ?>><i class="fas fa-save"></i>&nbsp;Create
+                                                                                                                                            } ?>><i
+                                                    class="fas fa-save"></i>&nbsp;Create
                                                 Catalog</button>
                                         </div>
                                     </div>
@@ -150,29 +147,41 @@ include "include/topnavbar.php";
                                     <tbody>
                                         <?php if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) { ?>
-                                                <tr>
-                                                    <td><?php echo $row['idtbl_catalog'] ?></td>
-                                                    <td><?php echo $row['category'] ?></td>
-
-                                                    <td class="text-right">
-                                                        <button class="btn btn-outline-secondary btn-sm btnlistview" id="<?php echo $row['idtbl_catalog'] ?>" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="View list image"><i class="fa fa-camera" aria-hidden="true"></i></button>
-                                                        <button class="btn btn-outline-primary btn-sm btnEdit <?php if ($editcheck == 0) {
-                                                                                                                    echo 'd-none';
-                                                                                                                } ?>" id="<?php echo $row['idtbl_catalog'] ?>"><i data-feather="edit-2"></i></button>
-                                                        <?php if ($row['status'] == 1) { ?>
-                                                            <a href="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=2" onclick="return confirm('Are you sure you want to deactive this?');" target="_self" class="btn btn-outline-success btn-sm <?php if ($statuscheck == 0) {
-                                                                                                                                                                                                                                                                                echo 'd-none';
-                                                                                                                                                                                                                                                                            } ?>"><i data-feather="check"></i></a>
-                                                        <?php } else { ?>
-                                                            <a href="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=1" onclick="return confirm('Are you sure you want to active this?');" target="_self" class="btn btn-outline-warning btn-sm <?php if ($statuscheck == 0) {
-                                                                                                                                                                                                                                                                                echo 'd-none';
-                                                                                                                                                                                                                                                                            } ?>"><i data-feather="x-square"></i></a>
-                                                        <?php } ?>
-                                                        <a href="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=3" onclick="return confirm('Are you sure you want to remove this?');" target="_self" class="btn btn-outline-danger btn-sm <?php if ($deletecheck == 0) {
-                                                                                                                                                                                                                                                                            echo 'd-none';
-                                                                                                                                                                                                                                                                        } ?>"><i data-feather="trash-2"></i></a>
-                                                    </td>
-                                                </tr>
+                                        <tr>
+                                            <td><?php echo $row['idtbl_catalog'] ?></td>
+                                            <td><?php echo $row['category'] ?></td>
+                                            <td class="text-right">
+                                                <button class="btn btn-outline-secondary btn-sm btnlistview"
+                                                    id="<?php echo $row['idtbl_catalog'] ?>" data-toggle="tooltip"
+                                                    data-placement="bottom" title=""
+                                                    data-original-title="View list image"><i class="fa fa-camera"
+                                                        aria-hidden="true"></i></button>
+                                                <?php if($editcheck==1){ ?>
+                                                <button
+                                                    class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
+                                                    id="<?php echo $row['idtbl_catalog'] ?>"><i
+                                                        data-feather="edit-2"></i></button>
+                                                <?php } if($statuscheck==1 && $row['status']==1){ ?>
+                                                <button
+                                                    data-url="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=2"
+                                                    data-actiontype="2"
+                                                    class="btn btn-outline-success btn-sm btntableaction"><i
+                                                        data-feather="check"></i></button>
+                                                <?php } else if($statuscheck==1 && $row['status']==2){ ?>
+                                                <button
+                                                    data-url="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=1"
+                                                    data-actiontype="1"
+                                                    class="btn btn-outline-warning btn-sm btntableaction"><i
+                                                        data-feather="x-square"></i></button>
+                                                <?php } if($deletecheck==1){ ?>
+                                                <button
+                                                    data-url="process/statuscatalog.php?record=<?php echo $row['idtbl_catalog'] ?>&type=3"
+                                                    data-actiontype="3"
+                                                    class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                        data-feather="trash-2"></i></button>
+                                                <?php } ?>
+                                            </td>
+                                        </tr>
                                         <?php }
                                         } ?>
                                     </tbody>
@@ -187,7 +196,8 @@ include "include/topnavbar.php";
     </div>
 </div>
 <!-- Modal Image View -->
-<div class="modal fade" id="modalimageview" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="modalimageview" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header p-2">
@@ -207,9 +217,8 @@ include "include/topnavbar.php";
 <?php include "include/footerscripts.php"; ?>
 <script>
     var prodCount = 0;
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#dataTable').DataTable();
-
         $("#product").select2({
             // dropdownParent: $('#addNewInquiryModal'),
             // placeholder: 'Select supplier',
@@ -218,12 +227,31 @@ include "include/topnavbar.php";
                 type: "post",
                 dataType: 'json',
                 delay: 250,
-                data: function(params) {
+                data: function (params) {
                     return {
                         searchTerm: params.term // search term
                     };
                 },
-                processResults: function(response) {
+                processResults: function (response) {
+                    return {
+                        results: response
+                    };
+                },
+                cache: true
+            }
+        });
+        $("#catalogcat").select2({
+            ajax: {
+                url: "getprocess/getproductcatalogforselect2.php",
+                type: "post",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        searchTerm: params.term, 
+                    };
+                },
+                processResults: function (response) { //console.log(response)
                     return {
                         results: response
                     };
@@ -232,8 +260,8 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#dataTable tbody').on('click', '.btnEdit', function() {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({
@@ -242,7 +270,7 @@ include "include/topnavbar.php";
                         recordID: id
                     },
                     url: 'getprocess/getcatalogedit.php',
-                    success: function(result) {
+                    success: function (result) {
                         var obj = JSON.parse(result);
                         // var uomname;
 
@@ -279,10 +307,12 @@ include "include/topnavbar.php";
                         // } else if (obj.group_type == 2) {
                         //     $('#type2').prop('checked', true);
                         // }
-                        $('#catalogcat').val(obj.tbl_catalog_category_idtbl_catalog_category);
+                        $('#catalogcat').val(obj
+                            .tbl_catalog_category_idtbl_catalog_category);
                         //  $('#product').val(obj.tbl_product_idtbl_product);
                         $('#recordOption').val('2');
-                        $('#btncreateorder').html('<i class="far fa-save"></i>&nbsp;Update');
+                        $('#btncreateorder').html(
+                            '<i class="far fa-save"></i>&nbsp;Update');
 
                         $.ajax({
                             type: "POST",
@@ -290,24 +320,34 @@ include "include/topnavbar.php";
                                 recordID: id
                             },
                             url: 'getprocess/procatalogtableedit.php',
-                            success: function(data) {
+                            success: function (data) {
                                 records = JSON.parse(data);
                                 $('#tableorder > tbody').empty();
-                                records.forEach(function(obj) {
+                                records.forEach(function (obj) {
 
-                                    var catalogcattext = obj.category;
+                                    var catalogcattext = obj
+                                        .category;
                                     var product = obj.product_name;
                                     var productID = obj.product_id;
-                                    var catalogcat = obj.tbl_catalog_category_idtbl_catalog_category;
+                                    var catalogcat = obj
+                                        .tbl_catalog_category_idtbl_catalog_category;
 
                                     prodCount++;
 
 
-                                    $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td class="d-none">' + catalogcat +
-                                        '</td><td class="text-center">' + catalogcattext +
-                                        '</td><td class="text-center">' + product +
-                                        '</td><td class="d-none">' + productID +
-                                        '</td></tr>');
+                                    $('#tableorder > tbody:last')
+                                        .append(
+                                            '<tr class="pointer"><td>' +
+                                            prodCount +
+                                            '</td><td class="d-none">' +
+                                            catalogcat +
+                                            '</td><td class="text-center">' +
+                                            catalogcattext +
+                                            '</td><td class="text-center">' +
+                                            product +
+                                            '</td><td class="d-none">' +
+                                            productID +
+                                            '</td></tr>');
                                 });
                                 $('#product').val('');
                                 $('#product').text('');
@@ -361,17 +401,17 @@ include "include/topnavbar.php";
 
         // });
 
-        $('#dataTable tbody').on('click', '.btnlistview', function() {
+        $('#dataTable tbody').on('click', '.btnlistview', function () {
             var productID = $(this).attr('id');
             // alert(productID);
             loadlistimages(productID);
             $('#modalimageview').modal('show');
 
         });
-        $('#modalimageview').on('click', '.btnclose', function() {
+        $('#modalimageview').on('click', '.btnclose', function () {
             window.location.reload();
         });
-        $("#formsubmit").click(function() {
+        $("#formsubmit").click(function () {
             if (!$("#createorderform")[0].checkValidity()) {
                 // If the form is invalid, submit it. The form won't actually submit;
                 // this will just cause the browser to display the native HTML5 error messages.
@@ -387,7 +427,8 @@ include "include/topnavbar.php";
                 var product = $('#product').val();
                 // var orderdate = $('#orderdate1').val();
 
-                $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount + '</td><td class="d-none">' + catalogcat +
+                $('#tableorder > tbody:last').append('<tr class="pointer"><td>' + prodCount +
+                    '</td><td class="d-none">' + catalogcat +
                     '</td><td class="text-center">' + catalogcattext +
                     '</td><td class="text-center">' + productcattext +
                     '</td><td class="d-none">' + product +
@@ -400,7 +441,7 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#tableorder').on('click', 'tr', function() {
+        $('#tableorder').on('click', 'tr', function () {
             var r = confirm("Are you sure, You want to remove this product ? ");
             if (r == true) {
                 $(this).closest('tr').remove();
@@ -408,7 +449,7 @@ include "include/topnavbar.php";
             }
         });
 
-        $('#btncreateorder').click(function() {
+        $('#btncreateorder').click(function () {
             var tbody = $("#tableorder tbody");
             var formData = new FormData();
 
@@ -420,9 +461,9 @@ include "include/topnavbar.php";
 
             if (tbody.children().length > 0) {
                 jsonObj = [];
-                $("#tableorder tbody tr").each(function() {
+                $("#tableorder tbody tr").each(function () {
                     item = {}
-                    $(this).find('td').each(function(col_idx) {
+                    $(this).find('td').each(function (col_idx) {
                         item["col_" + (col_idx + 1)] = $(this).text();
                     });
                     jsonObj.push(item);
@@ -446,9 +487,9 @@ include "include/topnavbar.php";
                     data: formData,
                     processData: false,
                     contentType: false,
-                    success: function(result) {
+                    success: function (result) {// alert(result)
                         action(result);
-                        setTimeout(function() {
+                        setTimeout(function () {
                             window.location.reload();
                         }, 1500);
                     }
@@ -488,16 +529,16 @@ include "include/topnavbar.php";
                 productID: productID,
             },
             url: 'getprocess/getproductlistimages.php',
-            success: function(result) { //alert(result);
+            success: function (result) { //alert(result);
                 $('#imagelist').removeClass('text-center');
                 $('#imagelist').html(result);
-               loadlistimages(productID);
+                loadlistimages(productID);
             }
         });
     }
 
     function optionimages(productID) {
-        $('#productimagetable tbody').on('click', '.btnremoveimage', function() {
+        $('#productimagetable tbody').on('click', '.btnremoveimage', function () {
             var imageID = $(this).attr('id');
             var r = confirm("Are you sure, You want to Delete this ? ");
             if (r == true) {
@@ -508,7 +549,7 @@ include "include/topnavbar.php";
 
                     },
                     url: 'process/statusproductimages.php',
-                    success: function(result) { //alert(result);
+                    success: function (result) { //alert(result);
                         $('#imagelist').html(result);
                         loadlistimages(productID);
                     }

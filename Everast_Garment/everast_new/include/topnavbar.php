@@ -1,7 +1,7 @@
 <?php
 $sessionusertype = $_SESSION['type'];
 
-$sqlnotfication = "SELECT COUNT(`idtbl_customer_order`) AS `count` FROM `tbl_customer_order` WHERE `confirm` = '0'";
+$sqlnotfication = "SELECT COUNT(`idtbl_customer_order`) AS `count` FROM `tbl_customer_order` WHERE (`confirm` = '0' OR `confirm` IS NULL) AND `status` IN (1, 2)";
 $resultnotfication = $conn->query($sqlnotfication);
 
 $sqlnotficationre = "SELECT COUNT(`idtbl_return`) AS `count` FROM `tbl_return` WHERE `acceptance_status` = '0'";
@@ -23,7 +23,7 @@ $rowusertype = $resultusertype->fetch_assoc();
 
     <ul class="navbar-nav align-items-center ml-auto">
     <div style="margin-right: 20px;">
-             <?php if ($sessionusertype == 1 || $sessionusertype == 2) {
+             <?php 
                 if ($resultnotficationre->num_rows > 0) {
                     $notficationresre = $resultnotficationre->fetch_assoc();
                     $notifys = $notficationresre['count'];
@@ -33,12 +33,11 @@ $rowusertype = $resultusertype->fetch_assoc();
                         <div class="badge">+ <?php echo $notifys ?></div>
                     <?php } ?>
                     <a href="#" data-toggle="tooltip" data-placement="bottom" title="Return" ><i data-feather="corner-down-left" style="margin-top: 5px;"></i></a>
-            <?php }
-            } ?> 
+            <?php } ?> 
            
         </div>
         <div style="margin-right: 20px;">
-            <?php if ($sessionusertype == 1 || $sessionusertype == 2) {
+            <?php
                 if ($resultnotfication->num_rows > 0) {
                     $notficationres = $resultnotfication->fetch_assoc();
                     $notify = $notficationres['count'];
@@ -48,8 +47,7 @@ $rowusertype = $resultusertype->fetch_assoc();
                         <div class="badge">+ <?php echo $notify ?></div>
                     <?php } ?>
                     <a href="customerporder.php" data-toggle="tooltip" data-placement="bottom" title="Customer Porder"> <i class="fa fa-tasks"></i> </a>
-            <?php }
-            } ?>
+            <?php } ?>
             
         </div>
         <li class="nav-item dropdown no-caret mr-3 dropdown-user">

@@ -6,7 +6,7 @@ $salesmanagerid=$_POST['salesmanagerid'];
 
 $array = [];
 
-$sql="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_sales_manager_idtbl_sales_manager` = '$salesmanagerid' AND `tbl_user_type_idtbl_user_type`=8 AND `status` = '1'";
+$sql="SELECT `idtbl_employee`, `name` FROM `tbl_employee` WHERE `tbl_sales_manager_idtbl_sales_manager` = '$salesmanagerid' AND `tbl_user_type_idtbl_user_type`=7 AND `status` = '1'";
 $result =$conn-> query($sql); 
 
 

@@ -3,6 +3,7 @@
 require_once('dbConnect.php');
 $username = $_POST["username"];
 $password1 = $_POST["password"];
+$logintype = $_POST["logintype"];
 
 $md5password = md5($password1);
 $id = "";
@@ -21,36 +22,64 @@ if (mysqli_num_rows($result) > 0) {
 
     $row = mysqli_fetch_row($result);
     $id = $row[0];
-    $sqlRefData = "SELECT `idtbl_employee`, `name`, `epfno`, `nic`, `phone`, `address`, `status`, `updatedatetime`,`tbl_user_type_idtbl_user_type` FROM `tbl_employee` WHERE `tbl_user_idtbl_user`='$id'";
-    $resultRefData = mysqli_query($con, $sqlRefData);
+    if($logintype == 0){
+        $sqlRefData = "SELECT `idtbl_employee`, `name`, `epfno`, `nic`, `phone`, `address`, `status`, `updatedatetime`,`tbl_user_type_idtbl_user_type`, `useraccountid` FROM `tbl_employee` WHERE `useraccountid`='$id'";
+        $resultRefData = mysqli_query($con, $sqlRefData);
 
-    $rowRefDta = mysqli_fetch_array($resultRefData);
-    $refName = "";
-    $phone = "";
-    $emp_id = "";
-    $userType = "";
-    if ($rowRefDta) {
-        $refName = $rowRefDta['name'];
-        $phone = $rowRefDta['phone'];
-        $emp_id = $rowRefDta['idtbl_employee'];
-        $userType = $rowRefDta['tbl_user_type_idtbl_user_type'];
+        $rowRefDta = mysqli_fetch_array($resultRefData);
+        $refName = "";
+        $phone = "";
+        $emp_id = "";
+        $userType = "";
+        if ($rowRefDta) {
+            $refName = $rowRefDta['name'];
+            $phone = $rowRefDta['phone'];
+            $emp_id = $rowRefDta['idtbl_employee'];
+            $userType = $rowRefDta['tbl_user_type_idtbl_user_type'];
+            $useraccountid = $rowRefDta['useraccountid'];
+
+            $code = "200";
+
+            $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" =>  $phone, "userType" => $userType, "userAccountId" => $useraccountid);
+            print_r(json_encode($response));
+        }else{
+            $code = "500";
+            $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" => $phone, "userType" => $userType);
+            print_r(json_encode($response));
+        }
+    }else{
+        $sqlAreaManagerData = "SELECT `idtbl_sales_manager`, `salesmanagername`, `contactone`, `tbl_user_idtbl_user` FROM `tbl_sales_manager` WHERE `tbl_user_idtbl_user`='$id'";
+        $resultAreaManagerData = mysqli_query($con, $sqlAreaManagerData);
+
+        $rowRefDta = mysqli_fetch_array($resultAreaManagerData);
+        $refName = "";
+        $phone = "";
+        $emp_id = "";
+        $userType = "13";
+        if ($rowRefDta) {
+            $refName = $rowRefDta['salesmanagername'];
+            $phone = $rowRefDta['contactone'];
+            $emp_id = $rowRefDta['idtbl_sales_manager'];
+            $userType = 13;
+            $useraccountid = $rowRefDta['tbl_user_idtbl_user'];
+
+            $code = "200";
+
+            $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" =>  $phone, "userType" => $userType, "userAccountId" => $useraccountid);
+            print_r(json_encode($response));
+        }else{
+            $code = "500";
+            $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" => $phone, "userType" => $userType);
+            print_r(json_encode($response));
+        }
     }
-    $sqlMoInno = "SELECT `mobileid` FROM `tbl_porder_otherinfo` WHERE `repid`='$id' ORDER BY `tbl_porder_otherinfo`.`updatedatetime` DESC LIMIT 1";
-    $resultMoInno = mysqli_query($con, $sqlMoInno);
-
-    if (mysqli_num_rows($resultMoInno) > 0) {
-
-        $rowRefDtamobile = mysqli_fetch_array($resultMoInno);
-        $LastMobileInnoNo = $rowRefDtamobile['mobileid'];
-    }
-    $code = "200";
-
-    $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" =>  $phone, "lastInnoNo" => $LastMobileInnoNo, "userType" => $userType);
-    print_r(json_encode($response));
+    
+  
+    
 } else {
 
     $code = "500";
-    $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" => $phone, "lastInnoNo" => $LastMobileInnoNo, "userType" => $userType);
+    $response = array("code" => $code, "refid" => $id, "empid" => $emp_id, "name" => $refName, "mobile" => $phone, "userType" => $userType);
     print_r(json_encode($response));
 }
 mysqli_close($con);

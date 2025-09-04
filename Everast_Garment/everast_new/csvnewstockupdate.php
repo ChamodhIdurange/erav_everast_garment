@@ -6,6 +6,7 @@ $userID=$_SESSION['userid'];
 
 $updatedatetime=date('Y-m-d h:i:s');
 $filename = "process/newstockreport.csv";
+
 $file1 = fopen($filename, 'r');
 $file2 = fopen($filename, 'r');
 $c = 0;

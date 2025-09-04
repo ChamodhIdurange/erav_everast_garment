@@ -1,6 +1,7 @@
 <?php 
 include "include/header.php";  
-include "connection/db.php";  
+include "include/topnavbar.php";
+
 
 $sqlcustomer="SELECT `idtbl_customer`, `name` FROM `tbl_customer` WHERE `status`=1 ORDER BY `name` ASC";
 $resultcustomer =$conn-> query($sqlcustomer);
@@ -70,13 +71,13 @@ include "include/topnavbar.php";
                             </div>
                         </div>
                         <br>
-                        <div class="col-12" style="display: none" align="right" id="hideprintBtn">
+                        <!-- <div class="col-12" style="display: none" align="right" id="hideprintBtn">
                             <button type="button"
                                 class="btn btn-outline-danger btn-sm ml-auto w-10 mt-2 px-5 align-right printBtn"
                                 id="printBtn">
                                 <i class="fas fa-file-pdf"></i>&nbsp;Print
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-12" id="showpdfview" style="display: none;">
                             <div class="embed-responsive embed-responsive-1by1" id="pdfframe">
                                 <iframe class="embed-responsive-item" frameborder="0"></iframe>
@@ -183,7 +184,14 @@ include "include/topnavbar.php";
                                 className: 'btn btn-primary btn-sm',
                                 text: '<i class="fas fa-print mr-2"></i> Print'
                             }
-                        ]
+                        ],
+                        "paging": true,
+                        "searching": true,
+                        "ordering": true,
+                        "lengthMenu": [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, 'All']
+                        ],
                     });
 
                 }

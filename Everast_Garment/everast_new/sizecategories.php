@@ -101,36 +101,16 @@ include "include/topnavbar.php";
                     "data": null,
                     "render": function (data, type, full) {
                         var button = '';
-                        button += '<button class="btn btn-outline-primary btn-sm btnEdit mr-1 ';
-                        if (editcheck == 0) {
-                            button += 'd-none';
+                        if(editcheck=1){
+                            button+='<button type="button" class="btn btn-primary btn-sm btnEdit mr-1" id="'+full['idtbl_size_categories']+'"><i class="fas fa-pen"></i></button>';
                         }
-                        button += '" id="' + full['idtbl_size_categories'] +
-                            '"><i class="fas fa-pen"></i></button>';
-                        if (full['status'] == 1) {
-                            button += '<a href="process/statussizecategories.php?record=' + full[
-                                    'idtbl_size_categories'] +
-                                '&type=2" onclick="return deactive_confirm()" target="_self" class="btn btn-outline-success btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-check"></i></a>';
-                        } else {
-                            button += '<a href="process/statussizecategories.php?record=' + full[
-                                    'idtbl_size_categories'] +
-                                '&type=1" onclick="return active_confirm()" target="_self" class="btn btn-outline-warning btn-sm mr-1 ';
-                            if (statuscheck == 0) {
-                                button += 'd-none';
-                            }
-                            button += '"><i class="fas fa-times"></i></a>';
+                        if(full['status']==1 ){
+                            button+='<button type="button" data-url="process/statussizecategories.php?record='+full['idtbl_size_categories']+'&type=2" data-actiontype="2" class="btn btn-success btn-sm mr-1 btntableaction"><i class="fas fa-check"></i></button>';
+                        }else if(full['status']==2){
+                            button+='<button type="button" data-url="process/statussizecategories.php?record='+full['idtbl_size_categories']+'&type=1" data-actiontype="1" class="btn btn-warning btn-sm mr-1 text-light btntableaction"><i class="fas fa-times"></i></button>';
                         }
-                        button += '<a href="process/statussizecategories.php?record=' + full[
-                                'idtbl_size_categories'] +
-                            '&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger btn-sm ';
-                        if (deletecheck == 0) {
-                            button += 'd-none';
-                        }
-                        button += '"><i class="far fa-trash-alt"></i></a>';
+                            button+='<button type="button" data-url="process/statussizecategories.php?record='+full['idtbl_size_categories']+'&type=3" data-actiontype="3" class="btn btn-danger btn-sm text-light btntableaction"><i class="fas fa-trash-alt"></i></button>';
+
 
                         return button;
                     }
@@ -140,8 +120,8 @@ include "include/topnavbar.php";
                 $('[data-toggle="tooltip"]').tooltip();
             }
         });
-        $('#dataTable tbody').on('click', '.btnEdit', function () {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({

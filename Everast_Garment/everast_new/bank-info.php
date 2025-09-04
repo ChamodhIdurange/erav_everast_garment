@@ -14,7 +14,8 @@ $resultbanks = $conn->query($banksql);
         <main>
             <div class="page-header page-header-light bg-white shadow">
                 <div class="container-fluid">
-                    <div class="page-header-content d-md-flex text-right align-items-center justify-content-between py-3">
+                    <div
+                        class="page-header-content d-md-flex text-right align-items-center justify-content-between py-3">
                         <div class="d-inline">
                             <h1 class="page-header-title">
                                 <div class="page-header-icon"><i data-feather="dollar-sign"></i></div>
@@ -32,14 +33,19 @@ $resultbanks = $conn->query($banksql);
                                 <form class="m-2" action="process/bankinfoprocess.php" method="post" autocomplete="off">
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Code</label>
-                                        <input class="form-control form-control-sm" type="text" id="code" maxlength="4" minlength="4" name="code" value="" required>
+                                        <input class="form-control form-control-sm" type="text" id="code" maxlength="4"
+                                            minlength="4" name="code" value="" required>
                                     </div>
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Bank Name</label>
-                                        <input class="form-control form-control-sm" type="text" id="name" name="name" value="">
+                                        <input class="form-control form-control-sm" type="text" id="name" name="name"
+                                            value="">
                                     </div>
                                     <div class="form-group mt-3">
-                                        <button type="submit" id="submitBtn" class="btn btn-outline-primary btn-sm w-50 fa-pull-right" <?php if($addcheck==0){echo 'disabled';} ?>><i class="far fa-save"></i>&nbsp;Add</button>
+                                        <button type="submit" id="submitBtn"
+                                            class="btn btn-outline-primary btn-sm w-50 fa-pull-right"
+                                            <?php if($addcheck==0){echo 'disabled';} ?>><i
+                                                class="far fa-save"></i>&nbsp;Add</button>
                                     </div>
                                     <input type="hidden" name="recordOption" id="recordOption" value="1">
                                     <input type="hidden" name="recordID" id="recordID" value="">
@@ -47,36 +53,53 @@ $resultbanks = $conn->query($banksql);
                             </div>
                             <div class="col-md-9">
                                 <!-- <div class="table-responsive-sm w-100"> -->
-                                    <div class="scrollbar pb-3" id="style-2">
-                                        <table id="dataTable" class="table table-sm w-100 table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Id</th>
-                                                    <th>Bank Name</th>
-                                                    <th>Code</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php if($resultbanks->num_rows > 0){ while($row = $resultbanks->fetch_assoc()){ ?>
-                                                <tr>
-                                                    <td><?php echo $row['idtbl_bank']; ?></td>
-                                                    <td><?php echo $row['bankname']; ?></td>
-                                                    <td><?php echo $row['code']; ?></td>
-                                                    <td class="text-right">
-                                                        <button class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>" id="<?php echo $row['idtbl_bank'] ?>"><i data-feather="edit-2"></i></button>
-                                                        <?php if($row['status']==1){ ?>
-                                                        <a href="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=2" onclick="return confirm('Are you sure you want to deactive this?');" target="_self" class="btn btn-outline-success btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i data-feather="check"></i></a>
-                                                        <?php }else{ ?>
-                                                        <a href="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=1" onclick="return confirm('Are you sure you want to active this?');" target="_self" class="btn btn-outline-warning btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i data-feather="x-square"></i></a>
-                                                        <?php } ?>
-                                                        <a href="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=3" onclick="return confirm('Are you sure you want to remove this?');" target="_self" class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>"><i data-feather="trash-2"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <?php }}?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                <div class="scrollbar pb-3" id="style-2">
+                                    <table id="dataTable" class="table table-sm w-100 table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Bank Name</th>
+                                                <th>Code</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if($resultbanks->num_rows > 0){ while($row = $resultbanks->fetch_assoc()){ ?>
+                                            <tr>
+                                                <td><?php echo $row['idtbl_bank']; ?></td>
+                                                <td><?php echo $row['bankname']; ?></td>
+                                                <td><?php echo $row['code']; ?></td>
+                                                <td class="text-right">
+                                                    <?php if($editcheck==1){ ?>
+                                                    <button
+                                                        class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
+                                                        id="<?php echo $row['idtbl_bank'] ?>"><i
+                                                            data-feather="edit-2"></i></button>
+                                                    <?php } if($statuscheck==1 && $row['status']==1){ ?>
+                                                    <button
+                                                        data-url="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=2"
+                                                        data-actiontype="2"
+                                                        class="btn btn-outline-success btn-sm btntableaction"><i
+                                                            data-feather="check"></i></button>
+                                                    <?php } else if($statuscheck==1 && $row['status']==2){ ?>
+                                                    <button
+                                                        data-url="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=1"
+                                                        data-actiontype="1"
+                                                        class="btn btn-outline-warning btn-sm btntableaction"><i
+                                                            data-feather="x-square"></i></button>
+                                                    <?php } if($deletecheck==1){ ?>
+                                                    <button
+                                                        data-url="process/statusbankinfo.php?record=<?php echo $row['idtbl_bank'] ?>&type=3"
+                                                        data-actiontype="3"
+                                                        class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                            data-feather="trash-2"></i></button>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                            <?php }}?>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <!-- </div> -->
                             </div>
                         </div>
@@ -89,10 +112,10 @@ $resultbanks = $conn->query($banksql);
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#dataTable').DataTable();
-        $('#dataTable tbody').on('click', '.btnEdit', function() {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({
@@ -101,7 +124,7 @@ $resultbanks = $conn->query($banksql);
                         recordID: id
                     },
                     url: 'getprocess/getbankinfo.php',
-                    success: function(result) { //alert(result);
+                    success: function (result) { //alert(result);
                         var obj = JSON.parse(result);
 
                         $('#recordID').val(obj.id);

@@ -36,11 +36,13 @@ include "include/topnavbar.php";
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Receipt No</th>
+                                            <th>Invoice No</th>
                                             <th>Date</th>
+                                            <th>Sales Rep</th>
+                                            <th>Customer</th>
                                             <th class="text-right">Payment</th>
-                                            <th class="text-right">Balance</th>
-                                            <th class="text-right">Actions</th>
+                                            <!-- <th class="text-right">Balance</th> -->
+                                            <!-- <th class="text-right">Actions</th> -->
                                         </tr>
                                     </thead>
                                     
@@ -95,53 +97,54 @@ include "include/topnavbar.php";
                     "data": "idtbl_invoice_payment"
                 },
                 {
-                    "targets": -1,
-                    "className": '',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        return 'PR-'+full['idtbl_invoice_payment'];
-                    }
+                    "data": "invoiceno"
                 },
-           
                 {
                     "data": "date"
                 },
-               
                 {
-                    "targets": -1,
-                    "className": 'text-right',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        var payment=addCommas(parseFloat(full['payment']).toFixed(2));
-                        return payment;
-                    }
+                    "data": "repname"
+                },
+                {
+                    "data": "cusname"
                 },
                 {
                     "targets": -1,
                     "className": 'text-right',
                     "data": null,
                     "render": function(data, type, full) {
-                        var payment=addCommas(parseFloat(full['balance']).toFixed(2));
+                        var payment=addCommas(parseFloat(full['payamount']).toFixed(2));
                         return payment;
                     }
                 },
-                {
-                    "targets": -1,
-                    "className": 'text-right',
-                    "data": null,
-                    "render": function(data, type, full) {
-                        var button='';
-                        button+='<button class="btn btn-outline-dark btn-sm btnview mr-1" id="'+full['idtbl_invoice_payment']+'"><i class="fas fa-eye"></i></button>';
-                        if(full['paymentcomplete']==0){
-                            button+='<a href="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3" onclick="return delete_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';if(deletecheck==0){button+='d-none';}button+='"><i class="far fa-trash-alt"></i></a>';
+                // {
+                //     "targets": -1,
+                //     "className": 'text-right',
+                //     "data": null,
+                //     "render": function(data, type, full) {
+                //         var payment=addCommas(parseFloat(full['balance']).toFixed(2));
+                //         return payment;
+                //     }
+                // },
+                // {
+                //     "targets": -1,
+                //     "className": 'text-right',
+                //     "data": null,
+                //     "render": function(data, type, full) {
+                //         var button='';
+                //         // button+='<button class="btn btn-outline-dark btn-sm btnview mr-1" id="'+full['idtbl_invoice_payment']+'"><i class="fas fa-eye"></i></button>';
+                //         // if(full['paymentcomplete']==0  && deletecheck != 0){
+
+                //         //     button+='<button type="button" data-url="process/statuspaymentreceipt.php?record='+full['idtbl_invoice_payment']+'&type=3"  data-actiontype="3" title="Delete" class="btn btn-outline-danger btn-sm mr-1 btntableaction" id="'+full['idtbl_invoice_payment']+'"><i class="far fa-trash-alt"></i></button>';
                         
-                            // button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
-                        }
-                        return button;
-                    }
-                }
+                //         //     // button+='<a href="process/changepaymentstatus.php?record='+full['idtbl_invoice']+'&method='+full['method']+'&type=3" onclick="return active_confirm()" target="_self" class="btn btn-outline-danger mr-1 btn-sm ';button+='"><i class="fas fa-money-bill-alt"></i></a>';
+                //         // }
+                //         return button;
+                //     }
+                // }
             ]
         } );
+        
         $('#dataTable tbody').on('click', '.btnview', function() {
             var id = $(this).attr('id');
            // alert(id);
@@ -149,7 +152,8 @@ include "include/topnavbar.php";
             $('#frame').html('<iframe class="embed-responsive-item" frameborder="0"></iframe>');
             $('#modalpaymentreceipt iframe').contents().find('body').html("<img src='images/spinner.gif' class='img-fluid' style='margin-top:200px;margin-left:500px;' />");
 
-            var src = 'pdfprocess/paymentpdf.php?paymentinoiceID=' + id;
+            // alert(id)
+            var src = 'pdfprocess/paymentreceiptpdf.php?paymentinoiceID=' + id;
             //            alert(src);
             var width = $(this).attr('data-width') || 640; // larghezza dell'iframe se non impostato usa 640
             var height = $(this).attr('data-height') || 360; // altezza dell'iframe se non impostato usa 360
@@ -202,3 +206,4 @@ include "include/topnavbar.php";
     }
 </script>
 <?php include "include/footer.php"; ?>
+

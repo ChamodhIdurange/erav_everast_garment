@@ -13,7 +13,6 @@
  *
  * @license MIT - http://datatables.net/license_mit
  */
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
  */
@@ -40,9 +39,15 @@ $columns = array(
 	array( 'db' => '`u`.`delivered`',   'dt' => 'delivered', 'field' => 'delivered' ),
 	array( 'db' => '`u`.`is_printed`',   'dt' => 'is_printed', 'field' => 'is_printed' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
+	array( 'db' => '`u`.`remark`',   'dt' => 'remark', 'field' => 'remark' ),
+	array( 'db' => '`u`.`insertdatetime`',   'dt' => 'insertdatetime', 'field' => 'insertdatetime' ),
 	array( 'db' => '`ub`.`area`', 'dt' => 'area', 'field' => 'area' ),
     array( 'db' => '`uc`.`name`', 'dt' => 'cusname', 'field' => 'cusname', 'as' => 'cusname' ),
-    array( 'db' => '`ud`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' )
+    array( 'db' => '`uc`.`address`', 'dt' => 'cusaddress', 'field' => 'cusaddress', 'as' => 'cusaddress' ),
+	array( 'db' => '`u`.`tbl_customer_idtbl_customer`',   'dt' => 'tbl_customer_idtbl_customer', 'field' => 'tbl_customer_idtbl_customer' ),
+	array( 'db' => '`u`.`tbl_employee_idtbl_employee`',   'dt' => 'tbl_employee_idtbl_employee', 'field' => 'tbl_employee_idtbl_employee' ),
+    array( 'db' => '`ud`.`name`', 'dt' => 'repname', 'field' => 'repname', 'as' => 'repname' ),
+	array( 'db' => '`u`.`cuspono`',   'dt' => 'cuspono', 'field' => 'cuspono' )
 );
 
 // SQL server connection information
@@ -64,8 +69,7 @@ require('ssp.customized.class.php' );
 
 $joinQuery = "FROM `tbl_customer_order` AS `u` LEFT JOIN `tbl_area` AS `ub` ON (`ub`.`idtbl_area` = `u`.`tbl_area_idtbl_area`) LEFT JOIN `tbl_customer` AS `uc` ON (`uc`.`idtbl_customer` = `u`.`tbl_customer_idtbl_customer`) LEFT JOIN `tbl_employee` AS `ud` ON (`ud`.`idtbl_employee` = `u`.`tbl_employee_idtbl_employee`)";
 
-$extraWhere = "`u`.`status`=1";
-
+$extraWhere = "`u`.`status` = 1 AND (`u`.`confirm` IS NULL OR `u`.`confirm` = 0) AND (`u`.`dispatchissue` IS NULL OR `u`.`dispatchissue` = 0) AND (`u`.`delivered` IS NULL OR `u`.`delivered` = 0)";
 echo json_encode(
 	SSP::simple( $_POST, $sql_details, $table, $primaryKey, $columns, $joinQuery, $extraWhere)
 );

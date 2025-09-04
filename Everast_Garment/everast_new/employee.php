@@ -10,6 +10,9 @@ $resultusertypeuser=$conn->query($sqlusertypeuser);
 $sqlsalesmanager="SELECT `idtbl_sales_manager`, `salesmanagername` FROM `tbl_sales_manager` WHERE `status`=1";
 $resultsalesmanager=$conn->query($sqlsalesmanager);
 
+$sqluseraccount="SELECT `idtbl_user`, `name` FROM `tbl_user` WHERE `status`=1";
+$resultuseraccount=$conn->query($sqluseraccount);
+
 $sqlarea="SELECT * FROM `tbl_area` WHERE `status`=1 ";
 $resultarea=$conn->query($sqlarea);
 
@@ -69,6 +72,17 @@ include "include/topnavbar.php";
                                             <?php if($resultsalesmanager->num_rows > 0) {while ($rowsalesmanager = $resultsalesmanager-> fetch_assoc()) { ?>
                                             <option value="<?php echo $rowsalesmanager['idtbl_sales_manager'] ?>">
                                                 <?php echo $rowsalesmanager['salesmanagername'] ?></option>
+                                            <?php }} ?>
+                                            
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="small font-weight-bold text-dark">User Account*</label>
+                                        <select class="form-control form-control-sm" name="useraccount" id="useraccount">
+                                            <option value="">Select User Account</option>
+                                            <?php if($resultuseraccount->num_rows > 0) {while ($rowuseraccount = $resultuseraccount-> fetch_assoc()) { ?>
+                                            <option value="<?php echo $rowuseraccount['idtbl_user'] ?>">
+                                                <?php echo $rowuseraccount['name'] ?></option>
                                             <?php }} ?>
                                             
                                         </select>
@@ -138,28 +152,30 @@ include "include/topnavbar.php";
                                                         data-feather="map-pin"></i></button>
 
                                                 <?php }?>
-                                                <button
-                                                    class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
-                                                    id="<?php echo $row['idtbl_employee'] ?>"><i
-                                                        data-feather="edit-2"></i></button>
-                                                <?php if($row['status']==1){ ?>
-                                                <a href="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=2"
-                                                    onclick="return confirm('Are you sure you want to deactive this?');"
-                                                    target="_self"
-                                                    class="btn btn-outline-success btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i
-                                                        data-feather="check"></i></a>
-                                                <?php }else{ ?>
-                                                <a href="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=1"
-                                                    onclick="return confirm('Are you sure you want to active this?');"
-                                                    target="_self"
-                                                    class="btn btn-outline-warning btn-sm <?php if($statuscheck==0){echo 'd-none';} ?>"><i
-                                                        data-feather="x-square"></i></a>
-                                                <?php } ?>
-                                                <a href="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=3"
-                                                    onclick="return confirm('Are you sure you want to remove this?');"
-                                                    target="_self"
-                                                    class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>"><i
-                                                        data-feather="trash-2"></i></a>
+                                                <?php if($editcheck==1){ ?>
+                                                    <button
+                                                        class="btn btn-outline-primary btn-sm btnEdit <?php if($editcheck==0){echo 'd-none';} ?>"
+                                                        id="<?php echo $row['idtbl_employee'] ?>"><i
+                                                            data-feather="edit-2"></i></button>
+                                                    <?php } if($statuscheck==1 && $row['status']==1){ ?>
+                                                    <button
+                                                        data-url="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=2"
+                                                        data-actiontype="2"
+                                                        class="btn btn-outline-success btn-sm btntableaction"><i
+                                                            data-feather="check"></i></button>
+                                                    <?php } else if($statuscheck==1 && $row['status']==2){ ?>
+                                                    <button
+                                                        data-url="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=1"
+                                                        data-actiontype="1"
+                                                        class="btn btn-outline-warning btn-sm btntableaction"><i
+                                                            data-feather="x-square"></i></button>
+                                                    <?php } if($deletecheck==1){ ?>
+                                                    <button
+                                                        data-url="process/statusemployee.php?record=<?php echo $row['idtbl_employee'] ?>&type=3"
+                                                        data-actiontype="3"
+                                                        class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                            data-feather="trash-2"></i></button>
+                                                    <?php } ?>
                                             </td>
                                         </tr>
                                         <?php }} ?>
@@ -202,8 +218,8 @@ include "include/topnavbar.php";
         $('#area').prop("disabled", true);;
         $('#area').select2();
         $('#dataTable').DataTable();
-        $('#dataTable tbody').on('click', '.btnEdit', function () {
-            var r = confirm("Are you sure, You want to Edit this ? ");
+        $('#dataTable tbody').on('click', '.btnEdit', async function () {
+            var r = await Otherconfirmation("You want to edit this ? ");
             if (r == true) {
                 var id = $(this).attr('id');
                 $.ajax({
@@ -223,6 +239,7 @@ include "include/topnavbar.php";
                         $('#empaddress').val(obj.address);
                         $('#emptype').val(obj.emptype);
                         $('#salesmanager').val(obj.salesmanager);
+                        $('#useraccount').val(obj.useraccountid);
 
                         $('#recordOption').val('2');
                         $('#submitBtn').html('<i class="far fa-save"></i>&nbsp;Update');
@@ -237,7 +254,6 @@ include "include/topnavbar.php";
                                         'selected',
                                         true);
                                 }
-
                             } else {
                                 $("#area option:selected").removeAttr("selected");
                             }

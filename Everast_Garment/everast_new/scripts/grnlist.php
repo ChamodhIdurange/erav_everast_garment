@@ -13,7 +13,6 @@
  *
  * @license MIT - http://datatables.net/license_mit
  */
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
  */
@@ -39,6 +38,8 @@ $columns = array(
 	array( 'db' => '`u`.`batchno`', 'dt' => 'batchno', 'field' => 'batchno' ),
 	array( 'db' => '`u`.`confirm_status`', 'dt' => 'confirm_status', 'field' => 'confirm_status' ),
 	array( 'db' => '`u`.`transferstatus`', 'dt' => 'transferstatus', 'field' => 'transferstatus' ),
+	array( 'db' => '`u`.`paymentcomplete`', 'dt' => 'paymentcomplete', 'field' => 'paymentcomplete' ),
+	array( 'db' => '`us`.`suppliername`', 'dt' => 'suppliername', 'field' => 'suppliername' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' )
 );
 
@@ -59,7 +60,7 @@ $sql_details = array(
 // require( 'ssp.class.php' );
 require('ssp.customized.class.php' );
 
-$joinQuery = "FROM `tbl_grn` AS `u`";
+$joinQuery = "FROM `tbl_grn` AS `u` LEFT JOIN `tbl_porder` AS `ua` ON (`ua`.`idtbl_porder` = `u`.`tbl_porder_idtbl_porder`) LEFT JOIN `tbl_supplier` AS `us` ON (`us`.`idtbl_supplier` = `ua`.`tbl_supplier_idtbl_supplier`)";
 
 $extraWhere = "`u`.`status` IN (1,2)";
 

@@ -15,14 +15,16 @@ $currdate=date('Y-m-d');
 
 
 
-$sql = "SELECT  g.batchno, gd.qty, gd.tbl_product_idtbl_product FROM  tbl_grn g JOIN  tbl_grndetail gd ON g.idtbl_grn = gd.tbl_grn_idtbl_grn WHERE  g.idtbl_grn = '$record'";
+$sql = "SELECT  g.batchno, gd.qty, gd.tbl_product_idtbl_product, gd.unitprice, gd.saleprice FROM  tbl_grn g JOIN  tbl_grndetail gd ON g.idtbl_grn = gd.tbl_grn_idtbl_grn WHERE  g.idtbl_grn = '$record'";
 
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $insert_stock = "INSERT INTO tbl_stock (batchqty, qty, `update`, status, batchno, insertdatetime, tbl_user_idtbl_user, tbl_product_idtbl_product) 
-                         VALUES ('{$row['qty']}', '{$row['qty']}', '$currdate', '1', '{$row['batchno']}', NOW(), '$userID', '{$row['tbl_product_idtbl_product']}')";
+        $unitprice = $row['unitprice'];
+        $saleprice = $row['saleprice'];
+        $insert_stock = "INSERT INTO tbl_stock (batchqty, qty, unitprice, saleprice, `update`, status, batchno, insertdatetime, tbl_user_idtbl_user, tbl_product_idtbl_product) 
+                         VALUES ('{$row['qty']}', '{$row['qty']}', '$unitprice', '$saleprice', '$currdate', '1', '{$row['batchno']}', NOW(), '$userID', '{$row['tbl_product_idtbl_product']}')";
 
         if (!$conn->query($insert_stock)) {
             header("Location:../grn.php?action=5");

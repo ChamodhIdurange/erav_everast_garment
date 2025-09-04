@@ -1,5 +1,4 @@
 <?php
-
 /*
  * DataTables example server-side processing script.
  *
@@ -13,14 +12,11 @@
  *
  * @license MIT - http://datatables.net/license_mit
  */
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
  */
-
 // DB table to use
 $table = 'tbl_customer';
-
 // Table's primary key
 $primaryKey = 'idtbl_customer';
 
@@ -34,6 +30,8 @@ $columns = array(
 	array( 'db' => '`u`.`nic`', 'dt' => 'nic', 'field' => 'nic' ),
 	array( 'db' => '`u`.`phone`', 'dt' => 'phone', 'field' => 'phone' ),
 	array( 'db' => '`u`.`status`',   'dt' => 'status', 'field' => 'status' ),
+	array( 'db' => '`u`.`enable_for_porder`',   'dt' => 'enable_for_porder', 'field' => 'enable_for_porder' ),
+	array( 'db' => '`u`.`is_verified`',   'dt' => 'is_verified', 'field' => 'is_verified' ),
 	array( 'db' => '`u`.`type`',   'dt' => 'type', 'field' => 'type' ),
 	array( 'db' => '`u`.`address`',   'dt' => 'address', 'field' => 'address' ),
 	array( 'db' => '`e`.`name`', 'dt' => 'empname', 'field' => 'empname', 'as' => 'empname' ),

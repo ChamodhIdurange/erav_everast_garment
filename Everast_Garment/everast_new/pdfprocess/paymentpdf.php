@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../connection/db.php');
-require_once '../vendor/autoload.php'; // Adjust the path as necessary
+require_once '../vendor/autoload.php';
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -12,28 +12,25 @@ $options->set('isPhpEnabled', true);
 
 $dompdf = new Dompdf($options);
 
-$paymentinoiceID=$_GET['paymentinoiceID'];
+$invoiceId=$_GET['invoiceId'];
 
-$sqlpaymentdetail="SELECT * FROM `tbl_invoice_payment_has_tbl_invoice` WHERE `tbl_invoice_payment_idtbl_invoice_payment`='$paymentinoiceID'";
-$resultpaymentdetail=$conn->query($sqlpaymentdetail);
+$sqlinvoice="SELECT * FROM `tbl_invoice` WHERE `idtbl_invoice`='$invoiceId'";
+$resultinvoice=$conn->query($sqlinvoice);
+$rowinvoice=$resultinvoice->fetch_assoc();
+$nettotal = $rowinvoice['nettotal'];
+$total = $rowinvoice['total'];
+$discount = $rowinvoice['discount'];
+$invoiceno = $rowinvoice['invoiceno'];
 
-$sqlpaymentmethodscash="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '1'";
-$resultpaymentmethodcash=$conn->query($sqlpaymentmethodscash);
-$rowcash=$resultpaymentmethodcash->fetch_assoc();
-$cashamount = $rowcash['payamount'];
 
-$sqlpaymentmethodscheque="SELECT SUM(`i`.`amount`) as `payamount` FROM `tbl_invoice_payment_has_tbl_invoice` as `p` JOIN `tbl_invoice_payment` as `pi` on (`pi`.`idtbl_invoice_payment` = `p`.`tbl_invoice_payment_idtbl_invoice_payment`) JOIN `tbl_invoice_payment_detail` AS `i` ON (`i`.`tbl_invoice_payment_idtbl_invoice_payment` = `pi`.`idtbl_invoice_payment`) WHERE `pi`.`idtbl_invoice_payment`='$paymentinoiceID' AND `i`.`method` = '2'";
-$resultpaymentmethodcheque=$conn->query($sqlpaymentmethodscheque);
-$rowcheque=$resultpaymentmethodcheque->fetch_assoc();
-$chequeamount = $rowcheque['payamount'];
-
-$sqlpayment="SELECT * FROM `tbl_invoice_payment` WHERE `idtbl_invoice_payment`='$paymentinoiceID' AND `status`=1";
+$sqlpayment="SELECT SUM(`ih`.`payamount`) AS 'paymentmade' FROM `tbl_invoice_payment` AS `ip` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`ip`.`idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId' GROUP BY `ih`.`tbl_invoice_idtbl_invoice`";
 $resultpayment=$conn->query($sqlpayment);
 $rowpayment=$resultpayment->fetch_assoc();
+$paymentmade = $rowpayment['paymentmade'];
 
-$sqlpaymentbank="SELECT * FROM `tbl_invoice_payment_detail` WHERE `status`=1 AND `tbl_invoice_payment_idtbl_invoice_payment`='$paymentinoiceID'";
+$sqlpaymentbank="SELECT `id`.`method`, `id`.`amount`, `id`.`receiptno`, `id`.`chequeno` FROM `tbl_invoice_payment_detail` AS `id` LEFT JOIN `tbl_invoice_payment_has_tbl_invoice` AS `ih` ON (`id`.`tbl_invoice_payment_idtbl_invoice_payment` = `ih`.`tbl_invoice_payment_idtbl_invoice_payment`) WHERE `ih`.`tbl_invoice_idtbl_invoice`='$invoiceId'";
 $resultpaymentbank=$conn->query($sqlpaymentbank);
-
+// echo $sqlpaymentbank;
 $html = '
     <!DOCTYPE html>
     <html lang="en">
@@ -87,7 +84,7 @@ $html = '
     <body>
         <table border="0" width="100%">
             <tr>
-                <td style="vertical-align: bottom;padding-bottom: 17px;">Receipt: PR-'.$paymentinoiceID.'</td>
+                <td style="vertical-align: bottom;padding-bottom: 17px;">Invoice No: '.$invoiceno.'</td>
                 <td style="text-align: right;">
                     <div class="receipt-header">
                         <div class="header-content">
@@ -121,21 +118,16 @@ $html = '
                             </tr>
                         </thead>
                         <tbody>';
-                            $i=1;while($rowpaymentdetails=$resultpaymentdetail->fetch_assoc()){
+                            $i=1;
                             $html.='<tr>
                                 <td>'.$i.'</td>
-                                <td>INV-'.$rowpaymentdetails['tbl_invoice_idtbl_invoice'].'</td>
+                                <td>'.$invoiceno.'</td>
                                 <td style="text-align: right">';
-                                    $invoiceID=$rowpaymentdetails['tbl_invoice_idtbl_invoice']; $sqlinvoice="SELECT `total` FROM `tbl_invoice` WHERE `idtbl_invoice`='$invoiceID' AND `status`=1"; 
-                                    $resultinvoice=$conn->query($sqlinvoice); 
-                                    $rowinvoice=$resultinvoice->fetch_assoc();
-
-                                    $html.=number_format($rowinvoice['total'], 2);
+                                    $html.=$total;
                                 $html.='</td>
-                                <td style="text-align: right">'.number_format($rowpaymentdetails['discount'],2).'</td>
-                                <td style="text-align: right">';$paymentdone = $rowinvoice['total'] - $rowpaymentdetails['discount']; $html.=number_format($paymentdone,2).'</td>
+                                <td style="text-align: right">'.$discount.'</td>
+                                <td style="text-align: right">';$paymentdone = $total- $discount; $html.=number_format($paymentdone,2).'</td>
                             </tr>';
-                            $i++;}
                         $html.='</tbody>
                     </table>
                 </td>
@@ -146,33 +138,43 @@ $html = '
                     <table class="tg" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th class="text-right">Method</th>
+                                <th>Method</th>
+                                <th>Receipt</th>
+                                <th>Cheque No</th>
                                 <th style="text-align: right">Payment</th>
                             </tr>
                         </thead>
                         <tbody>'; 
-                            while($rowpaymentbank=$resultpaymentbank->fetch_assoc()){
+                        while($rowpaymentbank=$resultpaymentbank->fetch_assoc()){
                             $html.='<tr>
-                                <td>';if($rowpaymentbank['method']==1){$html.='Cash';}else if($rowpaymentbank['method']==2){$html.='Cheque';}else if($rowpaymentbank['method']==3){$html.='Credit Note';}$html.='</td>
+                                <td>';
+                                if($rowpaymentbank['method']==1){
+                                    $html.='Cash';
+                                }else if($rowpaymentbank['method']==2){
+                                    $html.='Cheque';
+                                }else if($rowpaymentbank['method']==3){
+                                    $html.='Credit Note';
+                                }else if($rowpaymentbank['method']==4){
+                                    $html.='Exfess Note';
+                                }
+                            $html.='</td>
+                                <td>'.$rowpaymentbank['receiptno'].'</td>
+                                <td>'.$rowpaymentbank['chequeno'].'</td>
                                 <td style="text-align: right">'.number_format($rowpaymentbank['amount'], 2).'</td>
                             </tr>';
-                            }
+                        }
                         $html.='<tbody>
                     </table>
                 </td>
                 <td style="vertical-align: top;">
                     <table width="100%">
                         <tr>
-                            <td width="65%" style="text-align: right">Net Total</td>
-                            <td style="text-align: right">Rs. '.number_format($rowpayment['payment'], 2).'</td>
-                        </tr>
-                        <tr>
-                            <td width="65%" style="text-align: right">Payment</td>
-                            <td style="text-align: right">Rs. '.number_format($rowpayment['payment'], 2).'</td>
+                            <td width="65%" style="text-align: right">Payment Made</td>
+                            <td style="text-align: right">Rs. '.number_format($paymentmade, 2).'</td>
                         </tr>
                         <tr>
                             <td width="65%" style="text-align: right">Balance</td>
-                            <td style="text-align: right">Rs. '.number_format($rowpayment['balance'], 2).'</td>
+                            <td style="text-align: right">Rs. '.number_format($nettotal - $paymentmade, 2).'</td>
                         </tr>
                     </table>
                 </td>
@@ -185,3 +187,4 @@ $dompdf->loadHtml($html);
 // $dompdf->setPaper('21.5cm', '27.5cm', 'portrait');
 $dompdf->render();
 $dompdf->stream("Test.pdf", ["Attachment" => 0]);
+

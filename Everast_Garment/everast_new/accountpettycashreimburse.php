@@ -20,7 +20,8 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
         <main>
             <div class="page-header page-header-light bg-white shadow">
                 <div class="container-fluid">
-                    <div class="page-header-content d-md-flex text-right align-items-center justify-content-between py-3">
+                    <div
+                        class="page-header-content d-md-flex text-right align-items-center justify-content-between py-3">
                         <div class="d-inline">
                             <h1 class="page-header-title">
                                 <div class="page-header-icon"><i class="fas fa-university"></i></div>
@@ -35,13 +36,17 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
                     <div class="card-body p-0 p-2">
                         <div class="row">
                             <div class="col-md-3">
-                                <form class="m-2" action="process/accountpettycashreimburseprocess.php" method="post" autocomplete="off">
+                                <form class="m-2" action="process/accountpettycashreimburseprocess.php" method="post"
+                                    autocomplete="off">
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Petty Cash Account</label>
-                                        <select class="form-control form-control-sm" id="pettyCashAccount" name="pettyCashAccount" required>
+                                        <select class="form-control form-control-sm" id="pettyCashAccount"
+                                            name="pettyCashAccount" required>
                                             <option value="">Select</option>
                                             <?php while($rowaccount = $resultaccount->fetch_assoc()){ ?>
-                                            <option value="<?php echo $rowaccount['idtbl_account'] ?>"><?php echo $rowaccount['account'].' - '.$rowaccount['accountno'] ?></option>
+                                            <option value="<?php echo $rowaccount['idtbl_account'] ?>">
+                                                <?php echo $rowaccount['account'].' - '.$rowaccount['accountno'] ?>
+                                            </option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -50,22 +55,28 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
                                         <select class="form-control form-control-sm" id="bank" name="bank" required>
                                             <option value="">Select</option>
                                             <?php while($rowbank = $resultbank->fetch_assoc()){ ?>
-                                            <option value="<?php echo $rowbank['tbl_bank_idtbl_bank'] ?>"><?php echo $rowbank['bankname'] ?></option>
+                                            <option value="<?php echo $rowbank['tbl_bank_idtbl_bank'] ?>">
+                                                <?php echo $rowbank['bankname'] ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Bank Account</label>
-                                        <select class="form-control form-control-sm" id="bankAccount" name="bankAccount" required>
+                                        <select class="form-control form-control-sm" id="bankAccount" name="bankAccount"
+                                            required>
                                             <option value="">Select</option>
                                         </select>
                                     </div>
                                     <div class="form-group mb-1">
                                         <label class="small font-weight-bold text-dark">Amount</label>
-                                        <input class="form-control form-control-sm input-integer-decimal" type="text" id="amount" name="amount" required>
+                                        <input class="form-control form-control-sm input-integer-decimal" type="text"
+                                            id="amount" name="amount" required>
                                     </div>
                                     <div class="form-group mt-3">
-                                        <button type="submit" id="submitBtn" class="btn btn-outline-primary btn-sm px-4 fa-pull-right" <?php if($addcheck==0){echo 'disabled';} ?>><i class="far fa-save"></i>&nbsp;Add</button>
+                                        <button type="submit" id="submitBtn"
+                                            class="btn btn-outline-primary btn-sm px-4 fa-pull-right"
+                                            <?php if($addcheck==0){echo 'disabled';} ?>><i
+                                                class="far fa-save"></i>&nbsp;Add</button>
                                     </div>
                                     <input type="hidden" name="recordOption" id="recordOption" value="1">
                                     <input type="hidden" name="recordID" id="recordID" value="">
@@ -84,9 +95,10 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody>statusaccountpettycashreimburse
                                             <?php if($resultpettycashaccount->num_rows > 0){ while($row = $resultpettycashaccount->fetch_assoc()){ ?>
-                                            <tr <?php if($row['status']==3){?> style="background-color:darkred; color:white;" <?php }?>>
+                                            <tr <?php if($row['status']==3){?>
+                                                style="background-color:darkred; color:white;" <?php }?>>
                                                 <td><?php echo $row['idtbl_pettycash_reimburse']; ?></td>
                                                 <td><?php echo $row['petty_cash_account']; ?></td>
                                                 <td><?php echo $row['bankname']; ?></td>
@@ -94,9 +106,13 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
                                                 <td><?php echo number_format($row['amount'], 2);?></td>
                                                 <td class="text-right">
                                                     <?php if($row['status']==3){ ?>
-                                                        <span>Cancelled</span>
+                                                    <span>Cancelled</span>
                                                     <?php }else{ ?>
-                                                        <a href="process/statusaccountpettycashreimburse.php?record=<?php echo $row['idtbl_pettycash_reimburse'] ?>&type=3" onclick="return confirm('Are you sure you want to Cancel this?');" target="_self" class="btn btn-outline-danger btn-sm <?php if($deletecheck==0){echo 'd-none';} ?>" data-toggle="tooltip" data-placement="bottom" title="Cancel"><i data-feather="x"></i></a>
+                                                    <button
+                                                        data-url="process/statusaccountpettycashreimburse.php?record=<?php echo $row['idtbl_pettycash_reimburse'] ?>&type=3"
+                                                        data-actiontype="3"
+                                                        class="btn btn-outline-danger btn-sm btntableaction"><i
+                                                            data-feather="x"></i></button>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -115,39 +131,38 @@ $resultpettycashaccount =$conn-> query($pettycashaccountsql);
 </div>
 <?php include "include/footerscripts.php"; ?>
 <script>
-$(document).ready(function() {
+    $(document).ready(function () {
 
-    $('.input-integer-decimal').inputNumber({
-        maxDecimalDigits: 2
-    });
-    $('#dataTable').DataTable();
+        $('.input-integer-decimal').inputNumber({
+            maxDecimalDigits: 2
+        });
+        $('#dataTable').DataTable();
 
-    $('#bank').change(function(){
-        var bankID = $(this).val();
-        $.ajax({
-            type: "POST",
-            data: {
-                recordID: bankID
-            },
-            url: 'getprocess/getbankaccount.php',
-            success: function(result) { //alert(result);
-                var obj = JSON.parse(result);
-                $('#bankAccount').empty();
-                $('#bankAccount').append('<option value="">Select</option>');
-                
-                $.each(obj, function(index, item) {
-                    $('#bankAccount').append($('<option>', { 
-                        value: item.idtbl_account, 
-                        text: item.account + ' - ' + item.accountno
-                    }));
-                });
+        $('#bank').change(function () {
+            var bankID = $(this).val();
+            $.ajax({
+                type: "POST",
+                data: {
+                    recordID: bankID
+                },
+                url: 'getprocess/getbankaccount.php',
+                success: function (result) { //alert(result);
+                    var obj = JSON.parse(result);
+                    $('#bankAccount').empty();
+                    $('#bankAccount').append('<option value="">Select</option>');
 
-                $('#bank').trigger('bankAccountLoaded');
-            }
+                    $.each(obj, function (index, item) {
+                        $('#bankAccount').append($('<option>', {
+                            value: item.idtbl_account,
+                            text: item.account + ' - ' + item.accountno
+                        }));
+                    });
+
+                    $('#bank').trigger('bankAccountLoaded');
+                }
+            });
         });
     });
-});
-
 </script>
 <?php
 // specify optional header includes in this array.
