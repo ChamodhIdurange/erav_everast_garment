@@ -82,7 +82,7 @@ include "include/topnavbar.php";
     const $monthLabel = $('#monthLabel');
 
     const today = new Date();
-    $date.val(today.toISOString().split('T')[0]); // default today
+    $date.val(today.toISOString().split('T')[0]); 
     updateMonthLabel();
 
     const dt = $('#dataTable').DataTable({

@@ -385,6 +385,37 @@ function checkprivilege($arraymenu, $menuID, $type)
                     </nav>
                 </div>
             <?php }
+
+                if (menucheck($menuprivilegearray, 15) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="porder.php">
+                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                        Purchsing Order
+                    </a>
+                <?php }
+                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="grn.php">
+                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
+                        Good Receive
+                    </a>
+                <?php }
+                        if (menucheck($menuprivilegearray, 16) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="monthend.php">
+                        <div class="nav-link-icon"><i data-feather="truck"></i></div>
+                        Month End
+                    </a>
+                <?php }
+                    if (menucheck($menuprivilegearray, 40) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="vatinfo.php">
+                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                        Vat Info
+                    </a>
+                <?php }
+                    if (menucheck($menuprivilegearray, 17) == 1) { ?>
+                    <a class="nav-link p-0 px-3 py-2" href="customerporder.php">
+                        <div class="nav-link-icon"><i data-feather="archive"></i></div>
+                        Customer Porder
+                    </a>
+
             if (menucheck($menuprivilegearray, 14) == 1 | menucheck($menuprivilegearray, 15) == 1) { ?>
                 <a class="nav-link p-0 px-3 py-2 collapsed text-dark" href="javascript:void(0);" data-toggle="collapse"
                     data-target="#collapsemainitem" aria-expanded="false" aria-controls="collapsemainitem">
