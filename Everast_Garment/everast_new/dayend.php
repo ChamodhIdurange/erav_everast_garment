@@ -59,9 +59,7 @@ include "include/topnavbar.php";
                                         <tr>
                                             <th>#</th>
                                             <th>Date</th>
-                                            <th>Close Stock Value</th>
                                             <th>Status</th>
-                                            <th class="text-right">Actions</th>
                                         </tr>
                                     </thead>
                                 </table>
